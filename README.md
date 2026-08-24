@@ -41,6 +41,25 @@ Then open `http://localhost:4173/site/index.html`.
 
 The catalog links the real token and component stylesheets, so its examples always render from the library it documents.
 
+## Deploy to VibeHub
+
+OneDS is configured for its persistent Microsoft VibeHub project in `vibehub.json`. The API key remains outside Git in `~/.env.vibehub`.
+
+Live catalog: https://vibehub.microsoft.com/app/one-ds/
+
+Deploy a new version with:
+
+```sh
+set -a
+source ~/.env.vibehub
+set +a
+node scripts/deploy-vibehub.mjs
+```
+
+The deployment script runs the OneDS checker, stages the catalog at the archive root, rewrites its local parent-relative stylesheet links for hosting, uploads a new version through the VibeHub API, and reports the live URL and version ID.
+
+Use `node scripts/deploy-vibehub.mjs --dry-run` to validate packaging without making a network request. The `--create` option is reserved for the intentional first deployment and refuses to run after a project ID has been configured.
+
 ## Use OneDS in another project
 
 From the root of a consuming project, create a symlink to the local checkout:
