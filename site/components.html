@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Components · OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/data-table/data-table.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/chip/chip.css">
+  <link rel="stylesheet" href="../components/tabs/tabs.css">
+  <link rel="stylesheet" href="../components/empty-state/empty-state.css">
+  <link rel="stylesheet" href="../components/loading/loading.css">
+  <link rel="stylesheet" href="../components/dialog/dialog.css">
+  <link rel="stylesheet" href="../components/inline-message/inline-message.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="../components/menu/menu.css">
+  <link rel="stylesheet" href="../components/search-field/search-field.css">
+  <link rel="stylesheet" href="../components/toolbar/toolbar.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html" aria-current="page">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#card">Card</a></li>
+          <li><a class="sidebar__link" href="#section">Section</a></li>
+          <li><a class="sidebar__link" href="#grid">Grid</a></li>
+          <li><a class="sidebar__link" href="#page-header">Page header</a></li>
+          <li><a class="sidebar__link" href="#data-table">Data table</a></li>
+          <li><a class="sidebar__link" href="#button">Button</a></li>
+          <li><a class="sidebar__link" href="#chip">Chip</a></li>
+          <li><a class="sidebar__link" href="#tabs">Tabs</a></li>
+          <li><a class="sidebar__link" href="#empty-state">Empty state</a></li>
+          <li><a class="sidebar__link" href="#loading">Loading</a></li>
+          <li><a class="sidebar__link" href="#dialog">Dialog</a></li>
+          <li><a class="sidebar__link" href="#inline-message">Inline message</a></li>
+          <li><a class="sidebar__link" href="#input">Input</a></li>
+          <li><a class="sidebar__link" href="#menu">Menu</a></li>
+          <li><a class="sidebar__link" href="#search-field">Search field</a></li>
+          <li><a class="sidebar__link" href="#toolbar">Toolbar</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header">
+          <div class="page-header__content">
+            <h1 class="page-header__title">Components</h1>
+            <p class="page-header__description">The built library in manifest order, rendered from its real CSS with every defined modifier and interaction state.</p>
+          </div>
+          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
+        </header>
+
+        <section class="section" id="card" aria-labelledby="card-title">
+          <header class="section__header">
+            <h2 class="section__title" id="card-title">Card</h2>
+            <p class="section__description">Groups closely related content and actions within a bounded surface.</p>
+          </header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it only to decorate content that already forms a coherent page section.</p>
+            <div class="grid">
+              <article class="card"><header class="card__header"><h3 class="card__title">Default</h3><p class="card__description">Standard spacing and elevation.</p></header><div class="card__body"><p class="card__text">Related content belongs here.</p></div><footer class="card__footer"><span>Footer</span><button class="button button--quiet" type="button">Action</button></footer></article>
+              <article class="card card--compact"><header class="card__header"><h3 class="card__title">Compact</h3><p class="card__description">Reduced gap and padding.</p></header><p class="card__text"><code>card--compact</code></p></article>
+              <article class="card card--flat"><header class="card__header"><h3 class="card__title">Flat</h3><p class="card__description">The border remains while elevation is removed.</p></header><p class="card__text"><code>card--flat</code></p></article>
+              <article class="card card--compact card--flat"><header class="card__header"><h3 class="card__title">Compact and flat</h3><p class="card__description">Both modifiers compose.</p></header><p class="card__text"><code>card--compact card--flat</code></p></article>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;article class="card" aria-labelledby="card-example-title"&gt;
+  &lt;header class="card__header"&gt;
+    &lt;h2 class="card__title" id="card-example-title"&gt;Card title&lt;/h2&gt;
+    &lt;p class="card__description"&gt;A concise description of the grouped content.&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;div class="card__body"&gt;
+    &lt;p class="card__text"&gt;Card content belongs here.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;footer class="card__footer"&gt;
+    &lt;p class="card__text"&gt;Optional supporting information or actions belong here.&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/article&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="section" aria-labelledby="section-title">
+          <header class="section__header"><h2 class="section__title" id="section-title">Section</h2><p class="section__description">Organizes a distinct topic or task within the page flow.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for a small group that belongs inside another component.</p>
+            <div class="specimen-block">
+              <section class="section" aria-labelledby="nested-section-title"><header class="section__header"><h3 class="section__title" id="nested-section-title">A distinct topic</h3><p class="section__description">The header introduces content that belongs together in page flow.</p></header><div class="section__body"><p>Section content belongs here.</p></div></section>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;section class="section" aria-labelledby="section-example-title"&gt;
+  &lt;header class="section__header"&gt;
+    &lt;h2 class="section__title" id="section-example-title"&gt;Section title&lt;/h2&gt;
+    &lt;p class="section__description"&gt;A concise introduction to this topic.&lt;/p&gt;
+  &lt;/header&gt;
+  &lt;div class="section__body"&gt;
+    &lt;p&gt;Section content belongs here.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="grid" aria-labelledby="grid-title">
+          <header class="section__header"><h2 class="section__title" id="grid-title">Grid</h2><p class="section__description">Arranges peer content in consistent responsive columns.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it when source order and a single reading column are more important than alignment.</p>
+            <div class="specimen-block"><span class="specimen-label">Default</span><div class="grid"><article class="card card--compact card--flat"><h3 class="card__title">First peer</h3></article><article class="card card--compact card--flat"><h3 class="card__title">Second peer</h3></article></div></div>
+            <div class="specimen-block"><span class="specimen-label">Compact</span><div class="grid grid--compact"><article class="card card--compact card--flat"><h3 class="card__title">First peer</h3></article><article class="card card--compact card--flat"><h3 class="card__title">Second peer</h3></article></div></div>
+            <pre class="code-block" tabindex="0"><code>&lt;div class="grid"&gt;
+  &lt;article class="card"&gt;
+    &lt;h2 class="card__title"&gt;First item&lt;/h2&gt;
+  &lt;/article&gt;
+  &lt;article class="card"&gt;
+    &lt;h2 class="card__title"&gt;Second item&lt;/h2&gt;
+  &lt;/article&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="page-header" aria-labelledby="page-header-title">
+          <header class="section__header"><h2 class="section__title" id="page-header-title">Page header</h2><p class="section__description">Introduces the current page with its title, context, and primary actions.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it as a promotional hero or repeat it within page sections.</p>
+            <div class="specimen-block"><header class="page-header"><div class="page-header__content"><h3 class="page-header__title">Workspace settings</h3><p class="page-header__description">Manage defaults for this workspace.</p></div><div class="page-header__actions"><button class="button" type="button">Save changes</button></div></header></div>
+            <pre class="code-block" tabindex="0"><code>&lt;header class="page-header"&gt;
+  &lt;div class="page-header__content"&gt;
+    &lt;h1 class="page-header__title"&gt;Page title&lt;/h1&gt;
+    &lt;p class="page-header__description"&gt;A concise description of the page's purpose.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="page-header__actions"&gt;
+    &lt;button class="button" type="button"&gt;Primary action&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="data-table" aria-labelledby="data-table-title">
+          <header class="section__header"><h2 class="section__title" id="data-table-title">Data table</h2><p class="section__description">Presents structured records for scanning and comparison across columns.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for unstructured content or datasets that do not benefit from column comparison.</p>
+            <div class="grid">
+              <div class="card card--compact"><div class="data-table__scroll"><table class="data-table"><caption>Default rows</caption><thead><tr><th scope="col">Component</th><th scope="col">Status</th></tr></thead><tbody><tr><td>Card</td><td>Built</td></tr><tr><td>Quote</td><td>Not built</td></tr></tbody></table></div></div>
+              <div class="card card--compact"><div class="data-table__scroll"><table class="data-table data-table--compact"><caption>Compact rows</caption><thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead><tbody><tr><td>space-xs</td><td>8px</td></tr><tr><td>space-sm</td><td>12px</td></tr></tbody></table></div></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;div class="card card--compact"&gt;
+  &lt;div class="data-table__scroll"&gt;
+    &lt;table class="data-table"&gt;
+      &lt;caption&gt;Release status&lt;/caption&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;&lt;th scope="col"&gt;Version&lt;/th&gt;&lt;th scope="col"&gt;Status&lt;/th&gt;&lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;&lt;td&gt;Current&lt;/td&gt;&lt;td&gt;Available&lt;/td&gt;&lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="button" aria-labelledby="button-title">
+          <header class="section__header"><h2 class="section__title" id="button-title">Button</h2><p class="section__description">Triggers an immediate action or state change.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for navigation to another resource when a link is semantically correct.</p>
+            <div class="specimen-block"><span class="specimen-label">Variants</span><div class="specimen-row"><button class="button" type="button">Primary</button><button class="button button--secondary" type="button">Secondary</button><button class="button button--quiet" type="button">Quiet</button><button class="button button--danger" type="button">Danger</button><button class="button button--pill" type="button">Pill</button><button class="button" type="button" disabled>Disabled</button></div><button class="button button--block" type="button">Block</button></div>
+            <div class="grid grid--compact">
+              <div class="specimen-state specimen-state--hover"><span class="specimen-label">Hover variants</span><div class="specimen-row"><button class="button" type="button">Primary</button><button class="button button--secondary" type="button">Secondary</button><button class="button button--quiet" type="button">Quiet</button><button class="button button--danger" type="button">Danger</button></div></div>
+              <div class="specimen-state specimen-state--focus"><span class="specimen-label">Focus</span><button class="button" type="button">Focused</button></div>
+              <div class="specimen-state specimen-state--active"><span class="specimen-label">Active</span><button class="button" type="button">Pressed</button></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;div role="group" aria-label="Available actions"&gt;
+  &lt;button class="button" type="button"&gt;Primary action&lt;/button&gt;
+  &lt;button class="button button--secondary" type="button"&gt;Secondary action&lt;/button&gt;
+  &lt;button class="button button--quiet" type="button"&gt;Quiet action&lt;/button&gt;
+  &lt;button class="button button--danger" type="button"&gt;Remove&lt;/button&gt;
+  &lt;button class="button" type="button" disabled&gt;Unavailable&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="chip" aria-labelledby="chip-title">
+          <header class="section__header"><h2 class="section__title" id="chip-title">Chip</h2><p class="section__description">Displays a compact label, selection, filter, or removable value.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for long text, primary actions, or general status prose.</p>
+            <div class="specimen-block"><span class="specimen-label">Variants</span><div class="specimen-row"><span class="chip">Static</span><button class="chip chip--interactive" type="button">Interactive</button><button class="chip chip--interactive chip--selected" type="button" aria-pressed="true">Selected</button></div></div>
+            <div class="grid grid--compact">
+              <div class="specimen-state specimen-state--hover"><span class="specimen-label">Hover</span><button class="chip chip--interactive" type="button">Filter</button></div>
+              <div class="specimen-state specimen-state--focus"><span class="specimen-label">Focus</span><button class="chip chip--interactive" type="button">Filter</button></div>
+              <div class="specimen-state specimen-state--active"><span class="specimen-label">Active</span><button class="chip chip--interactive" type="button">Filter</button></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;span class="chip"&gt;Filter label&lt;/span&gt;
+&lt;button class="chip chip--interactive" type="button"&gt;Interactive filter&lt;/button&gt;
+&lt;button class="chip chip--interactive chip--selected" type="button" aria-pressed="true"&gt;Selected filter&lt;/button&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="tabs" aria-labelledby="tabs-title">
+          <header class="section__header"><h2 class="section__title" id="tabs-title">Tabs</h2><p class="section__description">Switches between peer panels while preserving their shared context.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for sequential steps or navigation among unrelated destinations.</p>
+            <div class="specimen-block"><span class="specimen-label">Selected, unselected, and disabled</span><div class="tabs" role="tablist" aria-label="Catalog views"><button class="tab" type="button" role="tab" aria-selected="true">Overview</button><button class="tab" type="button" role="tab" aria-selected="false">Activity</button><button class="tab" type="button" role="tab" aria-selected="false" disabled>Unavailable</button></div></div>
+            <div class="grid grid--compact">
+              <div class="specimen-state specimen-state--hover"><span class="specimen-label">Hover</span><div class="tabs"><button class="tab" type="button">Activity</button></div></div>
+              <div class="specimen-state specimen-state--focus"><span class="specimen-label">Focus</span><div class="tabs"><button class="tab" type="button">Activity</button></div></div>
+              <div class="specimen-state specimen-state--active"><span class="specimen-label">Active</span><div class="tabs"><button class="tab" type="button">Activity</button></div></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;div class="tabs" role="tablist" aria-label="Content views"&gt;
+  &lt;button class="tab" id="overview-tab" type="button" role="tab" aria-selected="true" aria-controls="overview-panel"&gt;Overview&lt;/button&gt;
+  &lt;button class="tab" id="activity-tab" type="button" role="tab" aria-selected="false" aria-controls="activity-panel" tabindex="-1"&gt;Activity&lt;/button&gt;
+&lt;/div&gt;
+&lt;div id="overview-panel" role="tabpanel" aria-labelledby="overview-tab"&gt;Overview content&lt;/div&gt;
+&lt;div id="activity-panel" role="tabpanel" aria-labelledby="activity-tab" hidden&gt;Activity content&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="empty-state" aria-labelledby="empty-state-heading">
+          <header class="section__header"><h2 class="section__title" id="empty-state-heading">Empty state</h2><p class="section__description">Explains why no content is present and offers an appropriate next action.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it while content is still loading or when an error needs explicit recovery.</p>
+            <div class="grid">
+              <div class="specimen-block"><section class="empty-state" aria-labelledby="empty-default-title"><h3 class="empty-state__title" id="empty-default-title">No results</h3><p class="empty-state__description">Try changing your search or filters.</p></section></div>
+              <div class="specimen-block"><section class="empty-state" aria-labelledby="empty-icon-title"><span class="empty-state__icon" aria-hidden="true">i</span><h3 class="empty-state__title" id="empty-icon-title">Nothing saved</h3><p class="empty-state__description">Saved items will appear here.</p></section></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;section class="empty-state" aria-labelledby="empty-state-title"&gt;
+  &lt;h2 class="empty-state__title" id="empty-state-title"&gt;No results&lt;/h2&gt;
+  &lt;p class="empty-state__description"&gt;Try changing your search or filters.&lt;/p&gt;
+&lt;/section&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="loading" aria-labelledby="loading-title">
+          <header class="section__header"><h2 class="section__title" id="loading-title">Loading</h2><p class="section__description">Communicates that an active operation has not yet completed.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it when no work is in progress or as a substitute for an empty state.</p>
+            <div class="specimen-block"><div class="specimen-row"><span class="loading" role="status" aria-label="Loading"></span><span>Loading records</span></div></div>
+            <pre class="code-block" tabindex="0"><code>&lt;span class="loading" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="dialog" aria-labelledby="dialog-section-title">
+          <header class="section__header"><h2 class="section__title" id="dialog-section-title">Dialog</h2><p class="section__description">Focuses attention on content or actions that require a response.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for nonblocking feedback or content that belongs in the page flow.</p>
+            <div class="grid">
+              <div class="specimen-block specimen-dialog"><span class="specimen-label">Default</span><dialog class="dialog" open aria-labelledby="dialog-default-title" aria-describedby="dialog-default-description"><form method="dialog"><div class="dialog__body"><div><h3 class="dialog__title" id="dialog-default-title">Confirm change?</h3><p class="dialog__description" id="dialog-default-description">Review the details before continuing.</p></div></div><div class="dialog__actions"><button class="button button--quiet" type="button">Cancel</button><button class="button" type="button">Continue</button></div></form></dialog></div>
+              <div class="specimen-block specimen-dialog"><span class="specimen-label">Danger icon</span><dialog class="dialog" open aria-labelledby="dialog-danger-title" aria-describedby="dialog-danger-description"><form method="dialog"><div class="dialog__body"><div class="dialog__icon dialog__icon--danger" aria-hidden="true">!</div><div><h3 class="dialog__title" id="dialog-danger-title">Remove item?</h3><p class="dialog__description" id="dialog-danger-description">This action cannot be undone.</p></div></div><div class="dialog__actions"><button class="button button--quiet" type="button">Cancel</button><button class="button button--danger" type="button">Remove</button></div></form></dialog></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;dialog class="dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description"&gt;
+  &lt;form method="dialog"&gt;
+    &lt;div class="dialog__body"&gt;
+      &lt;div&gt;
+        &lt;h2 class="dialog__title" id="dialog-title"&gt;Remove item?&lt;/h2&gt;
+        &lt;p class="dialog__description" id="dialog-description"&gt;This action cannot be undone.&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="dialog__actions"&gt;
+      &lt;button class="button button--quiet" type="submit" value="cancel"&gt;Cancel&lt;/button&gt;
+      &lt;button class="button button--danger" type="submit" value="confirm"&gt;Remove&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="inline-message" aria-labelledby="inline-message-title">
+          <header class="section__header"><h2 class="section__title" id="inline-message-title">Inline message</h2><p class="section__description">Communicates contextual status or feedback within the current flow.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for blocking confirmations or unrelated global notifications.</p>
+            <div class="specimen-block"><span class="specimen-label">Danger</span><div class="inline-message inline-message--danger" role="alert"><span>The item could not be saved.</span></div></div>
+            <pre class="code-block" tabindex="0"><code>&lt;div class="inline-message inline-message--danger" role="alert"&gt;
+  &lt;span&gt;The item could not be saved.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="input" aria-labelledby="input-title">
+          <header class="section__header"><h2 class="section__title" id="input-title">Input</h2><p class="section__description">Captures one line of user-entered text or data.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for multiline content or a fixed set of choices.</p>
+            <div class="grid">
+              <div class="specimen-state"><label for="input-default">Default</label><input class="input" id="input-default" type="text" placeholder="Enter a name"></div>
+              <div class="specimen-state specimen-state--focus"><label for="input-focus">Focus</label><input class="input" id="input-focus" type="text" value="Ada Lovelace"></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;label for="display-name"&gt;Display name&lt;/label&gt;
+&lt;input class="input" id="display-name" type="text" placeholder="Enter a name"&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="menu" aria-labelledby="menu-title">
+          <header class="section__header"><h2 class="section__title" id="menu-title">Menu</h2><p class="section__description">Presents a contextual list of commands or choices from a trigger.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for persistent navigation or complex form content.</p>
+            <div class="grid">
+              <div class="specimen-block"><span class="specimen-label">Default, current, checked, and danger</span><div class="menu" role="menu" aria-label="Conversation options"><button class="menu__item" type="button" role="menuitem"><span class="menu__label">Default item</span></button><button class="menu__item" type="button" role="menuitem" aria-current="true"><span class="menu__label">Current item</span></button><button class="menu__item" type="button" role="menuitemcheckbox" aria-checked="true"><span class="menu__label">Checked item</span></button><button class="menu__item menu__item--danger" type="button" role="menuitem"><span class="menu__label">Danger item</span></button></div></div>
+              <div class="specimen-stack">
+                <div class="specimen-state specimen-state--hover"><span class="specimen-label">Hover</span><div class="menu"><button class="menu__item" type="button"><span class="menu__label">Hovered item</span></button></div></div>
+                <div class="specimen-state specimen-state--focus"><span class="specimen-label">Focus</span><div class="menu"><button class="menu__item" type="button"><span class="menu__label">Focused item</span></button></div></div>
+                <div class="specimen-state specimen-state--active"><span class="specimen-label">Active</span><div class="menu"><button class="menu__item" type="button"><span class="menu__label">Pressed item</span></button></div></div>
+              </div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;div class="menu" role="menu" aria-label="Conversation options"&gt;
+  &lt;button class="menu__item" type="button" role="menuitem" aria-current="true"&gt;
+    &lt;span class="menu__label"&gt;Current conversation&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="menu__item" type="button" role="menuitem"&gt;
+    &lt;span class="menu__label"&gt;Another conversation&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;button class="menu__item menu__item--danger" type="button" role="menuitem"&gt;
+    &lt;span class="menu__label"&gt;Remove conversation&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="search-field" aria-labelledby="search-field-title">
+          <header class="section__header"><h2 class="section__title" id="search-field-title">Search field</h2><p class="section__description">Captures a query used to search or filter content.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for general text entry unrelated to finding content.</p>
+            <div class="grid">
+              <div class="specimen-state"><label for="search-default">Default</label><span class="search-field"><input class="search-field__input" id="search-default" type="search" placeholder="Search items"></span></div>
+              <div class="specimen-state specimen-state--focus"><label for="search-focus">Focus within</label><span class="search-field"><input class="search-field__input" id="search-focus" type="search" value="Tokens"></span></div>
+            </div>
+            <pre class="code-block" tabindex="0"><code>&lt;label for="site-search"&gt;Search&lt;/label&gt;
+&lt;span class="search-field"&gt;
+  &lt;input class="search-field__input" id="site-search" type="search" placeholder="Search items"&gt;
+&lt;/span&gt;</code></pre>
+          </div>
+        </section>
+
+        <section class="section" id="toolbar" aria-labelledby="toolbar-title">
+          <header class="section__header"><h2 class="section__title" id="toolbar-title">Toolbar</h2><p class="section__description">Groups compact controls that operate on the current view or content.</p></header>
+          <div class="section__body">
+            <p><strong>When not to use:</strong> Do not use it for page navigation or unrelated actions.</p>
+            <div class="specimen-block"><div class="toolbar" role="toolbar" aria-label="Editor actions"><button class="button button--quiet" type="button">Undo</button><button class="button button--quiet" type="button">Redo</button></div></div>
+            <pre class="code-block" tabindex="0"><code>&lt;div class="toolbar" role="toolbar" aria-label="Editor actions"&gt;
+  &lt;button class="button button--quiet" type="button"&gt;Undo&lt;/button&gt;
+  &lt;button class="button button--quiet" type="button"&gt;Redo&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+        </section>
+
+        <footer class="site-footer"><a href="themes.html">Previous: Themes</a><a href="rules.html">Next: Rules</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

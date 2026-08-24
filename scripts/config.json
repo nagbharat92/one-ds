@@ -1,0 +1,7 @@
+{
+	"generatedTokens": "../tokens.css",
+	"components": "../components",
+	"manifest": "../MANIFEST.md",
+	"authoredCss": ["../components", "../site"],
+	"html": ["../components", "../site"]
+}

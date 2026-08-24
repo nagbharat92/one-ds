@@ -1,0 +1,337 @@
+{
+	"reference": {
+		"color": {
+			"constant": {
+				"white": { "$value": "255 255 255" },
+				"black": { "$value": "0 0 0" },
+				"light": { "$value": "255 255 255" },
+				"dark": { "$value": "28 25 22" },
+				"productIcon": { "$value": "221 33 133" }
+			},
+			"light": {
+				"canvas": { "$value": "246 241 236" },
+				"canvasTop": { "$value": "255 253 251" },
+				"surface": { "$value": "255 253 251" },
+				"ink": { "$value": "28 25 22" },
+				"accent": { "$value": "176 86 41" },
+				"danger": { "$value": "190 45 52" },
+				"success": { "$value": "32 126 80" },
+				"shadow": { "$value": "35 26 17" }
+			},
+			"dark": {
+				"canvas": { "$value": "33 31 28" },
+				"canvasTop": { "$value": "40 37 34" },
+				"surface": { "$value": "48 45 42" },
+				"ink": { "$value": "250 246 241" },
+				"accent": { "$value": "226 154 105" },
+				"danger": { "$value": "242 125 131" },
+				"success": { "$value": "105 201 151" },
+				"shadow": { "$value": "0 0 0" }
+			}
+		},
+		"space": {
+			"none": { "$value": "0px" },
+			"3xs": { "$value": "2px" },
+			"2xs": { "$value": "4px" },
+			"xs": { "$value": "8px" },
+			"sm": { "$value": "12px" },
+			"md": { "$value": "16px" },
+			"lg": { "$value": "24px" },
+			"xl": { "$value": "32px" },
+			"2xl": { "$value": "48px" },
+			"3xl": { "$value": "64px" }
+		},
+		"radius": {
+			"2xs": { "$value": "2px" },
+			"xs": { "$value": "4px" },
+			"sm": { "$value": "6px" },
+			"md": { "$value": "8px" },
+			"lg": { "$value": "12px" },
+			"xl": { "$value": "16px" },
+			"pill": { "$value": "9999px" }
+		},
+		"font": {
+			"family": {
+				"content": { "$value": "\"Segoe Sans\", \"Segoe UI Variable Text\", \"Segoe UI\", sans-serif" },
+				"functional": { "$value": "\"Segoe Sans\", \"Segoe UI Variable Small\", \"Segoe UI\", sans-serif" }
+			},
+			"size": {
+				"xs": { "$value": "12px" },
+				"sm": { "$value": "13px" },
+				"md": { "$value": "14px" },
+				"lg": { "$value": "16px" },
+				"xl": { "$value": "18px" },
+				"display": { "$value": "24px" }
+			},
+			"weight": {
+				"regular": { "$value": "400" },
+				"medium": { "$value": "500" },
+				"semibold": { "$value": "600" }
+			},
+			"lineHeight": {
+				"tight": { "$value": "1.25" },
+				"snug": { "$value": "1.4" },
+				"normal": { "$value": "1.5" },
+				"relaxed": { "$value": "1.65" }
+			},
+			"letterSpacing": { "$value": "0" },
+			"measure": { "$value": "68ch" },
+			"optical": {
+				"small": { "$value": "\"opsz\" 8" },
+				"text": { "$value": "\"opsz\" 14" },
+				"display": { "$value": "\"opsz\" 18" }
+			}
+		},
+		"control": {
+			"height": {
+				"xs": { "$value": "28px" },
+				"sm": { "$value": "32px" },
+				"md": { "$value": "40px" },
+				"lg": { "$value": "44px" }
+			}
+		},
+		"icon": {
+			"size": {
+				"xs": { "$value": "12px" },
+				"sm": { "$value": "14px" },
+				"base": { "$value": "16px" },
+				"md": { "$value": "18px" },
+				"display": { "$value": "20px" },
+				"lg": { "$value": "22px" }
+			}
+		},
+		"stroke": {
+			"thin": { "$value": "1px" },
+			"thick": { "$value": "2px" }
+		},
+		"motion": {
+			"duration": {
+				"none": { "$value": "0ms" },
+				"instant": { "$value": "90ms" },
+				"fast": { "$value": "140ms" },
+				"normal": { "$value": "220ms" },
+				"slow": { "$value": "340ms" }
+			},
+			"ease": {
+				"standard": { "$value": "cubic-bezier(0.2, 0, 0, 1)" },
+				"entrance": { "$value": "cubic-bezier(0.12, 0.85, 0.2, 1)" }
+			},
+			"distance": {
+				"enter": { "$value": "8px" },
+				"lift": { "$value": "-1px" }
+			},
+			"scale": {
+				"press": { "$value": "0.96" },
+				"enter": { "$value": "0.97" }
+			},
+			"transition": {
+				"state": { "$value": "background-color {reference.motion.duration.fast} {reference.motion.ease.standard}, border-color {reference.motion.duration.fast} {reference.motion.ease.standard}, box-shadow {reference.motion.duration.fast} {reference.motion.ease.standard}, color {reference.motion.duration.fast} {reference.motion.ease.standard}, opacity {reference.motion.duration.fast} {reference.motion.ease.standard}, transform {reference.motion.duration.fast} {reference.motion.ease.standard}" }
+			},
+			"reduced": { "$value": "1ms" }
+		},
+		"opacity": {
+			"hidden": { "$value": "0" },
+			"muted": { "$value": "0.5" },
+			"disabled": { "$value": "0.5" },
+			"full": { "$value": "1" }
+		},
+		"layer": {
+			"base": { "$value": "1" },
+			"header": { "$value": "10" },
+			"menu": { "$value": "20" },
+			"overlay": { "$value": "30" },
+			"embedded": { "$value": "2147483647" }
+		}
+	},
+	"semantic": {
+		"light": {
+			"rgb": {
+				"canvas": { "$value": "{reference.color.light.canvas}" },
+				"canvasTop": { "$value": "{reference.color.light.canvasTop}" },
+				"surface": { "$value": "{reference.color.light.surface}" },
+				"ink": { "$value": "{reference.color.light.ink}" },
+				"accent": { "$value": "{reference.color.light.accent}" },
+				"danger": { "$value": "{reference.color.light.danger}" },
+				"success": { "$value": "{reference.color.light.success}" },
+				"shadow": { "$value": "{reference.color.light.shadow}" }
+			},
+			"colorScheme": { "$value": "light" },
+			"shadowAmbientAlpha": { "$value": "5%" },
+			"shadowKeyAlpha": { "$value": "9%" },
+			"shadowStrongAlpha": { "$value": "13%" },
+			"backdropAlpha": { "$value": "36%" },
+			"color": {
+				"canvas": { "$value": "rgb({semantic.light.rgb.canvas})" },
+				"canvasTop": { "$value": "rgb({semantic.light.rgb.canvasTop})" },
+				"canvasTransparent": { "$value": "rgb({semantic.light.rgb.canvas} / 0%)" },
+				"surface": { "$value": "rgb({semantic.light.rgb.surface})" },
+				"toolbarPrimary": { "$value": "rgb({reference.color.constant.white})" },
+				"toolbarSecondary": { "$value": "rgb({reference.color.constant.white} / 50%)" },
+				"transparent": { "$value": "rgb({semantic.light.rgb.ink} / 0%)" },
+				"fgPrimary": { "$value": "rgb({semantic.light.rgb.ink} / 93%)" },
+				"fgSecondary": { "$value": "rgb({semantic.light.rgb.ink} / 70%)" },
+				"fgTertiary": { "$value": "rgb({semantic.light.rgb.ink} / 52%)" },
+				"strokeSubtle": { "$value": "rgb({semantic.light.rgb.ink} / 8%)" },
+				"stroke": { "$value": "rgb({semantic.light.rgb.ink} / 14%)" },
+				"divider": { "$value": "rgb({semantic.light.rgb.ink} / 9%)" },
+				"stateHover": { "$value": "rgb({semantic.light.rgb.ink} / 6%)" },
+				"stateActive": { "$value": "rgb({semantic.light.rgb.ink} / 11%)" },
+				"stateSelected": { "$value": "rgb({semantic.light.rgb.accent} / 10%)" },
+				"stateSelectedStrong": { "$value": "rgb({semantic.light.rgb.accent} / 16%)" },
+				"accent": { "$value": "rgb({semantic.light.rgb.accent})" },
+				"accentHover": { "$value": "rgb({semantic.light.rgb.accent} / 88%)" },
+				"accentSoft": { "$value": "rgb({semantic.light.rgb.accent} / 9%)" },
+				"accentSubtle": { "$value": "rgb({semantic.light.rgb.accent} / 45%)" },
+				"danger": { "$value": "rgb({semantic.light.rgb.danger})" },
+				"dangerHover": { "$value": "rgb({semantic.light.rgb.danger} / 90%)" },
+				"dangerSoft": { "$value": "rgb({semantic.light.rgb.danger} / 9%)" },
+				"success": { "$value": "rgb({semantic.light.rgb.success})" },
+				"focusRing": { "$value": "rgb({semantic.light.rgb.accent})" },
+				"focusRingOnStrong": { "$value": "rgb({reference.color.constant.dark})" },
+				"shadowAmbient": { "$value": "rgb({semantic.light.rgb.shadow} / {semantic.light.shadowAmbientAlpha})" },
+				"shadowKey": { "$value": "rgb({semantic.light.rgb.shadow} / {semantic.light.shadowKeyAlpha})" },
+				"shadowStrong": { "$value": "rgb({semantic.light.rgb.shadow} / {semantic.light.shadowStrongAlpha})" },
+				"backdrop": { "$value": "rgb({semantic.light.rgb.shadow} / {semantic.light.backdropAlpha})" },
+				"onStrong": { "$value": "rgb({reference.color.constant.light})" },
+				"inverseSurface": { "$value": "rgb({reference.color.constant.dark})" },
+				"inverseFg": { "$value": "rgb({reference.color.constant.light})" }
+			},
+			"elevation": {
+				"1": { "$value": "0 1px 1px {semantic.light.color.shadowAmbient}, 0 2px 4px -1px {semantic.light.color.shadowKey}" },
+				"2": { "$value": "0 1px 2px {semantic.light.color.shadowAmbient}, 0 6px 14px -3px {semantic.light.color.shadowKey}" },
+				"3": { "$value": "0 2px 4px {semantic.light.color.shadowAmbient}, 0 16px 32px -8px {semantic.light.color.shadowStrong}" }
+			}
+		},
+		"dark": {
+			"rgb": {
+				"canvas": { "$value": "{reference.color.dark.canvas}" },
+				"canvasTop": { "$value": "{reference.color.dark.canvasTop}" },
+				"surface": { "$value": "{reference.color.dark.surface}" },
+				"ink": { "$value": "{reference.color.dark.ink}" },
+				"accent": { "$value": "{reference.color.dark.accent}" },
+				"danger": { "$value": "{reference.color.dark.danger}" },
+				"success": { "$value": "{reference.color.dark.success}" },
+				"shadow": { "$value": "{reference.color.dark.shadow}" }
+			},
+			"colorScheme": { "$value": "dark" },
+			"shadowAmbientAlpha": { "$value": "20%" },
+			"shadowKeyAlpha": { "$value": "32%" },
+			"shadowStrongAlpha": { "$value": "44%" },
+			"backdropAlpha": { "$value": "62%" },
+			"color": {
+				"canvas": { "$value": "rgb({semantic.dark.rgb.canvas})" },
+				"canvasTop": { "$value": "rgb({semantic.dark.rgb.canvasTop})" },
+				"canvasTransparent": { "$value": "rgb({semantic.dark.rgb.canvas} / 0%)" },
+				"surface": { "$value": "rgb({semantic.dark.rgb.surface})" },
+				"toolbarPrimary": { "$value": "rgb({reference.color.constant.black} / 40%)" },
+				"toolbarSecondary": { "$value": "rgb({reference.color.constant.black} / 20%)" },
+				"transparent": { "$value": "rgb({semantic.dark.rgb.ink} / 0%)" },
+				"fgPrimary": { "$value": "rgb({semantic.dark.rgb.ink} / 93%)" },
+				"fgSecondary": { "$value": "rgb({semantic.dark.rgb.ink} / 70%)" },
+				"fgTertiary": { "$value": "rgb({semantic.dark.rgb.ink} / 52%)" },
+				"strokeSubtle": { "$value": "rgb({semantic.dark.rgb.ink} / 8%)" },
+				"stroke": { "$value": "rgb({semantic.dark.rgb.ink} / 14%)" },
+				"divider": { "$value": "rgb({semantic.dark.rgb.ink} / 9%)" },
+				"stateHover": { "$value": "rgb({semantic.dark.rgb.ink} / 6%)" },
+				"stateActive": { "$value": "rgb({semantic.dark.rgb.ink} / 11%)" },
+				"stateSelected": { "$value": "rgb({semantic.dark.rgb.accent} / 10%)" },
+				"stateSelectedStrong": { "$value": "rgb({semantic.dark.rgb.accent} / 16%)" },
+				"accent": { "$value": "rgb({semantic.dark.rgb.accent})" },
+				"accentHover": { "$value": "rgb({semantic.dark.rgb.accent} / 88%)" },
+				"accentSoft": { "$value": "rgb({semantic.dark.rgb.accent} / 9%)" },
+				"accentSubtle": { "$value": "rgb({semantic.dark.rgb.accent} / 45%)" },
+				"danger": { "$value": "rgb({semantic.dark.rgb.danger})" },
+				"dangerHover": { "$value": "rgb({semantic.dark.rgb.danger} / 90%)" },
+				"dangerSoft": { "$value": "rgb({semantic.dark.rgb.danger} / 9%)" },
+				"success": { "$value": "rgb({semantic.dark.rgb.success})" },
+				"focusRing": { "$value": "rgb({semantic.dark.rgb.accent})" },
+				"focusRingOnStrong": { "$value": "rgb({reference.color.constant.dark})" },
+				"shadowAmbient": { "$value": "rgb({semantic.dark.rgb.shadow} / {semantic.dark.shadowAmbientAlpha})" },
+				"shadowKey": { "$value": "rgb({semantic.dark.rgb.shadow} / {semantic.dark.shadowKeyAlpha})" },
+				"shadowStrong": { "$value": "rgb({semantic.dark.rgb.shadow} / {semantic.dark.shadowStrongAlpha})" },
+				"backdrop": { "$value": "rgb({semantic.dark.rgb.shadow} / {semantic.dark.backdropAlpha})" },
+				"onStrong": { "$value": "rgb({reference.color.constant.dark})" },
+				"inverseSurface": { "$value": "rgb({reference.color.constant.dark})" },
+				"inverseFg": { "$value": "rgb({reference.color.constant.light})" }
+			},
+			"elevation": {
+				"1": { "$value": "0 1px 1px {semantic.dark.color.shadowAmbient}, 0 2px 4px -1px {semantic.dark.color.shadowKey}" },
+				"2": { "$value": "0 1px 2px {semantic.dark.color.shadowAmbient}, 0 6px 14px -3px {semantic.dark.color.shadowKey}" },
+				"3": { "$value": "0 2px 4px {semantic.dark.color.shadowAmbient}, 0 16px 32px -8px {semantic.dark.color.shadowStrong}" }
+			}
+		}
+	},
+	"component": {
+		"focus": {
+			"width": { "$value": "{reference.stroke.thick}" },
+			"offset": { "$value": "{reference.space.3xs}" }
+		},
+		"inertialScroll": {
+			"strength": { "$value": "0.2" },
+			"settleDistance": { "$value": "0.5" },
+			"lineStep": { "$value": "16" },
+			"pageStep": { "$value": "0.9" }
+		},
+		"button": {
+			"height": { "$value": "{reference.control.height.sm}" },
+			"paddingBlock": { "$value": "{reference.space.2xs}" },
+			"paddingInline": { "$value": "{reference.space.sm}" },
+			"gap": { "$value": "{reference.space.xs}" },
+			"radius": { "$value": "{reference.radius.md}" }
+		},
+		"iconButton": {
+			"size": { "$value": "{reference.control.height.sm}" },
+			"radius": { "$value": "{reference.radius.md}" }
+		},
+		"field": {
+			"height": { "$value": "{reference.control.height.md}" },
+			"radius": { "$value": "{reference.radius.md}" },
+			"paddingInline": { "$value": "{reference.space.sm}" }
+		},
+		"datePicker": {
+			"width": { "$value": "{component.menu.width}" },
+			"radius": { "$value": "{reference.radius.lg}" },
+			"padding": { "$value": "{reference.space.2xs}" },
+			"daySize": { "$value": "36px" },
+			"dayRadius": { "$value": "{reference.radius.md}" },
+			"headerHeight": { "$value": "{reference.control.height.md}" },
+			"weekdayHeight": { "$value": "{reference.control.height.sm}" },
+			"navigationSize": { "$value": "{reference.control.height.sm}" }
+		},
+		"menu": {
+			"width": { "$value": "280px" },
+			"padding": { "$value": "{reference.space.2xs}" },
+			"gap": { "$value": "{reference.space.2xs}" },
+			"radius": { "$value": "{reference.radius.lg}" },
+			"itemHeight": { "$value": "{reference.control.height.sm}" },
+			"itemRadius": { "$value": "{reference.radius.md}" },
+			"itemPaddingBlock": { "$value": "{reference.space.2xs}" },
+			"itemPaddingInline": { "$value": "{reference.space.sm}" }
+		},
+		"dialog": {
+			"width": { "$value": "440px" },
+			"radius": { "$value": "{reference.radius.xl}" }
+		},
+		"spinner": {
+			"size": { "$value": "{reference.icon.size.lg}" },
+			"duration": { "$value": "700ms" },
+			"turn": { "$value": "1turn" }
+		},
+		"surface": {
+			"radius": { "$value": "{reference.radius.lg}" }
+		},
+		"toolbar": {
+			"backdropBlur": { "$value": "{reference.space.sm}" }
+		},
+		"checkbox": {
+			"size": { "$value": "{reference.icon.size.md}" }
+		},
+		"extensionIcon": {
+			"sourceSize": { "$value": "128" },
+			"size16": { "$value": "16" },
+			"size32": { "$value": "32" },
+			"size48": { "$value": "48" },
+			"size128": { "$value": "128" }
+		}
+	}
+}

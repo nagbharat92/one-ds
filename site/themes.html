@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Themes · OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/chip/chip.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/inline-message/inline-message.css">
+  <link rel="stylesheet" href="../components/input/input.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html" aria-current="page">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#mechanism">Theme mechanism</a></li>
+          <li><a class="sidebar__link" href="#comparison">Live comparison</a></li>
+          <li><a class="sidebar__link" href="#layering">Alpha layering</a></li>
+          <li><a class="sidebar__link" href="#adding-color">Adding a color</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header">
+          <div class="page-header__content">
+            <h1 class="page-header__title">Themes</h1>
+            <p class="page-header__description">OneDS themes change semantic meaning at the document root while preserving a shared reference scale and component geometry.</p>
+          </div>
+          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
+        </header>
+
+        <section class="section" id="mechanism" aria-labelledby="mechanism-title">
+          <header class="section__header">
+            <h2 class="section__title" id="mechanism-title">Theme mechanism</h2>
+            <p class="section__description">Set <code>data-oneds-theme</code> on the document root to choose a mode explicitly.</p>
+          </header>
+          <div class="section__body">
+            <pre class="code-block" tabindex="0"><code>&lt;html lang="en" data-oneds-theme="light"&gt;
+&lt;html lang="en" data-oneds-theme="dark"&gt;</code></pre>
+            <div class="grid">
+              <article class="card card--compact">
+                <h3 class="card__title">What switches</h3>
+                <p class="card__text">Semantic RGB channels, semantic colors, shadow alpha, elevations, backdrop alpha, and <code>color-scheme</code> resolve to the selected light or dark values.</p>
+              </article>
+              <article class="card card--compact">
+                <h3 class="card__title">What stays fixed</h3>
+                <p class="card__text">Reference palettes, spacing, typography, radii, control sizes, icon sizes, motion, opacity, layers, and component geometry do not change between themes.</p>
+              </article>
+            </div>
+            <div class="card card--compact">
+              <p class="card__text">When the attribute is absent, <code>prefers-color-scheme: dark</code> selects dark semantic values for users with a dark system preference. An explicit attribute takes precedence.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="comparison" aria-labelledby="comparison-title">
+          <header class="section__header">
+            <h2 class="section__title" id="comparison-title">The same components in both themes</h2>
+            <p class="section__description">The markup and component classes are identical. Only the enclosing theme attribute changes.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="theme-preview" data-oneds-theme="light">
+                <strong>Light</strong>
+                <article class="card card--compact">
+                  <header class="card__header"><h3 class="card__title">Review status</h3><p class="card__description">Semantic roles resolve against the light palette.</p></header>
+                  <div class="card__body">
+                    <label for="theme-light-input">Release name</label>
+                    <input class="input" id="theme-light-input" type="text" value="Spring update">
+                    <div class="specimen-row"><span class="chip chip--selected">Selected</span><span class="chip">Draft</span></div>
+                    <div class="inline-message inline-message--danger"><span>One required field is missing.</span></div>
+                  </div>
+                  <footer class="card__footer"><button class="button button--secondary" type="button">Cancel</button><button class="button" type="button">Continue</button></footer>
+                </article>
+              </div>
+              <div class="theme-preview" data-oneds-theme="dark">
+                <strong>Dark</strong>
+                <article class="card card--compact">
+                  <header class="card__header"><h3 class="card__title">Review status</h3><p class="card__description">Semantic roles resolve against the dark palette.</p></header>
+                  <div class="card__body">
+                    <label for="theme-dark-input">Release name</label>
+                    <input class="input" id="theme-dark-input" type="text" value="Spring update">
+                    <div class="specimen-row"><span class="chip chip--selected">Selected</span><span class="chip">Draft</span></div>
+                    <div class="inline-message inline-message--danger"><span>One required field is missing.</span></div>
+                  </div>
+                  <footer class="card__footer"><button class="button button--secondary" type="button">Cancel</button><button class="button" type="button">Continue</button></footer>
+                </article>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="layering" aria-labelledby="layering-title">
+          <header class="section__header">
+            <h2 class="section__title" id="layering-title">Alpha layering</h2>
+            <p class="section__description">Interaction states are translucent layers built from the active semantic ink or accent channel.</p>
+          </header>
+          <div class="section__body">
+            <div class="state-layer-demo">
+              <div class="state-layer-demo__item">Surface</div>
+              <div class="state-layer-demo__item state-layer-demo__item--hover">Ink hover layer</div>
+              <div class="state-layer-demo__item state-layer-demo__item--active">Ink active layer</div>
+              <div class="state-layer-demo__item state-layer-demo__item--selected">Accent selected layer</div>
+            </div>
+            <div class="prose">
+              <p>Hover and active colors are not independent opaque swatches. They apply a small amount of semantic ink over the surface beneath them, preserving the relationship between the surface and the active theme.</p>
+              <p>Selected colors use the semantic accent channel in the same way. This keeps state emphasis coherent when the base surface changes and avoids maintaining separate opaque state palettes for every theme.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="adding-color" aria-labelledby="adding-color-title">
+          <header class="section__header">
+            <h2 class="section__title" id="adding-color-title">Adding a new color</h2>
+            <p class="section__description">Add color by role, not by appearance.</p>
+          </header>
+          <div class="section__body">
+            <ol class="link-list">
+              <li>Add a source RGB channel to both reference theme palettes.</li>
+              <li>Alias those channels in both semantic RGB scopes using one shared semantic name.</li>
+              <li>Build opaque or alpha semantic colors from that channel according to their role.</li>
+              <li>Use the semantic variable in components; do not point components at light or dark reference colors directly.</li>
+              <li>Regenerate <code>tokens.css</code> and run the checker.</li>
+            </ol>
+            <div class="card card--compact"><p class="card__text">A new state color should normally remain an alpha layer over semantic ink or accent. Add separate light and dark opaque values only when compositing cannot express the intended role.</p></div>
+          </div>
+        </section>
+
+        <footer class="site-footer"><a href="tokens.html">Previous: Tokens</a><a href="components.html">Next: Components</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

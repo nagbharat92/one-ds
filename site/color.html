@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Color · OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/data-table/data-table.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/inline-message/inline-message.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html" aria-current="page">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#reference">Reference colors</a></li>
+          <li><a class="sidebar__link" href="#semantic">Semantic colors</a></li>
+          <li><a class="sidebar__link" href="#state-layers">State layers</a></li>
+          <li><a class="sidebar__link" href="#context">Colors in context</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header">
+          <div class="page-header__content">
+            <h1 class="page-header__title">Color</h1>
+            <p class="page-header__description">Reference colors preserve source values. Semantic colors express interface roles and switch with the active theme.</p>
+          </div>
+          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
+        </header>
+
+        <section class="section" id="reference" aria-labelledby="reference-title">
+          <header class="section__header">
+            <h2 class="section__title" id="reference-title">Reference colors</h2>
+            <p class="section__description">These RGB channel values never change when the semantic theme changes.</p>
+          </header>
+          <div class="section__body">
+            <div class="specimen-block">
+              <header class="specimen-block__header"><h3 class="specimen-block__title">Constants</h3><p class="specimen-block__description">Theme-independent anchors and the product icon color.</p></header>
+              <div class="swatch-grid">
+                <div class="swatch" data-swatch="constant-white"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-constant-white</code><span class="swatch__value">255 255 255</span></div>
+                <div class="swatch" data-swatch="constant-black"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-constant-black</code><span class="swatch__value">0 0 0</span></div>
+                <div class="swatch" data-swatch="constant-light"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-constant-light</code><span class="swatch__value">255 255 255</span></div>
+                <div class="swatch" data-swatch="constant-dark"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-constant-dark</code><span class="swatch__value">28 25 22</span></div>
+                <div class="swatch" data-swatch="constant-product-icon"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-constant-product-icon</code><span class="swatch__value">221 33 133</span></div>
+              </div>
+            </div>
+
+            <div class="specimen-block">
+              <header class="specimen-block__header"><h3 class="specimen-block__title">Light palette</h3><p class="specimen-block__description">Source channels for the light semantic theme.</p></header>
+              <div class="swatch-grid">
+                <div class="swatch" data-swatch="light-canvas"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-canvas</code><span class="swatch__value">246 241 236</span></div>
+                <div class="swatch" data-swatch="light-canvas-top"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-canvas-top</code><span class="swatch__value">255 253 251</span></div>
+                <div class="swatch" data-swatch="light-surface"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-surface</code><span class="swatch__value">255 253 251</span></div>
+                <div class="swatch" data-swatch="light-ink"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-ink</code><span class="swatch__value">28 25 22</span></div>
+                <div class="swatch" data-swatch="light-accent"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-accent</code><span class="swatch__value">176 86 41</span></div>
+                <div class="swatch" data-swatch="light-danger"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-danger</code><span class="swatch__value">190 45 52</span></div>
+                <div class="swatch" data-swatch="light-success"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-success</code><span class="swatch__value">32 126 80</span></div>
+                <div class="swatch" data-swatch="light-shadow"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-light-shadow</code><span class="swatch__value">35 26 17</span></div>
+              </div>
+            </div>
+
+            <div class="specimen-block">
+              <header class="specimen-block__header"><h3 class="specimen-block__title">Dark palette</h3><p class="specimen-block__description">Source channels for the dark semantic theme.</p></header>
+              <div class="swatch-grid">
+                <div class="swatch" data-swatch="dark-canvas"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-canvas</code><span class="swatch__value">33 31 28</span></div>
+                <div class="swatch" data-swatch="dark-canvas-top"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-canvas-top</code><span class="swatch__value">40 37 34</span></div>
+                <div class="swatch" data-swatch="dark-surface"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-surface</code><span class="swatch__value">48 45 42</span></div>
+                <div class="swatch" data-swatch="dark-ink"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-ink</code><span class="swatch__value">250 246 241</span></div>
+                <div class="swatch" data-swatch="dark-accent"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-accent</code><span class="swatch__value">226 154 105</span></div>
+                <div class="swatch" data-swatch="dark-danger"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-danger</code><span class="swatch__value">242 125 131</span></div>
+                <div class="swatch" data-swatch="dark-success"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-success</code><span class="swatch__value">105 201 151</span></div>
+                <div class="swatch" data-swatch="dark-shadow"><div class="swatch__surface"><div class="swatch__sample"></div></div><code class="swatch__name">--oneds-reference-color-dark-shadow</code><span class="swatch__value">0 0 0</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="semantic" aria-labelledby="semantic-title">
+          <header class="section__header">
+            <h2 class="section__title" id="semantic-title">Semantic colors</h2>
+            <p class="section__description">Each variable keeps one role while its resolved light and dark values change together.</p>
+          </header>
+          <div class="section__body">
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Semantic RGB channels and rendered colors</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+                  <tbody>
+                    <tr data-semantic-swatch="rgb-canvas"><th scope="row"><code>--oneds-semantic-rgb-canvas</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">246 241 236</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">33 31 28</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-canvas-top"><th scope="row"><code>--oneds-semantic-rgb-canvas-top</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">255 253 251</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">40 37 34</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-surface"><th scope="row"><code>--oneds-semantic-rgb-surface</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">255 253 251</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">48 45 42</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-ink"><th scope="row"><code>--oneds-semantic-rgb-ink</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">28 25 22</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">250 246 241</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-accent"><th scope="row"><code>--oneds-semantic-rgb-accent</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">176 86 41</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">226 154 105</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-danger"><th scope="row"><code>--oneds-semantic-rgb-danger</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">190 45 52</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">242 125 131</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-success"><th scope="row"><code>--oneds-semantic-rgb-success</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">32 126 80</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">105 201 151</span></div></td></tr>
+                    <tr data-semantic-swatch="rgb-shadow"><th scope="row"><code>--oneds-semantic-rgb-shadow</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">35 26 17</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">0 0 0</span></div></td></tr>
+                    <tr data-semantic-swatch="color-canvas"><th scope="row"><code>--oneds-semantic-color-canvas</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(246 241 236)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(33 31 28)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-canvas-top"><th scope="row"><code>--oneds-semantic-color-canvas-top</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(255 253 251)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(40 37 34)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-canvas-transparent"><th scope="row"><code>--oneds-semantic-color-canvas-transparent</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(246 241 236 / 0%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(33 31 28 / 0%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-surface"><th scope="row"><code>--oneds-semantic-color-surface</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(255 253 251)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(48 45 42)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-toolbar-primary"><th scope="row"><code>--oneds-semantic-color-toolbar-primary</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(255 255 255)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(0 0 0 / 40%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-toolbar-secondary"><th scope="row"><code>--oneds-semantic-color-toolbar-secondary</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(255 255 255 / 50%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(0 0 0 / 20%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-transparent"><th scope="row"><code>--oneds-semantic-color-transparent</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 0%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 0%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-fg-primary"><th scope="row"><code>--oneds-semantic-color-fg-primary</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 93%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 93%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-fg-secondary"><th scope="row"><code>--oneds-semantic-color-fg-secondary</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 70%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 70%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-fg-tertiary"><th scope="row"><code>--oneds-semantic-color-fg-tertiary</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 52%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 52%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-stroke-subtle"><th scope="row"><code>--oneds-semantic-color-stroke-subtle</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 8%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 8%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-stroke"><th scope="row"><code>--oneds-semantic-color-stroke</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 14%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 14%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-divider"><th scope="row"><code>--oneds-semantic-color-divider</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 9%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 9%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-state-hover"><th scope="row"><code>--oneds-semantic-color-state-hover</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 6%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 6%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-state-active"><th scope="row"><code>--oneds-semantic-color-state-active</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22 / 11%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(250 246 241 / 11%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-state-selected"><th scope="row"><code>--oneds-semantic-color-state-selected</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41 / 10%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105 / 10%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-state-selected-strong"><th scope="row"><code>--oneds-semantic-color-state-selected-strong</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41 / 16%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105 / 16%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-accent"><th scope="row"><code>--oneds-semantic-color-accent</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-accent-hover"><th scope="row"><code>--oneds-semantic-color-accent-hover</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41 / 88%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105 / 88%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-accent-soft"><th scope="row"><code>--oneds-semantic-color-accent-soft</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41 / 9%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105 / 9%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-accent-subtle"><th scope="row"><code>--oneds-semantic-color-accent-subtle</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41 / 45%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105 / 45%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-danger"><th scope="row"><code>--oneds-semantic-color-danger</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(190 45 52)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(242 125 131)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-danger-hover"><th scope="row"><code>--oneds-semantic-color-danger-hover</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(190 45 52 / 90%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(242 125 131 / 90%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-danger-soft"><th scope="row"><code>--oneds-semantic-color-danger-soft</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(190 45 52 / 9%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(242 125 131 / 9%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-success"><th scope="row"><code>--oneds-semantic-color-success</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(32 126 80)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(105 201 151)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-focus-ring"><th scope="row"><code>--oneds-semantic-color-focus-ring</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(176 86 41)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(226 154 105)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-focus-ring-on-strong"><th scope="row"><code>--oneds-semantic-color-focus-ring-on-strong</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-shadow-ambient"><th scope="row"><code>--oneds-semantic-color-shadow-ambient</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(35 26 17 / 5%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(0 0 0 / 20%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-shadow-key"><th scope="row"><code>--oneds-semantic-color-shadow-key</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(35 26 17 / 9%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(0 0 0 / 32%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-shadow-strong"><th scope="row"><code>--oneds-semantic-color-shadow-strong</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(35 26 17 / 13%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(0 0 0 / 44%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-backdrop"><th scope="row"><code>--oneds-semantic-color-backdrop</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(35 26 17 / 36%)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(0 0 0 / 62%)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-on-strong"><th scope="row"><code>--oneds-semantic-color-on-strong</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(255 255 255)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-inverse-surface"><th scope="row"><code>--oneds-semantic-color-inverse-surface</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(28 25 22)</span></div></td></tr>
+                    <tr data-semantic-swatch="color-inverse-fg"><th scope="row"><code>--oneds-semantic-color-inverse-fg</code></th><td><div class="semantic-light" data-oneds-theme="light"><div class="swatch__sample"></div><span class="token-value">rgb(255 255 255)</span></div></td><td><div class="semantic-dark" data-oneds-theme="dark"><div class="swatch__sample"></div><span class="token-value">rgb(255 255 255)</span></div></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="state-layers" aria-labelledby="state-layers-title">
+          <header class="section__header">
+            <h2 class="section__title" id="state-layers-title">State layers</h2>
+            <p class="section__description">The translucent hover, active, and selected colors are rendered over one real surface so their compositing remains visible.</p>
+          </header>
+          <div class="section__body">
+            <div class="state-layer-demo">
+              <div class="state-layer-demo__item">Surface</div>
+              <div class="state-layer-demo__item state-layer-demo__item--hover">Hover</div>
+              <div class="state-layer-demo__item state-layer-demo__item--active">Active</div>
+              <div class="state-layer-demo__item state-layer-demo__item--selected">Selected</div>
+              <div class="state-layer-demo__item state-layer-demo__item--selected-strong">Selected strong</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="context" aria-labelledby="context-title">
+          <header class="section__header">
+            <h2 class="section__title" id="context-title">Danger and success in context</h2>
+            <p class="section__description">Status colors carry meaning through text, border, and surface relationships rather than isolated swatches.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="inline-message inline-message--danger" role="alert"><span>The token file could not be generated. Fix the invalid alias and run the build again.</span></div>
+              <div class="card card--compact specimen-tone--success" role="status"><p class="card__text"><strong>Token build completed.</strong> The generated CSS is synchronized with its source.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="site-footer"><a href="index.html">Previous: Overview</a><a href="typography.html">Next: Typography</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

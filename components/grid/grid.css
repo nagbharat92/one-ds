@@ -1,0 +1,14 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--oneds-component-menu-width)), 1fr));
+  align-items: start;
+  gap: var(--oneds-reference-space-lg);
+}
+
+.grid--compact {
+  gap: var(--oneds-reference-space-md);
+}
+
+.grid > * {
+  min-width: var(--oneds-reference-space-none);
+}

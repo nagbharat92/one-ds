@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html">
+        <span class="sidebar__brand-name">OneDS</span>
+        <span class="sidebar__brand-detail">Reference catalog</span>
+      </a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html" aria-current="page">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#introduction">Introduction</a></li>
+          <li><a class="sidebar__link" href="#new-project">New project</a></li>
+          <li><a class="sidebar__link" href="#daily-workflow">Daily workflow</a></li>
+          <li><a class="sidebar__link" href="#make-a-change">Make a change</a></li>
+          <li><a class="sidebar__link" href="#catalog-pages">Catalog pages</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header" id="introduction">
+          <div class="page-header__content">
+            <h1 class="page-header__title">OneDS reference</h1>
+            <p class="page-header__description">OneDS is a shared plain HTML and CSS design system for building consistent interfaces without a runtime or dependency chain. This catalog documents the tokens and components that exist in the repository today.</p>
+          </div>
+          <div class="page-header__actions">
+            <button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button>
+          </div>
+        </header>
+
+        <section class="section" id="new-project" aria-labelledby="new-project-title">
+          <header class="section__header">
+            <h2 class="section__title" id="new-project-title">Set up a new project</h2>
+            <p class="section__description">Link the library, keep the link out of version control, install the agent protocol, and reserve a local component directory.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <article class="card">
+                <header class="card__header">
+                  <h3 class="card__title">Link OneDS</h3>
+                  <p class="card__description">Run from the consuming project's root.</p>
+                </header>
+                <pre class="code-block" tabindex="0"><code>ln -s ~/Documents/SideProjects/oneds oneds</code></pre>
+              </article>
+              <article class="card">
+                <header class="card__header">
+                  <h3 class="card__title">Ignore the symlink</h3>
+                  <p class="card__description">Add this line to the consuming project's <code>.gitignore</code>.</p>
+                </header>
+                <pre class="code-block" tabindex="0"><code>/oneds</code></pre>
+              </article>
+              <article class="card">
+                <header class="card__header">
+                  <h3 class="card__title">Install the agent protocol</h3>
+                  <p class="card__description">Copy the repository instructions into the standard Copilot location.</p>
+                </header>
+                <pre class="code-block" tabindex="0"><code>mkdir -p .github
+cp oneds/AGENT_PROTOCOL.md .github/copilot-instructions.md</code></pre>
+              </article>
+              <article class="card">
+                <header class="card__header">
+                  <h3 class="card__title">Create the local component area</h3>
+                  <p class="card__description">Keep unmatched application patterns separate from the shared library.</p>
+                </header>
+                <pre class="code-block" tabindex="0"><code>mkdir -p src/_local</code></pre>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="daily-workflow" aria-labelledby="daily-workflow-title">
+          <header class="section__header">
+            <h2 class="section__title" id="daily-workflow-title">How OneDS works day to day</h2>
+            <p class="section__description">The manifest is the routing layer between shared components and application-specific work.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <article class="card card--compact">
+                <h3 class="card__title">Read the manifest</h3>
+                <p class="card__text">The agent reads <code>oneds/MANIFEST.md</code> before writing interface code and checks whether a matching component is already built.</p>
+              </article>
+              <article class="card card--compact">
+                <h3 class="card__title">Reuse the library</h3>
+                <p class="card__text">When a component matches, the agent copies the package from <code>oneds/components/&lt;name&gt;/</code> verbatim.</p>
+              </article>
+              <article class="card card--compact">
+                <h3 class="card__title">Keep unmatched work local</h3>
+                <p class="card__text">When nothing matches, the agent builds in <code>src/_local/</code> and adds an <code>ONEDS-CANDIDATE</code> marker describing the pattern and its purpose.</p>
+              </article>
+              <article class="card card--compact">
+                <h3 class="card__title">Run the checker</h3>
+                <p class="card__text">The checker rejects literal design values, undefined tokens, incomplete component packages, manifest drift, and inline style attributes.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="make-a-change" aria-labelledby="make-a-change-title">
+          <header class="section__header">
+            <h2 class="section__title" id="make-a-change-title">Make a system change</h2>
+            <p class="section__description">Token source changes flow through generation and validation in a fixed order.</p>
+          </header>
+          <div class="section__body">
+            <ol class="link-list">
+              <li>Edit <code>tokens/oneds.tokens.json</code>, the token source of truth.</li>
+              <li>Generate the CSS custom properties.</li>
+              <li>Run the repository checks.</li>
+            </ol>
+            <pre class="code-block" tabindex="0"><code>node scripts/build-tokens.mjs
+node scripts/check.mjs</code></pre>
+            <div class="card card--compact">
+              <p class="card__text"><strong>Do not edit <code>tokens.css</code> directly.</strong> It is generated from <code>tokens/oneds.tokens.json</code> and will be replaced by the next token build.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="catalog-pages" aria-labelledby="catalog-pages-title">
+          <header class="section__header">
+            <h2 class="section__title" id="catalog-pages-title">Explore the catalog</h2>
+            <p class="section__description">Use the reference pages to inspect the live system rather than relying on remembered values.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <article class="card card--compact"><h3 class="card__title"><a href="color.html">Color</a></h3><p class="card__text">Reference palettes, semantic pairs, and state layers.</p></article>
+              <article class="card card--compact"><h3 class="card__title"><a href="typography.html">Typography</a></h3><p class="card__text">Families, sizes, weights, rhythm, and realistic composition.</p></article>
+              <article class="card card--compact"><h3 class="card__title"><a href="tokens.html">Tokens</a></h3><p class="card__text">Spacing, shape, motion, elevation, sizing, and component values.</p></article>
+              <article class="card card--compact"><h3 class="card__title"><a href="themes.html">Themes</a></h3><p class="card__text">Theme switching and semantic alpha layering.</p></article>
+              <article class="card card--compact"><h3 class="card__title"><a href="components.html">Components</a></h3><p class="card__text">Live variants, states, guidance, and source markup.</p></article>
+              <article class="card card--compact"><h3 class="card__title"><a href="rules.html">Rules</a></h3><p class="card__text">The generation contract with violations and corrections.</p></article>
+            </div>
+          </div>
+        </section>
+
+        <footer class="site-footer">
+          <span>OneDS reference catalog</span>
+          <a href="color.html">Next: Color</a>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

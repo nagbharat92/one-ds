@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tokens · OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/data-table/data-table.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html" aria-current="page">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#spacing">Spacing</a></li>
+          <li><a class="sidebar__link" href="#shape">Shape and stroke</a></li>
+          <li><a class="sidebar__link" href="#sizing">Control and icon sizing</a></li>
+          <li><a class="sidebar__link" href="#shadows">Semantic theme values</a></li>
+          <li><a class="sidebar__link" href="#motion">Motion</a></li>
+          <li><a class="sidebar__link" href="#opacity-layer">Opacity and layer</a></li>
+          <li><a class="sidebar__link" href="#component-tokens">Component tokens</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header">
+          <div class="page-header__content">
+            <h1 class="page-header__title">Tokens</h1>
+            <p class="page-header__description">The remaining reference, semantic, and component tokens define spacing, shape, sizing, depth, motion, opacity, stacking, and component geometry.</p>
+          </div>
+          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
+        </header>
+
+        <section class="section" id="spacing" aria-labelledby="spacing-title">
+          <header class="section__header"><h2 class="section__title" id="spacing-title">Reference spacing</h2><p class="section__description">Each bar uses the token as its actual width.</p></header>
+          <div class="section__body specimen-block scale-list">
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-none</code><div class="token-value">0px</div></div><div class="token-bar space-none"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-3xs</code><div class="token-value">2px</div></div><div class="token-bar space-3xs"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-2xs</code><div class="token-value">4px</div></div><div class="token-bar space-2xs"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-xs</code><div class="token-value">8px</div></div><div class="token-bar space-xs"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-sm</code><div class="token-value">12px</div></div><div class="token-bar space-sm"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-md</code><div class="token-value">16px</div></div><div class="token-bar space-md"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-lg</code><div class="token-value">24px</div></div><div class="token-bar space-lg"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-xl</code><div class="token-value">32px</div></div><div class="token-bar space-xl"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-2xl</code><div class="token-value">48px</div></div><div class="token-bar space-2xl"></div></div>
+            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-3xl</code><div class="token-value">64px</div></div><div class="token-bar space-3xl"></div></div>
+          </div>
+        </section>
+
+        <section class="section" id="shape" aria-labelledby="shape-title">
+          <header class="section__header"><h2 class="section__title" id="shape-title">Reference shape and stroke</h2><p class="section__description">Radius tokens are applied to equal-size surfaces; stroke samples use their real thickness.</p></header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="specimen-block"><div class="radius-sample radius-2xs"></div><code class="token-name">--oneds-reference-radius-2xs</code><span class="token-value">2px</span></div>
+              <div class="specimen-block"><div class="radius-sample radius-xs"></div><code class="token-name">--oneds-reference-radius-xs</code><span class="token-value">4px</span></div>
+              <div class="specimen-block"><div class="radius-sample radius-sm"></div><code class="token-name">--oneds-reference-radius-sm</code><span class="token-value">6px</span></div>
+              <div class="specimen-block"><div class="radius-sample radius-md"></div><code class="token-name">--oneds-reference-radius-md</code><span class="token-value">8px</span></div>
+              <div class="specimen-block"><div class="radius-sample radius-lg"></div><code class="token-name">--oneds-reference-radius-lg</code><span class="token-value">12px</span></div>
+              <div class="specimen-block"><div class="radius-sample radius-xl"></div><code class="token-name">--oneds-reference-radius-xl</code><span class="token-value">16px</span></div>
+              <div class="specimen-block"><div class="radius-sample radius-pill"></div><code class="token-name">--oneds-reference-radius-pill</code><span class="token-value">9999px</span></div>
+            </div>
+            <div class="grid">
+              <div class="specimen-block"><div class="stroke-sample stroke-thin"></div><code class="token-name">--oneds-reference-stroke-thin</code><span class="token-value">1px</span></div>
+              <div class="specimen-block"><div class="stroke-sample stroke-thick"></div><code class="token-name">--oneds-reference-stroke-thick</code><span class="token-value">2px</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="sizing" aria-labelledby="sizing-title">
+          <header class="section__header"><h2 class="section__title" id="sizing-title">Reference control and icon sizing</h2><p class="section__description">Control bars use the token as height; icon squares use it on both axes.</p></header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="specimen-block"><div class="control-size control-xs"></div><code class="token-name">--oneds-reference-control-height-xs</code><span class="token-value">28px</span></div>
+              <div class="specimen-block"><div class="control-size control-sm"></div><code class="token-name">--oneds-reference-control-height-sm</code><span class="token-value">32px</span></div>
+              <div class="specimen-block"><div class="control-size control-md"></div><code class="token-name">--oneds-reference-control-height-md</code><span class="token-value">40px</span></div>
+              <div class="specimen-block"><div class="control-size control-lg"></div><code class="token-name">--oneds-reference-control-height-lg</code><span class="token-value">44px</span></div>
+            </div>
+            <div class="grid grid--compact">
+              <div class="specimen-block"><div class="icon-size icon-xs"></div><code class="token-name">--oneds-reference-icon-size-xs</code><span class="token-value">12px</span></div>
+              <div class="specimen-block"><div class="icon-size icon-sm"></div><code class="token-name">--oneds-reference-icon-size-sm</code><span class="token-value">14px</span></div>
+              <div class="specimen-block"><div class="icon-size icon-base"></div><code class="token-name">--oneds-reference-icon-size-base</code><span class="token-value">16px</span></div>
+              <div class="specimen-block"><div class="icon-size icon-md"></div><code class="token-name">--oneds-reference-icon-size-md</code><span class="token-value">18px</span></div>
+              <div class="specimen-block"><div class="icon-size icon-display"></div><code class="token-name">--oneds-reference-icon-size-display</code><span class="token-value">20px</span></div>
+              <div class="specimen-block"><div class="icon-size icon-lg"></div><code class="token-name">--oneds-reference-icon-size-lg</code><span class="token-value">22px</span></div>
+            </div>
+            <div class="grid">
+              <div class="card card--compact"><div class="data-table__scroll"><table class="data-table data-table--compact"><caption>Control heights</caption><thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead><tbody><tr><th scope="row"><code>--oneds-reference-control-height-xs</code></th><td>28px</td></tr><tr><th scope="row"><code>--oneds-reference-control-height-sm</code></th><td>32px</td></tr><tr><th scope="row"><code>--oneds-reference-control-height-md</code></th><td>40px</td></tr><tr><th scope="row"><code>--oneds-reference-control-height-lg</code></th><td>44px</td></tr></tbody></table></div></div>
+              <div class="card card--compact"><div class="data-table__scroll"><table class="data-table data-table--compact"><caption>Icon sizes</caption><thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead><tbody><tr><th scope="row"><code>--oneds-reference-icon-size-xs</code></th><td>12px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-sm</code></th><td>14px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-base</code></th><td>16px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-md</code></th><td>18px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-display</code></th><td>20px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-lg</code></th><td>22px</td></tr></tbody></table></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="shadows" aria-labelledby="shadows-title">
+          <header class="section__header"><h2 class="section__title" id="shadows-title">Semantic theme values</h2><p class="section__description">Shadow alpha and elevation change with the semantic theme; the color page covers the remaining semantic color tokens.</p></header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="theme-preview" data-oneds-theme="light">
+                <strong>Light elevations</strong>
+                <div class="shadow-sample shadow-1"></div><code class="token-name">--oneds-semantic-elevation-1</code>
+                <div class="shadow-sample shadow-2"></div><code class="token-name">--oneds-semantic-elevation-2</code>
+                <div class="shadow-sample shadow-3"></div><code class="token-name">--oneds-semantic-elevation-3</code>
+              </div>
+              <div class="theme-preview" data-oneds-theme="dark">
+                <strong>Dark elevations</strong>
+                <div class="shadow-sample shadow-1"></div><code class="token-name">--oneds-semantic-elevation-1</code>
+                <div class="shadow-sample shadow-2"></div><code class="token-name">--oneds-semantic-elevation-2</code>
+                <div class="shadow-sample shadow-3"></div><code class="token-name">--oneds-semantic-elevation-3</code>
+              </div>
+            </div>
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Theme-dependent semantic values</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-semantic-color-scheme</code></th><td>light</td><td>dark</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-shadow-ambient-alpha</code></th><td>5%</td><td>20%</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-shadow-key-alpha</code></th><td>9%</td><td>32%</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-shadow-strong-alpha</code></th><td>13%</td><td>44%</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-backdrop-alpha</code></th><td>36%</td><td>62%</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-elevation-1</code></th><td>Ambient plus compact key shadow</td><td>Ambient plus compact key shadow</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-elevation-2</code></th><td>Ambient plus medium key shadow</td><td>Ambient plus medium key shadow</td></tr>
+                    <tr><th scope="row"><code>--oneds-semantic-elevation-3</code></th><td>Ambient plus strong key shadow</td><td>Ambient plus strong key shadow</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="motion" aria-labelledby="motion-title">
+          <header class="section__header"><h2 class="section__title" id="motion-title">Reference motion</h2><p class="section__description">Duration bars replay continuously for comparison. Reduced motion collapses them to the reduced token.</p></header>
+          <div class="section__body">
+            <div class="specimen-block scale-list">
+              <div><code class="token-name">--oneds-reference-motion-duration-none</code><span class="token-value"> · 0ms</span><div class="motion-track"><div class="motion-bar motion-none"></div></div></div>
+              <div><code class="token-name">--oneds-reference-motion-duration-instant</code><span class="token-value"> · 90ms</span><div class="motion-track"><div class="motion-bar motion-instant"></div></div></div>
+              <div><code class="token-name">--oneds-reference-motion-duration-fast</code><span class="token-value"> · 140ms</span><div class="motion-track"><div class="motion-bar motion-fast"></div></div></div>
+              <div><code class="token-name">--oneds-reference-motion-duration-normal</code><span class="token-value"> · 220ms</span><div class="motion-track"><div class="motion-bar motion-normal"></div></div></div>
+              <div><code class="token-name">--oneds-reference-motion-duration-slow</code><span class="token-value"> · 340ms</span><div class="motion-track"><div class="motion-bar motion-slow"></div></div></div>
+            </div>
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Motion behavior values</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-reference-motion-ease-standard</code></th><td>cubic-bezier(0.2, 0, 0, 1)</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-ease-entrance</code></th><td>cubic-bezier(0.12, 0.85, 0.2, 1)</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-distance-enter</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-distance-lift</code></th><td>-1px</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-scale-press</code></th><td>0.96</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-scale-enter</code></th><td>0.97</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-transition-state</code></th><td>Fast standard transitions for background, border, shadow, color, opacity, and transform</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-motion-reduced</code></th><td>1ms</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="opacity-layer" aria-labelledby="opacity-layer-title">
+          <header class="section__header"><h2 class="section__title" id="opacity-layer-title">Reference opacity and layer</h2><p class="section__description">Opacity samples render the same accent surface. Layer tokens establish the shared stacking order.</p></header>
+          <div class="section__body">
+            <div class="grid grid--compact">
+              <div class="specimen-block"><div class="opacity-sample opacity-hidden"></div><code class="token-name">--oneds-reference-opacity-hidden</code><span class="token-value">0</span></div>
+              <div class="specimen-block"><div class="opacity-sample opacity-muted"></div><code class="token-name">--oneds-reference-opacity-muted</code><span class="token-value">0.5</span></div>
+              <div class="specimen-block"><div class="opacity-sample opacity-disabled"></div><code class="token-name">--oneds-reference-opacity-disabled</code><span class="token-value">0.5</span></div>
+              <div class="specimen-block"><div class="opacity-sample opacity-full"></div><code class="token-name">--oneds-reference-opacity-full</code><span class="token-value">1</span></div>
+            </div>
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Opacity values</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-reference-opacity-hidden</code></th><td>0</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-opacity-muted</code></th><td>0.5</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-opacity-disabled</code></th><td>0.5</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-opacity-full</code></th><td>1</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Layer order</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th><th scope="col">Role</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-reference-layer-base</code></th><td>1</td><td>Raised content in the normal page flow</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-layer-header</code></th><td>10</td><td>Persistent headers and navigation</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-layer-menu</code></th><td>20</td><td>Menus and contextual popovers</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-layer-overlay</code></th><td>30</td><td>Modal overlays</td></tr>
+                    <tr><th scope="row"><code>--oneds-reference-layer-embedded</code></th><td>2147483647</td><td>Embedded hosts that must remain above their document</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="component-tokens" aria-labelledby="component-tokens-title">
+          <header class="section__header"><h2 class="section__title" id="component-tokens-title">Component tokens</h2><p class="section__description">Component tokens bind reference decisions to stable control geometry and behavior.</p></header>
+          <div class="section__body">
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Focus, scrolling, button, icon button, and field</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Resolved value</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-component-focus-width</code></th><td>2px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-focus-offset</code></th><td>2px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-strength</code></th><td>0.2</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-settle-distance</code></th><td>0.5</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-line-step</code></th><td>16</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-page-step</code></th><td>0.9</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-button-height</code></th><td>32px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-button-padding-block</code></th><td>4px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-button-padding-inline</code></th><td>12px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-button-gap</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-button-radius</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-icon-button-size</code></th><td>32px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-icon-button-radius</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-field-height</code></th><td>40px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-field-radius</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-field-padding-inline</code></th><td>12px</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Date picker and menu</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Resolved value</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-width</code></th><td>280px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-radius</code></th><td>12px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-padding</code></th><td>4px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-day-size</code></th><td>36px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-day-radius</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-header-height</code></th><td>40px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-weekday-height</code></th><td>32px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-date-picker-navigation-size</code></th><td>32px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-width</code></th><td>280px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-padding</code></th><td>4px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-gap</code></th><td>4px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-radius</code></th><td>12px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-item-height</code></th><td>32px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-item-radius</code></th><td>8px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-item-padding-block</code></th><td>4px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-menu-item-padding-inline</code></th><td>12px</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Dialog, spinner, surface, toolbar, and checkbox</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Resolved value</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-component-dialog-width</code></th><td>440px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-dialog-radius</code></th><td>16px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-spinner-size</code></th><td>22px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-spinner-duration</code></th><td>700ms</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-spinner-turn</code></th><td>1turn</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-surface-radius</code></th><td>12px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-toolbar-backdrop-blur</code></th><td>12px</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-checkbox-size</code></th><td>18px</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card card--compact">
+              <div class="data-table__scroll">
+                <table class="data-table data-table--compact">
+                  <caption>Extension icon metadata</caption>
+                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row"><code>--oneds-component-extension-icon-source-size</code></th><td>128</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-extension-icon-size16</code></th><td>16</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-extension-icon-size32</code></th><td>32</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-extension-icon-size48</code></th><td>48</td></tr>
+                    <tr><th scope="row"><code>--oneds-component-extension-icon-size128</code></th><td>128</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="site-footer"><a href="typography.html">Previous: Typography</a><a href="themes.html">Next: Themes</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

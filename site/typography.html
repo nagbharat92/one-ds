@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typography · OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html" aria-current="page">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#families">Families</a></li>
+          <li><a class="sidebar__link" href="#sizes">Type scale</a></li>
+          <li><a class="sidebar__link" href="#weights">Weights</a></li>
+          <li><a class="sidebar__link" href="#rhythm">Line height and spacing</a></li>
+          <li><a class="sidebar__link" href="#optical">Optical size and measure</a></li>
+          <li><a class="sidebar__link" href="#applied">Applied scale</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header">
+          <div class="page-header__content">
+            <h1 class="page-header__title">Typography</h1>
+            <p class="page-header__description">OneDS uses a compact type system tuned for product interfaces, with separate family roles for reading and controls.</p>
+          </div>
+          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
+        </header>
+
+        <section class="section" id="families" aria-labelledby="families-title">
+          <header class="section__header">
+            <h2 class="section__title" id="families-title">Font families</h2>
+            <p class="section__description">Both stacks prioritize Segoe Sans and fall back through platform Segoe UI faces to a generic sans serif.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <article class="card family-content">
+                <header class="card__header"><h3 class="card__title">Content family</h3><p class="card__description"><code>--oneds-reference-font-family-content</code></p></header>
+                <p class="card__text">Use for page titles, section headings, paragraphs, and other sustained reading.</p>
+                <p class="token-value">"Segoe Sans", "Segoe UI Variable Text", "Segoe UI", sans-serif</p>
+              </article>
+              <article class="card family-functional">
+                <header class="card__header"><h3 class="card__title">Functional family</h3><p class="card__description"><code>--oneds-reference-font-family-functional</code></p></header>
+                <p class="card__text">Use for controls, labels, token names, compact metadata, and operational text.</p>
+                <p class="token-value">"Segoe Sans", "Segoe UI Variable Small", "Segoe UI", sans-serif</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="sizes" aria-labelledby="sizes-title">
+          <header class="section__header">
+            <h2 class="section__title" id="sizes-title">Type scale</h2>
+            <p class="section__description">Live specimens are ordered from the largest display role to the smallest supporting label.</p>
+          </header>
+          <div class="section__body specimen-block">
+            <div class="type-specimen"><p class="type-specimen__sample type-display">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-display</code> · 24px</p></div>
+            <div class="type-specimen"><p class="type-specimen__sample type-xl">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-xl</code> · 18px</p></div>
+            <div class="type-specimen"><p class="type-specimen__sample type-lg">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-lg</code> · 16px</p></div>
+            <div class="type-specimen"><p class="type-specimen__sample type-md">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-md</code> · 14px</p></div>
+            <div class="type-specimen"><p class="type-specimen__sample type-sm">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-sm</code> · 13px</p></div>
+            <div class="type-specimen"><p class="type-specimen__sample type-xs">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-xs</code> · 12px</p></div>
+          </div>
+        </section>
+
+        <section class="section" id="weights" aria-labelledby="weights-title">
+          <header class="section__header">
+            <h2 class="section__title" id="weights-title">Weights</h2>
+            <p class="section__description">The three weights provide emphasis without introducing a separate display face.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="specimen-block"><p class="type-lg weight-regular">Regular keeps body text calm.</p><code class="token-name">--oneds-reference-font-weight-regular</code><span class="token-value">400</span></div>
+              <div class="specimen-block"><p class="type-lg weight-medium">Medium clarifies controls and labels.</p><code class="token-name">--oneds-reference-font-weight-medium</code><span class="token-value">500</span></div>
+              <div class="specimen-block"><p class="type-lg weight-semibold">Semibold establishes headings.</p><code class="token-name">--oneds-reference-font-weight-semibold</code><span class="token-value">600</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="rhythm" aria-labelledby="rhythm-title">
+          <header class="section__header">
+            <h2 class="section__title" id="rhythm-title">Line height and letter spacing</h2>
+            <p class="section__description">Line-height tokens move from compact headings to relaxed reading. Letter spacing remains neutral throughout the system.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="specimen-block"><p class="line-height-tight">Tight rhythm keeps a short heading visually cohesive across two lines of text.</p><code class="token-name">--oneds-reference-font-line-height-tight</code><span class="token-value">1.25</span></div>
+              <div class="specimen-block"><p class="line-height-snug">Snug rhythm gives supporting headings a little more room across two lines of text.</p><code class="token-name">--oneds-reference-font-line-height-snug</code><span class="token-value">1.4</span></div>
+              <div class="specimen-block"><p class="line-height-normal">Normal rhythm supports interface copy that must remain compact and readable across two lines.</p><code class="token-name">--oneds-reference-font-line-height-normal</code><span class="token-value">1.5</span></div>
+              <div class="specimen-block"><p class="line-height-relaxed">Relaxed rhythm is intended for longer passages where additional vertical space makes scanning easier.</p><code class="token-name">--oneds-reference-font-line-height-relaxed</code><span class="token-value">1.65</span></div>
+            </div>
+            <div class="specimen-block letter-spacing-token"><p>OneDS preserves natural letter spacing instead of using an overline treatment.</p><code class="token-name">--oneds-reference-font-letter-spacing</code><span class="token-value">0</span></div>
+          </div>
+        </section>
+
+        <section class="section" id="optical" aria-labelledby="optical-title">
+          <header class="section__header">
+            <h2 class="section__title" id="optical-title">Optical size and measure</h2>
+            <p class="section__description">Optical settings tune variable fonts for their role; the measure token limits long-form reading width.</p>
+          </header>
+          <div class="section__body">
+            <div class="grid">
+              <div class="specimen-block optical-small"><p class="type-sm">Small optical setting for compact labels.</p><code class="token-name">--oneds-reference-font-optical-small</code><span class="token-value">"opsz" 8</span></div>
+              <div class="specimen-block optical-text"><p class="type-md">Text optical setting for body content.</p><code class="token-name">--oneds-reference-font-optical-text</code><span class="token-value">"opsz" 14</span></div>
+              <div class="specimen-block optical-display"><p class="type-display">Display optical setting for titles.</p><code class="token-name">--oneds-reference-font-optical-display</code><span class="token-value">"opsz" 18</span></div>
+            </div>
+            <div class="specimen-block measure-sample"><p>The readable measure limits sustained prose to a comfortable line length while allowing compact interface elements to size independently.</p><code class="token-name">--oneds-reference-font-measure</code><span class="token-value">68ch</span></div>
+          </div>
+        </section>
+
+        <section class="section" id="applied" aria-labelledby="applied-title">
+          <header class="section__header">
+            <h2 class="section__title" id="applied-title">Scale in context</h2>
+            <p class="section__description">The hierarchy becomes clearest when the roles are composed as real content rather than viewed in isolation.</p>
+          </header>
+          <div class="section__body">
+            <article class="specimen-block content-example">
+              <h3 class="content-example__heading">A stable vocabulary for product work</h3>
+              <p class="content-example__subheading">Tokens hold decisions; components turn those decisions into reusable behavior.</p>
+              <p class="content-example__body">OneDS keeps the implementation close to the platform. Teams link plain CSS, choose an existing component when it fits, and keep application-specific patterns local until they prove reusable.</p>
+              <p class="content-example__caption">Reference note · Generated tokens are never edited by hand.</p>
+            </article>
+          </div>
+        </section>
+
+        <footer class="site-footer"><a href="color.html">Previous: Color</a><a href="tokens.html">Next: Tokens</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

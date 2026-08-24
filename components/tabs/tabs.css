@@ -1,0 +1,81 @@
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--oneds-reference-space-2xs);
+}
+
+.tab {
+  position: relative;
+  display: inline-flex;
+  min-height: var(--oneds-reference-control-height-md);
+  align-items: center;
+  justify-content: center;
+  padding: var(--oneds-reference-space-2xs) var(--oneds-reference-space-sm);
+  border: var(--oneds-reference-space-none);
+  border-radius: var(--oneds-reference-radius-md);
+  background: var(--oneds-semantic-color-transparent);
+  color: var(--oneds-semantic-color-fg-secondary);
+  font-family: var(--oneds-reference-font-family-functional);
+  font-size: var(--oneds-reference-font-size-sm);
+  font-weight: var(--oneds-reference-font-weight-medium);
+  cursor: pointer;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.tab::after {
+  position: absolute;
+  right: var(--oneds-reference-space-sm);
+  bottom: var(--oneds-reference-space-none);
+  left: var(--oneds-reference-space-sm);
+  height: var(--oneds-reference-stroke-thick);
+  border-radius: var(--oneds-reference-radius-pill);
+  background: var(--oneds-semantic-color-transparent);
+  content: "";
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.tab:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-semantic-color-focus-ring);
+  outline-offset: var(--oneds-component-focus-offset);
+}
+
+.tab:hover:not(:disabled) {
+  background: var(--oneds-semantic-color-state-hover);
+  color: var(--oneds-semantic-color-fg-primary);
+}
+
+.tab:active:not(:disabled) {
+  background: var(--oneds-semantic-color-state-active);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--oneds-semantic-color-accent);
+}
+
+.tab[aria-selected="true"]::after {
+  background: var(--oneds-semantic-color-accent);
+}
+
+.tab:disabled {
+  opacity: var(--oneds-reference-opacity-disabled);
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab,
+  .tab::after {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .tab:focus-visible,
+  .tab[aria-selected="true"] {
+    color: Highlight;
+    outline-color: Highlight;
+  }
+
+  .tab[aria-selected="true"]::after {
+    background: Highlight;
+  }
+}

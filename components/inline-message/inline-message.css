@@ -1,0 +1,14 @@
+.inline-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--oneds-reference-space-xs);
+  padding: var(--oneds-reference-space-sm);
+  border-radius: var(--oneds-reference-radius-lg);
+  font-family: var(--oneds-reference-font-family-content);
+  font-size: var(--oneds-reference-font-size-sm);
+}
+
+.inline-message--danger {
+  background: var(--oneds-semantic-color-danger-soft);
+  color: var(--oneds-semantic-color-danger);
+}

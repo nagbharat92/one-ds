@@ -1,0 +1,39 @@
+.input {
+  width: 100%;
+  height: var(--oneds-component-field-height);
+  padding: 0 var(--oneds-component-field-padding-inline);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke);
+  border-radius: var(--oneds-component-field-radius);
+  background: var(--oneds-semantic-color-canvas-top);
+  color: var(--oneds-semantic-color-fg-primary);
+  font-family: var(--oneds-reference-font-family-functional);
+  font-size: var(--oneds-reference-font-size-sm);
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.input::placeholder {
+  color: var(--oneds-semantic-color-fg-tertiary);
+  opacity: var(--oneds-reference-opacity-full);
+}
+
+.input:focus-visible {
+  border-color: var(--oneds-semantic-color-accent);
+  outline: var(--oneds-component-focus-width) solid var(--oneds-semantic-color-focus-ring);
+  outline-offset: var(--oneds-component-focus-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .input {
+    border-color: ButtonText;
+  }
+
+  .input:focus-visible {
+    outline-color: Highlight;
+  }
+}

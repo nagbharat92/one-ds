@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" data-oneds-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rules · OneDS reference</title>
+  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../components/button/button.css">
+  <link rel="stylesheet" href="../components/card/card.css">
+  <link rel="stylesheet" href="../components/grid/grid.css">
+  <link rel="stylesheet" href="../components/page-header/page-header.css">
+  <link rel="stylesheet" href="../components/section/section.css">
+  <link rel="stylesheet" href="_local.css">
+  <script src="theme.js" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <aside class="sidebar" aria-label="Documentation navigation">
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
+      <nav aria-label="Catalog pages">
+        <p class="sidebar__label">Catalog</p>
+        <ul class="sidebar__nav">
+          <li><a class="sidebar__link" href="index.html">Overview</a></li>
+          <li><a class="sidebar__link" href="color.html">Color</a></li>
+          <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
+          <li><a class="sidebar__link" href="themes.html">Themes</a></li>
+          <li><a class="sidebar__link" href="components.html">Components</a></li>
+          <li><a class="sidebar__link" href="rules.html" aria-current="page">Rules</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="On this page">
+        <p class="sidebar__label">On this page</p>
+        <ul class="sidebar__subnav">
+          <li><a class="sidebar__link" href="#routing">Route work first</a></li>
+          <li><a class="sidebar__link" href="#components">Component integrity</a></li>
+          <li><a class="sidebar__link" href="#tokens">Token discipline</a></li>
+          <li><a class="sidebar__link" href="#output">Output structure</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="site-main" id="main-content">
+      <div class="site-content">
+        <header class="page-header">
+          <div class="page-header__content">
+            <h1 class="page-header__title">Rules</h1>
+            <p class="page-header__description">The OneDS generation contract in plain language, with a small violation and correction for each source rule.</p>
+          </div>
+          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
+        </header>
+
+        <section class="section" id="routing" aria-labelledby="routing-title">
+          <header class="section__header"><h2 class="section__title" id="routing-title">Route work first</h2><p class="section__description">Decide whether a shared component already owns the pattern before writing interface code.</p></header>
+          <div class="section__body">
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Read the manifest before writing UI</h3><p class="card__description">The manifest is the source of truth for available and planned component roles.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code># Start writing a card from memory</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>cat oneds/MANIFEST.md
+# Then choose the matching component</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Keep unmatched interface work local</h3><p class="card__description">If no manifest component matches, build the pattern in <code>src/_local/</code> and identify what it was for.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>src/sidebar.css</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>src/_local/sidebar.css
+/* ONEDS-CANDIDATE: sidebar, project navigation. */</code></pre></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="components" aria-labelledby="components-title">
+          <header class="section__header"><h2 class="section__title" id="components-title">Component integrity</h2><p class="section__description">A shared component is copied as one owned implementation, not used as inspiration for a local fork.</p></header>
+          <div class="section__body">
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Copy a matching component verbatim</h3><p class="card__description">Use the files in <code>oneds/components/&lt;name&gt;/</code> without altering the component implementation.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;div class="my-card"&gt;...&lt;/div&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;article class="card"&gt;...&lt;/article&gt;</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Update the manifest with a new component</h3><p class="card__description">Creating a component directory and marking its manifest status <code>built</code> are one change.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>components/stat/
+MANIFEST.md: stat | not built</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>components/stat/
+MANIFEST.md: stat | built</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Do not rewrite or fork a match</h3><p class="card__description">Application code must not create a parallel version of an existing library component.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>.project-button {
+  /* a second button implementation */
+}</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;button class="button" type="button"&gt;Save&lt;/button&gt;</code></pre></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="tokens" aria-labelledby="tokens-title">
+          <header class="section__header"><h2 class="section__title" id="tokens-title">Token discipline</h2><p class="section__description">Themeable design values come from the generated OneDS token vocabulary.</p></header>
+          <div class="section__body">
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Use tokens for color, spacing, and size</h3><p class="card__description">Every authored visual value in those categories must resolve through a defined <code>--oneds-</code> variable.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>.panel {
+  padding: 16px;
+  color: #333;
+}</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>.panel {
+  padding: var(--oneds-reference-space-md);
+  color: var(--oneds-semantic-color-fg-primary);
+}</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Never invent a visual value</h3><p class="card__description">If no defined token expresses the need, stop and report the gap instead of making up a value.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>.panel {
+  gap: 18px;
+}</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code># Report: no token exists for the required gap.
+# Do not author the declaration yet.</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Edit token source, not generated CSS</h3><p class="card__description">Change <code>tokens/oneds.tokens.json</code>, then rebuild <code>tokens.css</code>.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code># Hand-edit tokens.css</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code># Edit tokens/oneds.tokens.json
+node scripts/build-tokens.mjs</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Write layout keywords literally</h3><p class="card__description">Custom properties are for themeable values, not CSS grammar such as display or alignment modes.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>.layout {
+  display: var(--oneds-display-grid);
+}</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>.layout {
+  display: grid;
+}</code></pre></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="output" aria-labelledby="output-title">
+          <header class="section__header"><h2 class="section__title" id="output-title">Output structure</h2><p class="section__description">Generated consuming-project HTML is self-contained and preserves the required semantic wrappers.</p></header>
+          <div class="section__body">
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Put every table inside a card</h3><p class="card__description">The required rule states that tables always need the shared bounded surface.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;table&gt;...&lt;/table&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;div class="card"&gt;
+  &lt;table&gt;...&lt;/table&gt;
+&lt;/div&gt;</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Inline CSS in generated output</h3><p class="card__description">For consuming-project output, copy token and component CSS into a <code>&lt;style&gt;</code> block.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;link rel="stylesheet" href="oneds/tokens.css"&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;style&gt;
+  /* copied tokens.css and component CSS */
+&lt;/style&gt;</code></pre></div></div>
+              <p class="card__text">This local reference catalog intentionally uses real stylesheet links because its build brief explicitly requires linked library sources.</p>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Do not include external file references in generated output</h3><p class="card__description">Generated consuming-project HTML must not depend on stylesheet links or CSS imports.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>@import "oneds/components/button/button.css";</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;style&gt;
+  /* verbatim component CSS */
+&lt;/style&gt;</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Never present a table outside a card</h3><p class="card__description">The forbidden form of the table rule repeats the same boundary explicitly: a bare table is invalid.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;main&gt;
+  &lt;table&gt;...&lt;/table&gt;
+&lt;/main&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;main&gt;
+  &lt;div class="card"&gt;
+    &lt;table&gt;...&lt;/table&gt;
+  &lt;/div&gt;
+&lt;/main&gt;</code></pre></div></div>
+            </article>
+          </div>
+        </section>
+
+        <footer class="site-footer"><a href="components.html">Previous: Components</a><a href="index.html">Back to overview</a></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

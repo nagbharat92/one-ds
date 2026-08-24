@@ -1,0 +1,65 @@
+.dialog {
+  width: min(calc(100% - (var(--oneds-reference-space-lg) * 2)), var(--oneds-component-dialog-width));
+  max-height: calc(100vh - (var(--oneds-reference-space-lg) * 2));
+  padding: 0;
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke);
+  border-radius: var(--oneds-component-dialog-radius);
+  background: var(--oneds-semantic-color-surface);
+  box-shadow: var(--oneds-semantic-elevation-3);
+  color: var(--oneds-semantic-color-fg-primary);
+  font-family: var(--oneds-reference-font-family-content);
+}
+
+.dialog::backdrop {
+  background: var(--oneds-semantic-color-backdrop);
+  -webkit-backdrop-filter: blur(var(--oneds-reference-space-2xs));
+  backdrop-filter: blur(var(--oneds-reference-space-2xs));
+}
+
+.dialog__body {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--oneds-reference-space-md);
+  padding: var(--oneds-reference-space-lg);
+}
+
+.dialog__icon {
+  display: grid;
+  width: var(--oneds-reference-control-height-md);
+  height: var(--oneds-reference-control-height-md);
+  flex: 0 0 var(--oneds-reference-control-height-md);
+  place-items: center;
+  border-radius: var(--oneds-reference-radius-lg);
+}
+
+.dialog__icon--danger {
+  background: var(--oneds-semantic-color-danger-soft);
+  color: var(--oneds-semantic-color-danger);
+}
+
+.dialog__title {
+  margin: var(--oneds-reference-space-none);
+  font-size: var(--oneds-reference-font-size-lg);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+  line-height: var(--oneds-reference-font-line-height-tight);
+}
+
+.dialog__description {
+  margin: var(--oneds-reference-space-xs) var(--oneds-reference-space-none) var(--oneds-reference-space-none);
+  color: var(--oneds-semantic-color-fg-secondary);
+  font-size: var(--oneds-reference-font-size-sm);
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--oneds-reference-space-xs);
+  padding: var(--oneds-reference-space-md) var(--oneds-reference-space-lg);
+  border-top: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke-subtle);
+}
+
+@media (forced-colors: active) {
+  .dialog {
+    border-color: ButtonText;
+  }
+}
