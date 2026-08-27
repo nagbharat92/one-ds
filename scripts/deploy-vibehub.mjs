@@ -61,8 +61,9 @@ try {
 		const htmlPath = path.join(stagingDirectory, htmlFile.name);
 		const source = await readFile(htmlPath, "utf8");
 		const deployed = source
-			.replaceAll('href="../tokens.css"', 'href="tokens.css"')
-			.replaceAll('href="../components/', 'href="components/');
+			.replaceAll('href="../tokens.css', 'href="tokens.css')
+			.replaceAll('href="../components/', 'href="components/')
+			.replaceAll('src="../components/', 'src="components/');
 
 		if (/\b(?:href|src)="\.\.\//.test(deployed)) {
 			throw new Error(`${htmlFile.name} still contains a parent-relative runtime URL.`);
