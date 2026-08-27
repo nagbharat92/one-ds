@@ -365,40 +365,43 @@ export async function readTheme(filePath = themeFile) {
 	return normalizeTheme(JSON.parse(await readFile(filePath, "utf8")));
 }
 
-/* A stale cached stylesheet is indistinguishable from a broken one, so the cache key is the file's own content. */
+/* A stale cached asset is indistinguishable from a broken one, so the cache key is the file's own content. */
 async function stampStylesheetVersions() {
 	const siteDirectory = path.join(repositoryRoot, "site");
 	const pages = (await readdir(siteDirectory)).filter((name) => name.endsWith(".html")).sort();
 	const digests = new Map();
 	const stamped = [];
+	/* Both stylesheets and scripts must be content-hashed; an un-stamped script keeps serving stale JS after deploy. */
+	const assetPatterns = [
+		/(<link rel="stylesheet" href=")([^"?]+\.css)(\?v=[^"]*)?(")/g,
+		/(<script\b[^>]*?\ssrc=")([^"?]+\.js)(\?v=[^"]*)?(")/g,
+	];
+
+	async function stampHref(open, href, _version, close, page) {
+		const target = path.resolve(siteDirectory, path.dirname(page), href);
+
+		if (!digests.has(target)) {
+			digests.set(
+				target,
+				createHash("sha256").update(await readFile(target)).digest("hex").slice(0, 8),
+			);
+		}
+
+		return `${open}${href}?v=${digests.get(target)}${close}`;
+	}
 
 	for (const page of pages) {
 		const pagePath = path.join(siteDirectory, page);
-		const html = await readFile(pagePath, "utf8");
-		let changed = false;
+		let next = await readFile(pagePath, "utf8");
+		const original = next;
 
-		const next = await replaceAsync(
-			html,
-			/(<link rel="stylesheet" href=")([^"?]+\.css)(\?v=[^"]*)?(")/g,
-			async (whole, open, href, _version, close) => {
-				const target = path.resolve(siteDirectory, href);
+		for (const pattern of assetPatterns) {
+			next = await replaceAsync(next, pattern, (whole, open, href, version, close) =>
+				stampHref(open, href, version, close, page),
+			);
+		}
 
-				if (!digests.has(target)) {
-					digests.set(
-						target,
-						createHash("sha256").update(await readFile(target)).digest("hex").slice(0, 8),
-					);
-				}
-
-				const replacement = `${open}${href}?v=${digests.get(target)}${close}`;
-
-				if (replacement !== whole) changed = true;
-
-				return replacement;
-			},
-		);
-
-		if (changed) {
+		if (next !== original) {
 			await writeFile(pagePath, next);
 			stamped.push(page);
 		}
@@ -490,7 +493,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
 	}
 
 	console.log(`Status interaction fit: ${statusFit.exactValues}/${statusFit.totalValues} light/dark values exactly match color-tokens.md.`);
-	console.log(`Stylesheet versions: ${versions.stylesheets} files hashed across ${versions.pages} pages${versions.stamped.length ? `, restamped ${versions.stamped.join(", ")}` : ", already current"}.`);
+	console.log(`Asset versions: ${versions.stylesheets} files hashed across ${versions.pages} pages${versions.stamped.length ? `, restamped ${versions.stamped.join(", ")}` : ", already current"}.`);
 
 	for (const comparison of statusFit.comparisons) {
 		for (const scheme of ["light", "dark"]) {

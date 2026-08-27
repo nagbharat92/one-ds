@@ -449,7 +449,7 @@
 	--oneds-component-popover-trigger-gap: var(--oneds-reference-space-8);
 	--oneds-component-empty-state-icon-size: var(--oneds-reference-icon-size-2xl);
 	--oneds-component-spinner-size: var(--oneds-reference-icon-size-sm);
-	--oneds-component-spinner-duration: 700ms;
+	--oneds-component-spinner-duration: 1000ms;
 	--oneds-component-spinner-turn: 1turn;
 	--oneds-component-spinner-track-opacity: 20%;
 	--oneds-component-progress-height: var(--oneds-reference-space-8);

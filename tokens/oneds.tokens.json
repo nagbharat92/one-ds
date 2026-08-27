@@ -563,7 +563,7 @@
 		},
 		"spinner": {
 			"size": { "$value": "{reference.icon.size.sm}" },
-			"duration": { "$value": "700ms" },
+			"duration": { "$value": "1000ms" },
 			"turn": { "$value": "1turn" },
 			"trackOpacity": { "$value": "20%" }
 		},
