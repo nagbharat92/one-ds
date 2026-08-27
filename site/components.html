@@ -1622,14 +1622,17 @@
         <hr class="separator">
 
         <section class="section" id="spinner" aria-labelledby="spinner-title">
-          <header class="section__header"><h2 class="section__title" id="spinner-title">Spinner</h2><p class="section__description">Shows an inline busy ring inside a control while a short action is in flight. It draws in the current text colour and ships at one size that sits within a control.</p></header>
+          <header class="section__header"><h2 class="section__title" id="spinner-title">Spinner</h2><p class="section__description">Shows an inline busy ring inside a control while a short action is in flight. It draws in the current text colour, comes across the icon size range, and sits alone in an icon button or beside a label.</p></header>
           <div class="section__body">
             <div class="card card--canvas">
-              <div class="specimen-block"><span class="specimen-label">With a label</span><div class="specimen-row"><span class="spinner" role="status" aria-label="Loading"></span><span>Loading records</span></div></div>
-              <div class="specimen-block"><span class="specimen-label">Inside a button</span><div class="specimen-row"><button class="button" type="button" aria-busy="true" disabled><span class="spinner" aria-hidden="true"></span><span class="text-trim">Saving</span></button></div></div>
+              <div class="specimen-block"><span class="specimen-label">Sizes</span><div class="spinner-scale"><span class="spinner-scale__item"><span class="specimen-label">xs · 12px</span><span class="spinner spinner--xs" aria-hidden="true"></span></span><span class="spinner-scale__item"><span class="specimen-label">sm · 16px</span><span class="spinner" aria-hidden="true"></span></span><span class="spinner-scale__item"><span class="specimen-label">md · 20px</span><span class="spinner spinner--md" aria-hidden="true"></span></span><span class="spinner-scale__item"><span class="specimen-label">lg · 24px</span><span class="spinner spinner--lg" aria-hidden="true"></span></span><span class="spinner-scale__item"><span class="specimen-label">xl · 28px</span><span class="spinner spinner--xl" aria-hidden="true"></span></span><span class="spinner-scale__item"><span class="specimen-label">2xl · 32px</span><span class="spinner spinner--2xl" aria-hidden="true"></span></span></div></div>
+              <div class="specimen-block"><span class="specimen-label">Inside a button</span><div class="specimen-row"><button class="button button--icon" type="button" aria-busy="true" aria-label="Saving"><span class="spinner" aria-hidden="true"></span></button><button class="button button--secondary button--icon" type="button" aria-busy="true" aria-label="Saving"><span class="spinner" aria-hidden="true"></span></button><button class="button button--outline button--icon" type="button" aria-busy="true" aria-label="Saving"><span class="spinner" aria-hidden="true"></span></button><button class="button button--danger button--icon" type="button" aria-busy="true" aria-label="Saving"><span class="spinner" aria-hidden="true"></span></button></div></div>
+              <div class="specimen-block"><span class="specimen-label">With a label</span><div class="specimen-row"><button class="button" type="button" aria-busy="true"><span class="spinner" aria-hidden="true"></span><span class="text-trim">Saving</span></button></div></div>
+              <div class="specimen-block"><span class="specimen-label">Beside text</span><div class="specimen-row"><span class="spinner" role="status" aria-label="Loading"></span><span class="text-trim">Loading records</span></div></div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it as a standalone page indicator, which suits loading, or when progress can be measured.</div></div>
-            <pre class="code-block" tabindex="0"><code>&lt;span class="spinner" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
+            <pre class="code-block" tabindex="0"><code>&lt;span class="spinner" role="status" aria-label="Loading"&gt;&lt;/span&gt;
+&lt;button class="button button--icon" type="button" aria-busy="true" aria-label="Saving"&gt;&lt;span class="spinner" aria-hidden="true"&gt;&lt;/span&gt;&lt;/button&gt;</code></pre>
           </div>
         </section>
 
