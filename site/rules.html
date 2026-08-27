@@ -1,41 +1,48 @@
 <!doctype html>
-<html lang="en" data-oneds-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rules · OneDS reference</title>
-  <link rel="stylesheet" href="../tokens.css">
-  <link rel="stylesheet" href="../components/button/button.css">
-  <link rel="stylesheet" href="../components/card/card.css">
-  <link rel="stylesheet" href="../components/grid/grid.css">
-  <link rel="stylesheet" href="../components/page-header/page-header.css">
-  <link rel="stylesheet" href="../components/section/section.css">
-  <link rel="stylesheet" href="_local.css">
-  <script src="theme.js" defer></script>
+  <link rel="stylesheet" href="../tokens.css?v=ae6d0b86">
+  <link rel="stylesheet" href="../components/button/button.css?v=b2977c3f">
+  <link rel="stylesheet" href="../components/card/card.css?v=ecac3130">
+  <link rel="stylesheet" href="../components/code-block/code-block.css?v=4ef135dd">
+  <link rel="stylesheet" href="../components/grid/grid.css?v=3ecedb1e">
+  <link rel="stylesheet" href="../components/page-header/page-header.css?v=7df3af63">
+  <link rel="stylesheet" href="../components/section/section.css?v=3f55f916">
+  <link rel="stylesheet" href="../components/tabs/tabs.css?v=f34cc528">
+  <link rel="stylesheet" href="_local.css?v=03d7b7d8">
+  <script src="theme.js?v=3" defer></script>
+  <script src="toc.js?v=1" defer></script>
 </head>
 <body>
   <div class="site-shell">
     <aside class="sidebar" aria-label="Documentation navigation">
-      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
-      <nav aria-label="Catalog pages">
-        <p class="sidebar__label">Catalog</p>
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Design system for agents.</span></a>
+      <div class="tabs sidebar__theme" role="group" aria-label="Theme"><button class="tab" type="button" data-theme-value="light" aria-pressed="true">Light</button><button class="tab" type="button" data-theme-value="dark" aria-pressed="false">Dark</button></div>
+      <nav aria-label="Documentation pages">
         <ul class="sidebar__nav">
           <li><a class="sidebar__link" href="index.html">Overview</a></li>
           <li><a class="sidebar__link" href="color.html">Color</a></li>
           <li><a class="sidebar__link" href="typography.html">Typography</a></li>
+          <li><a class="sidebar__link" href="icons.html">Icons</a></li>
           <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
           <li><a class="sidebar__link" href="themes.html">Themes</a></li>
           <li><a class="sidebar__link" href="components.html">Components</a></li>
-          <li><a class="sidebar__link" href="rules.html" aria-current="page">Rules</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="On this page">
-        <p class="sidebar__label">On this page</p>
-        <ul class="sidebar__subnav">
-          <li><a class="sidebar__link" href="#routing">Route work first</a></li>
-          <li><a class="sidebar__link" href="#components">Component integrity</a></li>
-          <li><a class="sidebar__link" href="#tokens">Token discipline</a></li>
-          <li><a class="sidebar__link" href="#output">Output structure</a></li>
+          <li>
+            <details open>
+              <summary class="sidebar__link sidebar__disclosure" aria-current="page"><svg class="sidebar__disclosure-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#chevron-right-16-regular"></use></svg><span>Rules</span></summary>
+              <ul class="sidebar__toc">
+                <li><a class="sidebar__toc-link" href="#routing">Route work first</a></li>
+                <li><a class="sidebar__toc-link" href="#components">Component integrity</a></li>
+                <li><a class="sidebar__toc-link" href="#tokens">Token discipline</a></li>
+                <li><a class="sidebar__toc-link" href="#icons">Icons and marks</a></li>
+                <li><a class="sidebar__toc-link" href="#output">Output structure</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a class="sidebar__link" href="experiments.html">Experiments</a></li>
         </ul>
       </nav>
     </aside>
@@ -47,7 +54,6 @@
             <h1 class="page-header__title">Rules</h1>
             <p class="page-header__description">The OneDS generation contract in plain language, with a small violation and correction for each source rule.</p>
           </div>
-          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
         </header>
 
         <section class="section" id="routing" aria-labelledby="routing-title">
@@ -100,8 +106,8 @@ MANIFEST.md: stat | built</code></pre></div></div>
   padding: 16px;
   color: #333;
 }</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>.panel {
-  padding: var(--oneds-reference-space-md);
-  color: var(--oneds-semantic-color-fg-primary);
+  padding: var(--oneds-inset-default);
+  color: var(--oneds-color-foreground-neutral-primary);
 }</code></pre></div></div>
             </article>
 
@@ -114,8 +120,8 @@ MANIFEST.md: stat | built</code></pre></div></div>
             </article>
 
             <article class="card">
-              <header class="card__header"><h3 class="card__title">Edit token source, not generated CSS</h3><p class="card__description">Change <code>tokens/oneds.tokens.json</code>, then rebuild <code>tokens.css</code>.</p></header>
-              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code># Hand-edit tokens.css</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code># Edit tokens/oneds.tokens.json
+              <header class="card__header"><h3 class="card__title">Edit token source, not generated CSS</h3><p class="card__description">Color theme changes go in <code>tokens/theme.json</code>; status colors and every non-color token go in <code>tokens/oneds.tokens.json</code>. Rebuild <code>tokens.css</code> either way.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code># Hand-edit tokens.css</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code># Edit tokens/theme.json or tokens/oneds.tokens.json
 node scripts/build-tokens.mjs</code></pre></div></div>
             </article>
 
@@ -126,6 +132,70 @@ node scripts/build-tokens.mjs</code></pre></div></div>
 }</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>.layout {
   display: grid;
 }</code></pre></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="icons" aria-labelledby="icons-title">
+          <header class="section__header"><h2 class="section__title" id="icons-title">Icons and marks</h2><p class="section__description">Glyphs are fetched from Fluent System Icons and site marks from Google's favicon service, so neither is drawn by hand or stored in the project. Full guidance is on the <a href="icons.html">icons page</a>.</p></header>
+          <div class="section__body">
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Fetch the grid you render at</h3><p class="card__description">Every icon size token is a Fluent grid, and Fluent redraws each grid at its own stroke weight.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>ic_fluent_copy_24_regular.svg
+/* rendered at 16px */</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>ic_fluent_copy_16_regular.svg
+/* --oneds-reference-icon-size-sm */</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Inline the icon and let it inherit</h3><p class="card__description">Colour comes from the surrounding text and size comes from a token, so one asset serves every theme.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;svg width="16" height="16"&gt;
+  &lt;use href="sprite.svg#copy"&gt;&lt;/use&gt;
+&lt;/svg&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;svg class="icon" viewBox="0 0 16 16" aria-hidden="true"&gt;
+  &lt;path d="…" fill="currentColor"/&gt;
+&lt;/svg&gt;</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Size the icon from its surface</h3><p class="card__description">Inline, match the text band. Inside a square control or tile, take half the container. Leading a centred block, take the top of the ramp.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>/* 40px danger tile */
+.tile svg { width: 16px; }</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>.dialog__icon svg {
+  width: var(--oneds-component-dialog-icon-size);
+}</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">A component owns its icon slot</h3><p class="card__description">If a component has an icon, its own CSS sizes it. Leaving the size to whatever class the page adds is how a focal glyph ends up at 16px.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>.empty-state__icon {
+  color: var(--oneds-color-foreground-neutral-tertiary);
+}</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>.empty-state__icon {
+  width: var(--oneds-component-empty-state-icon-size);
+  height: var(--oneds-component-empty-state-icon-size);
+  color: var(--oneds-color-foreground-neutral-tertiary);
+}</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Reserve filled for state</h3><p class="card__description">Weight marks a selected, current, or active item, or a status glyph. It is never a way to add emphasis.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>ic_fluent_home_20_filled.svg
+/* resting nav item */</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>ic_fluent_home_20_regular.svg
+/* filled only when current */</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Name the control, hide the decoration</h3><p class="card__description">An icon supports a label; it never becomes the accessible name by itself.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;button class="button button--icon"&gt;
+  &lt;svg&gt;…&lt;/svg&gt;
+&lt;/button&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;button class="button button--icon" aria-label="Copy"&gt;
+  &lt;svg aria-hidden="true"&gt;…&lt;/svg&gt;
+&lt;/button&gt;</code></pre></div></div>
+            </article>
+
+            <article class="card">
+              <header class="card__header"><h3 class="card__title">Request a favicon at twice the rendered size</h3><p class="card__description">The service only serves powers of two, so a mark rendered at 20px is requested at 64 and drawn into the favicon tokens.</p></header>
+              <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>&lt;img src="…/s2/favicons?domain=example.com"
+     width="20" height="20"&gt;</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;img class="favicon" alt="" loading="lazy"
+     referrerpolicy="no-referrer"
+     src="…/s2/favicons?domain=example.com&amp;sz=64"&gt;</code></pre></div></div>
             </article>
           </div>
         </section>
@@ -149,7 +219,7 @@ node scripts/build-tokens.mjs</code></pre></div></div>
             </article>
 
             <article class="card">
-              <header class="card__header"><h3 class="card__title">Do not include external file references in generated output</h3><p class="card__description">Generated consuming-project HTML must not depend on stylesheet links or CSS imports.</p></header>
+              <header class="card__header"><h3 class="card__title">Do not include external file references in generated output</h3><p class="card__description">Generated consuming-project HTML must not depend on stylesheet links, script references, or CSS imports. A remote image fetched at request time, such as a favicon, is not covered by this rule.</p></header>
               <div class="grid"><div><strong>Violation</strong><pre class="code-block" tabindex="0"><code>@import "oneds/components/button/button.css";</code></pre></div><div><strong>Correction</strong><pre class="code-block" tabindex="0"><code>&lt;style&gt;
   /* verbatim component CSS */
 &lt;/style&gt;</code></pre></div></div>

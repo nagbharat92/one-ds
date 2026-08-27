@@ -20,8 +20,3 @@ Copy `tokens.css` and `components/grid/grid.css` verbatim into the output HTML's
 ```
 
 Keep the source order meaningful because the grid collapses naturally as space becomes constrained.
-
-## Variants
-
-- Default: use `grid`.
-- Compact: use `grid grid--compact` for a denser group of peers.

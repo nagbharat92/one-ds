@@ -1,0 +1,19 @@
+.text-box {
+  min-width: 0;
+  padding: var(--oneds-inset-default);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: var(--oneds-component-surface-radius);
+  background: var(--oneds-color-surface-neutral-nearer);
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.text-box__content {
+  margin: 0;
+  color: inherit;
+}
+
+@media (forced-colors: active) {
+  .text-box {
+    border-color: CanvasText;
+  }
+}

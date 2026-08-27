@@ -1,0 +1,159 @@
+.date-picker {
+  position: relative;
+  display: inline-block;
+  min-width: var(--oneds-component-date-picker-min-width);
+}
+
+.date-picker__field {
+  display: flex;
+  height: var(--oneds-component-field-height);
+  align-items: center;
+  gap: var(--oneds-component-date-picker-gap);
+  padding-inline: var(--oneds-component-field-padding-inline) var(--oneds-component-date-picker-gap);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: var(--oneds-component-field-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.date-picker__field:hover {
+  border-color: var(--oneds-color-stroke-neutral-loud);
+}
+
+/* One ring on the field so the typed input and the trailing toggle share a single focus indicator. */
+.date-picker__field:focus-within {
+  border-color: var(--oneds-color-stroke-brand-loud);
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+.date-picker__input {
+  min-width: 0;
+  flex: 1 1 auto;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+}
+
+.date-picker__input::placeholder {
+  color: var(--oneds-color-foreground-neutral-tertiary);
+  opacity: var(--oneds-reference-opacity-full);
+}
+
+/* The popover is a native <details>, so the calendar opens and closes with no script. */
+.date-picker__popover {
+  display: flex;
+  flex: none;
+}
+
+.date-picker__toggle {
+  display: grid;
+  width: var(--oneds-component-date-picker-toggle-size);
+  height: var(--oneds-component-date-picker-toggle-size);
+  place-items: center;
+  border-radius: var(--oneds-component-date-picker-toggle-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  cursor: pointer;
+  list-style: none;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.date-picker__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.date-picker__toggle:hover {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.date-picker__toggle:active {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.date-picker__toggle svg {
+  width: var(--oneds-component-date-picker-icon-size);
+  height: var(--oneds-component-date-picker-icon-size);
+}
+
+.date-picker__panel {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 0;
+  margin-top: var(--oneds-component-date-picker-panel-gap);
+  animation: oneds-date-picker-enter var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-entrance) both;
+}
+
+/* Inside the popover the calendar reads as a floating layer, not an inline surface. */
+.date-picker__panel .calendar {
+  box-shadow: var(--oneds-semantic-elevation-3);
+}
+
+/* Render the calendar in flow (for docs, or an always-open inline picker). */
+.date-picker__panel--static {
+  position: static;
+  animation: none;
+}
+
+@keyframes oneds-date-picker-enter {
+  from {
+    opacity: var(--oneds-reference-opacity-hidden);
+    transform: translateY(var(--oneds-reference-motion-distance-rise)) scale(var(--oneds-reference-motion-scale-enter));
+  }
+
+  to {
+    opacity: var(--oneds-reference-opacity-full);
+    transform: none;
+  }
+}
+
+/* Invalid reads as an error before focus and keeps the danger colour through the focus ring. */
+.date-picker--invalid .date-picker__field {
+  border-color: var(--oneds-color-stroke-danger-loud);
+}
+
+.date-picker--invalid .date-picker__field:focus-within {
+  outline-color: var(--oneds-color-stroke-danger-loud);
+}
+
+.date-picker--disabled .date-picker__field {
+  background: var(--oneds-color-background-neutral-disabled);
+}
+
+.date-picker--disabled .date-picker__input {
+  color: var(--oneds-color-foreground-neutral-disabled);
+}
+
+.date-picker--disabled .date-picker__toggle {
+  color: var(--oneds-color-foreground-neutral-disabled);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .date-picker__field,
+  .date-picker__toggle {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+
+  .date-picker__panel {
+    animation-duration: var(--oneds-reference-motion-reduced);
+  }
+}
+
+@media (forced-colors: active) {
+  .date-picker__field {
+    border-color: ButtonText;
+  }
+
+  .date-picker__field:focus-within {
+    outline-color: Highlight;
+  }
+}

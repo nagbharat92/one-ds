@@ -1,0 +1,206 @@
+.hover-card {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-card__trigger {
+  color: var(--oneds-color-foreground-brand-primary);
+  font-weight: var(--oneds-reference-font-weight-medium);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.hover-card__trigger:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  border-radius: var(--oneds-reference-radius-xs);
+}
+
+.hover-card__content {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  width: var(--oneds-component-hover-card-width);
+  gap: var(--oneds-rhythm-group);
+  padding: var(--oneds-component-hover-card-padding);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: var(--oneds-component-hover-card-radius);
+  background: var(--oneds-color-surface-neutral-nearer);
+  box-shadow: var(--oneds-semantic-elevation-3);
+  opacity: var(--oneds-reference-opacity-hidden);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-entrance),
+    transform var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-entrance),
+    visibility var(--oneds-reference-motion-duration-normal);
+}
+
+.hover-card:hover .hover-card__content,
+.hover-card:focus-within .hover-card__content {
+  opacity: var(--oneds-reference-opacity-full);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Placement: resting position + entrance offset toward the trigger. */
+.hover-card__content--bottom {
+  top: 100%;
+  left: 50%;
+  margin-top: var(--oneds-component-hover-card-gap);
+  transform: translateX(-50%) translateY(calc(var(--oneds-reference-motion-distance-rise) * -1));
+}
+
+.hover-card__content--top {
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: var(--oneds-component-hover-card-gap);
+  transform: translateX(-50%) translateY(var(--oneds-reference-motion-distance-rise));
+}
+
+.hover-card__content--right {
+  top: 50%;
+  left: 100%;
+  margin-left: var(--oneds-component-hover-card-gap);
+  transform: translateY(-50%) translateX(calc(var(--oneds-reference-motion-distance-rise) * -1));
+}
+
+.hover-card__content--left {
+  top: 50%;
+  right: 100%;
+  margin-right: var(--oneds-component-hover-card-gap);
+  transform: translateY(-50%) translateX(var(--oneds-reference-motion-distance-rise));
+}
+
+.hover-card:hover .hover-card__content--bottom,
+.hover-card:focus-within .hover-card__content--bottom,
+.hover-card:hover .hover-card__content--top,
+.hover-card:focus-within .hover-card__content--top {
+  transform: translateX(-50%) translateY(0);
+}
+
+.hover-card:hover .hover-card__content--right,
+.hover-card:focus-within .hover-card__content--right,
+.hover-card:hover .hover-card__content--left,
+.hover-card:focus-within .hover-card__content--left {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Invisible bridge across the gap so the pointer keeps hover while moving in. */
+.hover-card__content::before {
+  content: "";
+  position: absolute;
+}
+
+.hover-card__content--bottom::before {
+  top: calc(var(--oneds-component-hover-card-gap) * -1);
+  right: 0;
+  left: 0;
+  height: var(--oneds-component-hover-card-gap);
+}
+
+.hover-card__content--top::before {
+  bottom: calc(var(--oneds-component-hover-card-gap) * -1);
+  right: 0;
+  left: 0;
+  height: var(--oneds-component-hover-card-gap);
+}
+
+.hover-card__content--right::before {
+  top: 0;
+  bottom: 0;
+  left: calc(var(--oneds-component-hover-card-gap) * -1);
+  width: var(--oneds-component-hover-card-gap);
+}
+
+.hover-card__content--left::before {
+  top: 0;
+  bottom: 0;
+  right: calc(var(--oneds-component-hover-card-gap) * -1);
+  width: var(--oneds-component-hover-card-gap);
+}
+
+/* Arrow: a bordered square rotated 45deg, only its two outward edges shown. */
+.hover-card__arrow {
+  position: absolute;
+  width: var(--oneds-component-hover-card-arrow-size);
+  height: var(--oneds-component-hover-card-arrow-size);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  background: var(--oneds-color-surface-neutral-nearer);
+  transform: rotate(45deg);
+}
+
+.hover-card__content--bottom .hover-card__arrow {
+  top: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  left: 50%;
+  margin-left: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.hover-card__content--top .hover-card__arrow {
+  bottom: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  left: 50%;
+  margin-left: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+
+.hover-card__content--right .hover-card__arrow {
+  top: 50%;
+  left: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  margin-top: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+
+.hover-card__content--left .hover-card__arrow {
+  top: 50%;
+  right: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  margin-top: calc(var(--oneds-component-hover-card-arrow-size) / -2);
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+.hover-card__title {
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-size: var(--oneds-semantic-typography-functional-body-large-size);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+  line-height: var(--oneds-semantic-typography-functional-body-large-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-large-letter-spacing);
+}
+
+.hover-card__text {
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-medium-letter-spacing);
+}
+
+.hover-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--oneds-rhythm-group);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-small-letter-spacing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-card__content {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .hover-card__content,
+  .hover-card__arrow {
+    border-color: CanvasText;
+    background: Canvas;
+  }
+
+  .hover-card__trigger:focus-visible {
+    outline-color: Highlight;
+  }
+}

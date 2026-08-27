@@ -50,9 +50,14 @@ function displayPath(filePath) {
 	return path.relative(configDirectory, filePath) || path.basename(filePath);
 }
 
+function stripComments(css) {
+	return css.replaceAll(/\/\*[\s\S]*?\*\//g, "");
+}
+
 const generatedTokensPath = configuredFile(config.generatedTokens, "generatedTokens");
 const componentsPath = configuredFile(config.components, "components");
 const manifestPath = configuredFile(config.manifest, "manifest");
+const tokenPagePath = configuredFile(config.tokenPage, "tokenPage");
 const authoredCssPaths = configuredPaths(config.authoredCss, "authoredCss");
 const htmlPaths = configuredPaths(config.html, "html");
 const authoredCssFiles = (await collectConfiguredFiles(authoredCssPaths, ".css")).filter(
@@ -65,9 +70,10 @@ const definedTokens = new Set(
 );
 const violations = [];
 const usedTokens = new Set();
+const scrollWrapperClasses = new Set();
 const forbiddenCssPatterns = [
 	[/#[0-9a-f]{3,8}\b/gi, "literal hex color"],
-	[/(?:rgb|rgba|hsl|hsla)\(\s*[\d.]/gi, "literal color function"],
+	[/\b(?:rgb|rgba|hsl|hsla|oklch|oklab|lch|lab)\(\s*[\d.]/gi, "literal color function"],
 	[/\b\d+(?:\.\d+)?(?:px|rem|em|ms)\b/gi, "literal dimension or duration"],
 	[/\b(?!100(?:vh|vw)\b)\d+(?:\.\d+)?(?:vh|vw|ch)\b/gi, "literal viewport or measure value"],
 	[/text-transform\s*:\s*uppercase/gi, "uppercase text transform"],
@@ -86,8 +92,39 @@ for (const cssFile of authoredCssFiles) {
 		}
 	}
 
+	// The primitive ladder is private; only rhythm, inset, and component tokens may resolve against it.
+	if (cssFile.startsWith(`${componentsPath}${path.sep}`)) {
+		const primitives = [
+			...new Set([...css.matchAll(/var\(\s*(--oneds-reference-space-[a-z0-9]+)/g)].map((match) => match[1])),
+		];
+
+		if (primitives.length) {
+			violations.push(
+				`${displayPath(cssFile)} references private spacing primitives: ${primitives.join(", ")}. Use --oneds-rhythm-* or --oneds-inset-*.`,
+			);
+		}
+	}
+
 	for (const match of css.matchAll(/var\(\s*(--oneds-[a-z0-9-]+)/g)) {
 		usedTokens.add(match[1]);
+	}
+
+	for (const [, selector, body] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+		if (!/overflow(?:-x)?\s*:\s*auto/.test(body)) continue;
+
+		for (const [, className] of selector.matchAll(/\.([a-z0-9_-]+)/gi)) scrollWrapperClasses.add(className);
+	}
+
+	// Line-height tokens resolve to a px length, so they inherit unchanged. A rule that
+	// resizes text without restating its line height keeps the ancestor's leading.
+	for (const [, selector, body] of stripComments(css).matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+		const rule = selector.trim().replaceAll(/\s+/g, " ");
+
+		if (rule.startsWith("@")) continue;
+		if (!/(?:^|[;\s])font-size\s*:/.test(body)) continue;
+		if (/(?:^|[;\s])(?:line-height|font)\s*:/.test(body)) continue;
+
+		violations.push(`${displayPath(cssFile)} sets font-size on "${rule}" without a paired line-height.`);
 	}
 }
 
@@ -101,11 +138,66 @@ if (missingTokens.length) {
 	violations.push(`Undefined OneDS tokens: ${missingTokens.join(", ")}`);
 }
 
+// Color, typography, and font tokens are documented on their own pages.
+const belongsOnTokenPage = (tokenName) => !tokenName.startsWith("--oneds-color-")
+	&& !tokenName.startsWith("--oneds-semantic-typography-")
+	&& !tokenName.startsWith("--oneds-reference-font-");
+const tokenPage = await readFile(tokenPagePath, "utf8");
+const tokenPageRows = new Set(
+	[...tokenPage.matchAll(/data-token="(--oneds-[a-z0-9-]+)"/g)].map((match) => match[1]),
+);
+const undocumentedTokens = [...definedTokens].filter(
+	(tokenName) => belongsOnTokenPage(tokenName) && !tokenPageRows.has(tokenName),
+).sort();
+const strayTokenRows = [...tokenPageRows].filter((tokenName) => !definedTokens.has(tokenName)).sort();
+
+if (undocumentedTokens.length) {
+	violations.push(
+		`Tokens with no ${displayPath(tokenPagePath)} row: ${undocumentedTokens.join(", ")}`,
+	);
+}
+
+if (strayTokenRows.length) {
+	violations.push(
+		`${displayPath(tokenPagePath)} documents tokens that do not exist: ${strayTokenRows.join(", ")}`,
+	);
+}
+
 for (const htmlFile of htmlFiles) {
 	const html = await readFile(htmlFile, "utf8");
 
 	if (/\sstyle\s*=/i.test(html)) {
 		violations.push(`${displayPath(htmlFile)} contains an inline style attribute.`);
+	}
+
+	// An icon set beside a label must let the label carry text-trim so the icon centres on the
+	// letters, not the font's leading. Flag a leading icon directly followed by an unwrapped label:
+	// bare text, or a single-text span that lacks the text-trim class.
+	if (htmlFile.startsWith(`${componentsPath}${path.sep}`)) {
+		const bareLabel = [...html.matchAll(/<\/svg>\s*[A-Za-z0-9]/g)].length;
+		const untrimmedSpan = [
+			...html.matchAll(/<\/svg>\s*<span\b(?![^>]*\btext-trim\b)[^>]*>[^<]+<\/span>/g),
+		].length;
+		const untrimmed = bareLabel + untrimmedSpan;
+
+		if (untrimmed) {
+			violations.push(
+				`${displayPath(htmlFile)} pairs a leading icon with ${untrimmed} untrimmed label${untrimmed === 1 ? "" : "s"}. Wrap each label in <span class="text-trim"> so the icon centres on the letters, not the font's leading.`,
+			);
+		}
+	}
+
+	const wrappers = [...html.matchAll(/<\w+[^>]*\sclass="([^"]*)"/g)];
+	const unwrapped = [...html.matchAll(/<table[\s>]/g)].filter((table) => {
+		const wrapper = wrappers.findLast((candidate) => candidate.index < table.index);
+
+		return !wrapper?.[1].split(/\s+/).some((className) => scrollWrapperClasses.has(className));
+	});
+
+	if (unwrapped.length) {
+		violations.push(
+			`${displayPath(htmlFile)} has ${unwrapped.length} table${unwrapped.length === 1 ? "" : "s"} whose nearest wrapper does not scroll. Wrap each in .data-table__scroll inside a .card.`,
+		);
 	}
 }
 

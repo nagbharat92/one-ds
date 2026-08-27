@@ -1,0 +1,217 @@
+/* Slider: a native range input styled as a track, fill, and thumb.
+   Basic uses one input; range (--range) overlaps two inputs on a shared track.
+   The fill position is driven by the LOCAL vars --slider-value (basic) and
+   --slider-min / --slider-max (range); production sets them via inline style
+   or script and keeps aria-valuenow in sync. */
+
+.slider {
+  display: block;
+  inline-size: 100%;
+}
+
+.slider__input {
+  inline-size: 100%;
+  block-size: var(--oneds-component-slider-thumb-size);
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Track — WebKit. The filled portion is a hard-stop gradient at --slider-value. */
+.slider__input::-webkit-slider-runnable-track {
+  block-size: var(--oneds-component-slider-track-height);
+  border-radius: var(--oneds-component-slider-track-radius);
+  background: linear-gradient(
+    to right,
+    var(--oneds-color-background-brand-loud) 0 calc(var(--slider-value, 0) * 1%),
+    var(--oneds-color-background-neutral-subtle) calc(var(--slider-value, 0) * 1%) 100%
+  );
+}
+
+/* Track — Firefox. */
+.slider__input::-moz-range-track {
+  block-size: var(--oneds-component-slider-track-height);
+  border-radius: var(--oneds-component-slider-track-radius);
+  background: var(--oneds-color-background-neutral-subtle);
+}
+
+.slider__input::-moz-range-progress {
+  block-size: var(--oneds-component-slider-track-height);
+  border-radius: var(--oneds-component-slider-track-radius);
+  background: var(--oneds-color-background-brand-loud);
+}
+
+/* Thumb — WebKit. margin-top recentres it on the thinner track. */
+.slider__input::-webkit-slider-thumb {
+  inline-size: var(--oneds-component-slider-thumb-size);
+  block-size: var(--oneds-component-slider-thumb-size);
+  margin-top: calc((var(--oneds-component-slider-track-height) - var(--oneds-component-slider-thumb-size)) / 2);
+  border: var(--oneds-component-slider-thumb-border) solid var(--oneds-color-background-brand-loud);
+  border-radius: var(--oneds-component-slider-thumb-radius);
+  background: var(--oneds-color-surface-neutral-nearer);
+  box-shadow: var(--oneds-semantic-elevation-1);
+  transition: var(--oneds-reference-motion-transition-state);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Thumb — Firefox. */
+.slider__input::-moz-range-thumb {
+  inline-size: var(--oneds-component-slider-thumb-size);
+  block-size: var(--oneds-component-slider-thumb-size);
+  border: var(--oneds-component-slider-thumb-border) solid var(--oneds-color-background-brand-loud);
+  border-radius: var(--oneds-component-slider-thumb-radius);
+  background: var(--oneds-color-surface-neutral-nearer);
+  box-shadow: var(--oneds-semantic-elevation-1);
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.slider__input:hover::-webkit-slider-thumb {
+  border-color: var(--oneds-color-background-brand-loud-hover);
+}
+
+.slider__input:hover::-moz-range-thumb {
+  border-color: var(--oneds-color-background-brand-loud-hover);
+}
+
+.slider__input:active::-webkit-slider-thumb {
+  transform: scale(var(--oneds-reference-motion-scale-press));
+  border-color: var(--oneds-color-background-brand-loud-pressed);
+}
+
+.slider__input:active::-moz-range-thumb {
+  transform: scale(var(--oneds-reference-motion-scale-press));
+  border-color: var(--oneds-color-background-brand-loud-pressed);
+}
+
+/* Two-part focus ring on the thumb. */
+.slider__input:focus-visible {
+  outline: none;
+}
+
+.slider__input:focus-visible::-webkit-slider-thumb {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+}
+
+.slider__input:focus-visible::-moz-range-thumb {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+}
+
+.slider__input:disabled {
+  cursor: not-allowed;
+  opacity: var(--oneds-reference-opacity-disabled);
+}
+
+/* Range: two inputs share one track. Only the thumbs take pointer events so
+   both handles stay draggable; the fill band spans --slider-min..--slider-max. */
+.slider--range {
+  position: relative;
+  display: grid;
+  align-items: center;
+  block-size: var(--oneds-component-slider-thumb-size);
+}
+
+.slider--range .slider__track {
+  position: absolute;
+  inset-inline: 0;
+  block-size: var(--oneds-component-slider-track-height);
+  border-radius: var(--oneds-component-slider-track-radius);
+  background: var(--oneds-color-background-neutral-subtle);
+}
+
+.slider--range .slider__fill {
+  position: absolute;
+  block-size: var(--oneds-component-slider-track-height);
+  inset-inline-start: calc(var(--slider-min, 0) * 1%);
+  inset-inline-end: calc((100 - var(--slider-max, 100)) * 1%);
+  border-radius: var(--oneds-component-slider-track-radius);
+  background: var(--oneds-color-background-brand-loud);
+}
+
+.slider--range .slider__input {
+  position: absolute;
+  inset-inline: 0;
+  block-size: var(--oneds-component-slider-thumb-size);
+  pointer-events: none;
+}
+
+.slider--range .slider__input::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+.slider--range .slider__input::-moz-range-track {
+  background: transparent;
+}
+
+.slider--range .slider__input::-moz-range-progress {
+  background: transparent;
+}
+
+.slider--range .slider__input::-webkit-slider-thumb {
+  pointer-events: auto;
+}
+
+.slider--range .slider__input::-moz-range-thumb {
+  pointer-events: auto;
+}
+
+/* Label variant — mirrors progress-field. */
+.slider-field {
+  display: grid;
+  gap: var(--oneds-component-slider-label-gap);
+}
+
+.slider-field__header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--oneds-component-slider-label-gap);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-medium-letter-spacing);
+}
+
+.slider-field__label {
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.slider-field__value {
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider__input::-webkit-slider-thumb {
+    transition-duration: var(--oneds-reference-motion-reduced);
+  }
+
+  .slider__input::-moz-range-thumb {
+    transition-duration: var(--oneds-reference-motion-reduced);
+  }
+
+  .slider__input:active::-webkit-slider-thumb {
+    transform: none;
+  }
+
+  .slider__input:active::-moz-range-thumb {
+    transform: none;
+  }
+}
+
+/* Example fill values for static documentation. In production set --slider-value
+   (basic) or --slider-min / --slider-max (range) via inline style or script. */
+.slider--value-40 {
+  --slider-value: 40;
+}
+
+.slider--value-70 {
+  --slider-value: 70;
+}
+
+.slider--range-25-75 {
+  --slider-min: 25;
+  --slider-max: 75;
+}

@@ -1,61 +1,168 @@
 .dialog {
-  width: min(calc(100% - (var(--oneds-reference-space-lg) * 2)), var(--oneds-component-dialog-width));
-  max-height: calc(100vh - (var(--oneds-reference-space-lg) * 2));
+  width: min(calc(100% - (var(--oneds-component-dialog-viewport-margin) * 2)), var(--oneds-component-dialog-width));
+  max-height: calc(100vh - (var(--oneds-component-dialog-viewport-margin) * 2));
   padding: 0;
-  border: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke);
+  overflow: hidden;
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
   border-radius: var(--oneds-component-dialog-radius);
-  background: var(--oneds-semantic-color-surface);
+  background: var(--oneds-color-surface-neutral-nearer);
   box-shadow: var(--oneds-semantic-elevation-3);
-  color: var(--oneds-semantic-color-fg-primary);
-  font-family: var(--oneds-reference-font-family-content);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  opacity: var(--oneds-reference-opacity-hidden);
+  transform: scale(var(--oneds-reference-motion-scale-enter));
+  transition: opacity var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-standard), transform var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-standard), overlay var(--oneds-reference-motion-duration-normal) allow-discrete, display var(--oneds-reference-motion-duration-normal) allow-discrete;
+}
+
+.dialog[open] {
+  opacity: var(--oneds-reference-opacity-full);
+  transform: scale(1);
+  animation: dialog-enter var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-standard);
 }
 
 .dialog::backdrop {
-  background: var(--oneds-semantic-color-backdrop);
-  -webkit-backdrop-filter: blur(var(--oneds-reference-space-2xs));
-  backdrop-filter: blur(var(--oneds-reference-space-2xs));
+  background: var(--oneds-color-background-overlay);
+  -webkit-backdrop-filter: blur(var(--oneds-component-dialog-backdrop-blur));
+  backdrop-filter: blur(var(--oneds-component-dialog-backdrop-blur));
+  opacity: var(--oneds-reference-opacity-hidden);
+  transition: opacity var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-standard), overlay var(--oneds-reference-motion-duration-normal) allow-discrete, display var(--oneds-reference-motion-duration-normal) allow-discrete;
 }
 
-.dialog__body {
+.dialog[open]::backdrop {
+  opacity: var(--oneds-reference-opacity-full);
+  animation: dialog-backdrop-enter var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-standard);
+}
+
+/* A dialog with a content body fills the shell so the body can own the scroll. */
+.dialog:has(.dialog__body)[open] {
   display: flex;
-  align-items: flex-start;
-  gap: var(--oneds-reference-space-md);
-  padding: var(--oneds-reference-space-lg);
+  flex-direction: column;
 }
 
-.dialog__icon {
+.dialog:has(.dialog__body) > form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.dialog__header {
   display: grid;
-  width: var(--oneds-reference-control-height-md);
-  height: var(--oneds-reference-control-height-md);
-  flex: 0 0 var(--oneds-reference-control-height-md);
-  place-items: center;
-  border-radius: var(--oneds-reference-radius-lg);
-}
-
-.dialog__icon--danger {
-  background: var(--oneds-semantic-color-danger-soft);
-  color: var(--oneds-semantic-color-danger);
+  gap: var(--oneds-rhythm-group);
+  padding: var(--oneds-inset-loose) calc(var(--oneds-inset-loose) + var(--oneds-reference-control-height-xs)) 0 var(--oneds-inset-loose);
 }
 
 .dialog__title {
-  margin: var(--oneds-reference-space-none);
-  font-size: var(--oneds-reference-font-size-lg);
+  margin: 0;
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-size: var(--oneds-semantic-typography-functional-subtitle-size);
   font-weight: var(--oneds-reference-font-weight-semibold);
-  line-height: var(--oneds-reference-font-line-height-tight);
+  line-height: var(--oneds-semantic-typography-functional-subtitle-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-subtitle-letter-spacing);
 }
 
 .dialog__description {
-  margin: var(--oneds-reference-space-xs) var(--oneds-reference-space-none) var(--oneds-reference-space-none);
-  color: var(--oneds-semantic-color-fg-secondary);
-  font-size: var(--oneds-reference-font-size-sm);
+  margin: 0;
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
 }
 
-.dialog__actions {
+.dialog__body {
+  padding: var(--oneds-rhythm-component) var(--oneds-inset-loose);
+}
+
+.dialog__body > * {
+  margin: 0;
+}
+
+.dialog__body > * + * {
+  margin-block-start: var(--oneds-rhythm-items);
+}
+
+.dialog__footer {
   display: flex;
   justify-content: flex-end;
-  gap: var(--oneds-reference-space-xs);
-  padding: var(--oneds-reference-space-md) var(--oneds-reference-space-lg);
-  border-top: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke-subtle);
+  gap: var(--oneds-rhythm-group);
+  padding: var(--oneds-inset-default) var(--oneds-inset-loose);
+  border-top: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  background: var(--oneds-color-background-neutral-subtle);
+}
+
+.dialog__close {
+  position: absolute;
+  inset-block-start: var(--oneds-inset-default);
+  inset-inline-end: var(--oneds-inset-default);
+  display: grid;
+  place-items: center;
+  width: var(--oneds-reference-control-height-xs);
+  height: var(--oneds-reference-control-height-xs);
+  padding: 0;
+  border: 0;
+  border-radius: var(--oneds-reference-radius-sm);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  cursor: pointer;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.dialog__close:hover {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.dialog__close:active {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.dialog__close:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+.dialog__close svg {
+  width: var(--oneds-reference-icon-size-sm);
+  height: var(--oneds-reference-icon-size-sm);
+}
+
+/* Sticky footer parameter: the body scrolls, the footer stays pinned. */
+.dialog--sticky-footer > form {
+  overflow: hidden;
+}
+
+.dialog--sticky-footer .dialog__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.dialog--sticky-footer .dialog__footer {
+  position: sticky;
+  inset-block-end: 0;
+}
+
+@keyframes dialog-enter {
+  from {
+    opacity: var(--oneds-reference-opacity-hidden);
+    transform: scale(var(--oneds-reference-motion-scale-enter));
+  }
+}
+
+@keyframes dialog-backdrop-enter {
+  from {
+    opacity: var(--oneds-reference-opacity-hidden);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog,
+  .dialog::backdrop {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
 }
 
 @media (forced-colors: active) {

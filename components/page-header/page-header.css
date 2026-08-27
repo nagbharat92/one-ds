@@ -3,37 +3,40 @@
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--oneds-reference-space-lg);
-  padding-block: var(--oneds-reference-space-2xl);
+  gap: var(--oneds-rhythm-section);
+  padding-block: var(--oneds-rhythm-page);
 }
 
+/* A display-scale title needs more room under it than a card title, so this steps one rung above the shared pair rhythm. */
 .page-header__content {
   display: grid;
-  max-width: var(--oneds-reference-font-measure);
-  gap: var(--oneds-reference-space-sm);
+  flex: 1 1 var(--oneds-reference-font-measure);
+  gap: var(--oneds-rhythm-component);
 }
 
 .page-header__title {
-  margin: var(--oneds-reference-space-none);
-  color: var(--oneds-semantic-color-fg-primary);
-  font-family: var(--oneds-reference-font-family-content);
-  font-size: var(--oneds-reference-font-size-display);
+  margin: 0;
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-page-title-size);
   font-weight: var(--oneds-reference-font-weight-semibold);
-  font-variation-settings: var(--oneds-reference-font-optical-display);
-  line-height: var(--oneds-reference-font-line-height-tight);
+  line-height: var(--oneds-semantic-typography-functional-page-title-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-page-title-letter-spacing);
 }
 
+/* Same level as the title, so colour separates them and the size stays at body. */
 .page-header__description {
-  margin: var(--oneds-reference-space-none);
-  color: var(--oneds-semantic-color-fg-secondary);
-  font-family: var(--oneds-reference-font-family-content);
-  font-size: var(--oneds-reference-font-size-lg);
-  line-height: var(--oneds-reference-font-line-height-normal);
+  margin: 0;
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-large-size);
+  line-height: var(--oneds-semantic-typography-functional-body-large-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-large-letter-spacing);
 }
 
 .page-header__actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--oneds-reference-space-xs);
+  gap: var(--oneds-rhythm-group);
 }

@@ -1,15 +1,18 @@
 const root = document.documentElement;
-const themeToggle = document.querySelector("[data-theme-toggle]");
+const themeControls = [...document.querySelectorAll("[data-theme-value]")];
+const themeStorageKey = "oneds-theme";
 
 function setTheme(theme) {
-  root.dataset.onedsTheme = theme;
-  const dark = theme === "dark";
-  themeToggle.textContent = dark ? "Use light theme" : "Use dark theme";
-  themeToggle.setAttribute("aria-pressed", String(dark));
+  root.dataset.theme = theme;
+  localStorage.setItem(themeStorageKey, theme);
+
+  themeControls.forEach((control) => {
+    control.setAttribute("aria-pressed", String(control.dataset.themeValue === theme));
+  });
 }
 
-themeToggle.addEventListener("click", () => {
-  setTheme(root.dataset.onedsTheme === "dark" ? "light" : "dark");
+themeControls.forEach((control) => {
+  control.addEventListener("click", () => setTheme(control.dataset.themeValue));
 });
 
-setTheme(root.dataset.onedsTheme || "light");
+setTheme(localStorage.getItem(themeStorageKey) || "light");

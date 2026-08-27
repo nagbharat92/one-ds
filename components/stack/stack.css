@@ -1,0 +1,17 @@
+/* The container owns every gap; children never set their own outer margin. */
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--oneds-rhythm-component);
+}
+
+.stack > * {
+  margin-block: 0;
+}
+
+.stack--tight { gap: var(--oneds-rhythm-tight); }
+.stack--group { gap: var(--oneds-rhythm-group); }
+.stack--items { gap: var(--oneds-rhythm-items); }
+.stack--section { gap: var(--oneds-rhythm-section); }
+.stack--block { gap: var(--oneds-rhythm-block); }
+.stack--page { gap: var(--oneds-rhythm-page); }

@@ -2,42 +2,114 @@
   overflow-x: auto;
 }
 
+/* A card holding nothing but a table yields its padding, so the caption, headers and rows share one edge. */
+.card:has(> .data-table__scroll:only-child) {
+  padding: 0;
+  overflow: hidden;
+}
+
 .data-table {
+  /* One inset drives the caption and the cells so the two can never drift apart. */
+  --data-table-inset: var(--oneds-inset-default);
+
   width: 100%;
   border-collapse: collapse;
-  color: var(--oneds-semantic-color-fg-primary);
-  font-family: var(--oneds-reference-font-family-functional);
-  font-size: var(--oneds-reference-font-size-sm);
-  line-height: var(--oneds-reference-font-line-height-normal);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-content-table-size);
+  letter-spacing: var(--oneds-semantic-typography-content-table-letter-spacing);
+  line-height: var(--oneds-semantic-typography-content-table-line-height);
 }
 
 .data-table caption {
-  padding: var(--oneds-reference-space-none) var(--oneds-reference-space-md) var(--oneds-reference-space-sm);
-  color: var(--oneds-semantic-color-fg-secondary);
-  font-family: var(--oneds-reference-font-family-content);
+  padding: var(--oneds-inset-tight) var(--data-table-inset);
+  border-bottom: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
   text-align: left;
+}
+
+/* Header cells sit on a filled band so the column labels read as scaffolding, not data. */
+.data-table thead {
+  background: var(--oneds-color-background-neutral-subtle);
 }
 
 .data-table th,
 .data-table td {
-  padding: var(--oneds-reference-space-sm) var(--oneds-reference-space-md);
-  border-color: var(--oneds-semantic-color-divider);
+  padding: var(--data-table-inset);
+  border-color: var(--oneds-color-stroke-neutral-subtle);
   border-style: solid;
-  border-width: var(--oneds-reference-space-none) var(--oneds-reference-space-none) var(--oneds-reference-stroke-thin);
+  border-width: 0 0 var(--oneds-reference-stroke-thin);
   text-align: left;
   vertical-align: top;
 }
 
 .data-table th {
-  color: var(--oneds-semantic-color-fg-secondary);
+  color: var(--oneds-color-foreground-neutral-secondary);
   font-weight: var(--oneds-reference-font-weight-semibold);
 }
 
-.data-table tbody tr:last-child td {
-  border-bottom-width: var(--oneds-reference-space-none);
+.data-table tbody tr:last-child > * {
+  border-bottom-width: 0;
 }
 
-.data-table--compact th,
-.data-table--compact td {
-  padding: var(--oneds-reference-space-xs);
+/* Body rows are backplates with a full interaction ramp; a selected row swaps in the filled band's steps. */
+.data-table tbody tr {
+  --data-table-row-rest: transparent;
+  --data-table-row-hover: var(--oneds-color-background-neutral-transparent-hover);
+  --data-table-row-pressed: var(--oneds-color-background-neutral-transparent-pressed);
+  --data-table-row-disabled: var(--oneds-color-background-neutral-disabled);
+
+  background: var(--data-table-row-rest);
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.data-table tbody tr:hover {
+  background: var(--data-table-row-hover);
+}
+
+/* Only a selectable row (one that carries aria-selected) presses; a plain row just hovers. */
+.data-table tbody tr[aria-selected]:active {
+  background: var(--data-table-row-pressed);
+}
+
+/* A selected row keeps the same rest/hover/pressed rhythm on the filled band. */
+.data-table tbody tr[aria-selected="true"] {
+  --data-table-row-rest: var(--oneds-color-background-neutral-subtle);
+  --data-table-row-hover: var(--oneds-color-background-neutral-subtle-hover);
+  --data-table-row-pressed: var(--oneds-color-background-neutral-subtle-pressed);
+  --data-table-row-disabled: var(--oneds-color-background-neutral-subtle);
+}
+
+/* A disabled row rests on its disabled step, dims its ink, and takes no pointer state. */
+.data-table tbody tr[aria-disabled="true"] {
+  background: var(--data-table-row-disabled);
+  color: var(--oneds-color-foreground-neutral-disabled);
+  pointer-events: none;
+}
+
+/* A footer summarises the columns above it: filled band, hairline over it, semibold. */
+.data-table tfoot {
+  background: var(--oneds-color-background-neutral-subtle);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+}
+
+.data-table tfoot th,
+.data-table tfoot td {
+  border-width: var(--oneds-reference-stroke-thin) 0 0;
+}
+
+/* Keep every cell on one line so a wide table scrolls sideways in its wrapper instead of wrapping. */
+.data-table--nowrap th,
+.data-table--nowrap td {
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .data-table tbody tr {
+    transition-duration: var(--oneds-reference-motion-reduced);
+  }
 }

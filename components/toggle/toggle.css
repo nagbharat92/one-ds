@@ -1,0 +1,98 @@
+/* Toggle: a two-state button that holds its on state. A native checkbox carries
+   the state, so it toggles and persists with no JS; the label is the visible
+   control. Built at one size, the large control. */
+.toggle {
+  position: relative;
+  display: inline-flex;
+  min-width: var(--oneds-component-toggle-min-width);
+  min-height: var(--oneds-component-toggle-height);
+  align-items: center;
+  justify-content: center;
+  gap: var(--oneds-component-toggle-gap);
+  padding-block: 0;
+  padding-inline: var(--oneds-component-toggle-padding-inline);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-transparent);
+  border-radius: var(--oneds-component-toggle-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: inherit;
+  font-size: var(--oneds-semantic-typography-functional-body-large-size);
+  font-weight: var(--oneds-reference-font-weight-medium);
+  line-height: var(--oneds-semantic-typography-functional-body-large-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-large-letter-spacing);
+  cursor: pointer;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+/* The checkbox overlays the whole control and stays invisible; it owns the state. */
+.toggle__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: inherit;
+  opacity: var(--oneds-reference-opacity-hidden);
+  cursor: inherit;
+}
+
+.toggle svg {
+  width: var(--oneds-component-toggle-icon-size);
+  height: var(--oneds-component-toggle-icon-size);
+  line-height: 1;
+}
+
+.toggle:hover:not(:has(.toggle__input:disabled)) {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+}
+
+.toggle:active:not(:has(.toggle__input:disabled)) {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.toggle:has(.toggle__input:focus-visible) {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+/* On: the checkbox is checked, so the control fills to read as pressed at rest. */
+.toggle:has(.toggle__input:checked) {
+  background: var(--oneds-color-background-neutral-subtle);
+}
+
+.toggle:has(.toggle__input:checked):hover:not(:has(.toggle__input:disabled)) {
+  background: var(--oneds-color-background-neutral-subtle-hover);
+}
+
+.toggle:has(.toggle__input:checked):active:not(:has(.toggle__input:disabled)) {
+  background: var(--oneds-color-background-neutral-subtle-pressed);
+}
+
+.toggle:has(.toggle__input:disabled) {
+  opacity: var(--oneds-reference-opacity-disabled);
+  cursor: default;
+}
+
+/* Outline: a bordered resting state; the on state still fills. */
+.toggle--outline {
+  border-color: var(--oneds-color-stroke-neutral-subtle);
+}
+
+/* Icon and label: a leading icon makes evenly padded content read as shifted
+   toward the text, so the trailing side steps up a rung to re-centre the pair. */
+.toggle:has(> svg ~ .text-trim) {
+  padding-inline-end: var(--oneds-component-toggle-icon-label-padding-inline-end);
+}
+
+@media (forced-colors: active) {
+  .toggle {
+    border-color: ButtonText;
+  }
+
+  .toggle:has(.toggle__input:checked) {
+    background: Highlight;
+    color: HighlightText;
+  }
+}
+

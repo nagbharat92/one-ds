@@ -1,8 +1,8 @@
 .loading {
   width: var(--oneds-component-spinner-size);
   height: var(--oneds-component-spinner-size);
-  border: var(--oneds-component-focus-width) solid var(--oneds-semantic-color-stroke);
-  border-top-color: var(--oneds-semantic-color-accent);
+  border: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-neutral-subtle);
+  border-top-color: var(--oneds-color-stroke-brand-loud);
   border-radius: var(--oneds-reference-radius-pill);
   animation: oneds-loading-spin var(--oneds-component-spinner-duration) linear infinite;
 }

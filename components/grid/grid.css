@@ -2,13 +2,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--oneds-component-menu-width)), 1fr));
   align-items: start;
-  gap: var(--oneds-reference-space-lg);
-}
-
-.grid--compact {
-  gap: var(--oneds-reference-space-md);
+  gap: var(--oneds-rhythm-section);
 }
 
 .grid > * {
-  min-width: var(--oneds-reference-space-none);
+  min-width: 0;
 }

@@ -1,0 +1,125 @@
+/* Toggle group: a set of toggle buttons for choosing one option (single) or
+   several (multiple). Large size only. Each item is a real button carrying
+   aria-pressed; the host wires the pressed state. Variants: default (segmented
+   items on a recessed track) and outline (bordered items joined flush). */
+.toggle-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--oneds-component-toggle-group-gap);
+  padding: var(--oneds-component-toggle-group-padding);
+  border-radius: var(--oneds-component-toggle-group-radius);
+  background: var(--oneds-color-background-neutral-subtle);
+}
+
+.toggle-group__item {
+  display: inline-flex;
+  min-height: calc(var(--oneds-component-toggle-group-height) - 2 * var(--oneds-component-toggle-group-padding));
+  align-items: center;
+  justify-content: center;
+  gap: var(--oneds-rhythm-group);
+  padding-inline: var(--oneds-component-toggle-group-item-padding-inline);
+  border: 0;
+  border-radius: var(--oneds-component-toggle-group-item-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-large-size);
+  font-weight: var(--oneds-reference-font-weight-medium);
+  line-height: var(--oneds-semantic-typography-functional-body-large-line-height);
+  cursor: pointer;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.toggle-group__item svg {
+  flex: none;
+  width: var(--oneds-component-toggle-group-icon-size);
+  height: var(--oneds-component-toggle-group-icon-size);
+}
+
+.toggle-group__item:hover {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.toggle-group__item:active {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.toggle-group__item:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  z-index: var(--oneds-reference-layer-base);
+}
+
+/* On: the pressed segment fills with the brand tint, matching OneDS selection. */
+.toggle-group__item[aria-pressed="true"] {
+  background: var(--oneds-color-background-brand-subtle);
+  color: var(--oneds-color-foreground-brand-primary);
+}
+
+.toggle-group__item:disabled {
+  opacity: var(--oneds-reference-opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* Outline: no track; each item is bordered and joined flush with one seam. */
+.toggle-group--outline {
+  gap: 0;
+  padding: 0;
+  background: var(--oneds-color-background-neutral-transparent);
+}
+
+.toggle-group--outline .toggle-group__item {
+  min-height: var(--oneds-component-toggle-group-height);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: 0;
+}
+
+.toggle-group--outline .toggle-group__item:first-child {
+  border-start-start-radius: var(--oneds-component-toggle-group-item-radius);
+  border-end-start-radius: var(--oneds-component-toggle-group-item-radius);
+}
+
+.toggle-group--outline .toggle-group__item:last-child {
+  border-start-end-radius: var(--oneds-component-toggle-group-item-radius);
+  border-end-end-radius: var(--oneds-component-toggle-group-item-radius);
+}
+
+.toggle-group--outline .toggle-group__item:not(:first-child) {
+  margin-inline-start: calc(-1 * var(--oneds-reference-stroke-thin));
+}
+
+.toggle-group--outline .toggle-group__item:hover,
+.toggle-group--outline .toggle-group__item:focus-visible {
+  z-index: var(--oneds-reference-layer-base);
+}
+
+.toggle-group--outline .toggle-group__item[aria-pressed="true"] {
+  border-color: var(--oneds-color-stroke-brand-loud);
+  z-index: var(--oneds-reference-layer-base);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-group__item {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .toggle-group--outline .toggle-group__item {
+    border-color: ButtonText;
+  }
+
+  .toggle-group__item[aria-pressed="true"] {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .toggle-group--outline .toggle-group__item[aria-pressed="true"] {
+    border-color: Highlight;
+  }
+
+  .toggle-group__item:focus-visible {
+    outline-color: Highlight;
+  }
+}

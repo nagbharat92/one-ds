@@ -10,9 +10,12 @@ Copy `tokens.css` and `components/inline-message/inline-message.css` verbatim in
 
 ```html
 <div class="inline-message inline-message--danger" role="alert">
-  <span>The item could not be saved.</span>
+  <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 10C7.58579 10 7.25 10.3358 7.25 10.75C7.25 11.1642 7.58579 11.5 8 11.5C8.41421 11.5 8.75 11.1642 8.75 10.75C8.75 10.3358 8.41421 10 8 10ZM8 4.5C7.72386 4.5 7.5 4.72386 7.5 5V8.5L7.50781 8.58984C7.55015 8.82309 7.75454 9 8 9C8.27614 9 8.5 8.77614 8.5 8.5V5L8.49219 4.91016C8.44985 4.67691 8.24546 4.5 8 4.5Z" fill="currentColor"></path></svg>
+  <span class="text-trim">The item could not be saved.</span>
 </div>
 ```
+
+The leading icon is optional and marked `aria-hidden="true"`; the status stays in the text. Wrap the text in `<span class="text-trim">` so the icon centres on the letters rather than on the font's leading. Omit the icon for a text-only strip.
 
 Use `role="alert"` only for urgent information that should be announced immediately. For nonurgent updates, use an appropriate status role or no live-region role.
 

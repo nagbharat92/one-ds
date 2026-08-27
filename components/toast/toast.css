@@ -1,0 +1,228 @@
+/* The viewport pins a stack of toasts to one edge of the window. It never blocks the page:
+   only the toasts themselves receive pointer events, the empty region stays click-through. */
+.toast-viewport {
+  position: fixed;
+  z-index: var(--oneds-reference-layer-overlay);
+  display: flex;
+  width: min(var(--oneds-component-toast-width), calc(100vw - var(--oneds-component-toast-viewport-margin) * 2));
+  max-height: calc(100vh - var(--oneds-component-toast-viewport-margin) * 2);
+  flex-direction: column;
+  gap: var(--oneds-component-toast-viewport-gap);
+  overflow: hidden;
+  pointer-events: none;
+  font-family: var(--oneds-reference-font-family-base);
+}
+
+.toast-viewport > * {
+  pointer-events: auto;
+}
+
+/* Placement: pin to a corner or an edge centre. Bottom edges stack upward so the newest
+   toast sits closest to the edge. */
+.toast-viewport--top-left {
+  inset-block-start: var(--oneds-component-toast-viewport-margin);
+  inset-inline-start: var(--oneds-component-toast-viewport-margin);
+  align-items: flex-start;
+}
+
+.toast-viewport--top-center {
+  inset-block-start: var(--oneds-component-toast-viewport-margin);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+}
+
+.toast-viewport--top-right {
+  inset-block-start: var(--oneds-component-toast-viewport-margin);
+  inset-inline-end: var(--oneds-component-toast-viewport-margin);
+  align-items: flex-end;
+}
+
+.toast-viewport--bottom-left {
+  inset-block-end: var(--oneds-component-toast-viewport-margin);
+  inset-inline-start: var(--oneds-component-toast-viewport-margin);
+  flex-direction: column-reverse;
+  align-items: flex-start;
+}
+
+.toast-viewport--bottom-center {
+  inset-block-end: var(--oneds-component-toast-viewport-margin);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.toast-viewport--bottom-right {
+  inset-block-end: var(--oneds-component-toast-viewport-margin);
+  inset-inline-end: var(--oneds-component-toast-viewport-margin);
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+
+/* Anchored: position the region against its nearest positioned ancestor instead of the
+   window. Used to embed a toast stack inside an app panel or a documentation preview. */
+.toast-viewport--anchored {
+  position: absolute;
+  max-height: 100%;
+}
+
+/* One notification: an elevated card of icon, message, and dismiss. */
+.toast {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  width: 100%;
+  max-width: var(--oneds-component-toast-width);
+  align-items: start;
+  column-gap: var(--oneds-component-toast-column-gap);
+  row-gap: var(--oneds-component-toast-row-gap);
+  padding: var(--oneds-component-toast-padding);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: var(--oneds-component-toast-radius);
+  background: var(--oneds-color-surface-neutral-nearer);
+  box-shadow: var(--oneds-semantic-elevation-3);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  animation: oneds-toast-enter var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-entrance) both;
+}
+
+.toast[data-state="closing"] {
+  animation: oneds-toast-exit var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard) both;
+}
+
+.toast:not(:has(.toast__icon)) {
+  grid-template-columns: minmax(0, 1fr) max-content;
+}
+
+.toast__icon {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  width: var(--oneds-component-toast-icon-size);
+  height: var(--oneds-component-toast-icon-size);
+  flex: none;
+  line-height: 1;
+  color: var(--oneds-color-foreground-neutral-secondary);
+}
+
+.toast__title {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-size: var(--oneds-semantic-typography-functional-body-large-size);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+  line-height: var(--oneds-semantic-typography-functional-body-large-line-height);
+}
+
+.toast__description {
+  grid-column: 2;
+  grid-row: 2;
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+}
+
+/* Without an icon, the message spans from the first column. */
+.toast:not(:has(.toast__icon)) .toast__title,
+.toast:not(:has(.toast__icon)) .toast__description {
+  grid-column: 1;
+}
+
+/* Without a title, the description sits on the first row beside the icon. */
+.toast:not(:has(.toast__title)) .toast__description {
+  grid-row: 1;
+  align-self: center;
+}
+
+.toast__close {
+  grid-column: 3;
+  grid-row: 1;
+  display: inline-flex;
+  width: var(--oneds-component-toast-close-size);
+  height: var(--oneds-component-toast-close-size);
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  margin: calc(var(--oneds-component-toast-close-size) / -4) calc(var(--oneds-component-toast-close-size) / -4) 0 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--oneds-component-toast-close-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  cursor: pointer;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.toast__close:hover {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.toast__close:active {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.toast__close:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+.toast__close svg {
+  width: var(--oneds-component-toast-close-icon-size);
+  height: var(--oneds-component-toast-close-icon-size);
+}
+
+/* Types: the surface and text stay neutral so the message reads clearly; the icon carries
+   the status colour, matching the button and alert status families. */
+.toast--info .toast__icon {
+  color: var(--oneds-color-foreground-brand-primary);
+}
+
+.toast--success .toast__icon {
+  color: var(--oneds-color-foreground-success-primary);
+}
+
+.toast--warning .toast__icon {
+  color: var(--oneds-color-foreground-warning-primary);
+}
+
+.toast--danger .toast__icon {
+  color: var(--oneds-color-foreground-danger-primary);
+}
+
+@keyframes oneds-toast-enter {
+  from {
+    opacity: var(--oneds-reference-opacity-hidden);
+    transform: translateY(var(--oneds-reference-motion-distance-enter)) scale(var(--oneds-reference-motion-scale-enter));
+  }
+
+  to {
+    opacity: var(--oneds-reference-opacity-full);
+    transform: none;
+  }
+}
+
+@keyframes oneds-toast-exit {
+  from {
+    opacity: var(--oneds-reference-opacity-full);
+  }
+
+  to {
+    opacity: var(--oneds-reference-opacity-hidden);
+    transform: scale(var(--oneds-reference-motion-scale-enter));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .toast {
+    border-color: ButtonText;
+  }
+}

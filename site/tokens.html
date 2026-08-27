@@ -1,45 +1,50 @@
 <!doctype html>
-<html lang="en" data-oneds-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tokens · OneDS reference</title>
-  <link rel="stylesheet" href="../tokens.css">
-  <link rel="stylesheet" href="../components/button/button.css">
-  <link rel="stylesheet" href="../components/card/card.css">
-  <link rel="stylesheet" href="../components/data-table/data-table.css">
-  <link rel="stylesheet" href="../components/grid/grid.css">
-  <link rel="stylesheet" href="../components/page-header/page-header.css">
-  <link rel="stylesheet" href="../components/section/section.css">
-  <link rel="stylesheet" href="_local.css">
-  <script src="theme.js" defer></script>
+  <link rel="stylesheet" href="../tokens.css?v=ae6d0b86">
+  <link rel="stylesheet" href="../components/button/button.css?v=b2977c3f">
+  <link rel="stylesheet" href="../components/data-table/data-table.css?v=f6281c82">
+  <link rel="stylesheet" href="../components/page-header/page-header.css?v=7df3af63">
+  <link rel="stylesheet" href="../components/section/section.css?v=3f55f916">
+  <link rel="stylesheet" href="../components/tabs/tabs.css?v=f34cc528">
+  <link rel="stylesheet" href="_local.css?v=03d7b7d8">
+  <script src="theme.js?v=3" defer></script>
+  <script src="toc.js?v=1" defer></script>
+  <script src="token-copy.js?v=3" defer></script>
 </head>
 <body>
   <div class="site-shell">
     <aside class="sidebar" aria-label="Documentation navigation">
-      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
-      <nav aria-label="Catalog pages">
-        <p class="sidebar__label">Catalog</p>
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Design system for agents.</span></a>
+      <div class="tabs sidebar__theme" role="group" aria-label="Theme"><button class="tab" type="button" data-theme-value="light" aria-pressed="true">Light</button><button class="tab" type="button" data-theme-value="dark" aria-pressed="false">Dark</button></div>
+      <nav aria-label="Documentation pages">
         <ul class="sidebar__nav">
           <li><a class="sidebar__link" href="index.html">Overview</a></li>
           <li><a class="sidebar__link" href="color.html">Color</a></li>
           <li><a class="sidebar__link" href="typography.html">Typography</a></li>
-          <li><a class="sidebar__link" href="tokens.html" aria-current="page">Tokens</a></li>
+          <li><a class="sidebar__link" href="icons.html">Icons</a></li>
+          <li>
+            <details open>
+              <summary class="sidebar__link sidebar__disclosure" aria-current="page"><svg class="sidebar__disclosure-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#chevron-right-16-regular"></use></svg><span>Tokens</span></summary>
+              <ul class="sidebar__toc">
+                <li><a class="sidebar__toc-link" href="#rhythm">Rhythm</a></li>
+                <li><a class="sidebar__toc-link" href="#inset">Inset</a></li>
+                <li><a class="sidebar__toc-link" href="#space">Spacing</a></li>
+                <li><a class="sidebar__toc-link" href="#shape">Shape and stroke</a></li>
+                <li><a class="sidebar__toc-link" href="#sizing">Control and icon sizing</a></li>
+                <li><a class="sidebar__toc-link" href="#elevation">Elevation and blur</a></li>
+                <li><a class="sidebar__toc-link" href="#motion">Motion</a></li>
+                <li><a class="sidebar__toc-link" href="#opacity-layer">Opacity and layer</a></li>
+                <li><a class="sidebar__toc-link" href="#component-tokens">Component tokens</a></li>
+              </ul>
+            </details>
+          </li>
           <li><a class="sidebar__link" href="themes.html">Themes</a></li>
           <li><a class="sidebar__link" href="components.html">Components</a></li>
           <li><a class="sidebar__link" href="rules.html">Rules</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="On this page">
-        <p class="sidebar__label">On this page</p>
-        <ul class="sidebar__subnav">
-          <li><a class="sidebar__link" href="#spacing">Spacing</a></li>
-          <li><a class="sidebar__link" href="#shape">Shape and stroke</a></li>
-          <li><a class="sidebar__link" href="#sizing">Control and icon sizing</a></li>
-          <li><a class="sidebar__link" href="#shadows">Semantic theme values</a></li>
-          <li><a class="sidebar__link" href="#motion">Motion</a></li>
-          <li><a class="sidebar__link" href="#opacity-layer">Opacity and layer</a></li>
-          <li><a class="sidebar__link" href="#component-tokens">Component tokens</a></li>
         </ul>
       </nav>
     </aside>
@@ -49,270 +54,782 @@
         <header class="page-header">
           <div class="page-header__content">
             <h1 class="page-header__title">Tokens</h1>
-            <p class="page-header__description">The remaining reference, semantic, and component tokens define spacing, shape, sizing, depth, motion, opacity, stacking, and component geometry.</p>
+            <p class="page-header__description">Every non-color token: spacing, shape, sizing, depth, motion, opacity, stacking, and component geometry. Values on this page are written by <code>scripts/build-tokens.mjs</code>, and a token with no row here fails the build.</p>
           </div>
-          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
         </header>
 
-        <section class="section" id="spacing" aria-labelledby="spacing-title">
-          <header class="section__header"><h2 class="section__title" id="spacing-title">Reference spacing</h2><p class="section__description">Each bar uses the token as its actual width.</p></header>
-          <div class="section__body specimen-block scale-list">
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-none</code><div class="token-value">0px</div></div><div class="token-bar space-none"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-3xs</code><div class="token-value">2px</div></div><div class="token-bar space-3xs"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-2xs</code><div class="token-value">4px</div></div><div class="token-bar space-2xs"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-xs</code><div class="token-value">8px</div></div><div class="token-bar space-xs"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-sm</code><div class="token-value">12px</div></div><div class="token-bar space-sm"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-md</code><div class="token-value">16px</div></div><div class="token-bar space-md"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-lg</code><div class="token-value">24px</div></div><div class="token-bar space-lg"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-xl</code><div class="token-value">32px</div></div><div class="token-bar space-xl"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-2xl</code><div class="token-value">48px</div></div><div class="token-bar space-2xl"></div></div>
-            <div class="scale-row"><div><code class="token-name">--oneds-reference-space-3xl</code><div class="token-value">64px</div></div><div class="token-bar space-3xl"></div></div>
+        <section class="section" id="rhythm" aria-labelledby="rhythm-title">
+          <header class="section__header"><h2 class="section__title" id="rhythm-title">Rhythm</h2><p class="section__description">The public spacing API. Every gap comes from one of these seven rungs, chosen by the relationship between the two things being separated, never by a distance.</p></header>
+          <div class="section__body token-table">
+            <table class="data-table"><caption>Gap between siblings</caption>
+              <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use between</th></tr></thead>
+              <tbody>
+                <tr data-token="--oneds-rhythm-tight"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-tight">--oneds-rhythm-tight</button></th><td data-token-value>4px</td><td>Parts fused into one object, such as an icon and its label</td></tr>
+                <tr data-token="--oneds-rhythm-group"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-group">--oneds-rhythm-group</button></th><td data-token-value>8px</td><td>A thing and its own annotation, such as a heading and its description</td></tr>
+                <tr data-token="--oneds-rhythm-items"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-items">--oneds-rhythm-items</button></th><td data-token-value>12px</td><td>Repeated equals in one set, such as chips or list rows</td></tr>
+                <tr data-token="--oneds-rhythm-component"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-component">--oneds-rhythm-component</button></th><td data-token-value>16px</td><td>Distinct siblings in one region, such as a table and the note beside it</td></tr>
+                <tr data-token="--oneds-rhythm-section"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-section">--oneds-rhythm-section</button></th><td data-token-value>24px</td><td>A header and the content it introduces</td></tr>
+                <tr data-token="--oneds-rhythm-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-block">--oneds-rhythm-block</button></th><td data-token-value>40px</td><td>Page-level blocks</td></tr>
+                <tr data-token="--oneds-rhythm-page"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-rhythm-page">--oneds-rhythm-page</button></th><td data-token-value>64px</td><td>The page's own top and bottom edge</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="inset" aria-labelledby="inset-title">
+          <header class="section__header"><h2 class="section__title" id="inset-title">Inset</h2><p class="section__description">Padding for a surface. A container's inset always exceeds the gap between its children, so nesting can never invert.</p></header>
+          <div class="section__body token-table">
+            <table class="data-table"><caption>Padding inside a surface</caption>
+              <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Use on</th></tr></thead>
+              <tbody>
+                <tr data-token="--oneds-inset-tight"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-inset-tight">--oneds-inset-tight</button></th><td data-token-value>12px</td><td>A dense surface, such as a table cell or menu item</td></tr>
+                <tr data-token="--oneds-inset-default"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-inset-default">--oneds-inset-default</button></th><td data-token-value>16px</td><td>A card, panel, or popover</td></tr>
+                <tr data-token="--oneds-inset-loose"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-inset-loose">--oneds-inset-loose</button></th><td data-token-value>24px</td><td>A dialog or hero</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="space" aria-labelledby="space-title">
+          <header class="section__header"><h2 class="section__title" id="space-title">Spacing</h2><p class="section__description">The primitive ladder that rhythm and inset resolve to. Named by value, because authored CSS never references it directly.</p></header>
+          <div class="section__body token-table">
+            <table class="data-table"><caption>Spacing primitives</caption>
+              <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+              <tbody>
+                <tr data-token="--oneds-reference-space-2"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-2">--oneds-reference-space-2</button></th><td data-token-value>2px</td><td><div class="token-bar space-2"></div></td></tr>
+                <tr data-token="--oneds-reference-space-4"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-4">--oneds-reference-space-4</button></th><td data-token-value>4px</td><td><div class="token-bar space-4"></div></td></tr>
+                <tr data-token="--oneds-reference-space-8"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-8">--oneds-reference-space-8</button></th><td data-token-value>8px</td><td><div class="token-bar space-8"></div></td></tr>
+                <tr data-token="--oneds-reference-space-12"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-12">--oneds-reference-space-12</button></th><td data-token-value>12px</td><td><div class="token-bar space-12"></div></td></tr>
+                <tr data-token="--oneds-reference-space-16"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-16">--oneds-reference-space-16</button></th><td data-token-value>16px</td><td><div class="token-bar space-16"></div></td></tr>
+                <tr data-token="--oneds-reference-space-24"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-24">--oneds-reference-space-24</button></th><td data-token-value>24px</td><td><div class="token-bar space-24"></div></td></tr>
+                <tr data-token="--oneds-reference-space-32"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-32">--oneds-reference-space-32</button></th><td data-token-value>32px</td><td><div class="token-bar space-32"></div></td></tr>
+                <tr data-token="--oneds-reference-space-40"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-40">--oneds-reference-space-40</button></th><td data-token-value>40px</td><td><div class="token-bar space-40"></div></td></tr>
+                <tr data-token="--oneds-reference-space-48"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-48">--oneds-reference-space-48</button></th><td data-token-value>48px</td><td><div class="token-bar space-48"></div></td></tr>
+                <tr data-token="--oneds-reference-space-64"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-64">--oneds-reference-space-64</button></th><td data-token-value>64px</td><td><div class="token-bar space-64"></div></td></tr>
+                <tr data-token="--oneds-reference-space-96"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-space-96">--oneds-reference-space-96</button></th><td data-token-value>96px</td><td><div class="token-bar space-96"></div></td></tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="section" id="shape" aria-labelledby="shape-title">
-          <header class="section__header"><h2 class="section__title" id="shape-title">Reference shape and stroke</h2><p class="section__description">Radius tokens are applied to equal-size surfaces; stroke samples use their real thickness.</p></header>
+          <header class="section__header"><h2 class="section__title" id="shape-title">Shape and stroke</h2><p class="section__description">Radius samples are equal-size surfaces; stroke samples use their real thickness.</p></header>
           <div class="section__body">
-            <div class="grid">
-              <div class="specimen-block"><div class="radius-sample radius-2xs"></div><code class="token-name">--oneds-reference-radius-2xs</code><span class="token-value">2px</span></div>
-              <div class="specimen-block"><div class="radius-sample radius-xs"></div><code class="token-name">--oneds-reference-radius-xs</code><span class="token-value">4px</span></div>
-              <div class="specimen-block"><div class="radius-sample radius-sm"></div><code class="token-name">--oneds-reference-radius-sm</code><span class="token-value">6px</span></div>
-              <div class="specimen-block"><div class="radius-sample radius-md"></div><code class="token-name">--oneds-reference-radius-md</code><span class="token-value">8px</span></div>
-              <div class="specimen-block"><div class="radius-sample radius-lg"></div><code class="token-name">--oneds-reference-radius-lg</code><span class="token-value">12px</span></div>
-              <div class="specimen-block"><div class="radius-sample radius-xl"></div><code class="token-name">--oneds-reference-radius-xl</code><span class="token-value">16px</span></div>
-              <div class="specimen-block"><div class="radius-sample radius-pill"></div><code class="token-name">--oneds-reference-radius-pill</code><span class="token-value">9999px</span></div>
+            <div class="token-table">
+              <table class="data-table"><caption>Corner radius</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-radius-2xs"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-2xs">--oneds-reference-radius-2xs</button></th><td data-token-value>2px</td><td><div class="radius-sample radius-2xs"></div></td></tr>
+                  <tr data-token="--oneds-reference-radius-xs"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-xs">--oneds-reference-radius-xs</button></th><td data-token-value>4px</td><td><div class="radius-sample radius-xs"></div></td></tr>
+                  <tr data-token="--oneds-reference-radius-sm"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-sm">--oneds-reference-radius-sm</button></th><td data-token-value>6px</td><td><div class="radius-sample radius-sm"></div></td></tr>
+                  <tr data-token="--oneds-reference-radius-md"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-md">--oneds-reference-radius-md</button></th><td data-token-value>8px</td><td><div class="radius-sample radius-md"></div></td></tr>
+                  <tr data-token="--oneds-reference-radius-lg"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-lg">--oneds-reference-radius-lg</button></th><td data-token-value>12px</td><td><div class="radius-sample radius-lg"></div></td></tr>
+                  <tr data-token="--oneds-reference-radius-xl"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-xl">--oneds-reference-radius-xl</button></th><td data-token-value>16px</td><td><div class="radius-sample radius-xl"></div></td></tr>
+                  <tr data-token="--oneds-reference-radius-pill"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-radius-pill">--oneds-reference-radius-pill</button></th><td data-token-value>9999px</td><td><div class="radius-sample radius-pill"></div></td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="grid">
-              <div class="specimen-block"><div class="stroke-sample stroke-thin"></div><code class="token-name">--oneds-reference-stroke-thin</code><span class="token-value">1px</span></div>
-              <div class="specimen-block"><div class="stroke-sample stroke-thick"></div><code class="token-name">--oneds-reference-stroke-thick</code><span class="token-value">2px</span></div>
+            <div class="token-table">
+              <table class="data-table"><caption>Stroke thickness</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-stroke-thin"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-stroke-thin">--oneds-reference-stroke-thin</button></th><td data-token-value>1px</td><td><div class="stroke-sample stroke-thin"></div></td></tr>
+                  <tr data-token="--oneds-reference-stroke-thick"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-stroke-thick">--oneds-reference-stroke-thick</button></th><td data-token-value>2px</td><td><div class="stroke-sample stroke-thick"></div></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
         <section class="section" id="sizing" aria-labelledby="sizing-title">
-          <header class="section__header"><h2 class="section__title" id="sizing-title">Reference control and icon sizing</h2><p class="section__description">Control bars use the token as height; icon squares use it on both axes.</p></header>
+          <header class="section__header"><h2 class="section__title" id="sizing-title">Control and icon sizing</h2><p class="section__description">Control samples use the token as height; icon samples use it on both axes.</p></header>
           <div class="section__body">
-            <div class="grid">
-              <div class="specimen-block"><div class="control-size control-xs"></div><code class="token-name">--oneds-reference-control-height-xs</code><span class="token-value">28px</span></div>
-              <div class="specimen-block"><div class="control-size control-sm"></div><code class="token-name">--oneds-reference-control-height-sm</code><span class="token-value">32px</span></div>
-              <div class="specimen-block"><div class="control-size control-md"></div><code class="token-name">--oneds-reference-control-height-md</code><span class="token-value">40px</span></div>
-              <div class="specimen-block"><div class="control-size control-lg"></div><code class="token-name">--oneds-reference-control-height-lg</code><span class="token-value">44px</span></div>
+            <div class="token-table">
+              <table class="data-table"><caption>Control height</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-control-height-xs"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-control-height-xs">--oneds-reference-control-height-xs</button></th><td data-token-value>28px</td><td><div class="control-size control-xs"></div></td></tr>
+                  <tr data-token="--oneds-reference-control-height-sm"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-control-height-sm">--oneds-reference-control-height-sm</button></th><td data-token-value>32px</td><td><div class="control-size control-sm"></div></td></tr>
+                  <tr data-token="--oneds-reference-control-height-md"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-control-height-md">--oneds-reference-control-height-md</button></th><td data-token-value>40px</td><td><div class="control-size control-md"></div></td></tr>
+                  <tr data-token="--oneds-reference-control-height-lg"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-control-height-lg">--oneds-reference-control-height-lg</button></th><td data-token-value>44px</td><td><div class="control-size control-lg"></div></td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="grid grid--compact">
-              <div class="specimen-block"><div class="icon-size icon-xs"></div><code class="token-name">--oneds-reference-icon-size-xs</code><span class="token-value">12px</span></div>
-              <div class="specimen-block"><div class="icon-size icon-sm"></div><code class="token-name">--oneds-reference-icon-size-sm</code><span class="token-value">14px</span></div>
-              <div class="specimen-block"><div class="icon-size icon-base"></div><code class="token-name">--oneds-reference-icon-size-base</code><span class="token-value">16px</span></div>
-              <div class="specimen-block"><div class="icon-size icon-md"></div><code class="token-name">--oneds-reference-icon-size-md</code><span class="token-value">18px</span></div>
-              <div class="specimen-block"><div class="icon-size icon-display"></div><code class="token-name">--oneds-reference-icon-size-display</code><span class="token-value">20px</span></div>
-              <div class="specimen-block"><div class="icon-size icon-lg"></div><code class="token-name">--oneds-reference-icon-size-lg</code><span class="token-value">22px</span></div>
-            </div>
-            <div class="grid">
-              <div class="card card--compact"><div class="data-table__scroll"><table class="data-table data-table--compact"><caption>Control heights</caption><thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead><tbody><tr><th scope="row"><code>--oneds-reference-control-height-xs</code></th><td>28px</td></tr><tr><th scope="row"><code>--oneds-reference-control-height-sm</code></th><td>32px</td></tr><tr><th scope="row"><code>--oneds-reference-control-height-md</code></th><td>40px</td></tr><tr><th scope="row"><code>--oneds-reference-control-height-lg</code></th><td>44px</td></tr></tbody></table></div></div>
-              <div class="card card--compact"><div class="data-table__scroll"><table class="data-table data-table--compact"><caption>Icon sizes</caption><thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead><tbody><tr><th scope="row"><code>--oneds-reference-icon-size-xs</code></th><td>12px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-sm</code></th><td>14px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-base</code></th><td>16px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-md</code></th><td>18px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-display</code></th><td>20px</td></tr><tr><th scope="row"><code>--oneds-reference-icon-size-lg</code></th><td>22px</td></tr></tbody></table></div></div>
+            <div class="token-table">
+              <table class="data-table"><caption>Icon size</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-icon-size-xs"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-icon-size-xs">--oneds-reference-icon-size-xs</button></th><td data-token-value>12px</td><td><div class="icon-size icon-xs"></div></td></tr>
+                  <tr data-token="--oneds-reference-icon-size-sm"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-icon-size-sm">--oneds-reference-icon-size-sm</button></th><td data-token-value>16px</td><td><div class="icon-size icon-sm"></div></td></tr>
+                  <tr data-token="--oneds-reference-icon-size-md"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-icon-size-md">--oneds-reference-icon-size-md</button></th><td data-token-value>20px</td><td><div class="icon-size icon-md"></div></td></tr>
+                  <tr data-token="--oneds-reference-icon-size-lg"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-icon-size-lg">--oneds-reference-icon-size-lg</button></th><td data-token-value>24px</td><td><div class="icon-size icon-lg"></div></td></tr>
+                  <tr data-token="--oneds-reference-icon-size-xl"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-icon-size-xl">--oneds-reference-icon-size-xl</button></th><td data-token-value>28px</td><td><div class="icon-size icon-xl"></div></td></tr>
+                  <tr data-token="--oneds-reference-icon-size-2xl"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-icon-size-2xl">--oneds-reference-icon-size-2xl</button></th><td data-token-value>32px</td><td><div class="icon-size icon-2xl"></div></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
-        <section class="section" id="shadows" aria-labelledby="shadows-title">
-          <header class="section__header"><h2 class="section__title" id="shadows-title">Semantic theme values</h2><p class="section__description">Shadow alpha and elevation change with the semantic theme; the color page covers the remaining semantic color tokens.</p></header>
+        <section class="section" id="elevation" aria-labelledby="elevation-title">
+          <header class="section__header"><h2 class="section__title" id="elevation-title">Elevation and blur</h2><p class="section__description">Each elevation is an ambient shadow plus a key shadow, and resolves its opacity through the active <code>color-scheme</code>. Both schemes are shown together because a shadow tuned for light paper disappears on dark.</p></header>
           <div class="section__body">
-            <div class="grid">
-              <div class="theme-preview" data-oneds-theme="light">
-                <strong>Light elevations</strong>
-                <div class="shadow-sample shadow-1"></div><code class="token-name">--oneds-semantic-elevation-1</code>
-                <div class="shadow-sample shadow-2"></div><code class="token-name">--oneds-semantic-elevation-2</code>
-                <div class="shadow-sample shadow-3"></div><code class="token-name">--oneds-semantic-elevation-3</code>
-              </div>
-              <div class="theme-preview" data-oneds-theme="dark">
-                <strong>Dark elevations</strong>
-                <div class="shadow-sample shadow-1"></div><code class="token-name">--oneds-semantic-elevation-1</code>
-                <div class="shadow-sample shadow-2"></div><code class="token-name">--oneds-semantic-elevation-2</code>
-                <div class="shadow-sample shadow-3"></div><code class="token-name">--oneds-semantic-elevation-3</code>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Elevation</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-semantic-elevation-1"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-semantic-elevation-1">--oneds-semantic-elevation-1</button></th><td><div class="elevation-cell color-scheme-light"><div class="shadow-sample shadow-1"></div></div></td><td><div class="elevation-cell color-scheme-dark"><div class="shadow-sample shadow-1"></div></div></td></tr>
+                  <tr data-token="--oneds-semantic-elevation-2"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-semantic-elevation-2">--oneds-semantic-elevation-2</button></th><td><div class="elevation-cell color-scheme-light"><div class="shadow-sample shadow-2"></div></div></td><td><div class="elevation-cell color-scheme-dark"><div class="shadow-sample shadow-2"></div></div></td></tr>
+                  <tr data-token="--oneds-semantic-elevation-3"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-semantic-elevation-3">--oneds-semantic-elevation-3</button></th><td><div class="elevation-cell color-scheme-light"><div class="shadow-sample shadow-3"></div></div></td><td><div class="elevation-cell color-scheme-dark"><div class="shadow-sample shadow-3"></div></div></td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Theme-dependent semantic values</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Light</th><th scope="col">Dark</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-semantic-color-scheme</code></th><td>light</td><td>dark</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-shadow-ambient-alpha</code></th><td>5%</td><td>20%</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-shadow-key-alpha</code></th><td>9%</td><td>32%</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-shadow-strong-alpha</code></th><td>13%</td><td>44%</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-backdrop-alpha</code></th><td>36%</td><td>62%</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-elevation-1</code></th><td>Ambient plus compact key shadow</td><td>Ambient plus compact key shadow</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-elevation-2</code></th><td>Ambient plus medium key shadow</td><td>Ambient plus medium key shadow</td></tr>
-                    <tr><th scope="row"><code>--oneds-semantic-elevation-3</code></th><td>Ambient plus strong key shadow</td><td>Ambient plus strong key shadow</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Backdrop blur</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Used by</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-blur-sm"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-blur-sm">--oneds-reference-blur-sm</button></th><td data-token-value>4px</td><td>Dialog backdrop</td></tr>
+                  <tr data-token="--oneds-reference-blur-md"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-blur-md">--oneds-reference-blur-md</button></th><td data-token-value>12px</td><td>Toolbar material</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
         <section class="section" id="motion" aria-labelledby="motion-title">
-          <header class="section__header"><h2 class="section__title" id="motion-title">Reference motion</h2><p class="section__description">Duration bars replay continuously for comparison. Reduced motion collapses them to the reduced token.</p></header>
+          <header class="section__header"><h2 class="section__title" id="motion-title">Motion</h2><p class="section__description">Duration samples replay continuously for comparison.</p></header>
           <div class="section__body">
-            <div class="specimen-block scale-list">
-              <div><code class="token-name">--oneds-reference-motion-duration-none</code><span class="token-value"> · 0ms</span><div class="motion-track"><div class="motion-bar motion-none"></div></div></div>
-              <div><code class="token-name">--oneds-reference-motion-duration-instant</code><span class="token-value"> · 90ms</span><div class="motion-track"><div class="motion-bar motion-instant"></div></div></div>
-              <div><code class="token-name">--oneds-reference-motion-duration-fast</code><span class="token-value"> · 140ms</span><div class="motion-track"><div class="motion-bar motion-fast"></div></div></div>
-              <div><code class="token-name">--oneds-reference-motion-duration-normal</code><span class="token-value"> · 220ms</span><div class="motion-track"><div class="motion-bar motion-normal"></div></div></div>
-              <div><code class="token-name">--oneds-reference-motion-duration-slow</code><span class="token-value"> · 340ms</span><div class="motion-track"><div class="motion-bar motion-slow"></div></div></div>
+            <div class="token-table">
+              <table class="data-table"><caption>Duration</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-motion-duration-none"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-duration-none">--oneds-reference-motion-duration-none</button></th><td data-token-value>0ms</td><td><div class="motion-track"><div class="motion-bar motion-none"></div></div></td></tr>
+                  <tr data-token="--oneds-reference-motion-duration-instant"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-duration-instant">--oneds-reference-motion-duration-instant</button></th><td data-token-value>90ms</td><td><div class="motion-track"><div class="motion-bar motion-instant"></div></div></td></tr>
+                  <tr data-token="--oneds-reference-motion-duration-fast"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-duration-fast">--oneds-reference-motion-duration-fast</button></th><td data-token-value>140ms</td><td><div class="motion-track"><div class="motion-bar motion-fast"></div></div></td></tr>
+                  <tr data-token="--oneds-reference-motion-duration-normal"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-duration-normal">--oneds-reference-motion-duration-normal</button></th><td data-token-value>220ms</td><td><div class="motion-track"><div class="motion-bar motion-normal"></div></div></td></tr>
+                  <tr data-token="--oneds-reference-motion-duration-slow"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-duration-slow">--oneds-reference-motion-duration-slow</button></th><td data-token-value>340ms</td><td><div class="motion-track"><div class="motion-bar motion-slow"></div></div></td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Motion behavior values</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-reference-motion-ease-standard</code></th><td>cubic-bezier(0.2, 0, 0, 1)</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-ease-entrance</code></th><td>cubic-bezier(0.12, 0.85, 0.2, 1)</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-distance-enter</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-distance-lift</code></th><td>-1px</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-scale-press</code></th><td>0.96</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-scale-enter</code></th><td>0.97</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-transition-state</code></th><td>Fast standard transitions for background, border, shadow, color, opacity, and transform</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-motion-reduced</code></th><td>1ms</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Easing, distance, and scale</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Role</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-motion-ease-standard"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-ease-standard">--oneds-reference-motion-ease-standard</button></th><td data-token-value>cubic-bezier(0.2, 0, 0, 1)</td><td>State changes on an element already on screen</td></tr>
+                  <tr data-token="--oneds-reference-motion-ease-entrance"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-ease-entrance">--oneds-reference-motion-ease-entrance</button></th><td data-token-value>cubic-bezier(0.12, 0.85, 0.2, 1)</td><td>Something arriving, such as a menu or dialog</td></tr>
+                  <tr data-token="--oneds-reference-motion-distance-enter"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-enter">--oneds-reference-motion-distance-enter</button></th><td data-token-value>8px</td><td>Offset an arriving surface travels</td></tr>
+                  <tr data-token="--oneds-reference-motion-distance-rise"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-rise">--oneds-reference-motion-distance-rise</button></th><td data-token-value>4px</td><td>Shorter arrival offset for a small surface</td></tr>
+                  <tr data-token="--oneds-reference-motion-distance-lift"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-lift">--oneds-reference-motion-distance-lift</button></th><td data-token-value>-1px</td><td>Hover lift on a control</td></tr>
+                  <tr data-token="--oneds-reference-motion-scale-press"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-scale-press">--oneds-reference-motion-scale-press</button></th><td data-token-value>0.96</td><td>Pressed state of a control</td></tr>
+                  <tr data-token="--oneds-reference-motion-scale-enter"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-scale-enter">--oneds-reference-motion-scale-enter</button></th><td data-token-value>0.97</td><td>Starting scale of an arriving surface</td></tr>
+                  <tr data-token="--oneds-reference-motion-reduced"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-reduced">--oneds-reference-motion-reduced</button></th><td data-token-value>1ms</td><td>Every duration under <code>prefers-reduced-motion</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Composite</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Applies to</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-motion-transition-state"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-transition-state">--oneds-reference-motion-transition-state</button></th><td>One ready-made <code>transition</code> covering background, border, shadow, color, opacity, and transform at the fast duration and standard easing.</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
         <section class="section" id="opacity-layer" aria-labelledby="opacity-layer-title">
-          <header class="section__header"><h2 class="section__title" id="opacity-layer-title">Reference opacity and layer</h2><p class="section__description">Opacity samples render the same accent surface. Layer tokens establish the shared stacking order.</p></header>
+          <header class="section__header"><h2 class="section__title" id="opacity-layer-title">Opacity and layer</h2><p class="section__description">Opacity samples apply each token to the same specimen. Layer tokens establish the shared stacking order.</p></header>
           <div class="section__body">
-            <div class="grid grid--compact">
-              <div class="specimen-block"><div class="opacity-sample opacity-hidden"></div><code class="token-name">--oneds-reference-opacity-hidden</code><span class="token-value">0</span></div>
-              <div class="specimen-block"><div class="opacity-sample opacity-muted"></div><code class="token-name">--oneds-reference-opacity-muted</code><span class="token-value">0.5</span></div>
-              <div class="specimen-block"><div class="opacity-sample opacity-disabled"></div><code class="token-name">--oneds-reference-opacity-disabled</code><span class="token-value">0.5</span></div>
-              <div class="specimen-block"><div class="opacity-sample opacity-full"></div><code class="token-name">--oneds-reference-opacity-full</code><span class="token-value">1</span></div>
+            <div class="token-table">
+              <table class="data-table"><caption>Opacity</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-opacity-hidden"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-opacity-hidden">--oneds-reference-opacity-hidden</button></th><td data-token-value>0</td><td><div class="opacity-sample opacity-hidden"></div></td></tr>
+                  <tr data-token="--oneds-reference-opacity-muted"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-opacity-muted">--oneds-reference-opacity-muted</button></th><td data-token-value>0.5</td><td><div class="opacity-sample opacity-muted"></div></td></tr>
+                  <tr data-token="--oneds-reference-opacity-disabled"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-opacity-disabled">--oneds-reference-opacity-disabled</button></th><td data-token-value>0.5</td><td><div class="opacity-sample opacity-disabled"></div></td></tr>
+                  <tr data-token="--oneds-reference-opacity-full"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-opacity-full">--oneds-reference-opacity-full</button></th><td data-token-value>1</td><td><div class="opacity-sample opacity-full"></div></td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Opacity values</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-reference-opacity-hidden</code></th><td>0</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-opacity-muted</code></th><td>0.5</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-opacity-disabled</code></th><td>0.5</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-opacity-full</code></th><td>1</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Layer order</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th><th scope="col">Role</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-reference-layer-base</code></th><td>1</td><td>Raised content in the normal page flow</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-layer-header</code></th><td>10</td><td>Persistent headers and navigation</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-layer-menu</code></th><td>20</td><td>Menus and contextual popovers</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-layer-overlay</code></th><td>30</td><td>Modal overlays</td></tr>
-                    <tr><th scope="row"><code>--oneds-reference-layer-embedded</code></th><td>2147483647</td><td>Embedded hosts that must remain above their document</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Layer order</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Role</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-layer-base"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-layer-base">--oneds-reference-layer-base</button></th><td data-token-value>1</td><td>Raised content in the normal page flow</td></tr>
+                  <tr data-token="--oneds-reference-layer-header"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-layer-header">--oneds-reference-layer-header</button></th><td data-token-value>10</td><td>Persistent headers and navigation</td></tr>
+                  <tr data-token="--oneds-reference-layer-menu"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-layer-menu">--oneds-reference-layer-menu</button></th><td data-token-value>20</td><td>Menus and contextual popovers</td></tr>
+                  <tr data-token="--oneds-reference-layer-overlay"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-layer-overlay">--oneds-reference-layer-overlay</button></th><td data-token-value>30</td><td>Modal overlays</td></tr>
+                  <tr data-token="--oneds-reference-layer-embedded"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-layer-embedded">--oneds-reference-layer-embedded</button></th><td data-token-value>2147483647</td><td>Embedded hosts that must stay above their document</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
         <section class="section" id="component-tokens" aria-labelledby="component-tokens-title">
-          <header class="section__header"><h2 class="section__title" id="component-tokens-title">Component tokens</h2><p class="section__description">Component tokens bind reference decisions to stable control geometry and behavior.</p></header>
+          <header class="section__header"><h2 class="section__title" id="component-tokens-title">Component tokens</h2><p class="section__description">Geometry and behavior bound to one component. Copy a component from <code>components/</code> rather than rebuilding it from these values.</p></header>
           <div class="section__body">
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Focus, scrolling, button, icon button, and field</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Resolved value</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-component-focus-width</code></th><td>2px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-focus-offset</code></th><td>2px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-strength</code></th><td>0.2</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-settle-distance</code></th><td>0.5</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-line-step</code></th><td>16</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-inertial-scroll-page-step</code></th><td>0.9</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-button-height</code></th><td>32px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-button-padding-block</code></th><td>4px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-button-padding-inline</code></th><td>12px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-button-gap</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-button-radius</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-icon-button-size</code></th><td>32px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-icon-button-radius</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-field-height</code></th><td>40px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-field-radius</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-field-padding-inline</code></th><td>12px</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Focus and scrolling</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-focus-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-focus-width">--oneds-component-focus-width</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-focus-offset"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-focus-offset">--oneds-component-focus-offset</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-inertial-scroll-strength"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inertial-scroll-strength">--oneds-component-inertial-scroll-strength</button></th><td data-token-value>0.2</td></tr>
+                  <tr data-token="--oneds-component-inertial-scroll-settle-distance"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inertial-scroll-settle-distance">--oneds-component-inertial-scroll-settle-distance</button></th><td data-token-value>0.5</td></tr>
+                  <tr data-token="--oneds-component-inertial-scroll-line-step"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inertial-scroll-line-step">--oneds-component-inertial-scroll-line-step</button></th><td data-token-value>16</td></tr>
+                  <tr data-token="--oneds-component-inertial-scroll-page-step"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inertial-scroll-page-step">--oneds-component-inertial-scroll-page-step</button></th><td data-token-value>0.9</td></tr>
+                </tbody>
+              </table>
             </div>
 
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Date picker and menu</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Resolved value</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-width</code></th><td>280px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-radius</code></th><td>12px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-padding</code></th><td>4px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-day-size</code></th><td>36px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-day-radius</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-header-height</code></th><td>40px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-weekday-height</code></th><td>32px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-date-picker-navigation-size</code></th><td>32px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-width</code></th><td>280px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-padding</code></th><td>4px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-gap</code></th><td>4px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-radius</code></th><td>12px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-item-height</code></th><td>32px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-item-radius</code></th><td>8px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-item-padding-block</code></th><td>4px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-menu-item-padding-inline</code></th><td>12px</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Button and icon button</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-button-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-height">--oneds-component-button-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-button-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-padding-block">--oneds-component-button-padding-block</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-button-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-padding-inline">--oneds-component-button-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-button-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-gap">--oneds-component-button-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-button-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-radius">--oneds-component-button-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-icon-button-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-icon-button-size">--oneds-component-icon-button-size</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-icon-button-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-icon-button-radius">--oneds-component-icon-button-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-button-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-icon-size">--oneds-component-button-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-button-icon-label-padding-inline-end"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-icon-label-padding-inline-end">--oneds-component-button-icon-label-padding-inline-end</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-button-spinner-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-spinner-size">--oneds-component-button-spinner-size</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
             </div>
 
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Dialog, spinner, surface, toolbar, and checkbox</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Resolved value</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-component-dialog-width</code></th><td>440px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-dialog-radius</code></th><td>16px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-spinner-size</code></th><td>22px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-spinner-duration</code></th><td>700ms</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-spinner-turn</code></th><td>1turn</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-surface-radius</code></th><td>12px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-toolbar-backdrop-blur</code></th><td>12px</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-checkbox-size</code></th><td>18px</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Badge</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-badge-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-padding-block">--oneds-component-badge-padding-block</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-badge-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-padding-inline">--oneds-component-badge-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-badge-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-gap">--oneds-component-badge-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-badge-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-radius">--oneds-component-badge-radius</button></th><td data-token-value>6px</td></tr>
+                  <tr data-token="--oneds-component-badge-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-icon-size">--oneds-component-badge-icon-size</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-badge-icon-padding-inline-start"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-icon-padding-inline-start">--oneds-component-badge-icon-padding-inline-start</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-badge-icon-label-padding-inline-end"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-badge-icon-label-padding-inline-end">--oneds-component-badge-icon-label-padding-inline-end</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
             </div>
 
-            <div class="card card--compact">
-              <div class="data-table__scroll">
-                <table class="data-table data-table--compact">
-                  <caption>Extension icon metadata</caption>
-                  <thead><tr><th scope="col">Variable</th><th scope="col">Value</th></tr></thead>
-                  <tbody>
-                    <tr><th scope="row"><code>--oneds-component-extension-icon-source-size</code></th><td>128</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-extension-icon-size16</code></th><td>16</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-extension-icon-size32</code></th><td>32</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-extension-icon-size48</code></th><td>48</td></tr>
-                    <tr><th scope="row"><code>--oneds-component-extension-icon-size128</code></th><td>128</td></tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Breadcrumb</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-breadcrumb-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-breadcrumb-gap">--oneds-component-breadcrumb-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-breadcrumb-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-breadcrumb-icon-size">--oneds-component-breadcrumb-icon-size</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Pagination</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-pagination-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-gap">--oneds-component-pagination-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-pagination-item-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-item-size">--oneds-component-pagination-item-size</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-pagination-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-item-padding-inline">--oneds-component-pagination-item-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-pagination-nav-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-nav-padding-inline">--oneds-component-pagination-nav-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-pagination-nav-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-nav-gap">--oneds-component-pagination-nav-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-pagination-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-radius">--oneds-component-pagination-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-pagination-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-pagination-icon-size">--oneds-component-pagination-icon-size</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Chip</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-chip-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-chip-padding-block">--oneds-component-chip-padding-block</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-chip-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-chip-padding-inline">--oneds-component-chip-padding-inline</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Field, textarea, search field, and tabs</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-field-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-field-height">--oneds-component-field-height</button></th><td data-token-value>40px</td></tr>
+                  <tr data-token="--oneds-component-field-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-field-radius">--oneds-component-field-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-field-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-field-padding-inline">--oneds-component-field-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-field-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-field-gap">--oneds-component-field-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-field-set-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-field-set-gap">--oneds-component-field-set-gap</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-field-group-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-field-group-gap">--oneds-component-field-group-gap</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-textarea-min-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-textarea-min-height">--oneds-component-textarea-min-height</button></th><td data-token-value>96px</td></tr>
+                  <tr data-token="--oneds-component-textarea-max-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-textarea-max-height">--oneds-component-textarea-max-height</button></th><td data-token-value>240px</td></tr>
+                  <tr data-token="--oneds-component-textarea-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-textarea-padding-block">--oneds-component-textarea-padding-block</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-search-field-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-search-field-padding">--oneds-component-search-field-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-tabs-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-padding">--oneds-component-tabs-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-tabs-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-radius">--oneds-component-tabs-radius</button></th><td data-token-value>9999px</td></tr>
+                  <tr data-token="--oneds-component-tabs-item-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-item-height">--oneds-component-tabs-item-height</button></th><td data-token-value>40px</td></tr>
+                  <tr data-token="--oneds-component-tabs-item-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-item-radius">--oneds-component-tabs-item-radius</button></th><td data-token-value>9999px</td></tr>
+                  <tr data-token="--oneds-component-tabs-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-item-padding-inline">--oneds-component-tabs-item-padding-inline</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-tabs-item-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-item-gap">--oneds-component-tabs-item-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-tabs-pill-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-pill-gap">--oneds-component-tabs-pill-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-tabs-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-icon-size">--oneds-component-tabs-icon-size</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-tabs-lined-indicator-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-lined-indicator-size">--oneds-component-tabs-lined-indicator-size</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-tabs-lined-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-lined-item-padding-inline">--oneds-component-tabs-lined-item-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-tabs-small-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-small-padding">--oneds-component-tabs-small-padding</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-tabs-small-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-small-radius">--oneds-component-tabs-small-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-tabs-small-item-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-small-item-height">--oneds-component-tabs-small-item-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-tabs-small-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-small-item-padding-inline">--oneds-component-tabs-small-item-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-tabs-small-item-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-small-item-radius">--oneds-component-tabs-small-item-radius</button></th><td data-token-value>6px</td></tr>
+                  <tr data-token="--oneds-component-tabs-selection-motion-duration"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tabs-selection-motion-duration">--oneds-component-tabs-selection-motion-duration</button></th><td data-token-value>220ms</td></tr>
+                  <tr data-token="--oneds-component-accordion-trigger-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-accordion-trigger-padding-block">--oneds-component-accordion-trigger-padding-block</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-accordion-content-padding-block-end"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-accordion-content-padding-block-end">--oneds-component-accordion-content-padding-block-end</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-accordion-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-accordion-icon-size">--oneds-component-accordion-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-accordion-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-accordion-radius">--oneds-component-accordion-radius</button></th><td data-token-value>6px</td></tr>
+                  <tr data-token="--oneds-component-alert-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-alert-padding">--oneds-component-alert-padding</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-alert-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-alert-radius">--oneds-component-alert-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-alert-column-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-alert-column-gap">--oneds-component-alert-column-gap</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-alert-row-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-alert-row-gap">--oneds-component-alert-row-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-alert-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-alert-icon-size">--oneds-component-alert-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-toast-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-width">--oneds-component-toast-width</button></th><td data-token-value>360px</td></tr>
+                  <tr data-token="--oneds-component-toast-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-padding">--oneds-component-toast-padding</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-toast-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-radius">--oneds-component-toast-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toast-column-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-column-gap">--oneds-component-toast-column-gap</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toast-row-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-row-gap">--oneds-component-toast-row-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-toast-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-icon-size">--oneds-component-toast-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-toast-close-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-close-size">--oneds-component-toast-close-size</button></th><td data-token-value>28px</td></tr>
+                  <tr data-token="--oneds-component-toast-close-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-close-icon-size">--oneds-component-toast-close-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-toast-close-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-close-radius">--oneds-component-toast-close-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-toast-viewport-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-viewport-gap">--oneds-component-toast-viewport-gap</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toast-viewport-margin"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toast-viewport-margin">--oneds-component-toast-viewport-margin</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-inline-message-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inline-message-icon-size">--oneds-component-inline-message-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-avatar-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-avatar-size">--oneds-component-avatar-size</button></th><td data-token-value>48px</td></tr>
+                  <tr data-token="--oneds-component-avatar-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-avatar-radius">--oneds-component-avatar-radius</button></th><td data-token-value>9999px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>AI Composer</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-ai-composer-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-radius">--oneds-component-ai-composer-radius</button></th><td data-token-value>calc(32px / 2 + 12px + 1px)</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-padding">--oneds-component-ai-composer-padding</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-gap">--oneds-component-ai-composer-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-row-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-row-gap">--oneds-component-ai-composer-row-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-input-min-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-input-min-height">--oneds-component-ai-composer-input-min-height</button></th><td data-token-value>44px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-input-max-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-input-max-height">--oneds-component-ai-composer-input-max-height</button></th><td data-token-value>160px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-input-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-input-padding-inline">--oneds-component-ai-composer-input-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-action-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-action-size">--oneds-component-ai-composer-action-size</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-action-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-action-radius">--oneds-component-ai-composer-action-radius</button></th><td data-token-value>9999px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-icon-size">--oneds-component-ai-composer-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-tool-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-tool-gap">--oneds-component-ai-composer-tool-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-tool-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-tool-padding-inline">--oneds-component-ai-composer-tool-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-tool-icon-label-padding-inline-end"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-tool-icon-label-padding-inline-end">--oneds-component-ai-composer-tool-icon-label-padding-inline-end</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-gap">--oneds-component-ai-composer-attachment-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-padding">--oneds-component-ai-composer-attachment-padding</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-radius">--oneds-component-ai-composer-attachment-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-preview-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-preview-size">--oneds-component-ai-composer-attachment-preview-size</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-preview-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-preview-radius">--oneds-component-ai-composer-attachment-preview-radius</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-remove-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-remove-size">--oneds-component-ai-composer-attachment-remove-size</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-ai-composer-attachment-dismiss-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-ai-composer-attachment-dismiss-size">--oneds-component-ai-composer-attachment-dismiss-size</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Menu</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-menu-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-width">--oneds-component-menu-width</button></th><td data-token-value>280px</td></tr>
+                  <tr data-token="--oneds-component-menu-viewport-margin"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-viewport-margin">--oneds-component-menu-viewport-margin</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-menu-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-padding">--oneds-component-menu-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-menu-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-gap">--oneds-component-menu-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-menu-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-radius">--oneds-component-menu-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-menu-item-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-item-height">--oneds-component-menu-item-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-menu-item-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-item-radius">--oneds-component-menu-item-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-menu-item-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-item-padding-block">--oneds-component-menu-item-padding-block</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-menu-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-item-padding-inline">--oneds-component-menu-item-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-menu-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-icon-size">--oneds-component-menu-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-menu-dot-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-menu-dot-size">--oneds-component-menu-dot-size</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Dialog</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-dialog-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-dialog-width">--oneds-component-dialog-width</button></th><td data-token-value>440px</td></tr>
+                  <tr data-token="--oneds-component-dialog-viewport-margin"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-dialog-viewport-margin">--oneds-component-dialog-viewport-margin</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-dialog-backdrop-blur"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-dialog-backdrop-blur">--oneds-component-dialog-backdrop-blur</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-dialog-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-dialog-radius">--oneds-component-dialog-radius</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-dialog-icon-tile-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-dialog-icon-tile-size">--oneds-component-dialog-icon-tile-size</button></th><td data-token-value>40px</td></tr>
+                  <tr data-token="--oneds-component-dialog-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-dialog-icon-size">--oneds-component-dialog-icon-size</button></th><td data-token-value>20px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Drawer</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-drawer-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-drawer-width">--oneds-component-drawer-width</button></th><td data-token-value>400px</td></tr>
+                  <tr data-token="--oneds-component-drawer-viewport-margin"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-drawer-viewport-margin">--oneds-component-drawer-viewport-margin</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-drawer-backdrop-blur"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-drawer-backdrop-blur">--oneds-component-drawer-backdrop-blur</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-drawer-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-drawer-radius">--oneds-component-drawer-radius</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>App sidebar</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-app-sidebar-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-width">--oneds-component-app-sidebar-width</button></th><td data-token-value>256px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-width-icon"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-width-icon">--oneds-component-app-sidebar-width-icon</button></th><td data-token-value>48px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-padding">--oneds-component-app-sidebar-padding</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-item-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-item-gap">--oneds-component-app-sidebar-item-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-group-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-group-gap">--oneds-component-app-sidebar-group-gap</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-item-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-item-height">--oneds-component-app-sidebar-item-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-item-padding-inline">--oneds-component-app-sidebar-item-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-item-icon-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-item-icon-gap">--oneds-component-app-sidebar-item-icon-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-item-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-item-radius">--oneds-component-app-sidebar-item-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-icon-size">--oneds-component-app-sidebar-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-app-sidebar-sub-inset"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-app-sidebar-sub-inset">--oneds-component-app-sidebar-sub-inset</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Hover card</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-hover-card-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-hover-card-width">--oneds-component-hover-card-width</button></th><td data-token-value>260px</td></tr>
+                  <tr data-token="--oneds-component-hover-card-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-hover-card-gap">--oneds-component-hover-card-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-hover-card-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-hover-card-padding">--oneds-component-hover-card-padding</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-hover-card-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-hover-card-radius">--oneds-component-hover-card-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-hover-card-arrow-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-hover-card-arrow-size">--oneds-component-hover-card-arrow-size</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Tooltip</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-tooltip-max-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tooltip-max-width">--oneds-component-tooltip-max-width</button></th><td data-token-value>240px</td></tr>
+                  <tr data-token="--oneds-component-tooltip-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tooltip-gap">--oneds-component-tooltip-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-tooltip-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tooltip-padding-block">--oneds-component-tooltip-padding-block</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-tooltip-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tooltip-padding-inline">--oneds-component-tooltip-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-tooltip-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tooltip-radius">--oneds-component-tooltip-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-tooltip-arrow-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-tooltip-arrow-size">--oneds-component-tooltip-arrow-size</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Resizable</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-resizable-handle-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-resizable-handle-size">--oneds-component-resizable-handle-size</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-resizable-grip-length"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-resizable-grip-length">--oneds-component-resizable-grip-length</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-resizable-grip-thickness"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-resizable-grip-thickness">--oneds-component-resizable-grip-thickness</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-resizable-panel-min-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-resizable-panel-min-size">--oneds-component-resizable-panel-min-size</button></th><td data-token-value>48px</td></tr>
+                  <tr data-token="--oneds-component-resizable-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-resizable-radius">--oneds-component-resizable-radius</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Popover</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-popover-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-width">--oneds-component-popover-width</button></th><td data-token-value>320px</td></tr>
+                  <tr data-token="--oneds-component-popover-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-gap">--oneds-component-popover-gap</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-popover-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-padding">--oneds-component-popover-padding</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-popover-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-radius">--oneds-component-popover-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-popover-panel-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-panel-gap">--oneds-component-popover-panel-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-popover-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-icon-size">--oneds-component-popover-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-popover-trigger-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-trigger-height">--oneds-component-popover-trigger-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-popover-trigger-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-trigger-radius">--oneds-component-popover-trigger-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-popover-trigger-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-trigger-padding-inline">--oneds-component-popover-trigger-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-popover-trigger-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-popover-trigger-gap">--oneds-component-popover-trigger-gap</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Empty state</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-empty-state-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-empty-state-icon-size">--oneds-component-empty-state-icon-size</button></th><td data-token-value>32px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="token-note">Checkbox and combobox geometry is settled here so any surface can adopt the controls without renegotiating these values.</p>
+            <div class="token-table">
+              <table class="data-table"><caption>Calendar</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-calendar-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-width">--oneds-component-calendar-width</button></th><td data-token-value>calc(36px * 7 + 4px * 2)</td></tr>
+                  <tr data-token="--oneds-component-calendar-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-radius">--oneds-component-calendar-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-calendar-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-padding">--oneds-component-calendar-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-calendar-day-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-day-size">--oneds-component-calendar-day-size</button></th><td data-token-value>36px</td></tr>
+                  <tr data-token="--oneds-component-calendar-day-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-day-radius">--oneds-component-calendar-day-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-calendar-header-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-header-height">--oneds-component-calendar-header-height</button></th><td data-token-value>40px</td></tr>
+                  <tr data-token="--oneds-component-calendar-weekday-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-weekday-height">--oneds-component-calendar-weekday-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-calendar-navigation-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-calendar-navigation-size">--oneds-component-calendar-navigation-size</button></th><td data-token-value>32px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Checkbox</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-checkbox-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-checkbox-size">--oneds-component-checkbox-size</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-checkbox-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-checkbox-radius">--oneds-component-checkbox-radius</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-checkbox-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-checkbox-gap">--oneds-component-checkbox-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-checkbox-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-checkbox-icon-size">--oneds-component-checkbox-icon-size</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Radio</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-radio-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-radio-size">--oneds-component-radio-size</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-radio-dot-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-radio-dot-size">--oneds-component-radio-dot-size</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-radio-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-radio-gap">--oneds-component-radio-gap</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Choice card</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-choice-card-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-choice-card-padding">--oneds-component-choice-card-padding</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-choice-card-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-choice-card-gap">--oneds-component-choice-card-gap</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-choice-card-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-choice-card-radius">--oneds-component-choice-card-radius</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Switch</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-switch-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-switch-width">--oneds-component-switch-width</button></th><td data-token-value>40px</td></tr>
+                  <tr data-token="--oneds-component-switch-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-switch-height">--oneds-component-switch-height</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-switch-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-switch-padding">--oneds-component-switch-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-switch-thumb-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-switch-thumb-size">--oneds-component-switch-thumb-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-switch-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-switch-gap">--oneds-component-switch-gap</button></th><td data-token-value>8px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Toggle group</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-toggle-group-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-height">--oneds-component-toggle-group-height</button></th><td data-token-value>44px</td></tr>
+                  <tr data-token="--oneds-component-toggle-group-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-radius">--oneds-component-toggle-group-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toggle-group-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-padding">--oneds-component-toggle-group-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-toggle-group-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-gap">--oneds-component-toggle-group-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-toggle-group-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-item-padding-inline">--oneds-component-toggle-group-item-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toggle-group-item-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-item-radius">--oneds-component-toggle-group-item-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-toggle-group-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-group-icon-size">--oneds-component-toggle-group-icon-size</button></th><td data-token-value>20px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Toggle</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-toggle-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-height">--oneds-component-toggle-height</button></th><td data-token-value>44px</td></tr>
+                  <tr data-token="--oneds-component-toggle-min-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-min-width">--oneds-component-toggle-min-width</button></th><td data-token-value>44px</td></tr>
+                  <tr data-token="--oneds-component-toggle-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-padding-inline">--oneds-component-toggle-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toggle-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-gap">--oneds-component-toggle-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-toggle-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-radius">--oneds-component-toggle-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-toggle-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-icon-size">--oneds-component-toggle-icon-size</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-toggle-icon-label-padding-inline-end"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toggle-icon-label-padding-inline-end">--oneds-component-toggle-icon-label-padding-inline-end</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Combobox</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-combobox-min-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-min-width">--oneds-component-combobox-min-width</button></th><td data-token-value>240px</td></tr>
+                  <tr data-token="--oneds-component-combobox-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-radius">--oneds-component-combobox-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-combobox-panel-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-panel-gap">--oneds-component-combobox-panel-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-combobox-panel-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-panel-padding">--oneds-component-combobox-panel-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-combobox-panel-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-panel-radius">--oneds-component-combobox-panel-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-combobox-panel-max-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-panel-max-height">--oneds-component-combobox-panel-max-height</button></th><td data-token-value>280px</td></tr>
+                  <tr data-token="--oneds-component-combobox-option-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-option-height">--oneds-component-combobox-option-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-combobox-option-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-option-radius">--oneds-component-combobox-option-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-combobox-option-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-option-padding-inline">--oneds-component-combobox-option-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-combobox-option-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-option-gap">--oneds-component-combobox-option-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-combobox-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-icon-size">--oneds-component-combobox-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-combobox-clear-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-clear-size">--oneds-component-combobox-clear-size</button></th><td data-token-value>28px</td></tr>
+                  <tr data-token="--oneds-component-combobox-tag-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-tag-gap">--oneds-component-combobox-tag-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-combobox-tag-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-tag-padding-block">--oneds-component-combobox-tag-padding-block</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-combobox-tag-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-tag-padding-inline">--oneds-component-combobox-tag-padding-inline</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-combobox-tag-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-combobox-tag-radius">--oneds-component-combobox-tag-radius</button></th><td data-token-value>6px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Select</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-select-min-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-min-width">--oneds-component-select-min-width</button></th><td data-token-value>240px</td></tr>
+                  <tr data-token="--oneds-component-select-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-radius">--oneds-component-select-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-select-panel-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-panel-gap">--oneds-component-select-panel-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-select-panel-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-panel-padding">--oneds-component-select-panel-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-select-panel-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-panel-radius">--oneds-component-select-panel-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-select-panel-max-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-panel-max-height">--oneds-component-select-panel-max-height</button></th><td data-token-value>280px</td></tr>
+                  <tr data-token="--oneds-component-select-option-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-option-height">--oneds-component-select-option-height</button></th><td data-token-value>32px</td></tr>
+                  <tr data-token="--oneds-component-select-option-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-option-radius">--oneds-component-select-option-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-select-option-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-option-padding-inline">--oneds-component-select-option-padding-inline</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-select-option-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-option-gap">--oneds-component-select-option-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-select-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-select-icon-size">--oneds-component-select-icon-size</button></th><td data-token-value>16px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Date picker</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-date-picker-min-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-date-picker-min-width">--oneds-component-date-picker-min-width</button></th><td data-token-value>240px</td></tr>
+                  <tr data-token="--oneds-component-date-picker-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-date-picker-gap">--oneds-component-date-picker-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-date-picker-toggle-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-date-picker-toggle-size">--oneds-component-date-picker-toggle-size</button></th><td data-token-value>28px</td></tr>
+                  <tr data-token="--oneds-component-date-picker-toggle-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-date-picker-toggle-radius">--oneds-component-date-picker-toggle-radius</button></th><td data-token-value>6px</td></tr>
+                  <tr data-token="--oneds-component-date-picker-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-date-picker-icon-size">--oneds-component-date-picker-icon-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-date-picker-panel-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-date-picker-panel-gap">--oneds-component-date-picker-panel-gap</button></th><td data-token-value>4px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Sidebar and navigation</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-sidebar-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-sidebar-width">--oneds-component-sidebar-width</button></th><td data-token-value>256px</td></tr>
+                  <tr data-token="--oneds-component-nav-item-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-nav-item-padding">--oneds-component-nav-item-padding</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-nav-item-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-nav-item-padding-block">--oneds-component-nav-item-padding-block</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-nav-item-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-nav-item-padding-inline">--oneds-component-nav-item-padding-inline</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Page</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-page-width"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-page-width">--oneds-component-page-width</button></th><td data-token-value>800px</td></tr>
+                  <tr data-token="--oneds-component-page-font-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-page-font-size">--oneds-component-page-font-size</button></th><td data-token-value>17px</td></tr>
+                  <tr data-token="--oneds-component-page-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-page-padding-inline">--oneds-component-page-padding-inline</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-page-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-page-padding-block">--oneds-component-page-padding-block</button></th><td data-token-value>64px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Content surfaces</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-code-block-header-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-code-block-header-padding">--oneds-component-code-block-header-padding</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-code-block-header-padding-inline-start"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-code-block-header-padding-inline-start">--oneds-component-code-block-header-padding-inline-start</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-inline-code-padding-block"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inline-code-padding-block">--oneds-component-inline-code-padding-block</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-inline-code-padding-inline"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-inline-code-padding-inline">--oneds-component-inline-code-padding-inline</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-separator-thickness"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-separator-thickness">--oneds-component-separator-thickness</button></th><td data-token-value>1px</td></tr>
+                  <tr data-token="--oneds-component-swatch-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-swatch-size">--oneds-component-swatch-size</button></th><td data-token-value>64px</td></tr>
+                  <tr data-token="--oneds-component-swatch-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-swatch-padding">--oneds-component-swatch-padding</button></th><td data-token-value>4px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Spinner, progress, surface, and toolbar</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-spinner-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-spinner-size">--oneds-component-spinner-size</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-spinner-duration"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-spinner-duration">--oneds-component-spinner-duration</button></th><td data-token-value>700ms</td></tr>
+                  <tr data-token="--oneds-component-spinner-turn"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-spinner-turn">--oneds-component-spinner-turn</button></th><td data-token-value>1turn</td></tr>
+                  <tr data-token="--oneds-component-spinner-track-opacity"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-spinner-track-opacity">--oneds-component-spinner-track-opacity</button></th><td data-token-value>20%</td></tr>
+                  <tr data-token="--oneds-component-progress-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-progress-height">--oneds-component-progress-height</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-progress-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-progress-radius">--oneds-component-progress-radius</button></th><td data-token-value>9999px</td></tr>
+                  <tr data-token="--oneds-component-progress-label-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-progress-label-gap">--oneds-component-progress-label-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-slider-track-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-slider-track-height">--oneds-component-slider-track-height</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-slider-track-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-slider-track-radius">--oneds-component-slider-track-radius</button></th><td data-token-value>9999px</td></tr>
+                  <tr data-token="--oneds-component-slider-thumb-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-slider-thumb-size">--oneds-component-slider-thumb-size</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-slider-thumb-border"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-slider-thumb-border">--oneds-component-slider-thumb-border</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-slider-thumb-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-slider-thumb-radius">--oneds-component-slider-thumb-radius</button></th><td data-token-value>9999px</td></tr>
+                  <tr data-token="--oneds-component-slider-label-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-slider-label-gap">--oneds-component-slider-label-gap</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-surface-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-surface-radius">--oneds-component-surface-radius</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-toolbar-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toolbar-gap">--oneds-component-toolbar-gap</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-toolbar-backdrop-blur"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-toolbar-backdrop-blur">--oneds-component-toolbar-backdrop-blur</button></th><td data-token-value>12px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Skeleton</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-skeleton-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-radius">--oneds-component-skeleton-radius</button></th><td data-token-value>8px</td></tr>
+                  <tr data-token="--oneds-component-skeleton-text-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-text-height">--oneds-component-skeleton-text-height</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-skeleton-heading-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-heading-height">--oneds-component-skeleton-heading-height</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-skeleton-circle-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-circle-size">--oneds-component-skeleton-circle-size</button></th><td data-token-value>40px</td></tr>
+                  <tr data-token="--oneds-component-skeleton-gap"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-gap">--oneds-component-skeleton-gap</button></th><td data-token-value>12px</td></tr>
+                  <tr data-token="--oneds-component-skeleton-pulse-duration"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-pulse-duration">--oneds-component-skeleton-pulse-duration</button></th><td data-token-value>1600ms</td></tr>
+                  <tr data-token="--oneds-component-skeleton-pulse-opacity"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-skeleton-pulse-opacity">--oneds-component-skeleton-pulse-opacity</button></th><td data-token-value>0.5</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Card</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-card-scroll-max-height"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-card-scroll-max-height">--oneds-component-card-scroll-max-height</button></th><td data-token-value>192px</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Favicon</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-favicon-size-sm"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-favicon-size-sm">--oneds-component-favicon-size-sm</button></th><td data-token-value>16px</td></tr>
+                  <tr data-token="--oneds-component-favicon-size-md"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-favicon-size-md">--oneds-component-favicon-size-md</button></th><td data-token-value>20px</td></tr>
+                  <tr data-token="--oneds-component-favicon-size-lg"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-favicon-size-lg">--oneds-component-favicon-size-lg</button></th><td data-token-value>24px</td></tr>
+                  <tr data-token="--oneds-component-favicon-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-favicon-radius">--oneds-component-favicon-radius</button></th><td data-token-value>2px</td></tr>
+                  <tr data-token="--oneds-component-favicon-tile-padding"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-favicon-tile-padding">--oneds-component-favicon-tile-padding</button></th><td data-token-value>4px</td></tr>
+                  <tr data-token="--oneds-component-favicon-tile-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-favicon-tile-radius">--oneds-component-favicon-tile-radius</button></th><td data-token-value>calc(2px + 4px)</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="token-table">
+              <table class="data-table"><caption>Extension icon</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-component-extension-icon-source-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-extension-icon-source-size">--oneds-component-extension-icon-source-size</button></th><td data-token-value>128</td></tr>
+                  <tr data-token="--oneds-component-extension-icon-size16"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-extension-icon-size16">--oneds-component-extension-icon-size16</button></th><td data-token-value>16</td></tr>
+                  <tr data-token="--oneds-component-extension-icon-size32"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-extension-icon-size32">--oneds-component-extension-icon-size32</button></th><td data-token-value>32</td></tr>
+                  <tr data-token="--oneds-component-extension-icon-size48"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-extension-icon-size48">--oneds-component-extension-icon-size48</button></th><td data-token-value>48</td></tr>
+                  <tr data-token="--oneds-component-extension-icon-size128"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-extension-icon-size128">--oneds-component-extension-icon-size128</button></th><td data-token-value>128</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>

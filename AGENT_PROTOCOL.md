@@ -7,3 +7,5 @@ If a matching component exists, copy it from oneds/components/<name>/ verbatim. 
 If nothing matches, build it in src/_local/ and add a comment: ONEDS-CANDIDATE: name, what it was for.
 
 Never invent a color, size, or spacing value. Only use tokens from oneds/tokens.css.
+
+Icons come from Fluent System Icons. Inline the SVG with fill="currentColor", size it with an --oneds-reference-icon-size-* token, and fetch the asset drawn on that same grid. Site favicons come from Google's favicon service. See oneds/site/icons.html.

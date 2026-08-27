@@ -1,13 +1,13 @@
 .menu {
   display: flex;
   width: var(--oneds-component-menu-width);
-  max-width: calc(100vw - (var(--oneds-reference-space-sm) * 2));
+  max-width: calc(100vw - (var(--oneds-component-menu-viewport-margin) * 2));
   flex-direction: column;
   gap: var(--oneds-component-menu-gap);
   padding: var(--oneds-component-menu-padding);
-  border: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke-subtle);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
   border-radius: var(--oneds-component-menu-radius);
-  background: var(--oneds-semantic-color-surface);
+  background: var(--oneds-color-surface-neutral-nearer);
   box-shadow: var(--oneds-semantic-elevation-3);
   animation: oneds-menu-enter var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-entrance) both;
 }
@@ -15,7 +15,7 @@
 @keyframes oneds-menu-enter {
   from {
     opacity: var(--oneds-reference-opacity-hidden);
-    transform: translateY(var(--oneds-reference-space-2xs)) scale(var(--oneds-reference-motion-scale-enter));
+    transform: translateY(var(--oneds-reference-motion-distance-rise)) scale(var(--oneds-reference-motion-scale-enter));
   }
 
   to {
@@ -24,50 +24,76 @@
   }
 }
 
+.menu__heading {
+  padding: var(--oneds-component-menu-item-padding-block) var(--oneds-component-menu-item-padding-inline);
+  margin: 0;
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  font-weight: var(--oneds-reference-font-weight-medium);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-small-letter-spacing);
+}
+
+.menu__separator {
+  block-size: var(--oneds-reference-stroke-thin);
+  margin-block: 0;
+  margin-inline: calc(var(--oneds-component-menu-padding) * -1);
+  border: 0;
+  background: var(--oneds-color-stroke-neutral-subtle);
+}
+
+/* A group carries the radio/checkbox set semantics; it keeps the menu's own column rhythm. */
+.menu__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--oneds-component-menu-gap);
+}
+
 .menu__item {
   display: flex;
   width: 100%;
   min-height: var(--oneds-component-menu-item-height);
   align-items: center;
-  gap: var(--oneds-reference-space-xs);
+  gap: var(--oneds-rhythm-group);
   padding: var(--oneds-component-menu-item-padding-block) var(--oneds-component-menu-item-padding-inline);
   border: 0;
   border-radius: var(--oneds-component-menu-item-radius);
-  background: var(--oneds-semantic-color-transparent);
-  color: var(--oneds-semantic-color-fg-primary);
-  font-family: var(--oneds-reference-font-family-functional);
-  font-size: var(--oneds-reference-font-size-sm);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
   font-weight: var(--oneds-reference-font-weight-regular);
-  font-variation-settings: var(--oneds-reference-font-optical-small);
-  line-height: var(--oneds-reference-font-line-height-snug);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-medium-letter-spacing);
   text-align: left;
   cursor: pointer;
   transition: var(--oneds-reference-motion-transition-state);
 }
 
 .menu__item:focus-visible {
-  outline: var(--oneds-component-focus-width) solid var(--oneds-semantic-color-focus-ring);
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
   outline-offset: calc(var(--oneds-component-focus-width) * -1);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
 }
 
 .menu__item:hover,
 .menu__item:focus-visible {
-  background: var(--oneds-semantic-color-state-hover);
+  background: var(--oneds-color-background-neutral-transparent-hover);
 }
 
 .menu__item:active {
-  background: var(--oneds-semantic-color-state-active);
+  background: var(--oneds-color-background-neutral-transparent-pressed);
 }
 
-.menu__item[aria-current="true"],
-.menu__item[aria-checked="true"] {
-  background: var(--oneds-semantic-color-state-selected);
-  color: var(--oneds-semantic-color-accent);
+.menu__item[aria-current="true"] {
+  background: var(--oneds-color-background-brand-subtle);
+  color: var(--oneds-color-foreground-brand-primary);
   font-weight: var(--oneds-reference-font-weight-medium);
 }
 
 .menu__item--danger {
-  color: var(--oneds-semantic-color-danger);
+  color: var(--oneds-color-foreground-danger-primary);
 }
 
 .menu__label {
@@ -76,6 +102,75 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.menu__icon,
+.menu__caret {
+  flex: 0 0 auto;
+  inline-size: var(--oneds-component-menu-icon-size);
+  block-size: var(--oneds-component-menu-icon-size);
+  color: var(--oneds-color-foreground-neutral-secondary);
+}
+
+.menu__item--danger .menu__icon {
+  color: inherit;
+}
+
+.menu__shortcut {
+  flex: 0 0 auto;
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-small-letter-spacing);
+}
+
+.menu__indicator {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  inline-size: var(--oneds-component-menu-icon-size);
+  block-size: var(--oneds-component-menu-icon-size);
+}
+
+.menu__check {
+  inline-size: var(--oneds-component-menu-icon-size);
+  block-size: var(--oneds-component-menu-icon-size);
+}
+
+.menu__dot {
+  inline-size: var(--oneds-component-menu-dot-size);
+  block-size: var(--oneds-component-menu-dot-size);
+  border-radius: var(--oneds-reference-radius-pill);
+  background: currentColor;
+}
+
+.menu__check,
+.menu__dot {
+  opacity: var(--oneds-reference-opacity-hidden);
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.menu__item[aria-checked="true"] .menu__check,
+.menu__item[aria-checked="true"] .menu__dot {
+  opacity: var(--oneds-reference-opacity-full);
+}
+
+/* A submenu wraps its trigger and panel so the flyout anchors to the trigger row, not the whole menu. */
+.menu__submenu {
+  position: relative;
+}
+
+.menu__submenu-panel {
+  position: absolute;
+  inset-block-start: calc(var(--oneds-component-menu-padding) * -1);
+  inset-inline-start: 100%;
+  z-index: var(--oneds-reference-layer-menu);
+  display: none;
+}
+
+.menu__submenu:hover > .menu__submenu-panel,
+.menu__submenu:focus-within > .menu__submenu-panel {
+  display: flex;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -98,8 +193,7 @@
     outline-color: Highlight;
   }
 
-  .menu__item[aria-current="true"],
-  .menu__item[aria-checked="true"] {
+  .menu__item[aria-current="true"] {
     background: Highlight;
     color: HighlightText;
   }

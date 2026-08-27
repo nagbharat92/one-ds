@@ -7,7 +7,7 @@ The project is designed to be linked into consuming repositories. Applications r
 ## What is included
 
 - Design tokens for color, typography, spacing, shape, sizing, motion, opacity, elevation, and component geometry.
-- Light and dark semantic themes selected with `data-oneds-theme`.
+- Light and dark role colors use `light-dark()` and can be forced with `data-theme` on the document root.
 - Accessible HTML and token-only CSS component packages.
 - A manifest that records each component's purpose, usage boundary, and build status.
 - A checker that catches literal design values, undefined tokens, incomplete packages, manifest drift, and inline style attributes.
@@ -62,26 +62,9 @@ Use `node scripts/deploy-vibehub.mjs --dry-run` to validate packaging without ma
 
 ## Use OneDS in another project
 
-From the root of a consuming project, create a symlink to the local checkout:
+Open the project in VS Code and copy the setup prompt from the [OneDS overview page](site/index.html). Paste it into Copilot Chat in that project. Copilot will connect OneDS from Git, add the project instructions without replacing existing instructions, and explain when the project is ready.
 
-```sh
-ln -s ~/Documents/SideProjects/oneds oneds
-```
-
-Add the symlink to the consuming project's `.gitignore`:
-
-```gitignore
-/oneds
-```
-
-Install the agent protocol and create a place for project-specific patterns:
-
-```sh
-mkdir -p .github src/_local
-cp oneds/AGENT_PROTOCOL.md .github/copilot-instructions.md
-```
-
-Before writing UI, read `oneds/MANIFEST.md`. Copy a matching package from `oneds/components/<name>/` verbatim. If no component matches, build the pattern in `src/_local/` and mark it with an `ONEDS-CANDIDATE` comment.
+The Git connection replaces the old link to a folder on one computer. It keeps an exact OneDS version with each project, so the setup can be shared and opened on another computer.
 
 ## Work with tokens
 

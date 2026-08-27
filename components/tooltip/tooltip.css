@@ -1,0 +1,130 @@
+.tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.tooltip__content {
+  position: absolute;
+  z-index: 1;
+  width: max-content;
+  max-width: var(--oneds-component-tooltip-max-width);
+  padding: var(--oneds-component-tooltip-padding-block) var(--oneds-component-tooltip-padding-inline);
+  border-radius: var(--oneds-component-tooltip-radius);
+  background: var(--oneds-color-background-neutral-heavy);
+  color: var(--oneds-color-foreground-neutral-onloud);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-small-letter-spacing);
+  text-align: center;
+  opacity: var(--oneds-reference-opacity-hidden);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-entrance),
+    transform var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-entrance),
+    visibility var(--oneds-reference-motion-duration-fast);
+}
+
+.tooltip:hover .tooltip__content,
+.tooltip:focus-within .tooltip__content {
+  opacity: var(--oneds-reference-opacity-full);
+  visibility: visible;
+}
+
+/* Placement: resting position + entrance offset toward the trigger. */
+.tooltip__content--top {
+  bottom: 100%;
+  left: 50%;
+  margin-bottom: var(--oneds-component-tooltip-gap);
+  transform: translateX(-50%) translateY(var(--oneds-reference-motion-distance-rise));
+}
+
+.tooltip__content--bottom {
+  top: 100%;
+  left: 50%;
+  margin-top: var(--oneds-component-tooltip-gap);
+  transform: translateX(-50%) translateY(calc(var(--oneds-reference-motion-distance-rise) * -1));
+}
+
+.tooltip__content--right {
+  top: 50%;
+  left: 100%;
+  margin-left: var(--oneds-component-tooltip-gap);
+  transform: translateY(-50%) translateX(calc(var(--oneds-reference-motion-distance-rise) * -1));
+}
+
+.tooltip__content--left {
+  top: 50%;
+  right: 100%;
+  margin-right: var(--oneds-component-tooltip-gap);
+  transform: translateY(-50%) translateX(var(--oneds-reference-motion-distance-rise));
+}
+
+.tooltip:hover .tooltip__content--top,
+.tooltip:focus-within .tooltip__content--top,
+.tooltip:hover .tooltip__content--bottom,
+.tooltip:focus-within .tooltip__content--bottom {
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltip:hover .tooltip__content--right,
+.tooltip:focus-within .tooltip__content--right,
+.tooltip:hover .tooltip__content--left,
+.tooltip:focus-within .tooltip__content--left {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Arrow: a solid square rotated 45deg, half of it tucked behind the label. */
+.tooltip__arrow {
+  position: absolute;
+  width: var(--oneds-component-tooltip-arrow-size);
+  height: var(--oneds-component-tooltip-arrow-size);
+  background: var(--oneds-color-background-neutral-heavy);
+  transform: rotate(45deg);
+}
+
+/* Round only the outward tip; the two corners meeting the body stay square. */
+.tooltip__content--top .tooltip__arrow {
+  bottom: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  left: 50%;
+  margin-left: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  border-bottom-right-radius: var(--oneds-reference-radius-2xs);
+}
+
+.tooltip__content--bottom .tooltip__arrow {
+  top: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  left: 50%;
+  margin-left: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  border-top-left-radius: var(--oneds-reference-radius-2xs);
+}
+
+.tooltip__content--right .tooltip__arrow {
+  top: 50%;
+  left: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  margin-top: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  border-bottom-left-radius: var(--oneds-reference-radius-2xs);
+}
+
+.tooltip__content--left .tooltip__arrow {
+  top: 50%;
+  right: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  margin-top: calc(var(--oneds-component-tooltip-arrow-size) / -2);
+  border-top-right-radius: var(--oneds-reference-radius-2xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip__content {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .tooltip__content,
+  .tooltip__arrow {
+    background: CanvasText;
+  }
+
+  .tooltip__content {
+    color: Canvas;
+  }
+}

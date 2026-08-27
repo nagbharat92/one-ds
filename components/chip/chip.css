@@ -3,18 +3,17 @@
   max-width: 100%;
   min-height: var(--oneds-reference-control-height-sm);
   align-items: center;
-  gap: var(--oneds-reference-space-xs);
-  padding: var(--oneds-reference-space-2xs) var(--oneds-reference-space-sm);
-  border: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke-subtle);
+  gap: var(--oneds-rhythm-group);
+  padding: var(--oneds-component-chip-padding-block) var(--oneds-component-chip-padding-inline);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
   border-radius: var(--oneds-reference-radius-pill);
-  background: var(--oneds-semantic-color-surface);
-  box-shadow: var(--oneds-semantic-elevation-1);
-  color: var(--oneds-semantic-color-fg-primary);
-  font-family: var(--oneds-reference-font-family-functional);
-  font-size: var(--oneds-reference-font-size-xs);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
   font-weight: var(--oneds-reference-font-weight-medium);
-  font-variation-settings: var(--oneds-reference-font-optical-small);
-  line-height: var(--oneds-reference-font-line-height-snug);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  letter-spacing: var(--oneds-semantic-typography-functional-body-small-letter-spacing);
   transition: var(--oneds-reference-motion-transition-state);
 }
 
@@ -24,12 +23,13 @@
 }
 
 .chip--interactive:focus-visible {
-  outline: var(--oneds-component-focus-width) solid var(--oneds-semantic-color-focus-ring);
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
   outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
 }
 
 .chip--interactive:hover {
-  border-color: var(--oneds-semantic-color-accent-subtle);
+  border-color: var(--oneds-color-stroke-brand-subtle);
   box-shadow: var(--oneds-semantic-elevation-2);
   transform: translateY(var(--oneds-reference-motion-distance-lift));
 }
@@ -40,10 +40,10 @@
 }
 
 .chip--selected {
-  border-color: var(--oneds-semantic-color-transparent);
-  background: var(--oneds-semantic-color-state-selected);
+  border-color: var(--oneds-color-stroke-neutral-transparent);
+  background: var(--oneds-color-background-brand-subtle);
+  color: var(--oneds-color-foreground-brand-primary);
   box-shadow: none;
-  color: var(--oneds-semantic-color-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {

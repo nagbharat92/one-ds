@@ -3,19 +3,18 @@
   display: flex;
   min-height: var(--oneds-component-field-height);
   align-items: center;
-  gap: var(--oneds-reference-space-xs);
-  padding: var(--oneds-reference-space-2xs);
+  gap: var(--oneds-rhythm-group);
+  padding: var(--oneds-component-search-field-padding);
   padding-inline-start: var(--oneds-component-field-padding-inline);
-  border: var(--oneds-reference-stroke-thin) solid var(--oneds-semantic-color-stroke);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
   border-radius: var(--oneds-component-field-radius);
-  background: var(--oneds-semantic-color-surface);
-  box-shadow: var(--oneds-semantic-elevation-1);
+  background: var(--oneds-color-background-neutral-transparent);
   transition: var(--oneds-reference-motion-transition-state);
 }
 
 .search-field:focus-within {
-  border-color: var(--oneds-semantic-color-accent);
-  box-shadow: 0 0 0 var(--oneds-component-focus-width) var(--oneds-semantic-color-accent-soft), var(--oneds-semantic-elevation-1);
+  border-color: var(--oneds-color-stroke-brand-loud);
+  box-shadow: 0 0 0 var(--oneds-component-focus-width) var(--oneds-color-background-brand-soft), var(--oneds-semantic-elevation-1);
 }
 
 .search-field__input {
@@ -25,14 +24,15 @@
   padding: 0;
   border: 0;
   outline: 0;
-  background: var(--oneds-semantic-color-transparent);
-  color: var(--oneds-semantic-color-fg-primary);
-  font-family: var(--oneds-reference-font-family-functional);
-  font-size: var(--oneds-reference-font-size-sm);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
 }
 
 .search-field__input::placeholder {
-  color: var(--oneds-semantic-color-fg-tertiary);
+  color: var(--oneds-color-foreground-neutral-tertiary);
   opacity: var(--oneds-reference-opacity-full);
 }
 

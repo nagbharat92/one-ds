@@ -1,0 +1,13 @@
+<button class="button button--outline" type="button" data-alert-dialog-trigger="delete-project-dialog">Delete project</button>
+<dialog class="dialog alert-dialog" id="delete-project-dialog" role="alertdialog" aria-labelledby="delete-project-title" aria-describedby="delete-project-description">
+  <form method="dialog">
+    <div class="alert-dialog__header">
+      <h2 class="alert-dialog__title" id="delete-project-title">Delete this project?</h2>
+      <p class="alert-dialog__description" id="delete-project-description">This action cannot be undone. All environments, deployments, and settings will be permanently removed.</p>
+    </div>
+    <div class="alert-dialog__footer">
+      <button class="button button--outline" type="submit" value="cancel" autofocus>Cancel</button>
+      <button class="button button--danger" type="submit" value="confirm">Delete project</button>
+    </div>
+  </form>
+</dialog>

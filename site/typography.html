@@ -1,43 +1,45 @@
 <!doctype html>
-<html lang="en" data-oneds-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Typography · OneDS reference</title>
-  <link rel="stylesheet" href="../tokens.css">
-  <link rel="stylesheet" href="../components/button/button.css">
-  <link rel="stylesheet" href="../components/card/card.css">
-  <link rel="stylesheet" href="../components/grid/grid.css">
-  <link rel="stylesheet" href="../components/page-header/page-header.css">
-  <link rel="stylesheet" href="../components/section/section.css">
-  <link rel="stylesheet" href="_local.css">
-  <script src="theme.js" defer></script>
+  <link rel="stylesheet" href="../tokens.css?v=ae6d0b86">
+  <link rel="stylesheet" href="../components/data-table/data-table.css?v=f6281c82">
+  <link rel="stylesheet" href="../components/page-header/page-header.css?v=7df3af63">
+  <link rel="stylesheet" href="../components/section/section.css?v=3f55f916">
+  <link rel="stylesheet" href="../components/tabs/tabs.css?v=f34cc528">
+  <link rel="stylesheet" href="_local.css?v=03d7b7d8">
+  <script src="theme.js?v=3" defer></script>
+  <script src="toc.js?v=1" defer></script>
 </head>
 <body>
   <div class="site-shell">
     <aside class="sidebar" aria-label="Documentation navigation">
-      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Reference catalog</span></a>
-      <nav aria-label="Catalog pages">
-        <p class="sidebar__label">Catalog</p>
+      <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Design system for agents.</span></a>
+      <div class="tabs sidebar__theme" role="group" aria-label="Theme"><button class="tab" type="button" data-theme-value="light" aria-pressed="true">Light</button><button class="tab" type="button" data-theme-value="dark" aria-pressed="false">Dark</button></div>
+      <nav aria-label="Documentation pages">
         <ul class="sidebar__nav">
           <li><a class="sidebar__link" href="index.html">Overview</a></li>
           <li><a class="sidebar__link" href="color.html">Color</a></li>
-          <li><a class="sidebar__link" href="typography.html" aria-current="page">Typography</a></li>
+          <li>
+            <details open>
+              <summary class="sidebar__link sidebar__disclosure" aria-current="page"><svg class="sidebar__disclosure-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#chevron-right-16-regular"></use></svg><span>Typography</span></summary>
+              <ul class="sidebar__toc">
+                <li><a class="sidebar__toc-link" href="#font">Families</a></li>
+                <li><a class="sidebar__toc-link" href="#functional">Functional ramp</a></li>
+                <li><a class="sidebar__toc-link" href="#content">Content ramp</a></li>
+                <li><a class="sidebar__toc-link" href="#weights">Weights</a></li>
+                <li><a class="sidebar__toc-link" href="#measure">Measure</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a class="sidebar__link" href="icons.html">Icons</a></li>
           <li><a class="sidebar__link" href="tokens.html">Tokens</a></li>
           <li><a class="sidebar__link" href="themes.html">Themes</a></li>
           <li><a class="sidebar__link" href="components.html">Components</a></li>
           <li><a class="sidebar__link" href="rules.html">Rules</a></li>
-        </ul>
-      </nav>
-      <nav aria-label="On this page">
-        <p class="sidebar__label">On this page</p>
-        <ul class="sidebar__subnav">
-          <li><a class="sidebar__link" href="#families">Families</a></li>
-          <li><a class="sidebar__link" href="#sizes">Type scale</a></li>
-          <li><a class="sidebar__link" href="#weights">Weights</a></li>
-          <li><a class="sidebar__link" href="#rhythm">Line height and spacing</a></li>
-          <li><a class="sidebar__link" href="#optical">Optical size and measure</a></li>
-          <li><a class="sidebar__link" href="#applied">Applied scale</a></li>
+          <li><a class="sidebar__link" href="experiments.html">Experiments</a></li>
         </ul>
       </nav>
     </aside>
@@ -47,104 +49,116 @@
         <header class="page-header">
           <div class="page-header__content">
             <h1 class="page-header__title">Typography</h1>
-            <p class="page-header__description">OneDS uses a compact type system tuned for product interfaces, with separate family roles for reading and controls.</p>
+            <p class="page-header__description">One variable family and two role ramps. Every role pairs a size, a line height, and a letter spacing — take all three. Each specimen below is the role name set in its own role.</p>
           </div>
-          <div class="page-header__actions"><button class="button button--secondary" type="button" data-theme-toggle aria-pressed="false">Use dark theme</button></div>
         </header>
 
-        <section class="section" id="families" aria-labelledby="families-title">
+        <section class="section" id="font" aria-labelledby="font-title">
           <header class="section__header">
-            <h2 class="section__title" id="families-title">Font families</h2>
-            <p class="section__description">Both stacks prioritize Segoe Sans and fall back through platform Segoe UI faces to a generic sans serif.</p>
+            <h2 class="section__title" id="font-title">Families</h2>
+            <p class="section__description">Base carries every role. Editorial and code are slots a project can override.</p>
           </header>
           <div class="section__body">
-            <div class="grid">
-              <article class="card family-content">
-                <header class="card__header"><h3 class="card__title">Content family</h3><p class="card__description"><code>--oneds-reference-font-family-content</code></p></header>
-                <p class="card__text">Use for page titles, section headings, paragraphs, and other sustained reading.</p>
-                <p class="token-value">"Segoe Sans", "Segoe UI Variable Text", "Segoe UI", sans-serif</p>
-              </article>
-              <article class="card family-functional">
-                <header class="card__header"><h3 class="card__title">Functional family</h3><p class="card__description"><code>--oneds-reference-font-family-functional</code></p></header>
-                <p class="card__text">Use for controls, labels, token names, compact metadata, and operational text.</p>
-                <p class="token-value">"Segoe Sans", "Segoe UI Variable Small", "Segoe UI", sans-serif</p>
-              </article>
+            <div class="type-scale">
+              <table class="data-table" aria-labelledby="font-title">
+                <thead><tr><th scope="col">Family</th><th scope="col">Used for</th><th scope="col">Stack</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row"><span class="type-scale__sample family-base" data-type-role="content-h5">base</span></th><td class="type-scale__note">Every interface and content role</td><td class="type-scale__note family-base">"Segoe UI Variable", "Segoe UI", -apple-system, "Helvetica Neue", sans-serif</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample family-editorial" data-type-role="content-h5">editorial</span></th><td class="type-scale__note">Long-form serif material</td><td class="type-scale__note family-editorial">"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample family-code" data-type-role="content-h5">code</span></th><td class="type-scale__note">Source listings and terminal output</td><td class="type-scale__note family-code">"Cascadia Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace</td></tr>
+                </tbody>
+              </table>
             </div>
+            <p class="type-meta"><code>--oneds-reference-font-family-&lt;name&gt;</code> · Segoe UI Variable ships as one WOFF2 Latin subset, weight axis 300–700, optical size axis 5–36 left automatic, swap display.</p>
           </div>
         </section>
 
-        <section class="section" id="sizes" aria-labelledby="sizes-title">
+        <section class="section" id="functional" aria-labelledby="functional-title">
           <header class="section__header">
-            <h2 class="section__title" id="sizes-title">Type scale</h2>
-            <p class="section__description">Live specimens are ordered from the largest display role to the smallest supporting label.</p>
+            <h2 class="section__title" id="functional-title">Functional ramp</h2>
+            <p class="section__description">Product chrome: navigation, controls, labels, and status. Scanned and clicked rather than read, so leading stays tight or normal.</p>
           </header>
-          <div class="section__body specimen-block">
-            <div class="type-specimen"><p class="type-specimen__sample type-display">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-display</code> · 24px</p></div>
-            <div class="type-specimen"><p class="type-specimen__sample type-xl">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-xl</code> · 18px</p></div>
-            <div class="type-specimen"><p class="type-specimen__sample type-lg">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-lg</code> · 16px</p></div>
-            <div class="type-specimen"><p class="type-specimen__sample type-md">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-md</code> · 14px</p></div>
-            <div class="type-specimen"><p class="type-specimen__sample type-sm">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-sm</code> · 13px</p></div>
-            <div class="type-specimen"><p class="type-specimen__sample type-xs">Design systems make decisions reusable.</p><p class="type-specimen__meta"><code>--oneds-reference-font-size-xs</code> · 12px</p></div>
+          <div class="section__body">
+            <div class="type-scale">
+              <table class="data-table" aria-labelledby="functional-title">
+                <thead><tr><th scope="col">Role</th><th scope="col">Size</th><th scope="col">Line height</th><th scope="col">Tracking</th><th scope="col">Used for</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-display">display</span></th><td class="type-scale__metric">68px</td><td class="type-scale__metric">82px</td><td class="type-scale__metric">-0.0075em</td><td class="type-scale__note">Hero statements in chrome</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-page-title">page-title</span></th><td class="type-scale__metric">40px</td><td class="type-scale__metric">48px</td><td class="type-scale__metric">-0.0075em</td><td class="type-scale__note">Page header title</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-title-large">title-large</span></th><td class="type-scale__metric">32px</td><td class="type-scale__metric">38px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Top-level group title</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-title-medium">title-medium</span></th><td class="type-scale__metric">28px</td><td class="type-scale__metric">34px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Section title</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-title-small">title-small</span></th><td class="type-scale__metric">24px</td><td class="type-scale__metric">28px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Subsection title</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-subtitle">subtitle</span></th><td class="type-scale__metric">20px</td><td class="type-scale__metric">28px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Dialog and empty-state title</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-body-large">body-large</span></th><td class="type-scale__metric">16px</td><td class="type-scale__metric">22px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Descriptions and card text</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-body-medium">body-medium</span></th><td class="type-scale__metric">14px</td><td class="type-scale__metric">20px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Document baseline, controls, labels</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="functional-body-small">body-small</span></th><td class="type-scale__metric">12px</td><td class="type-scale__metric">16px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Metadata and captions</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="type-meta"><code>--oneds-semantic-typography-functional-&lt;role&gt;-{size, line-height, letter-spacing}</code> · sizes are rem, shown here at a 16px root</p>
+          </div>
+        </section>
+
+        <section class="section" id="content" aria-labelledby="content-title">
+          <header class="section__header">
+            <h2 class="section__title" id="content-title">Content ramp</h2>
+            <p class="section__description">Material meant to be read: generated headings, prose, tables, and code. Paragraph roles carry the relaxed line height sustained reading needs.</p>
+          </header>
+          <div class="section__body">
+            <div class="type-scale">
+              <table class="data-table" aria-labelledby="content-title">
+                <thead><tr><th scope="col">Role</th><th scope="col">Size</th><th scope="col">Line height</th><th scope="col">Tracking</th><th scope="col">Used for</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-statement">statement</span></th><td class="type-scale__metric">56px</td><td class="type-scale__metric">68px</td><td class="type-scale__metric">-0.0075em</td><td class="type-scale__note">Opening statement</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-h1">h1</span></th><td class="type-scale__metric">36px</td><td class="type-scale__metric">44px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Page heading</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-h2">h2</span></th><td class="type-scale__metric">32px</td><td class="type-scale__metric">38px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Section heading</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-h3">h3</span></th><td class="type-scale__metric">28px</td><td class="type-scale__metric">34px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Subsection heading</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-h4">h4</span></th><td class="type-scale__metric">24px</td><td class="type-scale__metric">28px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Minor heading</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-h5">h5</span></th><td class="type-scale__metric">20px</td><td class="type-scale__metric">24px</td><td class="type-scale__metric">-0.0015em</td><td class="type-scale__note">Smallest heading</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-paragraph-large">paragraph-large</span></th><td class="type-scale__metric">20px</td><td class="type-scale__metric">34px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Lead paragraph</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-subheadline">subheadline</span></th><td class="type-scale__metric">16px</td><td class="type-scale__metric">22px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Line under a heading</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-paragraph-medium">paragraph-medium</span></th><td class="type-scale__metric">16px</td><td class="type-scale__metric">28px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Default body copy</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-table">table</span></th><td class="type-scale__metric">16px</td><td class="type-scale__metric">22px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Table cells and headers</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-code">code</span></th><td class="type-scale__metric">16px</td><td class="type-scale__metric">22px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Source and terminal output</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-paragraph-small">paragraph-small</span></th><td class="type-scale__metric">14px</td><td class="type-scale__metric">24px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Dense or secondary copy</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample" data-type-role="content-paragraph-xsmall">paragraph-xsmall</span></th><td class="type-scale__metric">12px</td><td class="type-scale__metric">20px</td><td class="type-scale__metric">0</td><td class="type-scale__note">Footnotes and captions</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="type-meta"><code>--oneds-semantic-typography-content-&lt;role&gt;-{size, line-height, letter-spacing}</code></p>
           </div>
         </section>
 
         <section class="section" id="weights" aria-labelledby="weights-title">
           <header class="section__header">
             <h2 class="section__title" id="weights-title">Weights</h2>
-            <p class="section__description">The three weights provide emphasis without introducing a separate display face.</p>
+            <p class="section__description">Three axis positions shared by both ramps. Weight is chosen per use, never baked into a role.</p>
           </header>
           <div class="section__body">
-            <div class="grid">
-              <div class="specimen-block"><p class="type-lg weight-regular">Regular keeps body text calm.</p><code class="token-name">--oneds-reference-font-weight-regular</code><span class="token-value">400</span></div>
-              <div class="specimen-block"><p class="type-lg weight-medium">Medium clarifies controls and labels.</p><code class="token-name">--oneds-reference-font-weight-medium</code><span class="token-value">500</span></div>
-              <div class="specimen-block"><p class="type-lg weight-semibold">Semibold establishes headings.</p><code class="token-name">--oneds-reference-font-weight-semibold</code><span class="token-value">600</span></div>
+            <div class="type-scale">
+              <table class="data-table" aria-labelledby="weights-title">
+                <thead><tr><th scope="col">Weight</th><th scope="col">Value</th><th scope="col">Used for</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row"><span class="type-scale__sample weight-regular" data-type-role="content-h4">regular</span></th><td class="type-scale__metric">420</td><td class="type-scale__note">Body copy and supporting text</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample weight-medium" data-type-role="content-h4">medium</span></th><td class="type-scale__metric">550</td><td class="type-scale__note">Buttons, tabs, chips, and labels</td></tr>
+                  <tr><th scope="row"><span class="type-scale__sample weight-semibold" data-type-role="content-h4">semibold</span></th><td class="type-scale__metric">600</td><td class="type-scale__note">Headings, table headers, and strong text</td></tr>
+                </tbody>
+              </table>
             </div>
+            <p class="type-meta"><code>--oneds-reference-font-weight-&lt;name&gt;</code> · axis positions, not synthetic bolding</p>
           </div>
         </section>
 
-        <section class="section" id="rhythm" aria-labelledby="rhythm-title">
+        <section class="section" id="measure" aria-labelledby="measure-title">
           <header class="section__header">
-            <h2 class="section__title" id="rhythm-title">Line height and letter spacing</h2>
-            <p class="section__description">Line-height tokens move from compact headings to relaxed reading. Letter spacing remains neutral throughout the system.</p>
+            <h2 class="section__title" id="measure-title">Measure</h2>
+            <p class="section__description">Body copy is capped so a line never outruns the eye. Specimens, tables, and component examples are exempt because they are scanned rather than read.</p>
           </header>
           <div class="section__body">
-            <div class="grid">
-              <div class="specimen-block"><p class="line-height-tight">Tight rhythm keeps a short heading visually cohesive across two lines of text.</p><code class="token-name">--oneds-reference-font-line-height-tight</code><span class="token-value">1.25</span></div>
-              <div class="specimen-block"><p class="line-height-snug">Snug rhythm gives supporting headings a little more room across two lines of text.</p><code class="token-name">--oneds-reference-font-line-height-snug</code><span class="token-value">1.4</span></div>
-              <div class="specimen-block"><p class="line-height-normal">Normal rhythm supports interface copy that must remain compact and readable across two lines.</p><code class="token-name">--oneds-reference-font-line-height-normal</code><span class="token-value">1.5</span></div>
-              <div class="specimen-block"><p class="line-height-relaxed">Relaxed rhythm is intended for longer passages where additional vertical space makes scanning easier.</p><code class="token-name">--oneds-reference-font-line-height-relaxed</code><span class="token-value">1.65</span></div>
+            <div class="specimen-block">
+              <p class="measure-sample" data-type-role="content-paragraph-medium">This paragraph stops short of the panel edge because it is capped by the same token that constrains every page description and section description in the system.</p>
             </div>
-            <div class="specimen-block letter-spacing-token"><p>OneDS preserves natural letter spacing instead of using an overline treatment.</p><code class="token-name">--oneds-reference-font-letter-spacing</code><span class="token-value">0</span></div>
-          </div>
-        </section>
-
-        <section class="section" id="optical" aria-labelledby="optical-title">
-          <header class="section__header">
-            <h2 class="section__title" id="optical-title">Optical size and measure</h2>
-            <p class="section__description">Optical settings tune variable fonts for their role; the measure token limits long-form reading width.</p>
-          </header>
-          <div class="section__body">
-            <div class="grid">
-              <div class="specimen-block optical-small"><p class="type-sm">Small optical setting for compact labels.</p><code class="token-name">--oneds-reference-font-optical-small</code><span class="token-value">"opsz" 8</span></div>
-              <div class="specimen-block optical-text"><p class="type-md">Text optical setting for body content.</p><code class="token-name">--oneds-reference-font-optical-text</code><span class="token-value">"opsz" 14</span></div>
-              <div class="specimen-block optical-display"><p class="type-display">Display optical setting for titles.</p><code class="token-name">--oneds-reference-font-optical-display</code><span class="token-value">"opsz" 18</span></div>
-            </div>
-            <div class="specimen-block measure-sample"><p>The readable measure limits sustained prose to a comfortable line length while allowing compact interface elements to size independently.</p><code class="token-name">--oneds-reference-font-measure</code><span class="token-value">68ch</span></div>
-          </div>
-        </section>
-
-        <section class="section" id="applied" aria-labelledby="applied-title">
-          <header class="section__header">
-            <h2 class="section__title" id="applied-title">Scale in context</h2>
-            <p class="section__description">The hierarchy becomes clearest when the roles are composed as real content rather than viewed in isolation.</p>
-          </header>
-          <div class="section__body">
-            <article class="specimen-block content-example">
-              <h3 class="content-example__heading">A stable vocabulary for product work</h3>
-              <p class="content-example__subheading">Tokens hold decisions; components turn those decisions into reusable behavior.</p>
-              <p class="content-example__body">OneDS keeps the implementation close to the platform. Teams link plain CSS, choose an existing component when it fits, and keep application-specific patterns local until they prove reusable.</p>
-              <p class="content-example__caption">Reference note · Generated tokens are never edited by hand.</p>
-            </article>
+            <p class="type-meta"><code>--oneds-reference-font-measure</code> · 68ch</p>
           </div>
         </section>
 

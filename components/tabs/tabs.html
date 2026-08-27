@@ -4,3 +4,24 @@
 </div>
 <div id="overview-panel" role="tabpanel" aria-labelledby="overview-tab">Overview content</div>
 <div id="activity-panel" role="tabpanel" aria-labelledby="activity-tab" hidden>Activity content</div>
+
+<div class="tabs tabs--lined" role="tablist" aria-label="Report views">
+  <button class="tab" id="summary-tab" type="button" role="tab" aria-selected="true" aria-controls="summary-panel"><svg aria-hidden="true"><use href="fluent-icons.svg#person-16-regular"></use></svg><span class="text-trim">Summary</span></button>
+  <button class="tab" id="details-tab" type="button" role="tab" aria-selected="false" aria-controls="details-panel" tabindex="-1"><svg aria-hidden="true"><use href="fluent-icons.svg#settings-16-regular"></use></svg><span class="text-trim">Details</span></button>
+</div>
+<div id="summary-panel" role="tabpanel" aria-labelledby="summary-tab">Summary content</div>
+<div id="details-panel" role="tabpanel" aria-labelledby="details-tab" hidden>Details content</div>
+
+<div class="tabs tabs--icon-only" role="tablist" aria-label="Workspace views">
+  <button class="tab" id="account-tab" type="button" role="tab" aria-selected="true" aria-controls="account-panel" aria-label="Account"><svg aria-hidden="true"><use href="fluent-icons.svg#person-16-regular"></use></svg></button>
+  <button class="tab" id="settings-tab" type="button" role="tab" aria-selected="false" aria-controls="settings-panel" tabindex="-1" aria-label="Settings"><svg aria-hidden="true"><use href="fluent-icons.svg#settings-16-regular"></use></svg></button>
+</div>
+<div id="account-panel" role="tabpanel" aria-labelledby="account-tab">Account content</div>
+<div id="settings-panel" role="tabpanel" aria-labelledby="settings-tab" hidden>Settings content</div>
+
+<div class="tabs tabs--small" role="tablist" aria-label="Message filters">
+  <button class="tab" id="all-tab" type="button" role="tab" aria-selected="true" aria-controls="all-panel">All</button>
+  <button class="tab" id="unread-tab" type="button" role="tab" aria-selected="false" aria-controls="unread-panel" tabindex="-1">Unread</button>
+</div>
+<div id="all-panel" role="tabpanel" aria-labelledby="all-tab">All messages</div>
+<div id="unread-panel" role="tabpanel" aria-labelledby="unread-tab" hidden>Unread messages</div>

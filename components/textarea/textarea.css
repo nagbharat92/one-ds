@@ -1,0 +1,85 @@
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--oneds-component-textarea-min-height);
+  max-height: var(--oneds-component-textarea-max-height);
+  padding: var(--oneds-component-textarea-padding-block) var(--oneds-component-field-padding-inline);
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: var(--oneds-component-field-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+  resize: vertical;
+  overflow-y: auto;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+/* Where supported, the field grows with its content instead of needing a manual drag. */
+@supports (field-sizing: content) {
+  .textarea {
+    field-sizing: content;
+    resize: none;
+  }
+}
+
+.textarea::placeholder {
+  color: var(--oneds-color-foreground-neutral-tertiary);
+  opacity: var(--oneds-reference-opacity-full);
+}
+
+.textarea:focus-visible {
+  border-color: var(--oneds-color-stroke-brand-loud);
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+.textarea:disabled {
+  background: var(--oneds-color-background-neutral-disabled);
+  color: var(--oneds-color-foreground-neutral-disabled);
+  resize: none;
+  cursor: default;
+}
+
+/* Invalid reads as an error before focus and keeps the danger colour through the focus ring. */
+.textarea[aria-invalid="true"] {
+  border-color: var(--oneds-color-stroke-danger-loud);
+}
+
+.textarea[aria-invalid="true"]:focus-visible {
+  border-color: var(--oneds-color-stroke-danger-loud);
+  outline-color: var(--oneds-color-stroke-danger-loud);
+}
+
+/* Fixed variant: hold the resting height, no manual grabber and no content growth. */
+.textarea--fixed {
+  resize: none;
+}
+
+@supports (field-sizing: content) {
+  .textarea--fixed {
+    field-sizing: fixed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .textarea {
+    transition-duration: var(--oneds-reference-motion-reduced) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .textarea {
+    border-color: ButtonText;
+  }
+
+  .textarea:focus-visible {
+    outline-color: Highlight;
+  }
+
+  .textarea[aria-invalid="true"] {
+    border-color: LinkText;
+  }
+}

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spinner motion lab</title>
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --panel: #ffffff;
+    --ink: #202124;
+    --muted: #6b6b6b;
+    --line: #e2e0da;
+    --accent: #3B82F6;
+    --arc-color: #202124;
+    --arc-track: 0.15;
+  }
+  body.dark {
+    --bg: #17181a;
+    --panel: #212327;
+    --ink: #f2f2f2;
+    --muted: #9a9a9a;
+    --line: #34363b;
+    --arc-color: #f2f2f2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    min-height: 100vh;
+  }
+  .stage {
+    display: grid;
+    place-items: center;
+    gap: 32px;
+    padding: 40px;
+  }
+  .spinner-wrap { display: grid; place-items: center; gap: 28px; }
+  .spinner { color: var(--arc-color); }
+  .spinner.ccw { transform: scaleX(-1); }
+  .track { stroke: currentColor; stroke-opacity: var(--arc-track); }
+  .arc { stroke: currentColor; }
+  .marker { fill: var(--accent); }
+  .marker.hidden { display: none; }
+
+  /* Context previews so currentColor can be judged in situ */
+  .contexts { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid transparent;
+    font: inherit; font-size: 14px; font-weight: 550;
+  }
+  .btn--primary { background: var(--accent); color: #fff; }
+  .btn--outline { background: transparent; border-color: var(--line); color: var(--ink); }
+  .btn .mini { width: 16px; height: 16px; }
+  .btn--primary .mini { color: #fff; }
+
+  .panel {
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    padding: 24px;
+    display: grid;
+    gap: 18px;
+    align-content: start;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+  h1 { font-size: 15px; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 12px; margin: 0; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; }
+  .field label span { color: var(--accent); font-variant-numeric: tabular-nums; font-weight: 600; }
+  .field .hint { font-size: 11px; color: var(--muted); }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+  .readout {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px; font: 12px/1.6 ui-monospace, "SF Mono", Menlo, monospace;
+    color: var(--ink); white-space: pre-wrap; word-break: break-word;
+  }
+  button.action {
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    background: var(--ink); color: var(--panel); border: 0; border-radius: 8px; padding: 8px 12px;
+  }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 2px 0; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="spinner-wrap">
+      <svg id="spinner" class="spinner" width="160" height="160" viewBox="0 0 100 100" role="img" aria-label="Loading">
+        <circle class="track" cx="50" cy="50" r="42" fill="none" stroke-width="8"/>
+        <circle id="arc" class="arc" cx="50" cy="50" r="42" fill="none" stroke-width="8" stroke-linecap="round" pathLength="360"/>
+        <circle id="mHead" class="marker hidden" r="3.2"/>
+        <circle id="mTail" class="marker hidden" r="3.2"/>
+      </svg>
+      <div class="contexts">
+        <span class="btn btn--primary"><svg class="mini spinner" viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="42" fill="none" stroke-width="10"/><circle class="arc arc-sync" cx="50" cy="50" r="42" fill="none" stroke-width="10" stroke-linecap="round" pathLength="360"/></svg>Saving…</span>
+        <span class="btn btn--outline"><svg class="mini spinner" viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="42" fill="none" stroke-width="10"/><circle class="arc arc-sync" cx="50" cy="50" r="42" fill="none" stroke-width="10" stroke-linecap="round" pathLength="360"/></svg>Loading…</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div>
+      <h1>Spinner motion lab</h1>
+      <p class="sub">Two points ride one eased orbit, the tail delayed behind the head. Tune, then we port the values into OneDS.</p>
+    </div>
+
+    <div class="field">
+      <label>Cycle time <span id="durationOut">1000 ms</span></label>
+      <input type="range" id="duration" title="Cycle time" min="300" max="4000" step="50" value="1000">
+      <span class="hint">How long one full turn takes.</span>
+    </div>
+
+    <div class="field">
+      <label>Gap / arc size <span id="phiOut">20%</span></label>
+      <input type="range" id="phi" title="Gap / arc size" min="4" max="94" step="1" value="20">
+      <span class="hint">Delay between the two points. Small = short arc, large = long comet tail. Live arc: <span id="arcRange">–</span></span>
+    </div>
+
+    <div class="field">
+      <label>Exaggeration (slow top ↔ fast bottom) <span id="exagOut">0.65</span></label>
+      <input type="range" id="exag" title="Exaggeration" min="0" max="0.98" step="0.01" value="0.65">
+      <span class="hint">0 = constant speed. Higher = hangs at the top, whips through the bottom. Speed ratio top:bottom <span id="ratioOut">–</span></span>
+    </div>
+
+    <hr>
+
+    <div class="field">
+      <label>Size <span id="sizeOut">160 px</span></label>
+      <input type="range" id="size" title="Size" min="16" max="220" step="1" value="160">
+    </div>
+
+    <div class="field">
+      <label>Thickness <span id="thickOut">4</span></label>
+      <input type="range" id="thick" title="Thickness" min="1" max="20" step="0.5" value="4">
+    </div>
+
+    <div class="field">
+      <label>Rail opacity <span id="trackOut">0.20</span></label>
+      <input type="range" id="track" title="Rail opacity" min="0" max="0.6" step="0.01" value="0.20">
+    </div>
+
+    <div class="row">
+      <label class="toggle"><input type="checkbox" id="caps" checked> Round ends</label>
+      <label class="toggle"><input type="checkbox" id="ccw"> Reverse</label>
+      <label class="toggle"><input type="checkbox" id="markers"> Show points</label>
+      <label class="toggle"><input type="checkbox" id="dark"> Dark</label>
+    </div>
+
+    <div class="field">
+      <label>Arc colour</label>
+      <input type="color" id="color" title="Arc colour" value="#202124">
+    </div>
+
+    <hr>
+    <div class="readout" id="readout"></div>
+    <button class="action" id="copy">Copy settings</button>
+  </div>
+
+<script>
+(function () {
+  const TAU = Math.PI * 2;
+  // Cumulative angle (deg). velocity ∝ 1 - s·cos(2π·x): min at the top, max at the bottom.
+  const theta = (x, s) => 360 * (x - (s / TAU) * Math.sin(TAU * x));
+
+  const $ = (id) => document.getElementById(id);
+  const svg = $('spinner');
+  const arc = $('arc');
+  const syncArcs = [...document.querySelectorAll('.arc-sync')];
+  const mHead = $('mHead'), mTail = $('mTail');
+
+  const ctrl = {
+    duration: $('duration'), phi: $('phi'), exag: $('exag'),
+    size: $('size'), thick: $('thick'), track: $('track'),
+    caps: $('caps'), ccw: $('ccw'), markers: $('markers'), dark: $('dark'), color: $('color')
+  };
+
+  const state = {};
+  function read() {
+    state.duration = +ctrl.duration.value;
+    state.phi = +ctrl.phi.value / 100;
+    state.s = +ctrl.exag.value;
+    state.size = +ctrl.size.value;
+    state.thick = +ctrl.thick.value;
+    state.track = +ctrl.track.value;
+    state.caps = ctrl.caps.checked;
+    state.ccw = ctrl.ccw.checked;
+    state.markers = ctrl.markers.checked;
+    state.color = ctrl.color.value;
+
+    $('durationOut').textContent = state.duration + ' ms';
+    $('phiOut').textContent = Math.round(state.phi * 100) + '%';
+    $('exagOut').textContent = state.s.toFixed(2);
+    $('sizeOut').textContent = state.size + ' px';
+    $('thickOut').textContent = state.thick;
+    $('trackOut').textContent = state.track.toFixed(2);
+
+    document.body.classList.toggle('dark', state.dark = ctrl.dark.checked);
+    document.documentElement.style.setProperty('--arc-color', state.color);
+    document.documentElement.style.setProperty('--arc-track', state.track);
+
+    svg.setAttribute('width', state.size);
+    svg.setAttribute('height', state.size);
+    svg.classList.toggle('ccw', state.ccw);
+    [arc, ...syncArcs, svg.querySelector('.track'), ...document.querySelectorAll('.mini .track')].forEach(el => {
+      if (el.classList.contains('arc') || el.classList.contains('track')) el.setAttribute('stroke-width', el.closest('.mini') ? 10 : state.thick);
+    });
+    arc.setAttribute('stroke-linecap', state.caps ? 'round' : 'butt');
+    syncArcs.forEach(a => a.setAttribute('stroke-linecap', state.caps ? 'round' : 'butt'));
+    mHead.classList.toggle('hidden', !state.markers);
+    mTail.classList.toggle('hidden', !state.markers);
+
+    // Sample one period for the readouts.
+    let lo = 999, hi = -999, tRatio = ((1 + state.s) / (1 - state.s || 1e-6));
+    for (let i = 0; i < 200; i++) {
+      const p = i / 200;
+      const a = theta(p + state.phi, state.s) - theta(p, state.s);
+      lo = Math.min(lo, a); hi = Math.max(hi, a);
+    }
+    $('arcRange').textContent = Math.round(lo) + '°–' + Math.round(hi) + '°';
+    $('ratioOut').textContent = tRatio.toFixed(1) + '×';
+    writeReadout(lo, hi, tRatio);
+  }
+
+  function writeReadout(lo, hi, ratio) {
+    $('readout').textContent =
+      'cycle       ' + state.duration + ' ms\n' +
+      'gap/delay   ' + Math.round(state.phi * 100) + '%  (φ = ' + state.phi.toFixed(2) + ')\n' +
+      'exaggerate  ' + state.s.toFixed(2) + '  (ratio ' + ratio.toFixed(1) + '×)\n' +
+      'arc length  ' + Math.round(lo) + '° – ' + Math.round(hi) + '°\n' +
+      'thickness   ' + state.thick + '\n' +
+      'rail        ' + state.track.toFixed(2);
+  }
+
+  Object.values(ctrl).forEach(el => el.addEventListener('input', read));
+  $('copy').addEventListener('click', () => {
+    navigator.clipboard.writeText($('readout').textContent);
+    $('copy').textContent = 'Copied ✓';
+    setTimeout(() => $('copy').textContent = 'Copy settings', 1200);
+  });
+
+  const R = 42;
+  const pointAt = (angleDeg) => {
+    const rad = (angleDeg - 90) * Math.PI / 180; // 0° = top, clockwise
+    return [50 + R * Math.cos(rad), 50 + R * Math.sin(rad)];
+  };
+
+  let start = performance.now();
+  function frame(now) {
+    const p = (now - start) / state.duration;
+    const trail = theta(p, state.s);
+    const head = theta(p + state.phi, state.s);
+    let len = head - trail;
+    len = Math.max(2, Math.min(358, len));
+    const trailMod = ((trail % 360) + 360) % 360;
+
+    const dash = len + ' ' + (360 - len);
+    const rot = 'rotate(' + (trailMod - 90) + 'deg)';
+    arc.setAttribute('stroke-dasharray', dash);
+    arc.style.transformOrigin = '50% 50%';
+    arc.style.transform = rot;
+    syncArcs.forEach(a => { a.setAttribute('stroke-dasharray', dash); a.style.transformOrigin = '50% 50%'; a.style.transform = rot; });
+
+    if (state.markers) {
+      const [hx, hy] = pointAt(trailMod + len);
+      const [tx, ty] = pointAt(trailMod);
+      mHead.setAttribute('cx', hx); mHead.setAttribute('cy', hy);
+      mTail.setAttribute('cx', tx); mTail.setAttribute('cy', ty);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  read();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

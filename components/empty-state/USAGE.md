@@ -15,4 +15,4 @@ Copy `tokens.css` and `components/empty-state/empty-state.css` verbatim into the
 </section>
 ```
 
-An optional decorative or status icon may use `empty-state__icon`. Keep required recovery instructions in text.
+An optional decorative or status icon may use `empty-state__icon`. It is a focal glyph with no container, so it renders at `--oneds-component-empty-state-icon-size` (32px) and needs the 32 grid asset. Keep required recovery instructions in text.

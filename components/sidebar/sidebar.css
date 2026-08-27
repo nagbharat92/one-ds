@@ -1,0 +1,351 @@
+/* Application navigation shell. Named .app-sidebar so it never collides with a
+   documentation site's own .sidebar chrome. Docks to one edge, fills its parent's
+   height, and collapses to an icon rail. */
+.app-sidebar {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  inline-size: var(--oneds-component-app-sidebar-width);
+  block-size: 100%;
+  overflow: hidden;
+  border-inline-end: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  background: var(--oneds-color-surface-neutral-farther);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-family: var(--oneds-reference-font-family-base);
+  transition: inline-size var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-standard);
+}
+
+/* Side: pin to the inline-end edge instead. */
+.app-sidebar--right {
+  border-inline-start: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-inline-end: 0;
+}
+
+/* Floating: a detached, rounded, elevated panel rather than a docked wall. */
+.app-sidebar--floating {
+  block-size: auto;
+  border: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  border-radius: var(--oneds-reference-radius-lg);
+  background: var(--oneds-color-surface-neutral-nearer);
+  box-shadow: var(--oneds-semantic-elevation-2);
+}
+
+.app-sidebar[data-state="collapsed"] {
+  inline-size: var(--oneds-component-app-sidebar-width-icon);
+}
+
+/* Header: brand mark plus optional label. */
+.app-sidebar__header {
+  display: flex;
+  align-items: center;
+  gap: var(--oneds-component-app-sidebar-item-icon-gap);
+  padding: var(--oneds-component-app-sidebar-padding);
+}
+
+.app-sidebar__brand {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: var(--oneds-component-app-sidebar-item-icon-gap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--oneds-color-foreground-neutral-primary);
+  text-align: start;
+  text-decoration: none;
+}
+
+.app-sidebar__brand-logo {
+  display: inline-flex;
+  box-sizing: border-box;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--oneds-component-app-sidebar-item-height);
+  block-size: var(--oneds-component-app-sidebar-item-height);
+  border-radius: var(--oneds-component-app-sidebar-item-radius);
+  background: var(--oneds-color-background-brand-loud);
+  color: var(--oneds-color-foreground-brand-onloud);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+  line-height: 1;
+}
+
+.app-sidebar__brand-logo svg {
+  inline-size: var(--oneds-component-app-sidebar-icon-size);
+  block-size: var(--oneds-component-app-sidebar-icon-size);
+}
+
+.app-sidebar__brand-text {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.app-sidebar__brand-name {
+  overflow: hidden;
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  font-weight: var(--oneds-reference-font-weight-semibold);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-sidebar__brand-detail {
+  overflow: hidden;
+  color: var(--oneds-color-foreground-neutral-tertiary);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Content: scrolls when the groups outgrow the height; header and footer stay put. */
+.app-sidebar__content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--oneds-component-app-sidebar-group-gap);
+  padding: var(--oneds-component-app-sidebar-padding);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.app-sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--oneds-component-app-sidebar-item-gap);
+}
+
+.app-sidebar__group-label {
+  padding-inline: var(--oneds-component-app-sidebar-item-padding-inline);
+  overflow: hidden;
+  color: var(--oneds-color-foreground-neutral-tertiary);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  font-weight: var(--oneds-reference-font-weight-medium);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-sidebar__menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--oneds-component-app-sidebar-item-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-sidebar__item {
+  position: relative;
+}
+
+/* Button: the tap target for a menu entry. Works as <a>, <button>, or <summary>. */
+.app-sidebar__button {
+  display: flex;
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--oneds-component-app-sidebar-item-height);
+  align-items: center;
+  gap: var(--oneds-component-app-sidebar-item-icon-gap);
+  padding-inline: var(--oneds-component-app-sidebar-item-padding-inline);
+  border: 0;
+  border-radius: var(--oneds-component-app-sidebar-item-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-family: var(--oneds-reference-font-family-base);
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  list-style: none;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.app-sidebar__button::-webkit-details-marker {
+  display: none;
+}
+
+.app-sidebar__button:hover {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+  color: var(--oneds-color-foreground-neutral-primary);
+}
+
+.app-sidebar__button:active {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.app-sidebar__button:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+/* Active page: a soft fill, not the loud brand — this is navigation, not a control. */
+.app-sidebar__button[aria-current] {
+  background: var(--oneds-color-background-neutral-soft);
+  color: var(--oneds-color-foreground-neutral-primary);
+  font-weight: var(--oneds-reference-font-weight-medium);
+}
+
+.app-sidebar__button:disabled,
+.app-sidebar__button[aria-disabled="true"] {
+  color: var(--oneds-color-foreground-neutral-disabled);
+  pointer-events: none;
+}
+
+.app-sidebar__icon {
+  flex: none;
+  inline-size: var(--oneds-component-app-sidebar-icon-size);
+  block-size: var(--oneds-component-app-sidebar-icon-size);
+  line-height: 1;
+}
+
+.app-sidebar__label {
+  flex: 1 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.app-sidebar__badge {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--oneds-color-foreground-neutral-secondary);
+  font-size: var(--oneds-semantic-typography-functional-body-small-size);
+  line-height: var(--oneds-semantic-typography-functional-body-small-line-height);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-sidebar__caret {
+  flex: none;
+  margin-inline-start: auto;
+  inline-size: var(--oneds-component-app-sidebar-icon-size);
+  block-size: var(--oneds-component-app-sidebar-icon-size);
+  color: var(--oneds-color-foreground-neutral-secondary);
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.app-sidebar__collapsible[open] > .app-sidebar__button .app-sidebar__caret {
+  transform: rotate(90deg);
+}
+
+/* Nested menu: a hairline rail aligned under the parent icon. */
+.app-sidebar__sub {
+  display: flex;
+  flex-direction: column;
+  gap: var(--oneds-component-app-sidebar-item-gap);
+  margin: var(--oneds-component-app-sidebar-item-gap) 0 0;
+  margin-inline-start: calc(var(--oneds-component-app-sidebar-item-padding-inline) + var(--oneds-component-app-sidebar-icon-size) / 2);
+  padding-inline-start: var(--oneds-component-app-sidebar-sub-inset);
+  border-inline-start: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+  list-style: none;
+}
+
+.app-sidebar__sub-button {
+  font-size: var(--oneds-semantic-typography-functional-body-medium-size);
+  line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
+}
+
+.app-sidebar__separator {
+  block-size: var(--oneds-reference-stroke-thin);
+  margin: var(--oneds-component-app-sidebar-item-gap) var(--oneds-component-app-sidebar-item-padding-inline);
+  border: 0;
+  background: var(--oneds-color-stroke-neutral-subtle);
+}
+
+.app-sidebar__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--oneds-component-app-sidebar-item-gap);
+  padding: var(--oneds-component-app-sidebar-padding);
+  border-top: var(--oneds-reference-stroke-thin) solid var(--oneds-color-stroke-neutral-subtle);
+}
+
+/* Trigger: a small icon button that lives outside the sidebar, in the page header. */
+.app-sidebar__trigger {
+  display: inline-flex;
+  box-sizing: border-box;
+  inline-size: var(--oneds-component-app-sidebar-item-height);
+  block-size: var(--oneds-component-app-sidebar-item-height);
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--oneds-component-app-sidebar-item-radius);
+  background: var(--oneds-color-background-neutral-transparent);
+  color: var(--oneds-color-foreground-neutral-primary);
+  cursor: pointer;
+  transition: var(--oneds-reference-motion-transition-state);
+}
+
+.app-sidebar__trigger:hover {
+  background: var(--oneds-color-background-neutral-transparent-hover);
+}
+
+.app-sidebar__trigger:active {
+  background: var(--oneds-color-background-neutral-transparent-pressed);
+}
+
+.app-sidebar__trigger:focus-visible {
+  outline: var(--oneds-component-focus-width) solid var(--oneds-color-stroke-focus-outer);
+  outline-offset: var(--oneds-component-focus-offset);
+  box-shadow: inset 0 0 0 var(--oneds-reference-stroke-thin) var(--oneds-color-stroke-focus-inner);
+}
+
+.app-sidebar__trigger svg {
+  inline-size: var(--oneds-component-app-sidebar-icon-size);
+  block-size: var(--oneds-component-app-sidebar-icon-size);
+}
+
+/* Collapsed rail: keep the icons, drop everything that needs width. */
+.app-sidebar[data-state="collapsed"] .app-sidebar__label,
+.app-sidebar[data-state="collapsed"] .app-sidebar__badge,
+.app-sidebar[data-state="collapsed"] .app-sidebar__caret,
+.app-sidebar[data-state="collapsed"] .app-sidebar__brand-text,
+.app-sidebar[data-state="collapsed"] .app-sidebar__group-label,
+.app-sidebar[data-state="collapsed"] .app-sidebar__sub {
+  display: none;
+}
+
+.app-sidebar[data-state="collapsed"] .app-sidebar__button,
+.app-sidebar[data-state="collapsed"] .app-sidebar__brand {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+/* Layout helpers: a full-height row with the main content beside the sidebar. */
+.app-sidebar-layout {
+  display: flex;
+  min-block-size: 0;
+}
+
+.app-sidebar-inset {
+  display: flex;
+  min-inline-size: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar__button,
+  .app-sidebar__caret,
+  .app-sidebar__trigger {
+    transition-duration: var(--oneds-reference-motion-reduced);
+  }
+}
+
+@media (forced-colors: active) {
+  .app-sidebar {
+    border-color: ButtonText;
+  }
+
+  .app-sidebar__button[aria-current] {
+    outline: var(--oneds-reference-stroke-thin) solid Highlight;
+  }
+}
