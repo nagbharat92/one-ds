@@ -4,6 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>OneDS overview</title>
+  <script>
+    // VibeHub serves this app from a subdirectory; when the root is opened without a
+    // trailing slash, relative links resolve against the parent and bounce home. Pin a
+    // <base> to this page's own directory so links and assets always resolve correctly.
+    (function () {
+      var path = location.pathname;
+      var dir = /\.[^/]+$/.test(path) ? path.slice(0, path.lastIndexOf("/") + 1) : path.replace(/\/?$/, "/");
+      document.head.appendChild(Object.assign(document.createElement("base"), { href: location.origin + dir }));
+    })();
+  </script>
   <link rel="stylesheet" href="../tokens.css?v=d019416a">
   <link rel="stylesheet" href="../components/button/button.css?v=b2977c3f">
   <link rel="stylesheet" href="../components/code-block/code-block.css?v=4ef135dd">
@@ -20,7 +30,7 @@
         <span class="sidebar__brand-name">OneDS</span>
         <span class="sidebar__brand-detail">Design system for agents.</span>
       </a>
-      <div class="tabs sidebar__theme" role="group" aria-label="Theme">
+      <div class="tabs tabs--small sidebar__theme" role="group" aria-label="Theme">
         <button class="tab" type="button" data-theme-value="light" aria-pressed="true">Light</button>
         <button class="tab" type="button" data-theme-value="dark" aria-pressed="false">Dark</button>
       </div>
