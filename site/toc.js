@@ -7,6 +7,23 @@
     return;
   }
 
+  // The host may serve the site under a <base> (subpath hosting), which makes a
+  // bare "#id" link resolve against the base URL and reload the app root instead
+  // of scrolling. Pin each link to this document and scroll to the target directly.
+  for (const { link, target } of entries) {
+    const hash = link.hash;
+    link.setAttribute("href", location.pathname + hash);
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
+      event.preventDefault();
+      target.scrollIntoView();
+      history.pushState(null, "", location.pathname + hash);
+    });
+  }
+
   const panel = entries[0].link.closest(".sidebar");
   let current = null;
   let queued = false;
