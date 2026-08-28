@@ -427,9 +427,9 @@
 	--oneds-component-hover-card-radius: var(--oneds-reference-radius-lg);
 	--oneds-component-hover-card-arrow-size: var(--oneds-reference-space-8);
 	--oneds-component-tooltip-max-width: 240px;
-	--oneds-component-tooltip-gap: var(--oneds-reference-space-8);
-	--oneds-component-tooltip-padding-block: var(--oneds-reference-space-4);
-	--oneds-component-tooltip-padding-inline: var(--oneds-reference-space-8);
+	--oneds-component-tooltip-gap: var(--oneds-reference-space-12);
+	--oneds-component-tooltip-padding-block: var(--oneds-reference-space-8);
+	--oneds-component-tooltip-padding-inline: var(--oneds-reference-space-12);
 	--oneds-component-tooltip-radius: var(--oneds-reference-radius-md);
 	--oneds-component-tooltip-arrow-size: var(--oneds-reference-space-8);
 	--oneds-component-resizable-handle-size: var(--oneds-reference-space-8);

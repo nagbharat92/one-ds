@@ -172,8 +172,12 @@ for (const htmlFile of htmlFiles) {
 
 	// An icon set beside a label must let the label carry text-trim so the icon centres on the
 	// letters, not the font's leading. Flag a leading icon directly followed by an unwrapped label:
-	// bare text, or a single-text span that lacks the text-trim class.
-	if (htmlFile.startsWith(`${componentsPath}${path.sep}`)) {
+	// bare text, or a single-text span that lacks the text-trim class. Applies to component packages
+	// and to the component showcase page, where the demos must match the shipped components.
+	const isComponentPackage = htmlFile.startsWith(`${componentsPath}${path.sep}`);
+	const isComponentShowcase = htmlFile.endsWith(`${path.sep}components.html`);
+
+	if (isComponentPackage || isComponentShowcase) {
 		const bareLabel = [...html.matchAll(/<\/svg>\s*[A-Za-z0-9]/g)].length;
 		const untrimmedSpan = [
 			...html.matchAll(/<\/svg>\s*<span\b(?![^>]*\btext-trim\b)[^>]*>[^<]+<\/span>/g),

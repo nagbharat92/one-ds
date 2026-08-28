@@ -533,9 +533,9 @@
 		},
 		"tooltip": {
 			"maxWidth": { "$value": "240px" },
-			"gap": { "$value": "{reference.space.8}" },
-			"paddingBlock": { "$value": "{reference.space.4}" },
-			"paddingInline": { "$value": "{reference.space.8}" },
+			"gap": { "$value": "{reference.space.12}" },
+			"paddingBlock": { "$value": "{reference.space.8}" },
+			"paddingInline": { "$value": "{reference.space.12}" },
 			"radius": { "$value": "{reference.radius.md}" },
 			"arrowSize": { "$value": "{reference.space.8}" }
 		},
