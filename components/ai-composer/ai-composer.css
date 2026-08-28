@@ -306,22 +306,6 @@
   transform: scale(var(--oneds-reference-motion-scale-press));
 }
 
-/* Pending status: the submit button holds a spinner instead of a glyph. */
-.ai-composer__spinner {
-  width: var(--oneds-component-ai-composer-icon-size);
-  height: var(--oneds-component-ai-composer-icon-size);
-  border: var(--oneds-reference-stroke-thick) solid currentColor;
-  border-top-color: transparent;
-  border-radius: var(--oneds-reference-radius-pill);
-  animation: oneds-ai-composer-spin var(--oneds-component-spinner-duration) linear infinite;
-}
-
-@keyframes oneds-ai-composer-spin {
-  to {
-    transform: rotate(var(--oneds-component-spinner-turn));
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ai-composer,
   .ai-composer__action,
@@ -330,11 +314,6 @@
   .ai-composer__submit,
   .ai-composer__attachment-remove {
     transition-duration: var(--oneds-reference-motion-reduced) !important;
-  }
-
-  .ai-composer__spinner {
-    animation-duration: var(--oneds-reference-motion-reduced) !important;
-    animation-iteration-count: 1 !important;
   }
 }
 

@@ -61,7 +61,7 @@ The composer is a `<form>` with three stacked rows. The prompt always owns its o
 - `ai-composer__tool` — an icon-and-label toggle. `aria-pressed` carries the on state; there is no modifier class.
 - `ai-composer__select` — the trigger for a choice such as the model. It opens a `menu`; the composer only ships the trigger.
 - `ai-composer__submit` — the primary action. See the status table below.
-- `ai-composer__spinner` — a rotating arc to place inside the submit button while a response is pending.
+- `spinner` — the spinner component, placed inside the submit button while a response is pending. Copy `components/spinner/spinner.css` too.
 
 Every part is optional except the prompt and the submit button. An omitted part reserves no space and no tab stop.
 
@@ -72,7 +72,7 @@ The submit button keeps one shape and swaps its content. Set the content from th
 | Status | Content | Meaning |
 | --- | --- | --- |
 | Ready | Arrow up icon | Nothing is in flight. Disable the button while the prompt is empty and no file is attached. |
-| Pending | `ai-composer__spinner` | The request was sent and no tokens have arrived. |
+| Pending | `spinner` | The request was sent and no tokens have arrived. |
 | Streaming | Stop icon | A reply is arriving. Activating the button stops it. |
 | Error | Error circle icon | The last request failed. Activating the button retries it. |
 

@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("oneds-theme")||"light"}catch(e){}</script>
   <title>Tokens · OneDS reference</title>
-  <link rel="stylesheet" href="../tokens.css?v=d019416a">
-  <link rel="stylesheet" href="../components/button/button.css?v=b2977c3f">
+  <link rel="stylesheet" href="../tokens.css?v=02ff727c">
+  <link rel="stylesheet" href="../components/button/button.css?v=17430e3a">
   <link rel="stylesheet" href="../components/data-table/data-table.css?v=f6281c82">
   <link rel="stylesheet" href="../components/page-header/page-header.css?v=7df3af63">
   <link rel="stylesheet" href="../components/section/section.css?v=3f55f916">
   <link rel="stylesheet" href="../components/tabs/tabs.css?v=f34cc528">
-  <link rel="stylesheet" href="_local.css?v=03d7b7d8">
-  <script src="theme.js?v=1e7296ec" defer></script>
+  <link rel="stylesheet" href="_local.css?v=d3661ac5">
+  <script src="theme.js?v=8bb88d96" defer></script>
   <script src="toc.js?v=c7b1e319" defer></script>
   <script src="token-copy.js?v=04674d36" defer></script>
 </head>
@@ -218,9 +219,11 @@
                 <tbody>
                   <tr data-token="--oneds-reference-motion-ease-standard"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-ease-standard">--oneds-reference-motion-ease-standard</button></th><td data-token-value>cubic-bezier(0.2, 0, 0, 1)</td><td>State changes on an element already on screen</td></tr>
                   <tr data-token="--oneds-reference-motion-ease-entrance"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-ease-entrance">--oneds-reference-motion-ease-entrance</button></th><td data-token-value>cubic-bezier(0.12, 0.85, 0.2, 1)</td><td>Something arriving, such as a menu or dialog</td></tr>
+                  <tr data-token="--oneds-reference-motion-ease-arrive"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-ease-arrive">--oneds-reference-motion-ease-arrive</button></th><td data-token-value>cubic-bezier(0.16, 1, 0.3, 1)</td><td>Expo-out landing for the on-load entrance wave</td></tr>
                   <tr data-token="--oneds-reference-motion-distance-enter"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-enter">--oneds-reference-motion-distance-enter</button></th><td data-token-value>8px</td><td>Offset an arriving surface travels</td></tr>
                   <tr data-token="--oneds-reference-motion-distance-rise"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-rise">--oneds-reference-motion-distance-rise</button></th><td data-token-value>4px</td><td>Shorter arrival offset for a small surface</td></tr>
                   <tr data-token="--oneds-reference-motion-distance-lift"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-lift">--oneds-reference-motion-distance-lift</button></th><td data-token-value>-1px</td><td>Hover lift on a control</td></tr>
+                  <tr data-token="--oneds-reference-motion-distance-arrive"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-distance-arrive">--oneds-reference-motion-distance-arrive</button></th><td data-token-value>40px</td><td>Distance a block rises during the on-load entrance wave</td></tr>
                   <tr data-token="--oneds-reference-motion-scale-press"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-scale-press">--oneds-reference-motion-scale-press</button></th><td data-token-value>0.96</td><td>Pressed state of a control</td></tr>
                   <tr data-token="--oneds-reference-motion-scale-enter"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-scale-enter">--oneds-reference-motion-scale-enter</button></th><td data-token-value>0.97</td><td>Starting scale of an arriving surface</td></tr>
                   <tr data-token="--oneds-reference-motion-reduced"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-reduced">--oneds-reference-motion-reduced</button></th><td data-token-value>1ms</td><td>Every duration under <code>prefers-reduced-motion</code></td></tr>
@@ -232,6 +235,17 @@
                 <thead><tr><th scope="col">Token</th><th scope="col">Applies to</th></tr></thead>
                 <tbody>
                   <tr data-token="--oneds-reference-motion-transition-state"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-transition-state">--oneds-reference-motion-transition-state</button></th><td>One ready-made <code>transition</code> covering background, border, shadow, color, opacity, and transform at the fast duration and standard easing.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="token-table">
+              <table class="data-table"><caption>Entrance wave</caption>
+                <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Role</th></tr></thead>
+                <tbody>
+                  <tr data-token="--oneds-reference-motion-entrance-duration"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-entrance-duration">--oneds-reference-motion-entrance-duration</button></th><td data-token-value>1400ms</td><td>How long a single block takes to arrive</td></tr>
+                  <tr data-token="--oneds-reference-motion-entrance-stagger-base"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-entrance-stagger-base">--oneds-reference-motion-entrance-stagger-base</button></th><td data-token-value>100ms</td><td>Gap before the second block starts after the first</td></tr>
+                  <tr data-token="--oneds-reference-motion-entrance-stagger-growth"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-entrance-stagger-growth">--oneds-reference-motion-entrance-stagger-growth</button></th><td data-token-value>10ms</td><td>How much each successive gap grows, so the wave decelerates</td></tr>
+                  <tr data-token="--oneds-reference-motion-entrance-stagger-max"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-reference-motion-entrance-stagger-max">--oneds-reference-motion-entrance-stagger-max</button></th><td data-token-value>600ms</td><td>Clamp on a block's delay so a fast scroll cannot outrun the wave</td></tr>
                 </tbody>
               </table>
             </div>
@@ -297,7 +311,6 @@
                   <tr data-token="--oneds-component-icon-button-radius"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-icon-button-radius">--oneds-component-icon-button-radius</button></th><td data-token-value>8px</td></tr>
                   <tr data-token="--oneds-component-button-icon-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-icon-size">--oneds-component-button-icon-size</button></th><td data-token-value>16px</td></tr>
                   <tr data-token="--oneds-component-button-icon-label-padding-inline-end"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-icon-label-padding-inline-end">--oneds-component-button-icon-label-padding-inline-end</button></th><td data-token-value>16px</td></tr>
-                  <tr data-token="--oneds-component-button-spinner-size"><th scope="row"><button class="token-copy" type="button" data-token="--oneds-component-button-spinner-size">--oneds-component-button-spinner-size</button></th><td data-token-value>16px</td></tr>
                 </tbody>
               </table>
             </div>

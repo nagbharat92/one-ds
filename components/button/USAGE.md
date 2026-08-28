@@ -30,7 +30,7 @@ Content, combine with any emphasis:
 - Label only: text inside `button` (the default).
 - Icon and label: place an SVG icon before the label and mark it `aria-hidden="true"`; the `gap` spaces them. Wrap the label in `<span class="text-trim">` so the icon centres on the letters, not on the font's leading. The button adds a larger trailing padding (`--oneds-component-button-icon-label-padding-inline-end`, 16px) so the leading icon does not make the content look shifted toward the right edge.
 - Icon only: add `button--icon`, include one SVG icon, and provide an accessible name with `aria-label`.
-- Spinner: place a `<span class="button__spinner" aria-hidden="true"></span>` before the label, add `aria-busy="true"`, and set `disabled` while the action is in flight.
+- Spinner: place a `<span class="spinner" aria-hidden="true"></span>` before the label, add `aria-busy="true"`, and set `disabled` while the action is in flight. The ring is the spinner component, so copy `components/spinner/spinner.css` alongside `button.css` for busy buttons.
 
 ## Parameters
 

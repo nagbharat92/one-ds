@@ -177,11 +177,17 @@
 	--oneds-reference-motion-duration-slow: 340ms;
 	--oneds-reference-motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
 	--oneds-reference-motion-ease-entrance: cubic-bezier(0.12, 0.85, 0.2, 1);
+	--oneds-reference-motion-ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
 	--oneds-reference-motion-distance-enter: 8px;
 	--oneds-reference-motion-distance-rise: 4px;
 	--oneds-reference-motion-distance-lift: -1px;
+	--oneds-reference-motion-distance-arrive: 40px;
 	--oneds-reference-motion-scale-press: 0.96;
 	--oneds-reference-motion-scale-enter: 0.97;
+	--oneds-reference-motion-entrance-duration: 1400ms;
+	--oneds-reference-motion-entrance-stagger-base: 100ms;
+	--oneds-reference-motion-entrance-stagger-growth: 10ms;
+	--oneds-reference-motion-entrance-stagger-max: 600ms;
 	--oneds-reference-motion-transition-state: background-color var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard), border-color var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard), box-shadow var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard), color var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard), opacity var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard), transform var(--oneds-reference-motion-duration-fast) var(--oneds-reference-motion-ease-standard);
 	--oneds-reference-motion-reduced: 1ms;
 	--oneds-reference-opacity-hidden: 0;
@@ -285,7 +291,6 @@
 	--oneds-component-button-radius: var(--oneds-reference-radius-md);
 	--oneds-component-button-icon-size: var(--oneds-reference-icon-size-sm);
 	--oneds-component-button-icon-label-padding-inline-end: var(--oneds-reference-space-16);
-	--oneds-component-button-spinner-size: var(--oneds-reference-icon-size-sm);
 	--oneds-component-icon-button-size: var(--oneds-reference-control-height-sm);
 	--oneds-component-icon-button-radius: var(--oneds-reference-radius-md);
 	--oneds-component-badge-padding-block: var(--oneds-reference-space-2);
@@ -712,4 +717,38 @@ textarea {
 	.text-trim {
 		text-box: trim-both cap alphabetic;
 	}
+}
+
+/* Entrance wave: a block fades in while rising into place. Each block carries a zero-based --i,
+   and its delay is an arithmetic series whose gap grows each step, so a run of blocks decelerates
+   into place. Opt in with .animate-fade-in-up (rising) or .animate-fade-in (flat, for a element
+   that must not move, such as a sticky region). The delay clamps at --stagger-max so a long list
+   cannot outrun a fast scroll. */
+@keyframes oneds-fade-in-up {
+	from { opacity: 0; transform: translateY(var(--oneds-reference-motion-distance-arrive)); }
+	to { opacity: 1; transform: translateY(0); }
+}
+@keyframes oneds-fade-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.animate-fade-in-up,
+.animate-fade-in {
+	--i: 0;
+	animation-duration: var(--oneds-reference-motion-entrance-duration);
+	animation-timing-function: var(--oneds-reference-motion-ease-arrive);
+	animation-fill-mode: both;
+	animation-delay: min(
+		var(--i) * var(--oneds-reference-motion-entrance-stagger-base)
+			+ var(--i) * (var(--i) - 1) / 2 * var(--oneds-reference-motion-entrance-stagger-growth),
+		var(--oneds-reference-motion-entrance-stagger-max)
+	);
+}
+.animate-fade-in-up { animation-name: oneds-fade-in-up; }
+.animate-fade-in { animation-name: oneds-fade-in; }
+
+@media (prefers-reduced-motion: reduce) {
+	.animate-fade-in-up,
+	.animate-fade-in { animation: none; }
 }

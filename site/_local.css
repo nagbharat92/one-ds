@@ -219,6 +219,69 @@ details[open] > .sidebar__disclosure .sidebar__disclosure-icon {
   margin-block: 0;
 }
 
+/* Entrance wave (zero markup): on load each content block rises into place, staggered by --i. The
+   keyframes, timing, and reduced-motion off-switch are the OneDS primitive emitted into tokens.css;
+   this only binds them to the shell and numbers blocks. The sidebar is persistent chrome and each
+   page is a full URL load, so it is deliberately NOT animated — a fade would flash on every nav. */
+.site-content > * {
+  --i: 0;
+  animation-duration: var(--oneds-reference-motion-entrance-duration);
+  animation-timing-function: var(--oneds-reference-motion-ease-arrive);
+  animation-fill-mode: both;
+  animation-delay: min(
+    var(--i) * var(--oneds-reference-motion-entrance-stagger-base)
+      + var(--i) * (var(--i) - 1) / 2 * var(--oneds-reference-motion-entrance-stagger-growth),
+    var(--oneds-reference-motion-entrance-stagger-max)
+  );
+}
+
+.site-content > * { animation-name: oneds-fade-in-up; }
+
+.site-content > *:nth-child(1) { --i: 0; }
+.site-content > *:nth-child(2) { --i: 1; }
+.site-content > *:nth-child(3) { --i: 2; }
+.site-content > *:nth-child(4) { --i: 3; }
+.site-content > *:nth-child(5) { --i: 4; }
+.site-content > *:nth-child(6) { --i: 5; }
+.site-content > *:nth-child(7) { --i: 6; }
+.site-content > *:nth-child(8) { --i: 7; }
+.site-content > *:nth-child(9) { --i: 8; }
+.site-content > *:nth-child(10) { --i: 9; }
+.site-content > *:nth-child(11) { --i: 10; }
+.site-content > *:nth-child(12) { --i: 11; }
+.site-content > *:nth-child(13) { --i: 12; }
+.site-content > *:nth-child(14) { --i: 13; }
+.site-content > *:nth-child(15) { --i: 14; }
+.site-content > *:nth-child(16) { --i: 15; }
+.site-content > *:nth-child(17) { --i: 16; }
+.site-content > *:nth-child(18) { --i: 17; }
+.site-content > *:nth-child(19) { --i: 18; }
+.site-content > *:nth-child(20) { --i: 19; }
+.site-content > *:nth-child(21) { --i: 20; }
+.site-content > *:nth-child(22) { --i: 21; }
+.site-content > *:nth-child(23) { --i: 22; }
+.site-content > *:nth-child(24) { --i: 23; }
+.site-content > *:nth-child(25) { --i: 24; }
+.site-content > *:nth-child(26) { --i: 25; }
+.site-content > *:nth-child(27) { --i: 26; }
+.site-content > *:nth-child(28) { --i: 27; }
+.site-content > *:nth-child(29) { --i: 28; }
+.site-content > *:nth-child(30) { --i: 29; }
+.site-content > *:nth-child(31) { --i: 30; }
+.site-content > *:nth-child(32) { --i: 31; }
+.site-content > *:nth-child(33) { --i: 32; }
+.site-content > *:nth-child(34) { --i: 33; }
+.site-content > *:nth-child(35) { --i: 34; }
+.site-content > *:nth-child(36) { --i: 35; }
+.site-content > *:nth-child(37) { --i: 36; }
+.site-content > *:nth-child(38) { --i: 37; }
+.site-content > *:nth-child(39) { --i: 38; }
+.site-content > *:nth-child(40) { --i: 39; }
+
+@media (prefers-reduced-motion: reduce) {
+  .site-content > * { animation: none; }
+}
+
 .site-footer {
   display: flex;
   align-items: center;

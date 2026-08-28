@@ -1,6 +1,6 @@
 # Spinner
 
-Use the spinner as an inline busy indicator inside a control while a short action is in flight.
+Use the spinner as a busy indicator for a short, indeterminate action — inline inside a control, or standalone with `role="status"` as a page-level loading indicator.
 
 ## Sizes
 

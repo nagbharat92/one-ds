@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("oneds-theme")||"light"}catch(e){}</script>
   <title>Components · OneDS reference</title>
-  <link rel="stylesheet" href="../tokens.css?v=d019416a">
+  <link rel="stylesheet" href="../tokens.css?v=02ff727c">
   <link rel="stylesheet" href="../components/card/card.css?v=ecac3130">
   <link rel="stylesheet" href="../components/section/section.css?v=3f55f916">
   <link rel="stylesheet" href="../components/grid/grid.css?v=3ecedb1e">
@@ -13,12 +14,11 @@
   <link rel="stylesheet" href="../components/separator/separator.css?v=80ab246a">
   <link rel="stylesheet" href="../components/page-header/page-header.css?v=7df3af63">
   <link rel="stylesheet" href="../components/data-table/data-table.css?v=f6281c82">
-  <link rel="stylesheet" href="../components/button/button.css?v=b2977c3f">
+  <link rel="stylesheet" href="../components/button/button.css?v=17430e3a">
   <link rel="stylesheet" href="../components/code-block/code-block.css?v=4ef135dd">
   <link rel="stylesheet" href="../components/chip/chip.css?v=d04955db">
   <link rel="stylesheet" href="../components/tabs/tabs.css?v=f34cc528">
   <link rel="stylesheet" href="../components/accordion/accordion.css?v=e2f878b9">  <link rel="stylesheet" href="../components/alert/alert.css?v=8a2f86e2">  <link rel="stylesheet" href="../components/alert-dialog/alert-dialog.css?v=fe46c640">  <link rel="stylesheet" href="../components/avatar/avatar.css?v=88e1384f">  <link rel="stylesheet" href="../components/calendar/calendar.css?v=e44e2adc">  <link rel="stylesheet" href="../components/badge/badge.css?v=8618a439">  <link rel="stylesheet" href="../components/breadcrumb/breadcrumb.css?v=c4887cc9">  <link rel="stylesheet" href="../components/pagination/pagination.css?v=9ab24c96">  <link rel="stylesheet" href="../components/checkbox/checkbox.css?v=0108dba1">  <link rel="stylesheet" href="../components/combobox/combobox.css?v=7178edd4">  <link rel="stylesheet" href="../components/date-picker/date-picker.css?v=9b9fa523">  <link rel="stylesheet" href="../components/empty-state/empty-state.css?v=85442c86">
-  <link rel="stylesheet" href="../components/loading/loading.css?v=3fce4db9">
   <link rel="stylesheet" href="../components/dialog/dialog.css?v=a805b457">
   <link rel="stylesheet" href="../components/drawer/drawer.css?v=3ed704bb">
   <link rel="stylesheet" href="../components/hover-card/hover-card.css?v=e2453efd">
@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../components/resizable/resizable.css?v=44aa683a">
   <link rel="stylesheet" href="../components/text-box/text-box.css?v=8f887986">
   <link rel="stylesheet" href="../components/textarea/textarea.css?v=60d2c852">
-  <link rel="stylesheet" href="../components/ai-composer/ai-composer.css?v=9fa12cee">
+  <link rel="stylesheet" href="../components/ai-composer/ai-composer.css?v=7d81e39d">
   <link rel="stylesheet" href="../components/menu/menu.css?v=f2deff22">
   <link rel="stylesheet" href="../components/popover/popover.css?v=1e0b6215">
   <link rel="stylesheet" href="../components/progress/progress.css?v=16a27034">
@@ -45,8 +45,8 @@
   <link rel="stylesheet" href="../components/toast/toast.css?v=1452d414">
   <link rel="stylesheet" href="../components/toolbar/toolbar.css?v=8599f0f7">
   <link rel="stylesheet" href="../components/tooltip/tooltip.css?v=cdfed709">
-  <link rel="stylesheet" href="_local.css?v=03d7b7d8">
-  <script src="theme.js?v=1e7296ec" defer></script>
+  <link rel="stylesheet" href="_local.css?v=d3661ac5">
+  <script src="theme.js?v=8bb88d96" defer></script>
   <script src="toc.js?v=c7b1e319" defer></script>
   <script src="overview.js?v=8e2dfb63" defer></script>
   <script src="../components/alert-dialog/alert-dialog.js?v=ea6ed237" defer></script>
@@ -111,7 +111,6 @@
                 <li><a class="sidebar__toc-link" href="#hover-card">Hover card</a></li>
                 <li><a class="sidebar__toc-link" href="#inline-message">Inline message</a></li>
                 <li><a class="sidebar__toc-link" href="#input">Input</a></li>
-                <li><a class="sidebar__toc-link" href="#loading">Loading</a></li>
                 <li><a class="sidebar__toc-link" href="#menu">Menu</a></li>
                 <li><a class="sidebar__toc-link" href="#page-header">Page header</a></li>
                 <li><a class="sidebar__toc-link" href="#pagination">Pagination</a></li>
@@ -183,7 +182,7 @@
               <div class="specimen-block"><span class="specimen-label">Prompt and submit only</span><form class="ai-composer"><textarea class="ai-composer__input" name="prompt" rows="1" placeholder="Message Copilot" aria-label="Minimal composer example"></textarea><div class="ai-composer__footer"><div class="ai-composer__tools"></div><button class="ai-composer__submit" type="submit" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></form></div>
               <div class="specimen-block"><span class="specimen-label">Files held over the composer</span><form class="ai-composer" data-dragging="true"><textarea class="ai-composer__input" name="prompt" rows="1" placeholder="Drop files to attach them" aria-label="Drop target composer example"></textarea><div class="ai-composer__footer"><div class="ai-composer__tools"><button class="ai-composer__action" type="button" aria-label="Add photos or files" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-attach"></use></svg></button></div><button class="ai-composer__submit" type="submit" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></form></div>
               <div class="specimen-block"><span class="specimen-label">Disabled</span><form class="ai-composer"><textarea class="ai-composer__input" name="prompt" rows="1" placeholder="Message unavailable" aria-label="Disabled composer example" disabled></textarea><div class="ai-composer__footer"><div class="ai-composer__tools"><button class="ai-composer__action" type="button" aria-label="Add photos or files" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-add"></use></svg></button><button class="ai-composer__tool" type="button" aria-pressed="false" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-globe"></use></svg><span class="text-trim">Search</span></button></div><button class="ai-composer__submit" type="submit" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></form></div>
-              <div class="specimen-block"><span class="specimen-label">Submit status: ready, pending, streaming, error, and empty prompt</span><div class="cluster cluster--group"><button class="ai-composer__submit" type="button" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Sending message"><span class="ai-composer__spinner"></span></button><button class="ai-composer__submit" type="button" aria-label="Stop the reply"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-stop"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Retry"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=6#error-circle-16-filled"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></div>
+              <div class="specimen-block"><span class="specimen-label">Submit status: ready, pending, streaming, error, and empty prompt</span><div class="cluster cluster--group"><button class="ai-composer__submit" type="button" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Sending message"><span class="spinner" aria-hidden="true"></span></button><button class="ai-composer__submit" type="button" aria-label="Stop the reply"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-stop"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Retry"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=6#error-circle-16-filled"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for general form fields or nonconversational text entry.</div></div>
             <pre class="code-block" tabindex="0"><code>&lt;form class="ai-composer"&gt;
@@ -353,7 +352,7 @@
               <div class="specimen-block"><span class="specimen-label">Emphasis</span><div class="specimen-row"><button class="button" type="button">Primary</button><button class="button button--secondary" type="button">Secondary</button><button class="button button--outline" type="button">Outline</button><button class="button button--quiet" type="button">Ghost</button><button class="button button--danger" type="button">Destructive</button><button class="button button--link" type="button">Link</button></div></div>
               <div class="specimen-block"><span class="specimen-label">Icon and label</span><div class="specimen-row"><button class="button" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#checkmark-16-regular"></use></svg><span class="text-trim">Save</span></button><button class="button button--outline" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#copy-16-regular"></use></svg><span class="text-trim">Copy</span></button><button class="button button--quiet" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#edit-16-regular"></use></svg><span class="text-trim">Edit</span></button><button class="button button--danger" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#delete-16-regular"></use></svg><span class="text-trim">Delete</span></button></div></div>
               <div class="specimen-block"><span class="specimen-label">Icon only</span><div class="specimen-row"><button class="button button--icon" type="button" aria-label="Save" title="Save"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#checkmark-16-regular"></use></svg></button><button class="button button--outline button--icon" type="button" aria-label="Copy" title="Copy"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#copy-16-regular"></use></svg></button><button class="button button--quiet button--icon" type="button" aria-label="Edit" title="Edit"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#edit-16-regular"></use></svg></button><button class="button button--danger button--icon" type="button" aria-label="Delete" title="Delete"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#delete-16-regular"></use></svg></button></div></div>
-              <div class="specimen-block"><span class="specimen-label">Parameters</span><div class="specimen-row"><button class="button button--pill" type="button">Rounded</button><button class="button" type="button" aria-busy="true" disabled><span class="button__spinner" aria-hidden="true"></span><span class="text-trim">Saving</span></button><button class="button" type="button" disabled>Disabled</button></div><button class="button button--block" type="button">Full width</button></div>
+              <div class="specimen-block"><span class="specimen-label">Parameters</span><div class="specimen-row"><button class="button button--pill" type="button">Rounded</button><button class="button" type="button" aria-busy="true" disabled><span class="spinner" aria-hidden="true"></span><span class="text-trim">Saving</span></button><button class="button" type="button" disabled>Disabled</button></div><button class="button button--block" type="button">Full width</button></div>
               <div class="specimen-block"><span class="specimen-label">Button group and split button</span><div class="specimen-row"><div class="button-group" role="group" aria-label="Text alignment"><button class="button button--outline" type="button">Left</button><button class="button button--outline" type="button">Center</button><button class="button button--outline" type="button">Right</button></div><div class="button-group" role="group" aria-label="Save"><button class="button" type="button">Save</button><button class="button button--icon" type="button" aria-label="More save options" title="More save options"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=7#chevron-down-16-regular"></use></svg></button></div></div></div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for navigation to another resource when a link is semantically correct.</div></div>
@@ -367,7 +366,7 @@
 &lt;/div&gt;
 
 &lt;button class="button" type="button" aria-busy="true" disabled&gt;
-  &lt;span class="button__spinner" aria-hidden="true"&gt;&lt;/span&gt;&lt;span class="text-trim"&gt;Saving&lt;/span&gt;
+  &lt;span class="spinner" aria-hidden="true"&gt;&lt;/span&gt;&lt;span class="text-trim"&gt;Saving&lt;/span&gt;
 &lt;/button&gt;
 
 &lt;div class="button-group" role="group" aria-label="Save"&gt;
@@ -1130,19 +1129,6 @@
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for multiline content or a fixed set of choices.</div></div>
             <pre class="code-block" tabindex="0"><code>&lt;input class="input" id="display-name" type="text" placeholder="Enter a name" aria-label="Display name"&gt;</code></pre>
-          </div>
-        </section>
-
-        <hr class="separator">
-
-        <section class="section" id="loading" aria-labelledby="loading-title">
-          <header class="section__header"><h2 class="section__title" id="loading-title">Loading</h2><p class="section__description">Communicates that an active operation has not yet completed.</p></header>
-          <div class="section__body">
-            <div class="card card--canvas">
-              <div class="specimen-block"><div class="specimen-row"><span class="loading" role="status" aria-label="Loading"></span><span>Loading records</span></div></div>
-            </div>
-            <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it when no work is in progress or as a substitute for an empty state.</div></div>
-            <pre class="code-block" tabindex="0"><code>&lt;span class="loading" role="status" aria-label="Loading"&gt;&lt;/span&gt;</code></pre>
           </div>
         </section>
 

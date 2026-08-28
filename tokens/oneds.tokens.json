@@ -153,16 +153,24 @@
 			},
 			"ease": {
 				"standard": { "$value": "cubic-bezier(0.2, 0, 0, 1)" },
-				"entrance": { "$value": "cubic-bezier(0.12, 0.85, 0.2, 1)" }
+				"entrance": { "$value": "cubic-bezier(0.12, 0.85, 0.2, 1)" },
+				"arrive": { "$value": "cubic-bezier(0.16, 1, 0.3, 1)" }
 			},
 			"distance": {
 				"enter": { "$value": "8px" },
 				"rise": { "$value": "4px" },
-				"lift": { "$value": "-1px" }
+				"lift": { "$value": "-1px" },
+				"arrive": { "$value": "40px" }
 			},
 			"scale": {
 				"press": { "$value": "0.96" },
 				"enter": { "$value": "0.97" }
+			},
+			"entrance": {
+				"duration": { "$value": "1400ms" },
+				"staggerBase": { "$value": "100ms" },
+				"staggerGrowth": { "$value": "10ms" },
+				"staggerMax": { "$value": "600ms" }
 			},
 			"transition": {
 				"state": { "$value": "background-color {reference.motion.duration.fast} {reference.motion.ease.standard}, border-color {reference.motion.duration.fast} {reference.motion.ease.standard}, box-shadow {reference.motion.duration.fast} {reference.motion.ease.standard}, color {reference.motion.duration.fast} {reference.motion.ease.standard}, opacity {reference.motion.duration.fast} {reference.motion.ease.standard}, transform {reference.motion.duration.fast} {reference.motion.ease.standard}" }
@@ -338,8 +346,7 @@
 			"gap": { "$value": "{reference.space.8}" },
 			"radius": { "$value": "{reference.radius.md}" },
 			"iconSize": { "$value": "{reference.icon.size.sm}" },
-			"iconLabelPaddingInlineEnd": { "$value": "{reference.space.16}" },
-			"spinnerSize": { "$value": "{reference.icon.size.sm}" }
+			"iconLabelPaddingInlineEnd": { "$value": "{reference.space.16}" }
 		},
 		"iconButton": {
 			"size": { "$value": "{reference.control.height.sm}" },

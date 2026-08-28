@@ -135,8 +135,7 @@
 /* Icon and label: a leading icon (or spinner) makes evenly padded content look shifted
    right, so the trailing padding steps up a rung to optically re-centre the pair. */
 .button:not(.button--icon):has(> svg:first-child),
-.button:not(.button--icon):has(> .spinner:first-child),
-.button:not(.button--icon):has(> .button__spinner:first-child) {
+.button:not(.button--icon):has(> .spinner:first-child) {
   padding-inline-end: var(--oneds-component-button-icon-label-padding-inline-end);
 }
 
@@ -145,28 +144,6 @@
   min-height: var(--oneds-component-icon-button-size);
   padding: 0;
   border-radius: var(--oneds-component-icon-button-radius);
-}
-
-/* Spinner: a busy button shows a rotating ring in place of a leading icon. */
-.button__spinner {
-  width: var(--oneds-component-button-spinner-size);
-  height: var(--oneds-component-button-spinner-size);
-  box-sizing: border-box;
-  border: var(--oneds-component-focus-width) solid currentColor;
-  border-top-color: transparent;
-  border-radius: var(--oneds-reference-radius-pill);
-  animation: oneds-button-spin var(--oneds-component-spinner-duration) linear infinite;
-}
-
-/* A busy button's label trails with an ellipsis, matching the spinner convention. */
-.button__spinner + *::after {
-  content: "\2026";
-}
-
-@keyframes oneds-button-spin {
-  to {
-    transform: rotate(var(--oneds-component-spinner-turn));
-  }
 }
 
 /* Button group: buttons sit flush with shared corners and a single seam between them. */
@@ -202,11 +179,6 @@
 @media (prefers-reduced-motion: reduce) {
   .button {
     transition-duration: var(--oneds-reference-motion-reduced) !important;
-  }
-
-  .button__spinner {
-    animation-duration: var(--oneds-reference-motion-reduced) !important;
-    animation-iteration-count: 1 !important;
   }
 }
 

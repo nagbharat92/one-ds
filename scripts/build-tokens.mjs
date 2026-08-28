@@ -331,6 +331,40 @@ textarea {
 		text-box: trim-both cap alphabetic;
 	}
 }
+
+/* Entrance wave: a block fades in while rising into place. Each block carries a zero-based --i,
+   and its delay is an arithmetic series whose gap grows each step, so a run of blocks decelerates
+   into place. Opt in with .animate-fade-in-up (rising) or .animate-fade-in (flat, for a element
+   that must not move, such as a sticky region). The delay clamps at --stagger-max so a long list
+   cannot outrun a fast scroll. */
+@keyframes oneds-fade-in-up {
+	from { opacity: 0; transform: translateY(var(--oneds-reference-motion-distance-arrive)); }
+	to { opacity: 1; transform: translateY(0); }
+}
+@keyframes oneds-fade-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.animate-fade-in-up,
+.animate-fade-in {
+	--i: 0;
+	animation-duration: var(--oneds-reference-motion-entrance-duration);
+	animation-timing-function: var(--oneds-reference-motion-ease-arrive);
+	animation-fill-mode: both;
+	animation-delay: min(
+		var(--i) * var(--oneds-reference-motion-entrance-stagger-base)
+			+ var(--i) * (var(--i) - 1) / 2 * var(--oneds-reference-motion-entrance-stagger-growth),
+		var(--oneds-reference-motion-entrance-stagger-max)
+	);
+}
+.animate-fade-in-up { animation-name: oneds-fade-in-up; }
+.animate-fade-in { animation-name: oneds-fade-in; }
+
+@media (prefers-reduced-motion: reduce) {
+	.animate-fade-in-up,
+	.animate-fade-in { animation: none; }
+}
 `;
 }
 

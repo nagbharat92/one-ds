@@ -29,9 +29,8 @@
 | sidebar | Anchors an application's primary navigation in a docked column that groups links and collapses to an icon rail. | Do not use it for a documentation table of contents, a temporary panel, or navigation with only a handful of flat links. | built |
 | disclosure | Reveals or hides optional detail in place. | Do not use it to conceal information required to complete the current task. | not built |
 | empty-state | Explains why no content is present and offers an appropriate next action. | Do not use it while content is still loading or when an error needs explicit recovery. | built |
-| loading | Communicates that an active operation has not yet completed. | Do not use it when no work is in progress or as a substitute for an empty state. | built |
-| spinner | Shows an inline busy ring inside a control while a short action is in flight. | Do not use it as a standalone page indicator, which suits loading, or when progress can be measured. | built |
-| progress | Shows how far a determinate operation has advanced toward completion. | Do not use it when completion cannot be measured; use a loading indicator instead. | built |
+| spinner | Shows a busy ring while a short indeterminate action is in flight, inline in a control or standalone. | Do not use it when progress can be measured, which suits progress. | built |
+| progress | Shows how far a determinate operation has advanced toward completion. | Do not use it when completion cannot be measured; use a spinner instead. | built |
 | skeleton | Holds the shape of content that is still loading so the layout stays stable. | Do not use it when no content exists yet, or when an operation has measurable progress. | built |
 | dialog | Focuses attention on content or actions that require a response. | Do not use it for nonblocking feedback or content that belongs in the page flow. | built |
 | drawer | Slides secondary content or a focused sub-task in from a screen edge without leaving the page. | Do not use it for a blocking decision, brief feedback, or content that belongs in the main page flow. | built |
