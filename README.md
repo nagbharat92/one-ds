@@ -1,105 +1,103 @@
 # OneDS
 
-OneDS is a small, dependency-free design system built with plain HTML and CSS. It provides a shared token vocabulary, reusable component packages, an agent-readable manifest, automated rule checks, and a static reference catalog.
+A clean React + Vite + Tailwind + [shadcn/ui](https://ui.shadcn.com) foundation with a
+component showcase site. This is the Phase 1 baseline: standard shadcn defaults,
+no custom theming yet.
 
-The project is designed to be linked into consuming repositories. Applications reuse matching OneDS components verbatim and keep project-specific patterns local until they are ready to become shared components.
+## Stack
 
-## What is included
+- **React 19** + **TypeScript** (Vite)
+- **Tailwind CSS v4** (via `@tailwindcss/vite`)
+- **shadcn/ui** — Radix-based components, Nova preset, `neutral` base color, CSS variables, Lucide icons, Geist font
+- **shadcn MCP** wired into VS Code for adding components on demand
 
-- Design tokens for color, typography, spacing, shape, sizing, motion, opacity, elevation, and component geometry.
-- Light and dark role colors use `light-dark()` and can be forced with `data-theme` on the document root.
-- Accessible HTML and token-only CSS component packages.
-- A manifest that records each component's purpose, usage boundary, and build status.
-- A checker that catches literal design values, undefined tokens, incomplete packages, manifest drift, and inline style attributes.
-- A static documentation catalog covering setup, colors, typography, tokens, themes, components, and generation rules.
+## Getting started
 
-OneDS has no runtime dependencies and no application build step.
+```bash
+npm install
+npm run dev      # start the dev server (http://localhost:5173)
+npm run build    # type-check + production build
+npm run preview  # preview the production build
+```
+
+## Showcase site
+
+`npm run dev` serves the component showcase, modeled on shadcn's docs site:
+
+- **Sidebar** grouped by category, listing all installed components.
+- **One page per component** (hash-routed, e.g. `#/dialog`).
+- Each page stacks every named variation as its own live preview.
+- Every example includes Preview/Code controls, Reset, and an in-page index.
+- Preview and Code share one stable height; long snippets scroll inside the panel.
+- Demo links and forms simulate actions without leaving or reloading the showcase.
+
+The showcase is driven by category demo files under
+[src/showcase/demos](src/showcase/demos), aggregated in
+[src/showcase/registry.tsx](src/showcase/registry.tsx). To add a component to the
+showcase, add an entry (with a `Demo` render function and its `code` string) to the
+relevant category file — the sidebar and pages update automatically. Variant code
+is generated from its `Demo` function before development and production builds;
+an explicit `code` string overrides the generated snippet when a curated example
+is more useful.
+
+## Adding a component
+
+### Via the shadcn MCP (VS Code)
+
+The MCP server is configured in [`.vscode/mcp.json`](.vscode/mcp.json):
+
+```json
+{
+  "servers": {
+    "shadcn": { "command": "npx", "args": ["shadcn@latest", "mcp"] }
+  }
+}
+```
+
+1. Open `.vscode/mcp.json` in VS Code and click **Start** above the `shadcn` server
+   (or run **MCP: List Servers** → Start).
+2. In Copilot Chat (agent mode), ask in natural language, e.g.:
+   - "Show me all available components in the shadcn registry"
+   - "Add the `popover` and `hover-card` components to my project"
+   - "Build a login form using shadcn components"
+3. The agent installs the component(s) into `src/components/ui/` via the shadcn registry.
+
+After adding a component, expose it in the showcase by adding an entry to the
+matching file under [src/showcase/demos](src/showcase/demos).
+
+### Via the CLI
+
+```bash
+npx shadcn@latest add <component>   # e.g. npx shadcn@latest add popover
+```
 
 ## Project structure
 
-```text
-components/                 Component CSS, HTML, and usage guidance
-site/                       Static reference catalog
-tokens/oneds.tokens.json    Token source of truth
-tokens.css                  Generated CSS custom properties
-MANIFEST.md                 Component inventory and usage boundaries
-RULES.md                    Generation rules enforced by the project
-AGENT_PROTOCOL.md           Instructions for consuming-project agents
-scripts/build-tokens.mjs    Token generator
-scripts/check.mjs           Repository and consumer-project checker
+```
+src/
+  components/
+    ui/              # shadcn components (generated)
+    code-block.tsx   # code viewer with copy button
+    mode-toggle.tsx  # light/dark theme toggle
+  showcase/
+    generated-example-code.ts # generated source for variant Code views
+    types.ts         # shared ComponentEntry type + category order
+    registry.tsx     # aggregates all demo files into the registry
+    demos/           # one file per category (forms, overlays, data, ...)
+  hooks/             # generated hooks (use-mobile)
+  lib/utils.ts       # cn() helper
+  App.tsx            # showcase layout (sidebar + component pages)
+  main.tsx           # providers (theme, tooltip, toaster)
+  index.css          # Tailwind + shadcn theme tokens
+scripts/
+  generate-showcase-code.mjs # extracts variant source from TSX demos
+components.json      # shadcn config
+.vscode/mcp.json     # shadcn MCP server
 ```
 
-## Browse the catalog
+## Installed components
 
-Serve the repository root with any static file server. For example:
-
-```sh
-python3 -m http.server 4173
-```
-
-Then open `http://localhost:4173/site/index.html`.
-
-The catalog links the real token and component stylesheets, so its examples always render from the library it documents.
-
-## Deploy to VibeHub
-
-OneDS is configured for its persistent Microsoft VibeHub project in `vibehub.json`. The API key remains outside Git in `~/.env.vibehub`.
-
-Live catalog: https://vibehub.microsoft.com/app/one-ds/
-
-Deploy a new version with:
-
-```sh
-set -a
-source ~/.env.vibehub
-set +a
-node scripts/deploy-vibehub.mjs
-```
-
-The deployment script runs the OneDS checker, stages the catalog at the archive root, rewrites its local parent-relative stylesheet links for hosting, uploads a new version through the VibeHub API, and reports the live URL and version ID.
-
-Use `node scripts/deploy-vibehub.mjs --dry-run` to validate packaging without making a network request. The `--create` option is reserved for the intentional first deployment and refuses to run after a project ID has been configured.
-
-## Use OneDS in another project
-
-Open the project in VS Code and copy the setup prompt from the [OneDS overview page](site/index.html). Paste it into Copilot Chat in that project. Copilot will connect OneDS from Git, add the project instructions without replacing existing instructions, and explain when the project is ready.
-
-The Git connection replaces the old link to a folder on one computer. It keeps an exact OneDS version with each project, so the setup can be shared and opened on another computer.
-
-## Work with tokens
-
-`tokens/oneds.tokens.json` is the token source of truth. After changing it, regenerate the CSS:
-
-```sh
-node scripts/build-tokens.mjs
-```
-
-Do not edit `tokens.css` directly.
-
-## Add a component
-
-Each component package has exactly three files:
-
-```text
-components/<name>/<name>.css
-components/<name>/<name>.html
-components/<name>/USAGE.md
-```
-
-Use only defined `--oneds-` tokens for visual values. In the same change, update the component's status in `MANIFEST.md` to `built`.
-
-## Run checks
-
-Validate OneDS itself:
-
-```sh
-node scripts/check.mjs
-```
-
-To validate a consuming project, pass its checker configuration:
-
-```sh
-node path/to/oneds/scripts/check.mjs path/to/config.json
-```
-
-The configuration defines `generatedTokens`, `components`, `manifest`, `authoredCss`, and `html` paths. Paths are resolved relative to the configuration file and may point to individual files or directories.
+The showcase contains 65 component pages, including the complete installed
+shadcn/ui catalog plus Data Table, Date Picker, Questionnaire, and Typography
+compositions. They are grouped into Forms, Selection, Overlays, Navigation,
+Data Display, Feedback, Layout, Chat, Date, and Utilities.
