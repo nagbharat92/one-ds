@@ -29,7 +29,7 @@ The shell is a native `<details>`/`<summary>` disclosure, so the popover opens a
 
 ## Behaviour to wire in production
 
-The static markup demonstrates structure and every visual state. A production select still needs script for: updating `aria-selected` and the trigger value on choice, closing the popover after a choice, roving `aria-activedescendant` focus between options, and typeahead. Keep the class names and reflect state through the same attributes.
+The static markup demonstrates structure and every visual state. Copy `components/select/select.js` and load it once with `<script src="…/select.js" defer></script>` to make the demo behave: choosing an option updates `aria-selected`, moves the check, writes the label into the trigger, and closes the popover; an outside click or Escape dismisses an open select, and opening one closes the others so only a single popover shows at a time. Production selects layered on top of this still want roving `aria-activedescendant` focus between options, typeahead, and `role="combobox"`/`aria-expanded` on the trigger; keep the class names and reflect state through the same attributes.
 
 ## Basic
 
@@ -49,7 +49,7 @@ Add `select--disabled` to the root to dim the trigger and block interaction. Dis
 
 ## Invalid
 
-Add `select--invalid` to the root to colour the trigger border with the danger stroke and keep that colour through the focus ring. Pair it with `aria-invalid="true"` on the trigger and an error message beside the control.
+Add `select--invalid` to the root to colour the trigger border and its value text with the danger stroke and keep that colour through the focus ring. Set `aria-invalid="true"` on the trigger, then host the select in a `field` so the label reddens and a `field__error` explains what to fix; point the trigger's `aria-describedby` at that message.
 
 ## When not to use
 

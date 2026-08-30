@@ -42,8 +42,6 @@ The filled track is driven by local custom properties, because CSS cannot read a
 - **Basic** — `--slider-value` (a unitless number from 0 to 100) on the `.slider` element paints the WebKit fill.
 - **Range** — `--slider-min` and `--slider-max` on the `.slider--range` element position the `.slider__fill` band.
 
-Set them at runtime with an inline style or script whenever a thumb moves, and keep `aria-valuenow` in sync. The example `.slider--value-*` and `.slider--range-*` classes exist only for static documentation.
-
-The range variant overlaps two inputs and only makes each thumb interactive. That is enough for a static or lightly-scripted control; a production range slider still needs a small script to update the fill, to keep `aria-valuenow` current, and to stop the two thumbs from crossing.
+Include `components/slider/slider.js` (a small reference script) to keep these in sync: it computes each percentage from the input's `min`, `max`, and `value` on every `input` event, and stops the two range thumbs from crossing. The example `.slider--value-*` and `.slider--range-*` classes are the no-script fallback for static documentation.
 
 Use a slider for a value where the approximate position matters more than an exact figure. When an exact number is required, use a number [input](../input/USAGE.md) instead; for an on/off choice use a checkbox or radio. Host a slider in a [field](../field/USAGE.md) to attach a label, description, or error.

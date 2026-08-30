@@ -1,6 +1,6 @@
 # Field
 
-Use a field to host a control and attach its label, description, and error message. The field is the host — it does not replace the control it wraps. Put an [input](../input/USAGE.md), a [textarea](../text-box/USAGE.md), a select, or a slider inside it; group related fields with a field set; and turn an option into a large selectable tile with a choice card.
+Use a field to host a control and attach its label, description, and error message. The field is the host — it does not replace the control it wraps. Put an [input](../input/USAGE.md), a [textarea](../textarea/USAGE.md), a select, or a slider inside it; group related fields with a field set; and turn an option into a large selectable tile with a choice card.
 
 ## CSS
 
@@ -35,9 +35,9 @@ The control keeps its own class (`input`, `textarea`, and so on). The field only
 | Textarea | `textarea` | built |
 | Checkbox | `checkbox` (self-labelling; group with a field set) | built |
 | Radio | `radio` (self-labelling; group with a field set) | built |
-| Select | — | not built |
-| Slider | — | not built |
-| Switch | — | not built |
+| Select | `select` | built |
+| Slider | `slider` | built |
+| Switch | `switch` (self-labelling; group with a field set) | built |
 
 Checkboxes, radios, and switches carry their own label, so they do not need a `field__label`; place them directly in a `field-group` and give the group a legend with a field set.
 
@@ -57,6 +57,8 @@ A field set is a `<fieldset>` that gives a group of fields or controls one legen
 ```
 
 Use a field group on its own to stack several labelled fields down a form. Add `field-group--grid` to lay the fields out in two columns; give a field `field--full` to span both columns.
+
+To divide a group into labelled sections, put a `separator` (`<hr class="separator">`) between the field sets inside a `field-group`; the group's rhythm gives it clearance on both sides.
 
 ```html
 <div class="field-group field-group--grid">
@@ -95,7 +97,7 @@ A choice card turns an option into a large selectable tile with a title and opti
 </fieldset>
 ```
 
-The whole tile is the label, so clicking anywhere selects it. The card highlights and the indicator fills through the input's `:checked` state. For multiple selection, swap `type="radio"` for `type="checkbox"`.
+The whole tile is the label, so clicking anywhere selects it. The card highlights and the indicator fills through the input's `:checked` state. For multiple selection, swap `type="radio"` for `type="checkbox"`. To make a settings toggle the same tile, use the switch's own `switch--card` variant.
 
 ## When not to use
 

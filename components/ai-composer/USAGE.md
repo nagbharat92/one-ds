@@ -92,4 +92,4 @@ Focus is shown on the shell whenever anything inside it has focus, and every con
 
 ## When not to use
 
-Do not use it for general form fields or nonconversational text entry. Use `input` for a single line and `text-box` for freeform multi-line text that is not a prompt.
+Do not use it for general form fields or nonconversational text entry. Use `input` for a single line and `textarea` for freeform multi-line text that is not a prompt.

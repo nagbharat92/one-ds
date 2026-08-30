@@ -34,4 +34,12 @@ A vertical break between groups of controls needs an explicit role and orientati
 </div>
 ```
 
+A labelled marker centres a short caption between two rules — for a date break in a feed or a "compacted" marker in a running log. The rules fill the space left by the label:
+
+```html
+<div class="separator-marker" role="separator">
+  <span class="separator-marker__label">Today</span>
+</div>
+```
+
 Use a separator only where space alone cannot carry the separation. Where a bounded surface already draws an edge, that edge is the separator and a rule beside it competes with it.

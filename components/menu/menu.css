@@ -99,8 +99,6 @@
 .menu__label {
   min-width: 0;
   flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -165,6 +163,8 @@
   inset-block-start: calc(var(--oneds-component-menu-padding) * -1);
   inset-inline-start: 100%;
   z-index: var(--oneds-reference-layer-menu);
+  width: max-content;
+  max-width: var(--oneds-component-menu-width);
   display: none;
 }
 

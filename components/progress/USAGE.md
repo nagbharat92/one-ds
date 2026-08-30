@@ -39,4 +39,4 @@ Label:
 
 The filled width is driven by the `--progress-value` custom property (a unitless number from 0 to 100) on the `.progress` element. Set it at runtime with an inline style or script, and keep `aria-valuenow` in sync. The example `.progress--value-*` classes exist only for static documentation.
 
-Use progress only for determinate work. When completion cannot be measured, use a spinner instead.
+Use progress only for determinate work. When completion cannot be measured, use the loading indicator instead.

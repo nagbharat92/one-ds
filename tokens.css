@@ -480,6 +480,7 @@
 	--oneds-component-page-padding-inline: var(--oneds-reference-space-24);
 	--oneds-component-page-padding-block: var(--oneds-rhythm-page);
 	--oneds-component-separator-thickness: var(--oneds-reference-stroke-thin);
+	--oneds-component-separator-marker-gap: var(--oneds-reference-space-12);
 	--oneds-component-inline-code-padding-block: var(--oneds-reference-space-2);
 	--oneds-component-inline-code-padding-inline: var(--oneds-reference-space-4);
 	--oneds-component-swatch-size: var(--oneds-reference-space-64);

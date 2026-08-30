@@ -16,11 +16,10 @@
   transition: var(--oneds-reference-motion-transition-state);
 }
 
-/* Where supported, the field grows with its content instead of needing a manual drag. */
+/* Grows with its content where supported; the resize grabber still lets the reader drag it taller. */
 @supports (field-sizing: content) {
   .textarea {
     field-sizing: content;
-    resize: none;
   }
 }
 

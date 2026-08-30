@@ -609,7 +609,8 @@
 			"paddingBlock": { "$value": "{rhythm.page}" }
 		},
 		"separator": {
-			"thickness": { "$value": "{reference.stroke.thin}" }
+			"thickness": { "$value": "{reference.stroke.thin}" },
+			"markerGap": { "$value": "{reference.space.12}" }
 		},
 		"inlineCode": {
 			"paddingBlock": { "$value": "{reference.space.2}" },

@@ -30,10 +30,10 @@ Set these on the `<textarea>` to turn behaviours on or off:
 
 ## Behaviour
 
-Where the browser supports `field-sizing: content`, the field grows with its content up to its max height and then scrolls — no manual resize needed. Where it is not supported, the field starts at its resting height and shows a resize grabber the reader can drag taller. `textarea--fixed` turns both behaviours off.
+The field shows a resize grabber in the bottom-right corner that the reader can drag to make it taller. Where the browser supports `field-sizing: content`, it also grows on its own as the reader types, up to its max height, and then scrolls. `textarea--fixed` turns both off and holds the resting height.
 
 ## Composition
 
 Wrap the control in the field component to attach a label, help text, and error message. The control keeps its `textarea` class; the field supplies the surrounding structure.
 
-Use an input for a single-line value, a text box for read-only prose in a bounded surface, a code block for preformatted code or commands, or the AI composer for an assistant prompt.
+Use an input for a single-line value, a code block for preformatted code or commands, or the AI composer for an assistant prompt.

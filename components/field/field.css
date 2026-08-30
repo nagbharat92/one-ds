@@ -34,6 +34,11 @@
   color: var(--oneds-color-foreground-neutral-disabled);
 }
 
+/* An invalid control reddens its label so the error reads at the field level. */
+.field:has([aria-invalid="true"]) .field__label {
+  color: var(--oneds-color-foreground-danger-primary);
+}
+
 .field__description {
   color: var(--oneds-color-foreground-neutral-secondary);
   font-family: var(--oneds-reference-font-family-base);
@@ -60,9 +65,6 @@
 
 .field-set__legend {
   padding: 0;
-  /* A legend renders outside the fieldset's grid flow, so the field-set gap never
-     applies after it; restore that spacing explicitly. */
-  margin-block-end: var(--oneds-component-field-set-gap);
   color: var(--oneds-color-foreground-neutral-primary);
   font-family: var(--oneds-reference-font-family-base);
   font-size: var(--oneds-semantic-typography-functional-body-medium-size);

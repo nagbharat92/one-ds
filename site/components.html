@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem("oneds-theme")||"light"}catch(e){}</script>
   <title>Components · OneDS reference</title>
-  <link rel="stylesheet" href="../tokens.css?v=02ff727c">
+  <link rel="stylesheet" href="../tokens.css?v=945fe90e">
   <link rel="stylesheet" href="../components/card/card.css?v=ecac3130">
   <link rel="stylesheet" href="../components/section/section.css?v=3f55f916">
   <link rel="stylesheet" href="../components/grid/grid.css?v=3ecedb1e">
   <link rel="stylesheet" href="../components/stack/stack.css?v=c10a5f65">
   <link rel="stylesheet" href="../components/cluster/cluster.css?v=58b76bd4">
-  <link rel="stylesheet" href="../components/separator/separator.css?v=80ab246a">
+  <link rel="stylesheet" href="../components/separator/separator.css?v=a7b9eae5">
   <link rel="stylesheet" href="../components/page-header/page-header.css?v=7df3af63">
   <link rel="stylesheet" href="../components/data-table/data-table.css?v=f6281c82">
   <link rel="stylesheet" href="../components/button/button.css?v=17430e3a">
@@ -23,19 +22,18 @@
   <link rel="stylesheet" href="../components/drawer/drawer.css?v=3ed704bb">
   <link rel="stylesheet" href="../components/hover-card/hover-card.css?v=e2453efd">
   <link rel="stylesheet" href="../components/inline-message/inline-message.css?v=39dbf966">
-  <link rel="stylesheet" href="../components/input/input.css?v=639b7e9b">
-  <link rel="stylesheet" href="../components/field/field.css?v=36635c4e">
+  <link rel="stylesheet" href="../components/input/input.css?v=8220b1b0">
+  <link rel="stylesheet" href="../components/field/field.css?v=8f623627">
   <link rel="stylesheet" href="../components/radio/radio.css?v=6872f1c5">
   <link rel="stylesheet" href="../components/switch/switch.css?v=6f7be106">
   <link rel="stylesheet" href="../components/resizable/resizable.css?v=44aa683a">
-  <link rel="stylesheet" href="../components/text-box/text-box.css?v=8f887986">
-  <link rel="stylesheet" href="../components/textarea/textarea.css?v=60d2c852">
+  <link rel="stylesheet" href="../components/textarea/textarea.css?v=4f6a73e6">
   <link rel="stylesheet" href="../components/ai-composer/ai-composer.css?v=7d81e39d">
-  <link rel="stylesheet" href="../components/menu/menu.css?v=f2deff22">
+  <link rel="stylesheet" href="../components/menu/menu.css?v=ef3bb4ed">
   <link rel="stylesheet" href="../components/popover/popover.css?v=1e0b6215">
   <link rel="stylesheet" href="../components/progress/progress.css?v=16a27034">
   <link rel="stylesheet" href="../components/search-field/search-field.css?v=24676801">
-  <link rel="stylesheet" href="../components/select/select.css?v=6aed2566">
+  <link rel="stylesheet" href="../components/select/select.css?v=3ce01d7c">
   <link rel="stylesheet" href="../components/sidebar/sidebar.css?v=36080172">
   <link rel="stylesheet" href="../components/skeleton/skeleton.css?v=eccda976">
   <link rel="stylesheet" href="../components/slider/slider.css?v=034a9293">
@@ -52,8 +50,8 @@
   <script src="../components/alert-dialog/alert-dialog.js?v=ea6ed237" defer></script>
   <script src="../components/dialog/dialog.js?v=f6905556" defer></script>
   <script src="../components/drawer/drawer.js?v=e2a0f3aa" defer></script>
+  <script src="../components/select/select.js?v=78e4e5f6" defer></script>
   <script src="../components/resizable/resizable.js?v=c2b27a2e" defer></script>
-  <script src="../components/tabs/tabs.js?v=14fa8b5d" defer></script>
   <script src="../components/toast/toast.js?v=9fd24b13" defer></script>
   <script src="../components/sidebar/sidebar.js?v=e18ee62b" defer></script>
 </head>
@@ -74,7 +72,7 @@
   <div class="site-shell">
     <aside class="sidebar" aria-label="Documentation navigation">
       <a class="sidebar__brand" href="index.html"><span class="sidebar__brand-name">OneDS</span><span class="sidebar__brand-detail">Design system for agents.</span></a>
-      <div class="tabs tabs--small sidebar__theme" role="group" aria-label="Theme"><button class="tab" type="button" data-theme-value="light" aria-pressed="true">Light</button><button class="tab" type="button" data-theme-value="dark" aria-pressed="false">Dark</button></div>
+      <div class="tabs sidebar__theme" role="group" aria-label="Theme"><button class="tab" type="button" data-theme-value="light" aria-pressed="true">Light</button><button class="tab" type="button" data-theme-value="dark" aria-pressed="false">Dark</button></div>
       <nav aria-label="Documentation pages">
         <ul class="sidebar__nav">
           <li><a class="sidebar__link" href="index.html">Overview</a></li>
@@ -138,7 +136,6 @@
             </details>
           </li>
           <li><a class="sidebar__link" href="rules.html">Rules</a></li>
-          <li><a class="sidebar__link" href="experiments.html">Experiments</a></li>
         </ul>
       </nav>
     </aside>
@@ -182,7 +179,7 @@
               <div class="specimen-block"><span class="specimen-label">Prompt and submit only</span><form class="ai-composer"><textarea class="ai-composer__input" name="prompt" rows="1" placeholder="Message Copilot" aria-label="Minimal composer example"></textarea><div class="ai-composer__footer"><div class="ai-composer__tools"></div><button class="ai-composer__submit" type="submit" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></form></div>
               <div class="specimen-block"><span class="specimen-label">Files held over the composer</span><form class="ai-composer" data-dragging="true"><textarea class="ai-composer__input" name="prompt" rows="1" placeholder="Drop files to attach them" aria-label="Drop target composer example"></textarea><div class="ai-composer__footer"><div class="ai-composer__tools"><button class="ai-composer__action" type="button" aria-label="Add photos or files" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-attach"></use></svg></button></div><button class="ai-composer__submit" type="submit" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></form></div>
               <div class="specimen-block"><span class="specimen-label">Disabled</span><form class="ai-composer"><textarea class="ai-composer__input" name="prompt" rows="1" placeholder="Message unavailable" aria-label="Disabled composer example" disabled></textarea><div class="ai-composer__footer"><div class="ai-composer__tools"><button class="ai-composer__action" type="button" aria-label="Add photos or files" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-add"></use></svg></button><button class="ai-composer__tool" type="button" aria-pressed="false" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-globe"></use></svg><span class="text-trim">Search</span></button></div><button class="ai-composer__submit" type="submit" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></form></div>
-              <div class="specimen-block"><span class="specimen-label">Submit status: ready, pending, streaming, error, and empty prompt</span><div class="cluster cluster--group"><button class="ai-composer__submit" type="button" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Sending message"><span class="spinner" aria-hidden="true"></span></button><button class="ai-composer__submit" type="button" aria-label="Stop the reply"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-stop"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Retry"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=6#error-circle-16-filled"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></div>
+              <div class="specimen-block"><span class="specimen-label">Submit status: ready, pending, streaming, error, and empty prompt</span><div class="cluster cluster--group"><button class="ai-composer__submit" type="button" aria-label="Send message"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Sending message"><span class="ai-composer__spinner"></span></button><button class="ai-composer__submit" type="button" aria-label="Stop the reply"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-stop"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Retry"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=6#error-circle-16-filled"></use></svg></button><button class="ai-composer__submit" type="button" aria-label="Send message" disabled><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><use href="#composer-send"></use></svg></button></div></div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for general form fields or nonconversational text entry.</div></div>
             <pre class="code-block" tabindex="0"><code>&lt;form class="ai-composer"&gt;
@@ -352,7 +349,7 @@
               <div class="specimen-block"><span class="specimen-label">Emphasis</span><div class="specimen-row"><button class="button" type="button">Primary</button><button class="button button--secondary" type="button">Secondary</button><button class="button button--outline" type="button">Outline</button><button class="button button--quiet" type="button">Ghost</button><button class="button button--danger" type="button">Destructive</button><button class="button button--link" type="button">Link</button></div></div>
               <div class="specimen-block"><span class="specimen-label">Icon and label</span><div class="specimen-row"><button class="button" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#checkmark-16-regular"></use></svg><span class="text-trim">Save</span></button><button class="button button--outline" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#copy-16-regular"></use></svg><span class="text-trim">Copy</span></button><button class="button button--quiet" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#edit-16-regular"></use></svg><span class="text-trim">Edit</span></button><button class="button button--danger" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#delete-16-regular"></use></svg><span class="text-trim">Delete</span></button></div></div>
               <div class="specimen-block"><span class="specimen-label">Icon only</span><div class="specimen-row"><button class="button button--icon" type="button" aria-label="Save" title="Save"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#checkmark-16-regular"></use></svg></button><button class="button button--outline button--icon" type="button" aria-label="Copy" title="Copy"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#copy-16-regular"></use></svg></button><button class="button button--quiet button--icon" type="button" aria-label="Edit" title="Edit"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#edit-16-regular"></use></svg></button><button class="button button--danger button--icon" type="button" aria-label="Delete" title="Delete"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=4#delete-16-regular"></use></svg></button></div></div>
-              <div class="specimen-block"><span class="specimen-label">Parameters</span><div class="specimen-row"><button class="button button--pill" type="button">Rounded</button><button class="button" type="button" aria-busy="true" disabled><span class="spinner" aria-hidden="true"></span><span class="text-trim">Saving</span></button><button class="button" type="button" disabled>Disabled</button></div><button class="button button--block" type="button">Full width</button></div>
+              <div class="specimen-block"><span class="specimen-label">Parameters</span><div class="specimen-row"><button class="button button--pill" type="button">Rounded</button><button class="button" type="button" aria-busy="true" disabled><span class="button__spinner" aria-hidden="true"></span><span class="text-trim">Saving</span></button><button class="button" type="button" disabled>Disabled</button></div><button class="button button--block" type="button">Full width</button></div>
               <div class="specimen-block"><span class="specimen-label">Button group and split button</span><div class="specimen-row"><div class="button-group" role="group" aria-label="Text alignment"><button class="button button--outline" type="button">Left</button><button class="button button--outline" type="button">Center</button><button class="button button--outline" type="button">Right</button></div><div class="button-group" role="group" aria-label="Save"><button class="button" type="button">Save</button><button class="button button--icon" type="button" aria-label="More save options" title="More save options"><svg class="fluent-icon" aria-hidden="true"><use href="fluent-icons.svg?v=7#chevron-down-16-regular"></use></svg></button></div></div></div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for navigation to another resource when a link is semantically correct.</div></div>
@@ -366,7 +363,7 @@
 &lt;/div&gt;
 
 &lt;button class="button" type="button" aria-busy="true" disabled&gt;
-  &lt;span class="spinner" aria-hidden="true"&gt;&lt;/span&gt;&lt;span class="text-trim"&gt;Saving&lt;/span&gt;
+  &lt;span class="button__spinner" aria-hidden="true"&gt;&lt;/span&gt;&lt;span class="text-trim"&gt;Saving&lt;/span&gt;
 &lt;/button&gt;
 
 &lt;div class="button-group" role="group" aria-label="Save"&gt;
@@ -894,23 +891,17 @@
                   <span class="field__description" id="field-email-help">We only use it to send receipts.</span>
                 </div>
               </div>
-              <div class="specimen-block"><span class="specimen-label">Hosting a textarea</span>
-                <div class="field">
-                  <label class="field__label" for="field-bio">About you</label>
-                  <textarea class="textarea" id="field-bio" rows="3" placeholder="A sentence or two."></textarea>
-                </div>
-              </div>
-              <div class="specimen-block"><span class="specimen-label">With an error</span>
-                <div class="field">
-                  <label class="field__label" for="field-username">Username</label>
-                  <input class="input" id="field-username" type="text" value="ada lovelace" aria-invalid="true" aria-describedby="field-username-error">
-                  <span class="field__error" id="field-username-error" role="alert">Usernames cannot contain spaces.</span>
-                </div>
-              </div>
-              <div class="specimen-block"><span class="specimen-label">Required</span>
-                <div class="field field--required">
-                  <label class="field__label" for="field-work-email">Work email</label>
-                  <input class="input" id="field-work-email" type="email" placeholder="name@company.com" required>
+              <div class="specimen-block"><span class="specimen-label">Required and invalid</span>
+                <div class="field-group">
+                  <div class="field field--required">
+                    <label class="field__label" for="field-work-email">Work email</label>
+                    <input class="input" id="field-work-email" type="email" placeholder="name@company.com" required>
+                  </div>
+                  <div class="field">
+                    <label class="field__label" for="field-username">Username</label>
+                    <input class="input" id="field-username" type="text" value="ada lovelace" aria-invalid="true" aria-describedby="field-username-error">
+                    <span class="field__error" id="field-username-error" role="alert">Usernames cannot contain spaces.</span>
+                  </div>
                 </div>
               </div>
               <div class="specimen-block"><span class="specimen-label">Header with a helper link</span>
@@ -922,19 +913,7 @@
                   <input class="input" id="field-password" type="password">
                 </div>
               </div>
-              <div class="specimen-block"><span class="specimen-label">Field group</span>
-                <div class="field-group">
-                  <div class="field">
-                    <label class="field__label" for="field-first">First name</label>
-                    <input class="input" id="field-first" type="text" placeholder="Ada">
-                  </div>
-                  <div class="field">
-                    <label class="field__label" for="field-last">Last name</label>
-                    <input class="input" id="field-last" type="text" placeholder="Lovelace">
-                  </div>
-                </div>
-              </div>
-              <div class="specimen-block"><span class="specimen-label">Grid</span>
+              <div class="specimen-block"><span class="specimen-label">Grid, with a full-width field</span>
                 <div class="field-group field-group--grid">
                   <div class="field">
                     <label class="field__label" for="field-grid-first">First name</label>
@@ -950,26 +929,6 @@
                   </div>
                 </div>
               </div>
-              <div class="specimen-block"><span class="specimen-label">Form</span>
-                <form class="field-group" novalidate>
-                  <div class="field-group field-group--grid">
-                    <div class="field">
-                      <label class="field__label" for="field-form-first">First name</label>
-                      <input class="input" id="field-form-first" type="text" placeholder="Ada">
-                    </div>
-                    <div class="field">
-                      <label class="field__label" for="field-form-last">Last name</label>
-                      <input class="input" id="field-form-last" type="text" placeholder="Lovelace">
-                    </div>
-                  </div>
-                  <div class="field field--required">
-                    <label class="field__label" for="field-form-email">Email</label>
-                    <input class="input" id="field-form-email" type="email" placeholder="name@company.com" required aria-describedby="field-form-email-help">
-                    <span class="field__description" id="field-form-email-help">We only use this to send your receipt.</span>
-                  </div>
-                  <button class="button button--primary button--block" type="submit">Create account</button>
-                </form>
-              </div>
               <div class="specimen-block"><span class="specimen-label">Field set</span>
                 <fieldset class="field-set">
                   <legend class="field-set__legend">Contact method</legend>
@@ -981,15 +940,64 @@
                   </div>
                 </fieldset>
               </div>
-              <div class="specimen-block"><span class="specimen-label">Choice cards</span>
+              <div class="specimen-block"><span class="specimen-label">Choice cards — a selectable tile per option; works with radio, checkbox, or switch</span>
                 <fieldset class="field-set">
-                  <legend class="field-set__legend">Plan</legend>
+                  <legend class="field-set__legend">Compute environment</legend>
+                  <span class="field-set__description">Choose where your cluster runs.</span>
                   <div class="field-group">
-                    <label class="choice-card"><input class="choice-card__input" type="radio" name="field-plan" checked><span class="choice-card__body"><span class="choice-card__title">Starter</span><span class="choice-card__description">For individuals getting started.</span></span><span class="choice-card__indicator" aria-hidden="true"></span></label>
-                    <label class="choice-card"><input class="choice-card__input" type="radio" name="field-plan"><span class="choice-card__body"><span class="choice-card__title">Team</span><span class="choice-card__description">Shared workspaces and roles.</span></span><span class="choice-card__indicator" aria-hidden="true"></span></label>
-                    <label class="choice-card"><input class="choice-card__input" type="radio" name="field-plan"><span class="choice-card__body"><span class="choice-card__title">Enterprise</span><span class="choice-card__description">Advanced security and support.</span></span><span class="choice-card__indicator" aria-hidden="true"></span></label>
+                    <label class="choice-card"><input class="choice-card__input" type="radio" name="field-compute" checked><span class="choice-card__body"><span class="choice-card__title">Kubernetes</span><span class="choice-card__description">Run GPU workloads on a managed K8s cluster.</span></span><span class="choice-card__indicator" aria-hidden="true"></span></label>
+                    <label class="choice-card"><input class="choice-card__input" type="radio" name="field-compute"><span class="choice-card__body"><span class="choice-card__title">Virtual machine</span><span class="choice-card__description">Access a raw VM to run GPU workloads.</span></span><span class="choice-card__indicator" aria-hidden="true"></span></label>
                   </div>
                 </fieldset>
+              </div>
+              <div class="specimen-block"><span class="specimen-label">Grouped settings, divided by a separator</span>
+                <div class="field-group">
+                  <fieldset class="field-set">
+                    <legend class="field-set__legend">Responses</legend>
+                    <span class="field-set__description">Get notified when replies take time, like research or image generation.</span>
+                    <label class="switch switch--card"><input class="switch__input" type="checkbox" role="switch" checked><span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span><span class="switch__body"><span class="switch__label">Push notifications</span><span class="switch__description">Alert this device when a response is ready.</span></span></label>
+                  </fieldset>
+                  <hr class="separator">
+                  <fieldset class="field-set">
+                    <legend class="field-set__legend">Tasks</legend>
+                    <span class="field-set__description">Get notified when tasks you created have updates.</span>
+                    <div class="field-group">
+                      <label class="switch switch--card"><input class="switch__input" type="checkbox" role="switch"><span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span><span class="switch__body"><span class="switch__label">Push notifications</span><span class="switch__description">Alert this device when a task updates.</span></span></label>
+                      <label class="switch switch--card"><input class="switch__input" type="checkbox" role="switch"><span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span><span class="switch__body"><span class="switch__label">Email notifications</span><span class="switch__description">Send a summary to your inbox.</span></span></label>
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="specimen-block"><span class="specimen-label">A complete form</span>
+                <form class="field-group" novalidate>
+                  <div class="field-group field-group--grid">
+                    <div class="field">
+                      <label class="field__label" for="field-signup-first">First name</label>
+                      <input class="input" id="field-signup-first" type="text" placeholder="Ada">
+                    </div>
+                    <div class="field">
+                      <label class="field__label" for="field-signup-last">Last name</label>
+                      <input class="input" id="field-signup-last" type="text" placeholder="Lovelace">
+                    </div>
+                  </div>
+                  <div class="field field--required">
+                    <label class="field__label" for="field-signup-email">Email</label>
+                    <input class="input" id="field-signup-email" type="email" placeholder="name@company.com" required aria-describedby="field-signup-email-help">
+                    <span class="field__description" id="field-signup-email-help">We only use this to send your receipt.</span>
+                  </div>
+                  <div class="field field--required">
+                    <div class="field__header">
+                      <label class="field__label" for="field-signup-password">Password</label>
+                      <a class="button button--link" href="#field">Forgot password?</a>
+                    </div>
+                    <span class="field__description" id="field-signup-password-help">Must be at least 8 characters long.</span>
+                    <input class="input" id="field-signup-password" type="password" required aria-describedby="field-signup-password-help">
+                  </div>
+                  <div class="cluster cluster--group">
+                    <button class="button button--primary" type="submit">Create account</button>
+                    <button class="button button--outline" type="button">Cancel</button>
+                  </div>
+                </form>
               </div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not wrap a self-labelling checkbox, radio, or switch in a second label — group those controls with a field set instead.</div></div>
@@ -1131,6 +1139,9 @@
             <pre class="code-block" tabindex="0"><code>&lt;input class="input" id="display-name" type="text" placeholder="Enter a name" aria-label="Display name"&gt;</code></pre>
           </div>
         </section>
+
+        <hr class="separator">
+
 
         <hr class="separator">
 
@@ -1464,8 +1475,9 @@
                 </details>
               </div>
               <div class="specimen-block"><span class="specimen-label">Groups and a disabled option</span>
-                <div class="select__panel select__panel--static">
-                  <div class="select__list" role="listbox" aria-label="Timezone">
+                <details class="select">
+                  <summary class="select__trigger"><span class="select__value">Eastern Standard Time</span><svg class="select__chevron" aria-hidden="true"><use href="fluent-icons.svg?v=8#chevron-down-16-regular"></use></svg></summary>
+                  <div class="select__panel"><div class="select__list" role="listbox" aria-label="Timezone">
                     <div class="select__group" role="group" aria-label="North America">
                       <div class="select__group-label">North America</div>
                       <button class="select__option" type="button" role="option" aria-selected="true"><span class="select__option-label">Eastern Standard Time</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
@@ -1476,12 +1488,13 @@
                       <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">Greenwich Mean Time</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
                       <button class="select__option" type="button" role="option" aria-selected="false" disabled><span class="select__option-label">Central European Time</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
                     </div>
-                  </div>
-                </div>
+                  </div></div>
+                </details>
               </div>
               <div class="specimen-block"><span class="specimen-label">Scrollable</span>
-                <div class="select__panel select__panel--static">
-                  <div class="select__list" role="listbox" aria-label="Month">
+                <details class="select">
+                  <summary class="select__trigger"><span class="select__value">January</span><svg class="select__chevron" aria-hidden="true"><use href="fluent-icons.svg?v=8#chevron-down-16-regular"></use></svg></summary>
+                  <div class="select__panel"><div class="select__list" role="listbox" aria-label="Month">
                     <button class="select__option" type="button" role="option" aria-selected="true"><span class="select__option-label">January</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
                     <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">February</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
                     <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">March</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
@@ -1494,8 +1507,8 @@
                     <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">October</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
                     <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">November</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
                     <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">December</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
-                  </div>
-                </div>
+                  </div></div>
+                </details>
               </div>
               <div class="specimen-block"><span class="specimen-label">Disabled</span>
                 <details class="select select--disabled">
@@ -1503,13 +1516,17 @@
                 </details>
               </div>
               <div class="specimen-block"><span class="specimen-label">Invalid</span>
-                <details class="select select--invalid">
-                  <summary class="select__trigger" aria-invalid="true"><span class="select__value select__value--placeholder">Select a fruit…</span><svg class="select__chevron" aria-hidden="true"><use href="fluent-icons.svg?v=8#chevron-down-16-regular"></use></svg></summary>
-                  <div class="select__panel"><div class="select__list" role="listbox" aria-label="Fruit">
-                    <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">Apple</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
-                    <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">Banana</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
-                  </div></div>
-                </details>
+                <div class="field">
+                  <span class="field__label" id="select-invalid-label">Fruit</span>
+                  <details class="select select--invalid">
+                    <summary class="select__trigger" aria-invalid="true" aria-labelledby="select-invalid-label" aria-describedby="select-invalid-error"><span class="select__value select__value--placeholder">Select a fruit…</span><svg class="select__chevron" aria-hidden="true"><use href="fluent-icons.svg?v=8#chevron-down-16-regular"></use></svg></summary>
+                    <div class="select__panel"><div class="select__list" role="listbox" aria-label="Fruit">
+                      <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">Apple</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
+                      <button class="select__option" type="button" role="option" aria-selected="false"><span class="select__option-label">Banana</span><svg class="select__option-check" aria-hidden="true"><use href="fluent-icons.svg?v=8#checkmark-16-regular"></use></svg></button>
+                    </div></div>
+                  </details>
+                  <p class="field__error" id="select-invalid-error" role="alert">Please select a fruit.</p>
+                </div>
               </div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for a searchable set, which suits a combobox, or a short fixed set that reads better as a visible radio group.</div></div>
@@ -1709,9 +1726,14 @@
           <div class="section__body">
             <div class="card card--canvas">
               <div class="specimen-block"><span class="specimen-label">Selected, unselected, and disabled</span><div class="tabs" role="tablist" aria-label="Catalog views"><button class="tab" id="catalog-overview-tab" type="button" role="tab" aria-selected="true" aria-controls="catalog-overview-panel">Overview</button><button class="tab" id="catalog-activity-tab" type="button" role="tab" aria-selected="false" aria-controls="catalog-activity-panel" tabindex="-1">Activity</button><button class="tab" id="catalog-unavailable-tab" type="button" role="tab" aria-selected="false" aria-controls="catalog-unavailable-panel" disabled>Unavailable</button></div><div id="catalog-overview-panel" role="tabpanel" aria-labelledby="catalog-overview-tab">Overview content</div><div id="catalog-activity-panel" role="tabpanel" aria-labelledby="catalog-activity-tab" hidden>Activity content</div><div id="catalog-unavailable-panel" role="tabpanel" aria-labelledby="catalog-unavailable-tab" hidden>Unavailable content</div></div>
+              <div class="grid">
+                <div class="specimen-state specimen-state--hover"><span class="specimen-label">Hover</span><div class="tabs"><button class="tab" type="button">Activity</button></div></div>
+                <div class="specimen-state specimen-state--focus"><span class="specimen-label">Focus</span><div class="tabs"><button class="tab" type="button">Activity</button></div></div>
+                <div class="specimen-state specimen-state--active"><span class="specimen-label">Active</span><div class="tabs"><button class="tab" type="button">Activity</button></div></div>
+              </div>
+              <div class="specimen-block"><span class="specimen-label">Vertical</span><div class="tabs tabs--vertical" role="tablist" aria-orientation="vertical" aria-label="Account settings"><button class="tab" id="tabs-vertical-profile-tab" type="button" role="tab" aria-selected="true" aria-controls="tabs-vertical-profile-panel">Profile</button><button class="tab" id="tabs-vertical-security-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-vertical-security-panel" tabindex="-1">Security</button><button class="tab" id="tabs-vertical-billing-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-vertical-billing-panel" tabindex="-1">Billing</button></div><div id="tabs-vertical-profile-panel" role="tabpanel" aria-labelledby="tabs-vertical-profile-tab">Profile content</div><div id="tabs-vertical-security-panel" role="tabpanel" aria-labelledby="tabs-vertical-security-tab" hidden>Security content</div><div id="tabs-vertical-billing-panel" role="tabpanel" aria-labelledby="tabs-vertical-billing-tab" hidden>Billing content</div></div>
               <div class="specimen-block"><span class="specimen-label">Lined</span><div class="tabs tabs--lined" role="tablist" aria-label="Report views"><button class="tab" id="tabs-lined-summary-tab" type="button" role="tab" aria-selected="true" aria-controls="tabs-lined-summary-panel">Summary</button><button class="tab" id="tabs-lined-details-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-lined-details-panel" tabindex="-1">Details</button><button class="tab" id="tabs-lined-history-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-lined-history-panel" tabindex="-1">History</button></div><div id="tabs-lined-summary-panel" role="tabpanel" aria-labelledby="tabs-lined-summary-tab">Summary content</div><div id="tabs-lined-details-panel" role="tabpanel" aria-labelledby="tabs-lined-details-tab" hidden>Details content</div><div id="tabs-lined-history-panel" role="tabpanel" aria-labelledby="tabs-lined-history-tab" hidden>History content</div></div>
-              <div class="specimen-block"><span class="specimen-label">Icon only, fixed width</span><div class="tabs tabs--icon-only" role="tablist" aria-label="Workspace views"><button class="tab" id="tabs-icononly-account-tab" type="button" role="tab" aria-selected="true" aria-controls="tabs-icononly-account-panel" aria-label="Account"><svg aria-hidden="true"><use href="fluent-icons.svg?v=10#person-16-regular"></use></svg></button><button class="tab" id="tabs-icononly-messages-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-icononly-messages-panel" tabindex="-1" aria-label="Messages"><svg aria-hidden="true"><use href="fluent-icons.svg?v=10#chat-16-regular"></use></svg></button><button class="tab" id="tabs-icononly-settings-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-icononly-settings-panel" tabindex="-1" aria-label="Settings"><svg aria-hidden="true"><use href="fluent-icons.svg?v=10#settings-16-regular"></use></svg></button></div><div id="tabs-icononly-account-panel" role="tabpanel" aria-labelledby="tabs-icononly-account-tab">Account content</div><div id="tabs-icononly-messages-panel" role="tabpanel" aria-labelledby="tabs-icononly-messages-tab" hidden>Messages content</div><div id="tabs-icononly-settings-panel" role="tabpanel" aria-labelledby="tabs-icononly-settings-tab" hidden>Settings content</div></div>
-              <div class="specimen-block"><span class="specimen-label">Small, for tight spaces</span><div class="tabs tabs--small" role="tablist" aria-label="Message filters"><button class="tab" id="tabs-small-all-tab" type="button" role="tab" aria-selected="true" aria-controls="tabs-small-all-panel">All</button><button class="tab" id="tabs-small-unread-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-small-unread-panel" tabindex="-1">Unread</button><button class="tab" id="tabs-small-archived-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-small-archived-panel" tabindex="-1">Archived</button></div><div id="tabs-small-all-panel" role="tabpanel" aria-labelledby="tabs-small-all-tab">All messages</div><div id="tabs-small-unread-panel" role="tabpanel" aria-labelledby="tabs-small-unread-tab" hidden>Unread messages</div><div id="tabs-small-archived-panel" role="tabpanel" aria-labelledby="tabs-small-archived-tab" hidden>Archived messages</div></div>
+              <div class="specimen-block"><span class="specimen-label">Icons</span><div class="tabs" role="tablist" aria-label="Workspace views"><button class="tab" id="tabs-icons-account-tab" type="button" role="tab" aria-selected="true" aria-controls="tabs-icons-account-panel"><svg aria-hidden="true"><use href="fluent-icons.svg?v=10#person-16-regular"></use></svg><span class="text-trim">Account</span></button><button class="tab" id="tabs-icons-messages-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-icons-messages-panel" tabindex="-1"><svg aria-hidden="true"><use href="fluent-icons.svg?v=10#chat-16-regular"></use></svg><span class="text-trim">Messages</span></button><button class="tab" id="tabs-icons-settings-tab" type="button" role="tab" aria-selected="false" aria-controls="tabs-icons-settings-panel" tabindex="-1"><svg aria-hidden="true"><use href="fluent-icons.svg?v=10#settings-16-regular"></use></svg><span class="text-trim">Settings</span></button></div><div id="tabs-icons-account-panel" role="tabpanel" aria-labelledby="tabs-icons-account-tab">Account content</div><div id="tabs-icons-messages-panel" role="tabpanel" aria-labelledby="tabs-icons-messages-tab" hidden>Messages content</div><div id="tabs-icons-settings-panel" role="tabpanel" aria-labelledby="tabs-icons-settings-tab" hidden>Settings content</div></div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for sequential steps or navigation among unrelated destinations.</div></div>
             <pre class="code-block" tabindex="0"><code>&lt;div class="tabs" role="tablist" aria-label="Content views"&gt;
@@ -1721,7 +1743,7 @@
 &lt;div id="overview-panel" role="tabpanel" aria-labelledby="overview-tab"&gt;Overview content&lt;/div&gt;
 &lt;div id="activity-panel" role="tabpanel" aria-labelledby="activity-tab" hidden&gt;Activity content&lt;/div&gt;
 
-&lt;!-- Variants: tabs--lined (underline), tabs--icon-only (fixed-width icon squares), tabs--small (compact). Pair with tabs.js for interaction. --&gt;</code></pre>
+&lt;!-- Variants: add tabs--vertical or tabs--lined to .tabs; place an &lt;svg&gt; before the label for icons. --&gt;</code></pre>
           </div>
         </section>
 
@@ -1744,14 +1766,25 @@
           </div>
         </section>
 
-        <hr class="separator">
-
         <section class="section" id="textarea" aria-labelledby="textarea-title">
           <header class="section__header"><h2 class="section__title" id="textarea-title">Textarea</h2><p class="section__description">Captures multi-line text and grows with its content. It is the multi-line sibling of the input.</p></header>
           <div class="section__body">
             <div class="card card--canvas">
-              <div class="specimen-block"><span class="specimen-label">Default — grows as you type, then scrolls</span>
+              <div class="specimen-block"><span class="specimen-label">Default — grows as you type; drag the bottom-right grabber to resize</span>
                 <textarea class="textarea" rows="3" placeholder="Type your notes here" aria-label="Notes"></textarea>
+              </div>
+              <div class="specimen-block"><span class="specimen-label">With a label and help text</span>
+                <div class="field">
+                  <label class="field__label" for="textarea-message">Your message</label>
+                  <textarea class="textarea" id="textarea-message" rows="3" placeholder="Type your message here." aria-describedby="textarea-message-help"></textarea>
+                  <span class="field__description" id="textarea-message-help">We reply within a day.</span>
+                </div>
+              </div>
+              <div class="specimen-block"><span class="specimen-label">With a submit button</span>
+                <div class="field">
+                  <textarea class="textarea" rows="3" placeholder="Type your message here." aria-label="Message"></textarea>
+                  <button class="button button--block" type="button">Send message</button>
+                </div>
               </div>
               <div class="grid">
                 <div class="specimen-block"><span class="specimen-label">Fixed height</span>
@@ -1765,7 +1798,7 @@
                 </div>
               </div>
             </div>
-            <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for a single-line value, which suits an input, for read-only prose, which suits a text box, or for code, commands, prompts, or an assistant prompt.</div></div>
+            <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for a single-line value, which suits an input, or for code, commands, prompts, or an assistant prompt.</div></div>
             <pre class="code-block" tabindex="0"><code>&lt;textarea class="textarea" rows="3" placeholder="Type your notes here" aria-label="Notes"&gt;&lt;/textarea&gt;</code></pre>
           </div>
         </section>
@@ -1778,41 +1811,39 @@
             <div class="card card--canvas">
               <div class="specimen-block"><span class="specimen-label">Basic</span>
                 <div class="cluster cluster--group">
-                  <label class="toggle"><input class="toggle__input" type="checkbox" aria-label="Bold" checked><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg></label>
-                  <label class="toggle"><input class="toggle__input" type="checkbox" aria-label="Italic"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg></label>
-                  <label class="toggle"><input class="toggle__input" type="checkbox" aria-label="Underline"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-underline-20-regular"></use></svg></label>
+                  <button class="toggle" type="button" aria-pressed="true" aria-label="Bold"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg></button>
+                  <button class="toggle" type="button" aria-pressed="false" aria-label="Italic"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg></button>
+                  <button class="toggle" type="button" aria-pressed="false" aria-label="Underline"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-underline-20-regular"></use></svg></button>
                 </div>
               </div>
               <div class="specimen-block"><span class="specimen-label">Outline</span>
                 <div class="cluster cluster--group">
-                  <label class="toggle toggle--outline"><input class="toggle__input" type="checkbox" aria-label="Bold" checked><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg></label>
-                  <label class="toggle toggle--outline"><input class="toggle__input" type="checkbox" aria-label="Italic"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg></label>
+                  <button class="toggle toggle--outline" type="button" aria-pressed="true" aria-label="Bold"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg></button>
+                  <button class="toggle toggle--outline" type="button" aria-pressed="false" aria-label="Italic"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg></button>
                 </div>
               </div>
               <div class="specimen-block"><span class="specimen-label">With text</span>
                 <div class="cluster cluster--group">
-                  <label class="toggle"><input class="toggle__input" type="checkbox" checked><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg><span class="text-trim">Bold</span></label>
-                  <label class="toggle toggle--outline"><input class="toggle__input" type="checkbox"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg><span class="text-trim">Italic</span></label>
+                  <button class="toggle" type="button" aria-pressed="true"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg><span class="text-trim">Bold</span></button>
+                  <button class="toggle toggle--outline" type="button" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg><span class="text-trim">Italic</span></button>
                 </div>
               </div>
               <div class="specimen-block"><span class="specimen-label">Disabled</span>
                 <div class="cluster cluster--group">
-                  <label class="toggle"><input class="toggle__input" type="checkbox" aria-label="Bold" checked disabled><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg></label>
-                  <label class="toggle toggle--outline"><input class="toggle__input" type="checkbox" aria-label="Italic" disabled><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg></label>
+                  <button class="toggle" type="button" aria-pressed="true" aria-label="Bold" disabled><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-bold-20-regular"></use></svg></button>
+                  <button class="toggle toggle--outline" type="button" aria-pressed="false" aria-label="Italic" disabled><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><use href="fluent-icons.svg?v=11#text-italic-20-regular"></use></svg></button>
                 </div>
               </div>
             </div>
             <div class="alert"><div class="alert__content"><strong>When not to use:</strong> Do not use it for a setting that applies immediately, which suits a switch, or to trigger an action, which suits a button.</div></div>
-            <pre class="code-block" tabindex="0"><code>&lt;label class="toggle"&gt;
-  &lt;input class="toggle__input" type="checkbox" aria-label="Bold" checked&gt;
+            <pre class="code-block" tabindex="0"><code>&lt;button class="toggle" type="button" aria-pressed="true" aria-label="Bold"&gt;
   &lt;svg viewBox="0 0 20 20" aria-hidden="true"&gt;&lt;use href="fluent-icons.svg#text-bold-20-regular"&gt;&lt;/use&gt;&lt;/svg&gt;
-&lt;/label&gt;
+&lt;/button&gt;
 
-&lt;label class="toggle toggle--outline"&gt;
-  &lt;input class="toggle__input" type="checkbox"&gt;
+&lt;button class="toggle toggle--outline" type="button" aria-pressed="false"&gt;
   &lt;svg viewBox="0 0 20 20" aria-hidden="true"&gt;&lt;use href="fluent-icons.svg#text-italic-20-regular"&gt;&lt;/use&gt;&lt;/svg&gt;
   &lt;span class="text-trim"&gt;Italic&lt;/span&gt;
-&lt;/label&gt;</code></pre>
+&lt;/button&gt;</code></pre>
           </div>
         </section>
 

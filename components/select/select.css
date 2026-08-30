@@ -20,6 +20,8 @@
   line-height: var(--oneds-semantic-typography-functional-body-medium-line-height);
   cursor: pointer;
   list-style: none;
+  -webkit-user-select: none;
+  user-select: none;
   transition: var(--oneds-reference-motion-transition-state);
 }
 
@@ -82,6 +84,8 @@
   border-radius: var(--oneds-component-select-panel-radius);
   background: var(--oneds-color-surface-neutral-nearer);
   box-shadow: var(--oneds-semantic-elevation-3);
+  -webkit-user-select: none;
+  user-select: none;
   animation: oneds-select-enter var(--oneds-reference-motion-duration-normal) var(--oneds-reference-motion-ease-entrance) both;
 }
 
@@ -193,6 +197,11 @@
 /* Invalid reads as an error before focus and keeps the danger colour through the focus ring. */
 .select--invalid .select__trigger {
   border-color: var(--oneds-color-stroke-danger-loud);
+  color: var(--oneds-color-foreground-danger-primary);
+}
+
+.select--invalid .select__value--placeholder {
+  color: var(--oneds-color-foreground-danger-primary);
 }
 
 .select--invalid .select__trigger:focus-visible {

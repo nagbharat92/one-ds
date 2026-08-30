@@ -30,4 +30,4 @@ Wrap a set of placeholders in `.skeleton-group` to stack them with the standard 
 
 The skeleton pulses on its own with CSS; no script is required. Announce the loading state on a container with `role="status"` and `aria-busy="true"` rather than on each placeholder, and replace the whole group with the real content once it arrives. Under `prefers-reduced-motion` the pulse is removed.
 
-Use a skeleton only while content is loading and its shape is known. When no content exists at all, use the empty state; when an operation has measurable progress, use progress; for a brief indeterminate wait with no layout to preserve, use the spinner.
+Use a skeleton only while content is loading and its shape is known. When no content exists at all, use the empty state; when an operation has measurable progress, use progress; for a brief indeterminate wait with no layout to preserve, use the loading spinner.
