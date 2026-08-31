@@ -311,12 +311,14 @@ function CoachmarkContent({
   )
 }
 
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 function CoachmarkMedia({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <AspectRatio
       data-slot="coachmark-media"
+      ratio="landscape"
       className={cn(
-        "mx-(--coachmark-media-inset-inline) mt-(--coachmark-media-inset-block-start) overflow-hidden rounded-t-(--coachmark-radius) bg-muted [&>img]:aspect-(--coachmark-media-aspect) [&>img]:size-full [&>img]:object-cover",
+        "mx-(--coachmark-media-inset-inline) mt-(--coachmark-media-inset-block-start) overflow-hidden rounded-t-(--coachmark-radius) bg-muted [&>img]:size-full [&>img]:object-cover",
         className
       )}
       {...props}

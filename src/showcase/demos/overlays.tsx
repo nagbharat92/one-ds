@@ -1270,7 +1270,7 @@ export const overlaysDemos: ComponentEntry[] = [
             </CoachmarkTrigger>
             <CoachmarkContent size="lg">
               <CoachmarkMedia>
-                <div className="flex aspect-(--coachmark-media-aspect) items-center justify-center">
+                <div className="flex size-full items-center justify-center">
                   <SparklesIcon className="size-8 text-muted-foreground" />
                 </div>
               </CoachmarkMedia>

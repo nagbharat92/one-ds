@@ -2,6 +2,7 @@ import * as React from "react"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 function Card({
   className,
@@ -10,7 +11,7 @@ function Card({
   ...props
 }: React.ComponentProps<"div"> & {
   size?: "default" | "sm"
-  variant?: "default" | "preview"
+  variant?: "default" | "preview" | "code"
 }) {
   return (
     <div
@@ -20,8 +21,11 @@ function Card({
       className={cn(
         "group/card flex flex-col text-sm text-card-foreground",
         variant === "default" &&
-          "gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) ring-1 ring-foreground/10 [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
-        variant === "preview" && "card-preview items-center justify-center",
+          "gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) ring-1 ring-foreground/10 has-data-[slot=card-footer]:pb-0 has-data-[slot=card-media]:pt-0 has-[>img:first-child]:pt-0 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        variant === "preview" &&
+          "card-preview items-center justify-center has-data-[slot=accordion]:justify-start",
+        variant === "code" &&
+          "h-full gap-0 overflow-hidden rounded-xl border bg-card",
         className
       )}
       {...props}
@@ -100,6 +104,24 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+function CardMedia({
+  className,
+  ratio = "landscape",
+  ...props
+}: React.ComponentProps<typeof AspectRatio>) {
+  return (
+    <AspectRatio
+      data-slot="card-media"
+      ratio={ratio}
+      className={cn(
+        "overflow-hidden [&>img]:size-full [&>img]:object-cover",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -121,4 +143,5 @@ export {
   CardAction,
   CardDescription,
   CardContent,
+  CardMedia,
 }

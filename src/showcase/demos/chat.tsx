@@ -8,7 +8,6 @@ import {
   PaperclipIcon,
   AlertCircleIcon,
   ThumbsUpIcon,
-  HeartIcon,
   CopyIcon,
   ShareIcon,
   ThumbsDownIcon,
@@ -367,7 +366,9 @@ export function BubbleDemo() {
                     }
                     aria-label={`Thumbs up, ${counts.thumbsUp}`}
                   >
-                    <ThumbsUpIcon className="size-3" aria-hidden />
+                    <span className="text-sm leading-none" aria-hidden>
+                      👍
+                    </span>
                     {counts.thumbsUp}
                   </button>
                   <button
@@ -378,7 +379,9 @@ export function BubbleDemo() {
                     }
                     aria-label={`Heart, ${counts.heart}`}
                   >
-                    <HeartIcon className="size-3" aria-hidden />
+                    <span className="text-sm leading-none" aria-hidden>
+                      ❤️
+                    </span>
                     {counts.heart}
                   </button>
                 </BubbleReactions>
@@ -679,7 +682,7 @@ export function MessageDemo() {
     description: "A virtualized, auto-scrolling container for chat messages.",
     category: "Chat",
     Demo: () => (
-      <MessageScrollerProvider>
+      <MessageScrollerProvider autoScroll>
         <MessageScroller className="h-80 w-full max-w-sm rounded-lg border">
           <MessageScrollerViewport className="p-4">
             <MessageScrollerContent>
@@ -711,7 +714,7 @@ export function MessageDemo() {
 
 export function MessageScrollerDemo() {
   return (
-    <MessageScrollerProvider>
+    <MessageScrollerProvider autoScroll>
       <MessageScroller className="h-80 rounded-lg border">
         <MessageScrollerViewport className="p-4">
           <MessageScrollerContent>
@@ -733,7 +736,7 @@ export function MessageScrollerDemo() {
           "Use scrollAnchor to pin the viewport to a specific turn.",
         layout: "wide",
         Demo: () => (
-          <MessageScrollerProvider>
+          <MessageScrollerProvider defaultScrollPosition="last-anchor">
             <MessageScroller className="h-80 w-full max-w-sm rounded-lg border">
               <MessageScrollerViewport className="p-4">
                 <MessageScrollerContent>
@@ -741,7 +744,7 @@ export function MessageScrollerDemo() {
                     <MessageScrollerItem
                       key={m.id}
                       id={m.id}
-                      scrollAnchor={i === 4}
+                      scrollAnchor={i === 3}
                     >
                       <Message align={m.align}>
                         <MessageContent>
@@ -751,7 +754,7 @@ export function MessageScrollerDemo() {
                             }
                           >
                             <BubbleContent>
-                              {i === 4 ? `[anchored] ${m.text}` : m.text}
+                              {i === 3 ? `[anchored] ${m.text}` : m.text}
                             </BubbleContent>
                           </Bubble>
                         </MessageContent>
@@ -768,7 +771,7 @@ export function MessageScrollerDemo() {
         name: "Group Chat",
         layout: "wide",
         Demo: () => (
-          <MessageScrollerProvider>
+          <MessageScrollerProvider autoScroll>
             <MessageScroller className="h-80 w-full max-w-md rounded-lg border">
               <MessageScrollerViewport className="p-4">
                 <MessageScrollerContent>
@@ -819,12 +822,19 @@ export function MessageScrollerDemo() {
           "scrollPreviousItemPeek keeps the prior message partially visible.",
         layout: "wide",
         Demo: () => (
-          <MessageScrollerProvider scrollPreviousItemPeek={60}>
+          <MessageScrollerProvider
+            defaultScrollPosition="last-anchor"
+            scrollPreviousItemPeek={60}
+          >
             <MessageScroller className="h-64 w-full max-w-sm rounded-lg border">
               <MessageScrollerViewport className="p-4">
                 <MessageScrollerContent>
-                  {scrollerMessages.map((m) => (
-                    <MessageScrollerItem key={m.id} id={m.id}>
+                  {scrollerMessages.map((m, i) => (
+                    <MessageScrollerItem
+                      key={m.id}
+                      id={m.id}
+                      scrollAnchor={i === 3}
+                    >
                       <Message align={m.align}>
                         <MessageContent>
                           <Bubble
@@ -1003,7 +1013,7 @@ export function MessageScrollerDemo() {
           "useMessageScrollerVisibility exposes visible IDs and anchor.",
         layout: "wide",
         Demo: () => (
-          <MessageScrollerProvider>
+          <MessageScrollerProvider autoScroll>
             <div className="flex w-full max-w-sm flex-col gap-2">
               <MessageScroller className="h-64 w-full rounded-lg border">
                 <MessageScrollerViewport className="p-4">
@@ -1039,7 +1049,7 @@ export function MessageScrollerDemo() {
           "useMessageScrollerScrollable reports whether content overflows.",
         layout: "wide",
         Demo: () => (
-          <MessageScrollerProvider>
+          <MessageScrollerProvider autoScroll>
             <div className="flex w-full max-w-sm flex-col gap-2">
               <MessageScroller className="h-64 w-full rounded-lg border">
                 <MessageScrollerViewport className="p-4">

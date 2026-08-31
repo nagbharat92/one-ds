@@ -49,7 +49,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Container } from "@/components/ui/container"
 import { Page, PageContent, PageScroll } from "@/components/ui/page"
 import { Stack } from "@/components/ui/stack"
@@ -79,6 +79,77 @@ import {
 } from "@/components/ui/toolbar"
 
 const tags = Array.from({ length: 12 }).map((_, i) => `v1.2.0-beta.${12 - i}`)
+
+function ClusterWrappingDemo() {
+  return (
+    <Cluster
+      gap="sm"
+      className="w-full max-w-md rounded-lg border border-dashed p-3"
+    >
+      {Array.from({ length: 5 }, (_, index) => (
+        <div
+          key={index}
+          className="flex h-14 min-w-28 flex-1 items-center justify-center rounded-md bg-muted text-sm font-medium"
+        >
+          Item {index + 1}
+        </div>
+      ))}
+    </Cluster>
+  )
+}
+
+function ClusterAlignmentDemo() {
+  return (
+    <Cluster
+      gap="sm"
+      align="center"
+      className="h-32 w-full max-w-md rounded-lg border border-dashed p-3"
+    >
+      <div className="flex h-12 w-24 items-center justify-center rounded-md bg-muted text-sm font-medium">
+        Short
+      </div>
+      <div className="flex h-24 w-24 items-center justify-center rounded-md bg-muted text-sm font-medium">
+        Tall
+      </div>
+      <div className="flex h-16 w-24 items-center justify-center rounded-md bg-muted text-sm font-medium">
+        Medium
+      </div>
+    </Cluster>
+  )
+}
+
+function ClusterDistributionDemo() {
+  return (
+    <Stack gap="md" className="w-full max-w-md">
+      {(["start", "center", "between"] as const).map((justify) => (
+        <div key={justify} className="space-y-2">
+          <p className="text-sm font-medium">
+            {justify === "between"
+              ? "Space between"
+              : justify === "center"
+                ? "Center"
+                : "Start"}
+          </p>
+          <Cluster
+            gap="sm"
+            justify={justify}
+            wrap={false}
+            className="rounded-lg border border-dashed p-2"
+          >
+            {[1, 2, 3].map((item) => (
+              <span
+                key={item}
+                className="grid size-8 place-items-center rounded-sm bg-muted text-sm font-medium"
+              >
+                {item}
+              </span>
+            ))}
+          </Cluster>
+        </div>
+      ))}
+    </Stack>
+  )
+}
 
 function PageDemo() {
   return (
@@ -295,7 +366,7 @@ export function AccordionDemo() {
     category: "Layout",
     Demo: () => (
       <Collapsible className="w-full max-w-sm space-y-2">
-        <div className="flex items-center justify-between gap-4 rounded-md border px-4 py-2">
+        <div className="flex items-center justify-between gap-4 rounded-md border py-2 ps-4 pe-2">
           <span className="text-sm font-medium">@peduarte starred 3 repositories</span>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="icon" className="size-8">
@@ -320,7 +391,7 @@ import { Button } from "@/components/ui/button"
 export function CollapsibleDemo() {
   return (
     <Collapsible className="w-full max-w-sm space-y-2">
-      <div className="flex items-center justify-between rounded-md border px-4 py-2">
+      <div className="flex items-center justify-between rounded-md border py-2 ps-4 pe-2">
         <span className="text-sm font-medium">@peduarte starred 3 repositories</span>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="icon" className="size-8">
@@ -342,7 +413,7 @@ export function CollapsibleDemo() {
           const [darkMode, setDarkMode] = useState(false)
           return (
             <Collapsible defaultOpen className="w-full max-w-sm space-y-2">
-              <div className="flex items-center justify-between gap-4 rounded-md border px-4 py-2">
+              <div className="flex items-center justify-between gap-4 rounded-md border py-2 ps-4 pe-2">
                 <div className="flex items-center gap-2">
                   <SettingsIcon className="size-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Quick settings</span>
@@ -392,14 +463,14 @@ export function CollapsibleDemo() {
             <div className="w-full max-w-xs rounded-md border p-2">
               <Collapsible open={srcOpen} onOpenChange={setSrcOpen}>
                 <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-sm hover:bg-muted">
-                  <ChevronRightIcon className={`size-3.5 text-muted-foreground transition-transform ${srcOpen ? "rotate-90" : ""}`} />
+                  <ChevronRightIcon className={`size-3.5 text-muted-foreground transition-transform duration-(--speed-swift) ease-(--ease-glide) ${srcOpen ? "rotate-90" : ""}`} />
                   {srcOpen ? <FolderOpenIcon className="size-4 text-muted-foreground" /> : <FolderIcon className="size-4 text-muted-foreground" />}
                   <span>src</span>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="ml-4 border-l pl-2">
                   <Collapsible open={compOpen} onOpenChange={setCompOpen}>
                     <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-sm hover:bg-muted">
-                      <ChevronRightIcon className={`size-3.5 text-muted-foreground transition-transform ${compOpen ? "rotate-90" : ""}`} />
+                      <ChevronRightIcon className={`size-3.5 text-muted-foreground transition-transform duration-(--speed-swift) ease-(--ease-glide) ${compOpen ? "rotate-90" : ""}`} />
                       {compOpen ? <FolderOpenIcon className="size-4 text-muted-foreground" /> : <FolderIcon className="size-4 text-muted-foreground" />}
                       <span>components</span>
                     </CollapsibleTrigger>
@@ -603,7 +674,7 @@ export function ScrollAreaDemo() {
               <div className="flex gap-4 p-4">
                 {artworks.map((work) => (
                   <div key={work.title} className="w-36 shrink-0">
-                    <div className="aspect-square rounded-md bg-muted" />
+                    <AspectRatio ratio="square" className="rounded-md bg-muted" />
                     <p className="mt-2 truncate text-sm font-medium">{work.title}</p>
                     <p className="truncate text-sm text-muted-foreground">{work.artist}</p>
                   </div>
@@ -892,29 +963,39 @@ export function StackDemo() {
     slug: "cluster",
     name: "Cluster",
     description:
-      "A horizontal layout primitive that wraps, with gap, align, and justify.",
+      "Arrange items in a horizontal row that can wrap, align, and distribute its children.",
     category: "Layout",
-    Demo: () => (
-      <Cluster gap="sm" className="w-full">
-        <Badge>Design</Badge>
-        <Badge variant="secondary">Engineering</Badge>
-        <Badge variant="outline">Product</Badge>
-        <Badge variant="secondary">Marketing</Badge>
-        <Badge variant="outline">Research</Badge>
-      </Cluster>
-    ),
+    Demo: ClusterWrappingDemo,
     code: `import { Cluster } from "@/components/ui/cluster"
-import { Badge } from "@/components/ui/badge"
 
 export function ClusterDemo() {
   return (
-    <Cluster gap="sm">
-      <Badge>Design</Badge>
-      <Badge variant="secondary">Engineering</Badge>
-      <Badge variant="outline">Product</Badge>
+    <Cluster gap="sm" className="max-w-md rounded-lg border border-dashed p-3">
+      {Array.from({ length: 5 }, (_, index) => (
+        <div
+          key={index}
+          className="flex h-14 min-w-28 flex-1 items-center justify-center rounded-md bg-muted"
+        >
+          Item {index + 1}
+        </div>
+      ))}
     </Cluster>
   )
 }`,
+    examples: [
+      {
+        name: "Alignment",
+        description:
+          "Items with different heights share the same vertical center line.",
+        Demo: ClusterAlignmentDemo,
+      },
+      {
+        name: "Distribution",
+        description:
+          "Compare start, center, and space-between distribution across the available width.",
+        Demo: ClusterDistributionDemo,
+      },
+    ],
   },
   {
     slug: "toolbar",

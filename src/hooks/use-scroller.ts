@@ -6,6 +6,8 @@ export type UseScrollerOptions = {
   axis?: ScrollerAxis
   /** rAF-eased wheel scrolling. */
   inertia?: boolean
+  /** Allow wheel input at an edge to continue into an ancestor scroller. */
+  scrollChain?: boolean
   /** Lower is lazier. */
   strength?: number
   settleDistance?: number
@@ -33,6 +35,7 @@ export function useScroller(
   {
     axis = "y",
     inertia = true,
+    scrollChain = true,
     strength = scrollerMotion.strength,
     settleDistance = scrollerMotion.settleDistance,
     lineStep = scrollerMotion.lineStep,
@@ -105,7 +108,10 @@ export function useScroller(
             ? viewport * pageStep
             : 1
       const next = clamp(target + delta * unit)
-      if (next === target) return // at an edge — let the scroll chain naturally
+      if (next === target) {
+        if (!scrollChain) event.preventDefault()
+        return
+      }
       event.preventDefault()
       target = next
       start()
@@ -123,7 +129,7 @@ export function useScroller(
       el.removeEventListener("wheel", onWheel)
       el.removeEventListener("scroll", onScroll)
     }
-  }, [ref, axis, inertia, strength, settleDistance, lineStep, pageStep])
+  }, [ref, axis, inertia, scrollChain, strength, settleDistance, lineStep, pageStep])
 }
 
 /**

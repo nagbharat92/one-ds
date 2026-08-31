@@ -3,16 +3,15 @@ import { useState } from "react"
 import type { ComponentEntry } from "@/showcase/types"
 import type { DateRange } from "react-day-picker"
 import { Calendar } from "@/components/ui/calendar"
-import { DirectionProvider } from "@/components/ui/direction"
 import { Button } from "@/components/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { addDays, addMonths, format, setHours, setMinutes, isSameDay } from "date-fns"
-import { faIR } from "react-day-picker/locale"
 
 /* ------------------------------------------------------------------ */
 /*  Helper components                                                  */
@@ -41,7 +40,9 @@ function RangeCalendarDemo() {
         mode="range"
         selected={range}
         onSelect={setRange}
+        resetOnSelect
         numberOfMonths={2}
+        showOutsideDays={false}
         className="rounded-md border shadow-sm"
       />
       <p className="text-sm text-muted-foreground">
@@ -114,20 +115,28 @@ function DateTimePickerDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [time, setTime] = useState(() => {
     const now = new Date()
-    return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`
+    return {
+      hour: String(now.getHours() % 12 || 12).padStart(2, "0"),
+      minute: String(now.getMinutes()).padStart(2, "0"),
+      period: now.getHours() < 12 ? "am" : "pm",
+    }
   })
 
   function handleDateSelect(d: Date | undefined) {
     if (!d) { setDate(undefined); return }
-    const [h, m] = time.split(":").map(Number)
-    setDate(setMinutes(setHours(d, h), m))
+    const hour = Number(time.hour) % 12 + (time.period === "pm" ? 12 : 0)
+    setDate(setMinutes(setHours(d, hour), Number(time.minute)))
   }
 
-  function handleTimeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setTime(e.target.value)
+  function handleTimeChange(
+    hour: string,
+    minute: string,
+    period: string
+  ) {
+    setTime({ hour, minute, period })
     if (!date) return
-    const [h, m] = e.target.value.split(":").map(Number)
-    setDate(setMinutes(setHours(date, h), m))
+    const hour24 = Number(hour) % 12 + (period === "pm" ? 12 : 0)
+    setDate(setMinutes(setHours(date, hour24), Number(minute)))
   }
 
   return (
@@ -139,19 +148,63 @@ function DateTimePickerDemo() {
         className="rounded-md border shadow-sm"
       />
       <div className="flex items-center gap-2 px-1">
-        <label htmlFor="cal-time" className="text-sm font-medium">
-          Time
-        </label>
-        <input
-          id="cal-time"
-          type="time"
-          value={time}
-          onChange={handleTimeChange}
-          className="rounded-md border bg-transparent px-2 py-1 text-sm shadow-sm"
-        />
+        <span className="text-sm font-medium">Time</span>
+        <div className="flex items-center gap-1.5">
+          <Select
+            value={time.hour}
+            onValueChange={(hour) =>
+              handleTimeChange(hour, time.minute, time.period)
+            }
+          >
+            <SelectTrigger aria-label="Hour">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: 12 }, (_, index) =>
+                String(index + 1).padStart(2, "0")
+              ).map((hour) => (
+                <SelectItem key={hour} value={hour}>{hour}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <span aria-hidden="true" className="text-muted-foreground">:</span>
+          <Select
+            value={time.minute}
+            onValueChange={(minute) =>
+              handleTimeChange(time.hour, minute, time.period)
+            }
+          >
+            <SelectTrigger aria-label="Minute">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: 60 }, (_, minute) =>
+                String(minute).padStart(2, "0")
+              ).map((minute) => (
+                <SelectItem key={minute} value={minute}>{minute}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={time.period}
+            onValueChange={(period) =>
+              handleTimeChange(time.hour, time.minute, period)
+            }
+          >
+            <SelectTrigger aria-label="Period">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="am">am</SelectItem>
+              <SelectItem value="pm">pm</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <p className="text-sm text-muted-foreground">
-        {date ? format(date, "PPP 'at' p") : "Pick a date and time"}
+        {date
+          ? `${format(date, "PPP 'at' h:mm")} ${format(date, "a").toLowerCase()}`
+          : "Pick a date and time"}
       </p>
     </div>
   )
@@ -181,75 +234,6 @@ function BookedDatesDemo() {
         {date
           ? format(date, "PPP")
           : "Strikethrough dates are booked and cannot be selected."}
-      </p>
-    </div>
-  )
-}
-
-function CustomCellSizeDemo() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  return (
-    <div className="space-y-3">
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="showcase-calendar-large rounded-md border shadow-sm"
-      />
-      <p className="text-sm text-muted-foreground">
-        {date ? format(date, "PPP") : "Pick a date"}
-      </p>
-    </div>
-  )
-}
-
-function WeekNumbersDemo() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  return (
-    <div className="space-y-3">
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        showWeekNumber
-        className="rounded-md border shadow-sm"
-      />
-      <p className="text-sm text-muted-foreground">
-        {date ? format(date, "PPP") : "Pick a date"}
-      </p>
-    </div>
-  )
-}
-
-function PersianCalendarDemo() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  return (
-    <div className="space-y-3">
-      {/*
-       * react-day-picker v10 does NOT have a true Solar Hijri / Jalali
-       * calendar system — it always uses the Gregorian calendar internally.
-       * `numerals="arabext"` renders Eastern Arabic-Indic digits (۱۲۳),
-       * `locale={faIR}` provides Persian month/day names and RTL labels.
-       * A genuine Jalali calendar requires a dateLib override wrapping a
-       * library like date-fns-jalali, which is not bundled here.
-       */}
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        locale={faIR}
-        numerals="arabext"
-        dir="rtl"
-        className="rounded-md border shadow-sm"
-      />
-      <p className="text-sm text-muted-foreground" dir="rtl">
-        {date
-          ? date.toLocaleDateString("fa-IR", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          : "یک تاریخ انتخاب کنید"}
       </p>
     </div>
   )
@@ -298,7 +282,7 @@ export function CalendarDemo() {
       },
       {
         name: "Date and Time Picker",
-        description: "Combines a calendar with a native time input for full date-time selection.",
+        description: "Combines a calendar with hour, minute, and period selectors.",
         Demo: () => <DateTimePickerDemo />,
       },
       {
@@ -306,55 +290,6 @@ export function CalendarDemo() {
         description: "Visually distinguish booked dates with strikethrough and prevent their selection.",
         Demo: () => <BookedDatesDemo />,
       },
-      {
-        name: "Custom Cell Size",
-        description: "Larger day cells via the --cell-size custom property.",
-        Demo: () => <CustomCellSizeDemo />,
-      },
-      {
-        name: "Week Numbers",
-        description: "Shows ISO week numbers alongside the calendar grid.",
-        Demo: () => <WeekNumbersDemo />,
-      },
-      {
-        name: "Persian Calendar",
-        description: "Gregorian calendar with Persian locale labels and Eastern Arabic-Indic numerals. A true Solar Hijri system requires a dateLib override with date-fns-jalali.",
-        Demo: () => <PersianCalendarDemo />,
-      },
     ],
-  },
-  {
-    slug: "direction",
-    name: "Direction Provider",
-    description:
-      "Provides reading direction (LTR/RTL) context to components.",
-    category: "Utilities",
-    Demo: () => (
-      <DirectionProvider dir="rtl">
-        <div dir="rtl" className="w-full max-w-sm space-y-3 rounded-lg border p-4">
-          <p className="text-sm">تُبنى الواجهة مع دعم الاتجاه من اليمين إلى اليسار.</p>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">القائمة</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>الملف الشخصي</DropdownMenuItem>
-              <DropdownMenuItem>الإعدادات</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </DirectionProvider>
-    ),
-    code: `import { DirectionProvider } from "@/components/ui/direction"
-
-export function DirectionDemo() {
-  return (
-    <DirectionProvider dir="rtl">
-      <div dir="rtl">
-        {/* Radix components inside inherit RTL behavior */}
-      </div>
-    </DirectionProvider>
-  )
-}`,
   },
 ]

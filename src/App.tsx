@@ -22,7 +22,6 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card"
-import { ButtonGroupText } from "@/components/ui/button-group"
 import { ItemActions } from "@/components/ui/item"
 import {
   Sidebar,
@@ -138,7 +137,7 @@ function ExampleSection({
   const reset = (
     <Button
       variant="outline"
-      size="sm"
+      size="default"
       onClick={() => setResetKey((value) => value + 1)}
     >
       <RotateCcwIcon data-icon="inline-start" />
@@ -327,7 +326,7 @@ function ComponentPage({ slug }: { slug: string }) {
   return (
     <>
       <PageHeader className="showcase-component__header">
-        <PageHeaderContent>
+        <PageHeaderContent className="w-full">
           <PageHeaderTitle className="showcase-component__title">
             {entry.name}
           </PageHeaderTitle>
@@ -335,9 +334,12 @@ function ComponentPage({ slug }: { slug: string }) {
             {entry.description}
           </PageHeaderDescription>
           {installCommand ? (
-            <ButtonGroupText asChild>
-              <code className="showcase-component__command">{installCommand}</code>
-            </ButtonGroupText>
+            <CodeBlock
+              code={installCommand}
+              label="Install"
+              showLineNumbers={false}
+              className="showcase-component__command"
+            />
           ) : null}
         </PageHeaderContent>
       </PageHeader>

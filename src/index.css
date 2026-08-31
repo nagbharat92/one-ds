@@ -25,6 +25,16 @@
     --color-input: var(--input);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
+    --color-badge-blue-foreground: var(--badge-blue-foreground);
+    --color-badge-blue: var(--badge-blue);
+    --color-badge-green-foreground: var(--badge-green-foreground);
+    --color-badge-green: var(--badge-green);
+    --color-badge-sky-foreground: var(--badge-sky-foreground);
+    --color-badge-sky: var(--badge-sky);
+    --color-badge-purple-foreground: var(--badge-purple-foreground);
+    --color-badge-purple: var(--badge-purple);
+    --color-badge-red-foreground: var(--badge-red-foreground);
+    --color-badge-red: var(--badge-red);
     --color-presence-available: var(--presence-available);
     --color-presence-busy: var(--presence-busy);
     --color-presence-away: var(--presence-away);
@@ -73,6 +83,19 @@
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
 
+     /* Badge expressions. Pale surfaces keep compact labels legible while the
+       foreground carries the hue and contrast. */
+     --badge-blue: oklch(0.95 0.04 255);
+     --badge-blue-foreground: oklch(0.46 0.2 260);
+     --badge-green: oklch(0.95 0.05 150);
+     --badge-green-foreground: oklch(0.41 0.14 150);
+     --badge-sky: oklch(0.95 0.04 225);
+     --badge-sky-foreground: oklch(0.46 0.15 230);
+     --badge-purple: oklch(0.96 0.05 300);
+     --badge-purple-foreground: oklch(0.46 0.18 300);
+     --badge-red: oklch(0.95 0.04 25);
+     --badge-red-foreground: oklch(0.5 0.2 25);
+
     /* Presence. The only chromatic accents in an otherwise neutral palette,
        because a person's availability has to read at a glance. */
     --presence-available: oklch(0.63 0.16 149);
@@ -80,12 +103,31 @@
     --presence-away: oklch(0.75 0.15 75);
     --presence-offline: var(--muted-foreground);
 
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.488 0.243 264.376);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
     --radius: 0.625rem;
+
+     /* Media geometry. Components consume named ratios so image, artwork,
+       chart and illustration surfaces stay coordinated from one scale. */
+     --aspect-ratio-square: 1 / 1;
+     --aspect-ratio-landscape: 16 / 9;
+     --aspect-ratio-portrait: 3 / 4;
+
+    /* Card spacing scale. Every part resolves the same named inset. */
+    --card-spacing-small: calc(var(--spacing) * 3);
+    --card-spacing-default: calc(var(--spacing) * 4);
+    --card-spacing-comfortable: calc(var(--spacing) * 5);
+    --card-spacing-roomy: calc(var(--spacing) * 6);
+    --card-spacing-spacious: calc(var(--spacing) * 8);
+    --card-media-overlay: color-mix(in oklab, var(--primary) 35%, transparent);
+    --code-block-header-padding: calc(var(--spacing) * 4);
+    --code-block-padding-block: calc(var(--spacing) * 4);
+    --code-block-padding-inline: calc(var(--spacing) * 4);
+    --code-block-line-number-width: calc(var(--spacing) * 10);
+    --code-block-line-number-gap: calc(var(--spacing) * 4);
 
     /* Motion. Every token names a SPEED, never a count of milliseconds —
        pick how the change should read and let the scale own the timing. */
@@ -100,6 +142,18 @@
     --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    --collapsible-speed: var(--speed-brisk);
+    --collapsible-ease: var(--ease-glide);
+
+     /* Skeleton. A high-contrast travelling highlight reads more clearly than
+       a whole-surface opacity pulse while retaining the neutral palette. */
+    --skeleton-shimmer-speed: calc(var(--speed-pulse) * 2);
+    --skeleton-shimmer-angle: 110deg;
+    --skeleton-shimmer-edge-strength: 3%;
+    --skeleton-shimmer-mid-strength: 9%;
+    --skeleton-shimmer-peak-strength: 14%;
+    --skeleton-shimmer-spread: 32%;
+     --skeleton-shimmer-size: 200% 100%;
 
     /* Elevation. Two shadows per step: a tight ambient contact shadow plus a
        wider key shadow, so a lifted surface reads without a heavy edge. */
@@ -217,7 +271,6 @@
     --showcase-copy-width: calc(var(--spacing) * 192);
     --showcase-preview-min-height: calc(var(--spacing) * 72);
     --showcase-preview-viewport-height: calc(var(--spacing) * 112);
-    --showcase-calendar-cell-size-lg: calc(var(--spacing) * 10);
     --showcase-preview-padding: calc(var(--spacing) * 8);
     --showcase-preview-grid: calc(var(--spacing) * 6);
     --showcase-preview-dot: 1px;
@@ -237,6 +290,17 @@
     --showcase-sidebar-width: calc(var(--spacing) * 64);
     --scroll-fade-size: min(12%, calc(var(--spacing) * 10));
     --scroll-fade-reveal: calc(var(--spacing) * 8);
+    --carousel-stroke-clearance: 1px;
+    --carousel-control-inset: calc(var(--spacing) * 2);
+    --carousel-gap: calc(var(--spacing) * 4);
+    --carousel-item-padding: calc(var(--carousel-gap) / 2);
+    --carousel-slide-size: calc(100% - var(--scroll-fade-size) * 2);
+    --carousel-speed: var(--speed-swift);
+    --carousel-auto-speed: 5000ms;
+    --carousel-dot-size: calc(var(--spacing) * 1.5);
+    --carousel-progress-width: calc(var(--spacing) * 8);
+    --carousel-progress-gap: calc(var(--spacing) * 2);
+    --carousel-progress-inset: calc(var(--spacing) * 4);
     --scrollbar-size: calc(var(--spacing) * 1.5);
     --scrollbar-radius: var(--radius-lg);
     --scrollbar-thumb: color-mix(in oklab, var(--foreground) 25%, transparent);
@@ -261,7 +325,6 @@
     --coachmark-media-inset-block-start: calc(
         var(--coachmark-padding-block-start) * -1
     );
-    --coachmark-media-aspect: 16 / 9;
     --coachmark-beacon-size: calc(var(--spacing) * 3);
     --coachmark-beacon-scale: 2.5;
     --coachmark-beacon-opacity: 0.5;
@@ -285,16 +348,26 @@
     --accent: oklch(0.269 0 0);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
+    --badge-blue: oklch(0.3 0.08 255);
+    --badge-blue-foreground: oklch(0.84 0.11 255);
+    --badge-green: oklch(0.3 0.07 150);
+    --badge-green-foreground: oklch(0.85 0.12 150);
+    --badge-sky: oklch(0.3 0.07 225);
+    --badge-sky-foreground: oklch(0.86 0.1 225);
+    --badge-purple: oklch(0.31 0.08 300);
+    --badge-purple-foreground: oklch(0.86 0.11 300);
+    --badge-red: oklch(0.31 0.08 25);
+    --badge-red-foreground: oklch(0.86 0.11 25);
     --presence-available: oklch(0.72 0.17 149);
     --presence-away: oklch(0.81 0.15 75);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --chart-1: oklch(0.72 0.19 41.116);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.68 0.2 264.376);
+    --chart-4: oklch(0.72 0.2 303.9);
+    --chart-5: oklch(0.72 0.19 16.439);
     /* A shadow has to be far denser on a dark canvas to register at all. */
     --elevation-ambient: oklch(0 0 0 / 0.3);
     --elevation-key: oklch(0 0 0 / 0.55);
@@ -356,6 +429,108 @@
   }
 }
 
+/* Embla moves its track with transforms rather than native scroll position.
+   Keep the shared scroll-fade mask, but drive its logical edges from Embla's
+   actual ability to move so the fade remains truthful at both endpoints. */
+@layer utilities {
+  [data-slot="carousel-content"] {
+    animation: none;
+  }
+
+  [data-slot="carousel-content"][data-orientation="horizontal"][data-can-scroll-start="true"] {
+    --scroll-fade-s: var(--scroll-fade-size);
+  }
+
+  [data-slot="carousel-content"][data-orientation="horizontal"][data-can-scroll-end="true"] {
+    --scroll-fade-e: var(--scroll-fade-size);
+  }
+
+  [data-slot="carousel-content"][data-orientation="vertical"][data-can-scroll-start="true"] {
+    --scroll-fade-t: var(--scroll-fade-size);
+  }
+
+  [data-slot="carousel-content"][data-orientation="vertical"][data-can-scroll-end="true"] {
+    --scroll-fade-b: var(--scroll-fade-size);
+  }
+}
+
+@keyframes carousel-progress-fill {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes collapsible-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes collapsible-up {
+  from {
+    height: var(--radix-collapsible-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+@layer components {
+  [data-slot="collapsible-content"][data-state="open"] {
+    animation: collapsible-down var(--collapsible-speed) var(--collapsible-ease);
+  }
+
+  [data-slot="collapsible-content"][data-state="closed"] {
+    animation: collapsible-up var(--collapsible-speed) var(--collapsible-ease);
+  }
+
+  [data-slot="carousel"] {
+    --carousel-slide-extent: calc(var(--carousel-slide-size) + var(--carousel-gap));
+  }
+
+  [data-slot="carousel"][data-items-per-view="3"] {
+    --carousel-slide-size: calc(
+      (100% - var(--scroll-fade-size) * 2 - var(--carousel-gap) * 2) / 3
+    );
+  }
+
+  [data-slot="carousel"]:has(:focus-visible)
+    :is([data-slot="carousel-previous"], [data-slot="carousel-next"]) {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  [data-slot="carousel-progress"][data-active="true"] [data-slot="progress-indicator"] {
+    animation: carousel-progress-fill var(--carousel-auto-speed) linear forwards;
+  }
+
+  [data-slot="carousel"]:is(:hover, :has(:focus-visible))
+    [data-slot="carousel-progress"][data-active="true"]
+    [data-slot="progress-indicator"] {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="collapsible-content"] {
+    animation: none;
+  }
+
+  [data-slot="carousel-progress"] [data-slot="progress-indicator"] {
+    animation: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -383,6 +558,34 @@
 }
 
 @layer components {
+  [data-slot="card"][data-variant="default"] {
+    --card-spacing: var(--card-spacing-default);
+  }
+
+  [data-slot="card"][data-variant="default"][data-size="sm"] {
+    --card-spacing: var(--card-spacing-small);
+  }
+
+  .card-spacing-default[data-slot="card"] {
+    --card-spacing: var(--card-spacing-default);
+  }
+
+  .card-spacing-comfortable[data-slot="card"] {
+    --card-spacing: var(--card-spacing-comfortable);
+  }
+
+  .card-spacing-roomy[data-slot="card"] {
+    --card-spacing: var(--card-spacing-roomy);
+  }
+
+  .card-spacing-spacious[data-slot="card"] {
+    --card-spacing: var(--card-spacing-spacious);
+  }
+
+  .card-media-overlay {
+    background-color: var(--card-media-overlay);
+  }
+
   [data-slot="tabs-indicator"] {
     --tabs-travel-duration: calc(
       var(--tabs-pivot-speed) * var(--tabs-pivot-distance, 1)
@@ -411,6 +614,7 @@
 
   .showcase-page-content {
     --page-pad-block-start: var(--showcase-content-start);
+    --page-content-gap: var(--showcase-section-gap);
   }
 
   .page-scroll {
@@ -446,13 +650,60 @@
     }
   }
 
+  @keyframes skeleton-shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  .skeleton-shimmer {
+    background-color: var(--muted);
+    background-image: linear-gradient(
+      var(--skeleton-shimmer-angle),
+      var(--muted) calc(50% - var(--skeleton-shimmer-spread)),
+      color-mix(
+        in oklch,
+        var(--muted),
+        var(--foreground) var(--skeleton-shimmer-edge-strength)
+      ) calc(50% - var(--skeleton-shimmer-spread) * 0.75),
+      color-mix(
+        in oklch,
+        var(--muted),
+        var(--foreground) var(--skeleton-shimmer-mid-strength)
+      ) calc(50% - var(--skeleton-shimmer-spread) * 0.35),
+      color-mix(
+        in oklch,
+        var(--muted),
+        var(--foreground) var(--skeleton-shimmer-peak-strength)
+      ) 50%,
+      color-mix(
+        in oklch,
+        var(--muted),
+        var(--foreground) var(--skeleton-shimmer-mid-strength)
+      ) calc(50% + var(--skeleton-shimmer-spread) * 0.35),
+      color-mix(
+        in oklch,
+        var(--muted),
+        var(--foreground) var(--skeleton-shimmer-edge-strength)
+      ) calc(50% + var(--skeleton-shimmer-spread) * 0.75),
+      var(--muted) calc(50% + var(--skeleton-shimmer-spread))
+    );
+    background-repeat: no-repeat;
+    background-size: var(--skeleton-shimmer-size);
+    animation: skeleton-shimmer var(--skeleton-shimmer-speed) linear infinite;
+  }
+
   .coachmark-beacon-pulse {
     animation: coachmark-beacon var(--coachmark-beacon-duration)
       var(--coachmark-beacon-ease) infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .coachmark-beacon-pulse {
+    .coachmark-beacon-pulse,
+    .skeleton-shimmer {
       animation: none;
     }
   }
@@ -523,8 +774,8 @@
   }
 
   .showcase-component__command {
+    inline-size: 100%;
     max-inline-size: 100%;
-    overflow-wrap: anywhere;
   }
 
   .showcase-component__examples {
@@ -607,10 +858,6 @@
 
   .card-preview[data-layout="viewport"] {
     min-block-size: var(--showcase-preview-viewport-height);
-  }
-
-  .showcase-calendar-large {
-    --cell-size: var(--showcase-calendar-cell-size-lg);
   }
 
   .showcase-contained-viewport {

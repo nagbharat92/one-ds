@@ -54,6 +54,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import {
+  Collapsible,
+  CollapsibleContent,
+} from "@/components/ui/collapsible"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -1016,14 +1027,18 @@ function DateInputDemo() {
 
 function TimePickerDemo() {
   const [date, setDate] = useState<Date | undefined>(undefined)
-  const [time, setTime] = useState("12:00")
+  const [time, setTime] = useState({
+    hour: "12",
+    minute: "00",
+    period: "pm",
+  })
   const [open, setOpen] = useState(false)
 
   const combined = useMemo(() => {
     if (!date) return null
-    const [hours, minutes] = time.split(":").map(Number)
+    const hours = Number(time.hour) % 12 + (time.period === "pm" ? 12 : 0)
     const result = new Date(date)
-    result.setHours(hours, minutes, 0, 0)
+    result.setHours(hours, Number(time.minute), 0, 0)
     return result
   }, [date, time])
 
@@ -1041,10 +1056,43 @@ function TimePickerDemo() {
             <Calendar mode="single" selected={date} onSelect={(day) => { setDate(day); setOpen(false) }} />
           </PopoverContent>
         </Popover>
-        <Input type="time" value={time} onChange={(event) => setTime(event.target.value)} className="w-28" />
+        <div className="flex items-center gap-1.5">
+          <Select value={time.hour} onValueChange={(hour) => setTime((current) => ({ ...current, hour }))}>
+            <SelectTrigger aria-label="Hour" className="w-16">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((hour) => (
+                <SelectItem key={hour} value={hour}>{hour}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <span aria-hidden="true" className="text-muted-foreground">:</span>
+          <Select value={time.minute} onValueChange={(minute) => setTime((current) => ({ ...current, minute }))}>
+            <SelectTrigger aria-label="Minute" className="w-16">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: 60 }, (_, minute) => String(minute).padStart(2, "0")).map((minute) => (
+                <SelectItem key={minute} value={minute}>{minute}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={time.period} onValueChange={(period) => setTime((current) => ({ ...current, period }))}>
+            <SelectTrigger aria-label="Period" className="w-16">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="am">am</SelectItem>
+              <SelectItem value="pm">pm</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       {combined && (
-        <p className="text-sm text-muted-foreground">Combined: {format(combined, "PPP p")}</p>
+        <p className="text-sm text-muted-foreground">
+          Combined: {format(combined, "PPP 'at' h:mm")} {format(combined, "a").toLowerCase()}
+        </p>
       )}
     </div>
   )
@@ -1054,21 +1102,28 @@ function NaturalLanguagePickerDemo() {
   const [text, setText] = useState("")
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [feedback, setFeedback] = useState("")
+  const [displayDate, setDisplayDate] = useState<Date | undefined>(undefined)
+  const [displayFeedback, setDisplayFeedback] = useState("")
   const [open, setOpen] = useState(false)
 
   function handleParse() {
     const result = parseDate(text)
     if (result && isValid(result)) {
       setDate(result)
-      setFeedback(`Parsed: ${format(result, "PPP p")}`)
+      setDisplayDate(result)
+      const message = `Parsed: ${format(result, "PPP p")}`
+      setFeedback(message)
+      setDisplayFeedback(message)
     } else {
       setDate(undefined)
-      setFeedback("Could not parse a date from the input.")
+      const message = "Could not parse a date from the input."
+      setFeedback(message)
+      setDisplayFeedback(message)
     }
   }
 
   return (
-    <div className="space-y-3">
+    <div>
       <div className="flex items-center gap-2">
         <Input
           className="w-64"
@@ -1084,20 +1139,28 @@ function NaturalLanguagePickerDemo() {
           </Button>
         )}
       </div>
-      {feedback && <p className="text-sm text-muted-foreground">{feedback}</p>}
-      {date && (
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-60 justify-start text-left font-normal">
-              <CalendarIcon className="mr-2 size-4" />
-              {format(date, "PPP")}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar mode="single" selected={date} onSelect={(day) => { setDate(day); if (day) setFeedback(`Selected: ${format(day, "PPP")}`); setOpen(false) }} />
-          </PopoverContent>
-        </Popover>
-      )}
+      <Collapsible open={Boolean(feedback)}>
+        <CollapsibleContent className="pt-3">
+          <p className="text-sm text-muted-foreground">{displayFeedback}</p>
+        </CollapsibleContent>
+      </Collapsible>
+      <Collapsible open={Boolean(date)}>
+        <CollapsibleContent className="pt-3">
+          {displayDate && (
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-60 justify-start text-left font-normal">
+                  <CalendarIcon className="mr-2 size-4" />
+                  {format(displayDate, "PPP")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar mode="single" selected={displayDate} onSelect={(day) => { setDate(day); if (day) { setDisplayDate(day); const message = `Selected: ${format(day, "PPP")}`; setFeedback(message); setDisplayFeedback(message) }; setOpen(false) }} />
+              </PopoverContent>
+            </Popover>
+          )}
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   )
 }

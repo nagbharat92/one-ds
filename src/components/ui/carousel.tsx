@@ -7,6 +7,7 @@ import useEmblaCarousel, {
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
 type CarouselApi = UseEmblaCarouselType[1]
@@ -15,6 +16,7 @@ type CarouselOptions = UseCarouselParameters[0]
 type CarouselPlugin = UseCarouselParameters[1]
 
 type CarouselProps = {
+  itemsPerView?: 1 | 3
   opts?: CarouselOptions
   plugins?: CarouselPlugin
   orientation?: "horizontal" | "vertical"
@@ -28,6 +30,9 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
+  selectedIndex: number
+  slideCount: number
+  scrollTo: (index: number) => void
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -43,6 +48,7 @@ function useCarousel() {
 }
 
 function Carousel({
+  itemsPerView = 1,
   orientation = "horizontal",
   opts,
   setApi,
@@ -53,6 +59,8 @@ function Carousel({
 }: React.ComponentProps<"div"> & CarouselProps) {
   const [carouselRef, api] = useEmblaCarousel(
     {
+      align: "center",
+      loop: true,
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
     },
@@ -60,11 +68,15 @@ function Carousel({
   )
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [slideCount, setSlideCount] = React.useState(0)
 
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) return
     setCanScrollPrev(api.canScrollPrev())
     setCanScrollNext(api.canScrollNext())
+    setSelectedIndex(api.selectedScrollSnap())
+    setSlideCount(api.scrollSnapList().length)
   }, [])
 
   const scrollPrev = React.useCallback(() => {
@@ -74,6 +86,13 @@ function Carousel({
   const scrollNext = React.useCallback(() => {
     api?.scrollNext()
   }, [api])
+
+  const scrollTo = React.useCallback(
+    (index: number) => {
+      api?.scrollTo(index)
+    },
+    [api]
+  )
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -109,6 +128,7 @@ function Carousel({
       value={{
         carouselRef,
         api: api,
+        itemsPerView,
         opts,
         orientation:
           orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
@@ -116,14 +136,18 @@ function Carousel({
         scrollNext,
         canScrollPrev,
         canScrollNext,
+        selectedIndex,
+        slideCount,
+        scrollTo,
       }}
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        className={cn("group/carousel relative", className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
+        data-items-per-view={itemsPerView}
         {...props}
       >
         {children}
@@ -133,18 +157,24 @@ function Carousel({
 }
 
 function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
-  const { carouselRef, orientation } = useCarousel()
+  const { carouselRef, orientation, canScrollPrev, canScrollNext } = useCarousel()
 
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className={cn(
+        "overflow-hidden p-(--carousel-stroke-clearance)",
+        orientation === "horizontal" ? "scroll-fade-x" : "scroll-fade-y"
+      )}
       data-slot="carousel-content"
+      data-orientation={orientation}
+      data-can-scroll-start={canScrollPrev}
+      data-can-scroll-end={canScrollNext}
     >
       <div
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          orientation === "vertical" && "flex-col gap-(--carousel-gap)",
           className
         )}
         {...props}
@@ -162,8 +192,10 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        "min-w-0 shrink-0 grow-0",
+        orientation === "horizontal"
+          ? "basis-(--carousel-slide-extent) px-(--carousel-item-padding)"
+          : "basis-full",
         className
       )}
       {...props}
@@ -185,10 +217,10 @@ function CarouselPrevious({
       variant={variant}
       size={size}
       className={cn(
-        "absolute touch-manipulation rounded-full",
+        "pointer-events-none absolute z-10 touch-manipulation rounded-full opacity-0 transition-opacity duration-(--carousel-speed) ease-(--ease-settle) group-hover/carousel:pointer-events-auto group-hover/carousel:opacity-100 motion-reduce:transition-none",
         orientation === "horizontal"
-          ? "inset-y-0 -left-12 my-auto"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          ? "inset-y-0 inset-s-(--carousel-control-inset) my-auto"
+          : "top-(--carousel-control-inset) left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollPrev}
@@ -215,10 +247,10 @@ function CarouselNext({
       variant={variant}
       size={size}
       className={cn(
-        "absolute touch-manipulation rounded-full",
+        "pointer-events-none absolute z-10 touch-manipulation rounded-full opacity-0 transition-opacity duration-(--carousel-speed) ease-(--ease-settle) group-hover/carousel:pointer-events-auto group-hover/carousel:opacity-100 motion-reduce:transition-none",
         orientation === "horizontal"
-          ? "inset-y-0 -right-12 my-auto"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          ? "inset-y-0 inset-e-(--carousel-control-inset) my-auto"
+          : "bottom-(--carousel-control-inset) left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollNext}
@@ -231,6 +263,62 @@ function CarouselNext({
   )
 }
 
+function CarouselProgress({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const { api, selectedIndex, slideCount, scrollTo } = useCarousel()
+
+  const handleAnimationEnd = React.useCallback(
+    (event: React.AnimationEvent<HTMLDivElement>) => {
+      if (
+        event.animationName === "carousel-progress-fill" &&
+        (event.target as HTMLElement).dataset.slot === "progress-indicator"
+      ) {
+        api?.scrollNext()
+      }
+    },
+    [api]
+  )
+
+  if (slideCount < 2) return null
+
+  return (
+    <div
+      data-slot="carousel-progress-group"
+      className={cn(
+        "absolute inset-x-0 bottom-(--carousel-progress-inset) z-10 flex items-center justify-center gap-(--carousel-progress-gap)",
+        className
+      )}
+      onAnimationEnd={handleAnimationEnd}
+      {...props}
+    >
+      {Array.from({ length: slideCount }).map((_, index) => {
+        const active = index === selectedIndex
+
+        return (
+          <button
+            key={index}
+            type="button"
+            data-slot="carousel-progress"
+            data-active={active}
+            aria-label={`Go to slide ${index + 1}`}
+            aria-current={active ? "true" : undefined}
+            className="h-(--carousel-dot-size) w-(--carousel-dot-size) cursor-pointer rounded-full p-0 transition-[width] duration-(--carousel-speed) ease-(--ease-glide) data-[active=true]:w-(--carousel-progress-width)"
+            onClick={() => scrollTo(index)}
+          >
+            <Progress
+              value={0}
+              aria-hidden="true"
+              className="h-full bg-foreground/20"
+            />
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -238,5 +326,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselProgress,
   useCarousel,
 }

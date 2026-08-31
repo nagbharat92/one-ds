@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import {
+  ArrowUpRightIcon,
+  BadgeCheckIcon,
   ArrowRightIcon,
+  BookmarkIcon,
   ChevronDownIcon,
   FolderIcon,
   ImageIcon,
@@ -11,15 +14,14 @@ import {
   MailIcon,
   SearchIcon,
   SettingsIcon,
-  ShieldIcon,
   StarIcon,
   UserIcon,
   UsersIcon,
-  ZapIcon,
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
+import { CodeBlock } from "@/components/code-block"
 import {
   Avatar,
   AvatarBadge,
@@ -32,14 +34,17 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
+  CardMedia,
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Scroller } from "@/components/ui/scroller"
 import { Spinner } from "@/components/ui/spinner"
 import {
   Table,
@@ -67,7 +72,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
+  CarouselProgress,
 } from "@/components/ui/carousel"
 import {
   ChartContainer,
@@ -105,108 +110,317 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group"
 
 const chartData = [
-  { month: "Jan", desktop: 186 },
-  { month: "Feb", desktop: 305 },
-  { month: "Mar", desktop: 237 },
-  { month: "Apr", desktop: 173 },
-  { month: "May", desktop: 209 },
-  { month: "Jun", desktop: 264 },
+  { date: "Apr 1", desktop: 222, mobile: 150 },
+  { date: "Apr 2", desktop: 97, mobile: 180 },
+  { date: "Apr 3", desktop: 167, mobile: 120 },
+  { date: "Apr 4", desktop: 242, mobile: 260 },
+  { date: "Apr 5", desktop: 373, mobile: 290 },
+  { date: "Apr 6", desktop: 301, mobile: 340 },
+  { date: "Apr 7", desktop: 245, mobile: 180 },
+  { date: "Apr 8", desktop: 409, mobile: 320 },
+  { date: "Apr 9", desktop: 59, mobile: 110 },
+  { date: "Apr 10", desktop: 261, mobile: 190 },
+  { date: "Apr 11", desktop: 327, mobile: 350 },
+  { date: "Apr 12", desktop: 292, mobile: 210 },
+  { date: "Apr 13", desktop: 342, mobile: 380 },
+  { date: "Apr 14", desktop: 137, mobile: 220 },
+  { date: "Apr 15", desktop: 120, mobile: 170 },
+  { date: "Apr 16", desktop: 138, mobile: 190 },
+  { date: "Apr 17", desktop: 446, mobile: 360 },
+  { date: "Apr 18", desktop: 364, mobile: 410 },
+  { date: "Apr 19", desktop: 243, mobile: 180 },
+  { date: "Apr 20", desktop: 89, mobile: 150 },
+  { date: "Apr 21", desktop: 137, mobile: 200 },
+  { date: "Apr 22", desktop: 224, mobile: 270 },
+  { date: "Apr 23", desktop: 138, mobile: 170 },
+  { date: "Apr 24", desktop: 387, mobile: 390 },
+  { date: "Apr 25", desktop: 215, mobile: 240 },
+  { date: "Apr 26", desktop: 75, mobile: 130 },
+  { date: "Apr 27", desktop: 383, mobile: 420 },
+  { date: "Apr 28", desktop: 122, mobile: 160 },
+  { date: "Apr 29", desktop: 315, mobile: 350 },
+  { date: "Apr 30", desktop: 454, mobile: 390 },
 ]
 
+type ChartSeries = "desktop" | "mobile"
+
 const chartConfig = {
-  desktop: { label: "Desktop", color: "var(--chart-1)" },
+  desktop: { label: "Desktop", color: "var(--chart-2)" },
+  mobile: { label: "Mobile", color: "var(--chart-4)" },
 } satisfies ChartConfig
 
-function CarouselApiDemo() {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
+const chartTotals = chartData.reduce(
+  (totals, item) => ({
+    desktop: totals.desktop + item.desktop,
+    mobile: totals.mobile + item.mobile,
+  }),
+  { desktop: 0, mobile: 0 },
+)
 
-  useEffect(() => {
-    if (!api) return
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-    api.on("select", () => setCurrent(api.selectedScrollSnap() + 1))
-  }, [api])
+function ChartInteractiveDemo() {
+  const [activeSeries, setActiveSeries] = useState<ChartSeries>("desktop")
 
   return (
-    <div className="flex w-full max-w-xs flex-col items-center gap-2">
-      <Carousel setApi={setApi} className="w-full">
-        <CarouselContent>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <CarouselItem key={i}>
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{i + 1}</span>
-                </CardContent>
-              </Card>
-            </CarouselItem>
+    <Card className="@container/chart-card w-full max-w-3xl gap-0 py-0">
+      <div className="grid border-b @xl/chart-card:flex">
+        <CardHeader className="justify-center py-6 @xl/chart-card:flex-1">
+          <CardTitle>Visitors by device</CardTitle>
+          <CardDescription>
+            Daily visitors during the last 30 days
+          </CardDescription>
+        </CardHeader>
+        <div className="grid grid-cols-2 border-t @xl/chart-card:border-t-0 @xl/chart-card:border-s">
+          {(Object.keys(chartConfig) as ChartSeries[]).map((series) => (
+            <button
+              key={series}
+              type="button"
+              aria-pressed={activeSeries === series}
+              className="min-w-36 border-e px-6 py-5 text-start transition-colors outline-none last:border-e-0 hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50 aria-pressed:bg-muted/50"
+              onClick={() => setActiveSeries(series)}
+            >
+              <span className="block text-sm text-muted-foreground">
+                {chartConfig[series].label}
+              </span>
+              <span className="block text-3xl font-semibold tracking-tight tabular-nums">
+                {chartTotals[series].toLocaleString()}
+              </span>
+            </button>
           ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-      <p className="text-sm text-muted-foreground">
-        Slide {current} of {count}
-      </p>
+        </div>
+      </div>
+      <CardContent className="px-2 pt-6 pb-4 sm:px-6 sm:pt-8">
+        <ChartContainer config={chartConfig} className="min-h-64 w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              interval="preserveStartEnd"
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideIndicator />}
+            />
+            <Bar
+              dataKey={activeSeries}
+              fill={"var(--color-" + activeSeries + ")"}
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  )
+}
+
+const cardSpacingOptions = [
+  { className: "card-spacing-default", label: "16px", value: "default" },
+  {
+    className: "card-spacing-comfortable",
+    label: "20px",
+    value: "comfortable",
+  },
+  { className: "card-spacing-roomy", label: "24px", value: "roomy" },
+  { className: "card-spacing-spacious", label: "32px", value: "spacious" },
+]
+
+function CardLoginDemo() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription>
+          Enter your email below to login to your account
+        </CardDescription>
+        <CardAction>
+          <Button variant="link">Sign Up</Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={(event) => event.preventDefault()}>
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="card-email">Email</Label>
+              <Input
+                id="card-email"
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="card-password">Password</Label>
+                <a
+                  href="#"
+                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  onClick={(event) => event.preventDefault()}
+                >
+                  Forgot your password?
+                </a>
+              </div>
+              <Input id="card-password" type="password" required />
+            </div>
+          </div>
+        </form>
+      </CardContent>
+      <CardFooter className="flex-col gap-2">
+        <Button type="submit" className="w-full">
+          Login
+        </Button>
+        <Button variant="outline" className="w-full">
+          Login with Google
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function CardSpacingDemo() {
+  const [spacing, setSpacing] = useState("default")
+  const selectedSpacing = cardSpacingOptions.find(
+    (option) => option.value === spacing,
+  )
+
+  return (
+    <div className="mx-auto grid w-full max-w-sm gap-4">
+      <ToggleGroup
+        type="single"
+        value={spacing}
+        onValueChange={(value) => value && setSpacing(value)}
+        variant="outline"
+        size="sm"
+        className="justify-center"
+        aria-label="Card spacing"
+      >
+        {cardSpacingOptions.map((option) => (
+          <ToggleGroupItem key={option.value} value={option.value}>
+            {option.label}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+      <Card className={selectedSpacing?.className}>
+        <CardHeader>
+          <CardTitle>Login to your account</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account
+          </CardDescription>
+          <CardAction>
+            <Button variant="link">Sign Up</Button>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={(event) => event.preventDefault()}>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="card-spacing-email">Email</Label>
+                <Input
+                  id="card-spacing-email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="card-spacing-password">Password</Label>
+                  <a
+                    href="#"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                    onClick={(event) => event.preventDefault()}
+                  >
+                    Forgot your password?
+                  </a>
+                </div>
+                <Input id="card-spacing-password" type="password" required />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex-col gap-2">
+          <Button type="submit" className="w-full">
+            Login
+          </Button>
+          <Button variant="outline" className="w-full">
+            Login with Google
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   )
 }
 
-function CarouselPluginsDemo() {
-  const [api, setApi] = useState<CarouselApi>()
-  const intervalRef = useRef<ReturnType<typeof setInterval>>(null)
-  const [playing, setPlaying] = useState(true)
-
-  const start = useCallback(() => {
-    if (!api) return
-    if (intervalRef.current) clearInterval(intervalRef.current)
-    intervalRef.current = setInterval(() => {
-      if (api.canScrollNext()) api.scrollNext()
-      else api.scrollTo(0)
-    }, 2500)
-    setPlaying(true)
-  }, [api])
-
-  const stop = useCallback(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current)
-    intervalRef.current = null
-    setPlaying(false)
-  }, [])
-
-  useEffect(() => {
-    if (!api) return
-    start()
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
-  }, [api, start])
-
+function CardEdgeToEdgeDemo() {
   return (
-    <div className="flex w-full max-w-xs flex-col items-center gap-3">
-      <Carousel setApi={setApi} className="w-full">
-        <CarouselContent>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <CarouselItem key={i}>
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{i + 1}</span>
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => (playing ? stop() : start())}
-      >
-        {playing ? "Pause" : "Play"}
-      </Button>
-    </div>
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Terms of Service</CardTitle>
+        <CardDescription>
+          Review the terms before accepting the agreement.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="-mb-(--card-spacing)">
+        <div className="-mx-(--card-spacing) border-t bg-muted/50">
+          <Scroller className="max-h-48 space-y-4 px-(--card-spacing) py-4 text-sm leading-relaxed">
+            <p>
+              These terms govern your use of the workspace, including access to
+              shared documents, project files, and collaboration tools.
+            </p>
+            <p>
+              You are responsible for the content you upload and for ensuring
+              that your team has the appropriate permissions to view or edit it.
+            </p>
+            <p>
+              We may update features or limits as the service evolves. When
+              those changes materially affect your workflow, we will notify your
+              workspace administrators.
+            </p>
+            <p>
+              By continuing, you agree to keep your account credentials secure
+              and to follow your organization&apos;s acceptable use policies.
+            </p>
+          </Scroller>
+        </div>
+      </CardContent>
+      <CardFooter className="justify-end gap-2">
+        <Button variant="outline">Decline</Button>
+        <Button>Accept</Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function CardImageDemo() {
+  return (
+    <Card className="relative w-full max-w-sm">
+      <CardMedia>
+        <div className="card-media-overlay absolute inset-0 z-30" />
+        <img
+          src="https://avatar.vercel.sh/shadcn1"
+          alt="Event cover"
+          className="relative z-20 grayscale"
+        />
+      </CardMedia>
+      <CardHeader>
+        <CardAction>
+          <Badge variant="secondary">Featured</Badge>
+        </CardAction>
+        <CardTitle>Design systems meetup</CardTitle>
+        <CardDescription>
+          A practical talk on component APIs, accessibility, and shipping
+          faster.
+        </CardDescription>
+      </CardHeader>
+      <CardFooter>
+        <Button className="w-full">View Event</Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -255,19 +469,6 @@ export function AvatarDemo() {
               <AvatarBadge />
             </Avatar>
           </div>
-        ),
-      },
-      {
-        name: "Badge with Icon",
-        description: "Avatar badge with a small icon overlay.",
-        Demo: () => (
-          <Avatar size="lg">
-            <AvatarImage src={persona.avatar} alt="" />
-            <AvatarFallback>{persona.initials}</AvatarFallback>
-            <AvatarBadge>
-              <ZapIcon />
-            </AvatarBadge>
-          </Avatar>
         ),
       },
       {
@@ -407,36 +608,47 @@ export function BadgeDemo() {
     examples: [
       {
         name: "With Icon",
-        description: "Badge with a leading icon.",
+        description: "Badges with an icon at either inline edge.",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
-            <Badge><ShieldIcon data-icon="inline-start" />Secure</Badge>
-            <Badge variant="secondary"><StarIcon data-icon="inline-start" />Featured</Badge>
-            <Badge variant="destructive"><ZapIcon data-icon="inline-start" />Critical</Badge>
-            <Badge variant="outline"><MailIcon data-icon="inline-start" />Inbox</Badge>
+            <Badge variant="secondary">
+              <BadgeCheckIcon data-icon="inline-start" />
+              Verified
+            </Badge>
+            <Badge variant="outline">
+              Bookmark
+              <BookmarkIcon data-icon="inline-end" />
+            </Badge>
           </div>
         ),
       },
       {
         name: "With Spinner",
-        description: "Badge with a loading spinner.",
+        description: "Badges with a spinner at either inline edge.",
         Demo: () => (
-          <Badge variant="secondary">
-            <Spinner className="size-3" />
-            Syncing
-          </Badge>
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge variant="destructive">
+              <Spinner data-icon="inline-start" />
+              Deleting
+            </Badge>
+            <Badge variant="secondary">
+              Generating
+              <Spinner data-icon="inline-end" />
+            </Badge>
+          </div>
         ),
       },
       {
         name: "Link",
         description: "Badge rendered as a clickable link.",
         Demo: () => (
-          <Badge variant="link" asChild>
+          <Badge asChild>
             <a
               href="https://github.com/shadcn-ui/ui"
               onClick={(e) => e.preventDefault()}
             >
-              shadcn/ui
+              Open link
+              <ArrowUpRightIcon data-icon="inline-end" />
             </a>
           </Badge>
         ),
@@ -446,11 +658,11 @@ export function BadgeDemo() {
         description: "Badges with semantic color overrides.",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
-            <Badge className="bg-chart-1 text-white">Chart 1</Badge>
-            <Badge className="bg-chart-2 text-white">Chart 2</Badge>
-            <Badge className="bg-chart-3 text-white">Chart 3</Badge>
-            <Badge className="bg-chart-4 text-white">Chart 4</Badge>
-            <Badge className="bg-chart-5 text-white">Chart 5</Badge>
+            <Badge className="bg-badge-blue text-badge-blue-foreground">Blue</Badge>
+            <Badge className="bg-badge-green text-badge-green-foreground">Green</Badge>
+            <Badge className="bg-badge-sky text-badge-sky-foreground">Sky</Badge>
+            <Badge className="bg-badge-purple text-badge-purple-foreground">Purple</Badge>
+            <Badge className="bg-badge-red text-badge-red-foreground">Red</Badge>
           </div>
         ),
       },
@@ -461,131 +673,95 @@ export function BadgeDemo() {
     name: "Card",
     description: "Displays a card with header, content, and footer.",
     category: "Data Display",
-    Demo: () => (
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Create project</CardTitle>
-          <CardDescription>Deploy your new project in one click.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3">
-            <Label htmlFor="demo-card-name">Name</Label>
-            <Input id="demo-card-name" placeholder="Name of your project" />
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button>Deploy</Button>
-        </CardFooter>
-      </Card>
-    ),
+    Demo: CardLoginDemo,
     code: `import { Button } from "@/components/ui/button"
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export function CardDemo() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one click.</CardDescription>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription>
+          Enter your email below to login to your account
+        </CardDescription>
+        <CardAction>
+          <Button variant="link">Sign Up</Button>
+        </CardAction>
       </CardHeader>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
+      <CardContent>
+        <form>
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" placeholder="m@example.com" required />
+            </div>
+            <div className="grid gap-2">
+              <div className="flex items-center">
+                <Label htmlFor="password">Password</Label>
+                <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
+                  Forgot your password?
+                </a>
+              </div>
+              <Input id="password" type="password" required />
+            </div>
+          </div>
+        </form>
+      </CardContent>
+      <CardFooter className="flex-col gap-2">
+        <Button type="submit" className="w-full">Login</Button>
+        <Button variant="outline" className="w-full">Login with Google</Button>
       </CardFooter>
     </Card>
   )
 }`,
     examples: [
       {
-        name: "Sizes",
-        description: "Default and small card sizes.",
-        Demo: () => (
-          <div className="flex flex-wrap items-start gap-4">
-            <Card className="w-full max-w-xs">
-              <CardHeader>
-                <CardTitle>Default</CardTitle>
-                <CardDescription>Standard spacing and type.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">Card body content.</p>
-              </CardContent>
-            </Card>
-            <Card size="sm" className="w-full max-w-xs">
-              <CardHeader>
-                <CardTitle>Small</CardTitle>
-                <CardDescription>Tighter spacing.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">Card body content.</p>
-              </CardContent>
-            </Card>
-          </div>
-        ),
-      },
-      {
         name: "Spacing",
-        description: "Card with separated header, content, and footer.",
-        Demo: () => (
-          <Card className="w-full max-w-sm">
-            <CardHeader className="border-b">
-              <CardTitle>Account</CardTitle>
-              <CardDescription>Manage your account settings.</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="grid gap-3">
-                <Label htmlFor="card-spacing-email">Email</Label>
-                <Input id="card-spacing-email" placeholder="you@example.com" />
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-              <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
-            </CardFooter>
-          </Card>
-        ),
+        description:
+          "Adjust the spacing between sections and the inset of every card part.",
+        Demo: CardSpacingDemo,
       },
       {
-        name: "Preview Canvas",
-        description: "The centered white card used to stage every showcase example.",
+        name: "Edge to Edge",
+        description:
+          "Use negative card-spacing margins for full-width content that stays aligned with the card inset.",
+        Demo: CardEdgeToEdgeDemo,
+      },
+      {
+        name: "Code",
+        description:
+          "A themed card for readable code with line numbers and a copy action.",
         Demo: () => (
-          <Card variant="preview" className="min-h-48 w-full max-w-md">
-            <Button variant="outline">Component preview</Button>
-          </Card>
+          <CodeBlock
+            className="h-64 w-full max-w-md"
+            label="card.tsx"
+            code={`import { Card, CardContent } from "@/components/ui/card"
+
+export function Example() {
+  return (
+    <Card>
+      <CardContent>Theme-aware code card</CardContent>
+    </Card>
+  )
+}`}
+          />
         ),
-        code: `<Card variant="preview">
-  <YourComponent />
-</Card>`,
       },
       {
         name: "Image",
-        description: "Card with a top image.",
-        Demo: () => (
-          <Card className="w-full max-w-sm">
-            <img
-              src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
-              alt="Landscape"
-              className="aspect-video w-full object-cover"
-            />
-            <CardHeader>
-              <CardTitle>Mountain view</CardTitle>
-              <CardDescription>A landscape photograph from Unsplash.</CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Button variant="outline" size="sm">
-                <LinkIcon />
-                Share
-              </Button>
-            </CardFooter>
-          </Card>
-        ),
+        description: "Add an image before the card header.",
+        Demo: CardImageDemo,
       },
     ],
   },
@@ -760,7 +936,7 @@ export function TableDemo() {
     Demo: () => (
       <Item className="w-full max-w-sm rounded-lg border">
         <ItemMedia>
-          <Avatar>
+          <Avatar size="lg">
             <AvatarImage src={persona.avatar} alt="" />
             <AvatarFallback>{persona.initials}</AvatarFallback>
           </Avatar>
@@ -789,7 +965,7 @@ export function ItemDemo() {
   return (
     <Item className="rounded-lg border">
       <ItemMedia>
-        <Avatar>
+        <Avatar size="lg">
           <AvatarFallback>{persona.initials}</AvatarFallback>
         </Avatar>
       </ItemMedia>
@@ -940,7 +1116,7 @@ export function ItemDemo() {
         Demo: () => (
           <Item variant="outline" className="w-full max-w-sm">
             <ItemMedia>
-              <Avatar size="sm">
+              <Avatar size="lg">
                 <AvatarFallback>{persona.teammates[0].initials}</AvatarFallback>
               </Avatar>
             </ItemMedia>
@@ -975,7 +1151,7 @@ export function ItemDemo() {
   {
     slug: "carousel",
     name: "Carousel",
-    description: "A carousel with motion and swipe, built using Embla.",
+    description: "A horizontal carousel with swipe, controls, and edge fades.",
     category: "Data Display",
     Demo: () => (
       <Carousel className="w-full max-w-xs">
@@ -983,9 +1159,11 @@ export function ItemDemo() {
           {Array.from({ length: 5 }).map((_, index) => (
             <CarouselItem key={index}>
               <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <span className="text-4xl font-semibold">{index + 1}</span>
-                </CardContent>
+                <AspectRatio ratio="square" asChild>
+                  <CardContent className="flex items-center justify-center p-6">
+                    <span className="text-4xl font-semibold">{index + 1}</span>
+                  </CardContent>
+                </AspectRatio>
               </Card>
             </CarouselItem>
           ))}
@@ -1000,6 +1178,7 @@ export function ItemDemo() {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselProgress,
 } from "@/components/ui/carousel"
 
 export function CarouselDemo() {
@@ -1009,9 +1188,11 @@ export function CarouselDemo() {
         {Array.from({ length: 5 }).map((_, index) => (
           <CarouselItem key={index}>
             <Card>
-              <CardContent className="flex aspect-square items-center justify-center p-6">
-                <span className="text-4xl font-semibold">{index + 1}</span>
-              </CardContent>
+              <AspectRatio ratio="square" asChild>
+                <CardContent className="flex items-center justify-center p-6">
+                  <span className="text-4xl font-semibold">{index + 1}</span>
+                </CardContent>
+              </AspectRatio>
             </Card>
           </CarouselItem>
         ))}
@@ -1023,18 +1204,20 @@ export function CarouselDemo() {
 }`,
     examples: [
       {
-        name: "Sizes",
-        description: "Slides at different fractional widths.",
+        name: "Multiple cards",
+        description: "Three cards stay in view while the adjacent cards fade at each edge.",
         layout: "wide" as const,
         Demo: () => (
-          <Carousel className="w-full max-w-lg">
+          <Carousel itemsPerView={3} className="w-full max-w-lg">
             <CarouselContent>
-              {Array.from({ length: 8 }).map((_, i) => (
-                <CarouselItem key={i} className="basis-1/3">
+              {Array.from({ length: 9 }).map((_, index) => (
+                <CarouselItem key={index}>
                   <Card>
-                    <CardContent className="flex aspect-square items-center justify-center p-4">
-                      <span className="text-2xl font-semibold">{i + 1}</span>
-                    </CardContent>
+                    <AspectRatio ratio="square" asChild>
+                      <CardContent className="flex items-center justify-center p-4">
+                        <span className="text-2xl font-semibold">{index + 1}</span>
+                      </CardContent>
+                    </AspectRatio>
                   </Card>
                 </CarouselItem>
               ))}
@@ -1045,104 +1228,93 @@ export function CarouselDemo() {
         ),
       },
       {
-        name: "Spacing",
-        description: "Custom gap between slides.",
-        layout: "wide" as const,
+        name: "Self scrolling",
+        description: "Advances automatically, pauses on hover, and resumes from the same point.",
         Demo: () => (
-          <Carousel className="w-full max-w-lg">
-            <CarouselContent className="-ml-2">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <CarouselItem key={i} className="basis-1/3 pl-2">
+          <Carousel className="w-full max-w-xs">
+            <CarouselContent>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <CarouselItem key={index}>
                   <Card>
-                    <CardContent className="flex aspect-square items-center justify-center p-4">
-                      <span className="text-2xl font-semibold">{i + 1}</span>
-                    </CardContent>
+                    <AspectRatio ratio="square" asChild>
+                      <CardContent className="flex items-center justify-center p-6">
+                        <span className="text-4xl font-semibold">{index + 1}</span>
+                      </CardContent>
+                    </AspectRatio>
                   </Card>
                 </CarouselItem>
               ))}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
+            <CarouselProgress />
           </Carousel>
         ),
-      },
-      {
-        name: "Orientation",
-        description: "Vertical carousel layout.",
-        Demo: () => (
-          <Carousel orientation="vertical" className="w-full max-w-xs">
-            <CarouselContent className="h-52">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <CarouselItem key={i}>
-                  <Card>
-                    <CardContent className="flex items-center justify-center p-6">
-                      <span className="text-3xl font-semibold">{i + 1}</span>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        ),
-      },
-      {
-        name: "API",
-        description: "Access the Embla API to read slide state.",
-        layout: "wide" as const,
-        Demo: CarouselApiDemo,
-      },
-      {
-        name: "Plugins",
-        description: "Auto-advancing carousel driven by Embla API intervals.",
-        layout: "wide" as const,
-        Demo: CarouselPluginsDemo,
       },
     ],
   },
   {
     slug: "chart",
     name: "Chart",
-    description: "Beautiful charts built with Recharts and theme-aware config.",
+    description: "Interactive, theme-aware data visualizations presented in a complete analytics card.",
     category: "Data Display",
-    Demo: () => (
-      <ChartContainer config={chartConfig} className="min-h-52 w-full max-w-md">
-        <BarChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-          />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        </BarChart>
-      </ChartContainer>
-    ),
+    Demo: ChartInteractiveDemo,
     code: `import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { useState } from "react"
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const chartConfig = {
-  desktop: { label: "Desktop", color: "var(--chart-1)" },
+  desktop: { label: "Desktop", color: "var(--chart-2)" },
+  mobile: { label: "Mobile", color: "var(--chart-4)" },
 } satisfies ChartConfig
 
 export function ChartDemo() {
+  const [activeSeries, setActiveSeries] = useState<"desktop" | "mobile">("desktop")
+
   return (
-    <ChartContainer config={chartConfig} className="min-h-52 w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+    <Card className="@container/chart-card w-full max-w-3xl gap-0 py-0">
+      <div className="grid border-b @xl/chart-card:flex">
+        <CardHeader className="justify-center py-6 @xl/chart-card:flex-1">
+          <CardTitle>Visitors by device</CardTitle>
+          <CardDescription>Daily visitors during the last 30 days</CardDescription>
+        </CardHeader>
+        <div className="grid grid-cols-2 border-t @xl/chart-card:border-t-0 @xl/chart-card:border-s">
+          {(["desktop", "mobile"] as const).map((series) => (
+            <button
+              key={series}
+              type="button"
+              aria-pressed={activeSeries === series}
+              onClick={() => setActiveSeries(series)}
+            >
+              <span>{chartConfig[series].label}</span>
+              <strong>{chartTotals[series].toLocaleString()}</strong>
+            </button>
+          ))}
+        </div>
+      </div>
+      <CardContent className="px-2 pt-6 pb-4 sm:px-6 sm:pt-8">
+        <ChartContainer config={chartConfig} className="min-h-64 w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis dataKey="date" tickLine={false} axisLine={false} />
+            <ChartTooltip content={<ChartTooltipContent hideIndicator />} />
+            <Bar dataKey={activeSeries} fill={"var(--color-" + activeSeries + ")"} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   )
 }`,
   },
@@ -1153,7 +1325,7 @@ export function ChartDemo() {
     category: "Data Display",
     Demo: () => (
       <div className="w-full max-w-sm">
-        <AspectRatio ratio={16 / 9} className="bg-muted rounded-lg">
+        <AspectRatio ratio="landscape" className="bg-muted rounded-lg">
           <img
             src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
             alt="Photo"
@@ -1166,7 +1338,7 @@ export function ChartDemo() {
 
 export function AspectRatioDemo() {
   return (
-    <AspectRatio ratio={16 / 9} className="bg-muted rounded-lg">
+    <AspectRatio ratio="landscape" className="bg-muted rounded-lg">
       <img src="/photo.jpg" alt="Photo" className="h-full w-full rounded-lg object-cover" />
     </AspectRatio>
   )
@@ -1177,7 +1349,7 @@ export function AspectRatioDemo() {
         description: "1:1 aspect ratio.",
         Demo: () => (
           <div className="w-full max-w-48">
-            <AspectRatio ratio={1} className="bg-muted rounded-lg">
+            <AspectRatio ratio="square" className="bg-muted rounded-lg">
               <img
                 src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=400&dpr=2&q=80"
                 alt="Square photo"
@@ -1192,7 +1364,7 @@ export function AspectRatioDemo() {
         description: "3:4 portrait ratio.",
         Demo: () => (
           <div className="w-full max-w-48">
-            <AspectRatio ratio={3 / 4} className="bg-muted rounded-lg">
+            <AspectRatio ratio="portrait" className="bg-muted rounded-lg">
               <img
                 src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=400&dpr=2&q=80"
                 alt="Portrait photo"

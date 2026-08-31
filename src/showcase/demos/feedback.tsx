@@ -258,7 +258,7 @@ export function SkeletonDemo() {
                 )}
               </Card>
               <Button
-                size="xs"
+                size="sm"
                 variant="outline"
                 onClick={() => setLoaded((v) => !v)}
               >
@@ -290,7 +290,7 @@ export function SkeletonDemo() {
                 </div>
               )}
               <Button
-                size="xs"
+                size="sm"
                 variant="outline"
                 onClick={() => setLoaded((v) => !v)}
               >
@@ -334,7 +334,7 @@ export function SkeletonDemo() {
                 </div>
               )}
               <Button
-                size="xs"
+                size="sm"
                 variant="outline"
                 onClick={() => setLoaded((v) => !v)}
               >
@@ -382,7 +382,7 @@ export function SkeletonDemo() {
                 </TableBody>
               </Table>
               <Button
-                size="xs"
+                size="sm"
                 variant="outline"
                 onClick={() => setLoaded((v) => !v)}
               >
