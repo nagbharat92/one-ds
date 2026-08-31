@@ -17,6 +17,13 @@ import {
   MailIcon,
   ShieldIcon,
   KeyIcon,
+  PlusIcon,
+  DownloadIcon,
+  SearchIcon,
+  FilterIcon,
+  RocketIcon,
+  ListIcon,
+  LayoutGridIcon,
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
@@ -42,8 +49,82 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
+import { Container } from "@/components/ui/container"
+import { Page, PageContent, PageScroll } from "@/components/ui/page"
+import { Stack } from "@/components/ui/stack"
+import { Cluster } from "@/components/ui/cluster"
+import {
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
+  PageHeaderDescription,
+  PageHeaderEyebrow,
+  PageHeaderTitle,
+} from "@/components/ui/page-header"
+import {
+  Section,
+  SectionActions,
+  SectionContent,
+  SectionDescription,
+  SectionHeader,
+  SectionHeading,
+  SectionTitle,
+} from "@/components/ui/section"
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarSpacer,
+} from "@/components/ui/toolbar"
 
 const tags = Array.from({ length: 12 }).map((_, i) => `v1.2.0-beta.${12 - i}`)
+
+function PageDemo() {
+  return (
+    <div className="showcase-contained-viewport flex h-96 w-full flex-col overflow-hidden rounded-lg border">
+      <Page>
+        <PageScroll strength={0.1}>
+          <PageContent variant="docs">
+            <PageHeader>
+              <PageHeaderContent>
+                <PageHeaderEyebrow>
+                  <RocketIcon />
+                  Documentation
+                </PageHeaderEyebrow>
+                <PageHeaderTitle>Getting started</PageHeaderTitle>
+                <PageHeaderDescription>
+                  Scroll this panel to feel the lazy inertial motion and the
+                  top and bottom fade. Content also eases in on load.
+                </PageHeaderDescription>
+              </PageHeaderContent>
+            </PageHeader>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Section key={index}>
+                <SectionHeader>
+                  <SectionHeading>
+                    <SectionTitle>Section {index + 1}</SectionTitle>
+                    <SectionDescription>
+                      A titled region inside the page content column.
+                    </SectionDescription>
+                  </SectionHeading>
+                </SectionHeader>
+                <SectionContent>
+                  <Card>
+                    <CardContent className="text-sm text-muted-foreground">
+                      The page owns the scroll region, its fade, the scrollbar,
+                      the responsive gutters, and the bottom padding.
+                    </CardContent>
+                  </Card>
+                </SectionContent>
+              </Section>
+            ))}
+          </PageContent>
+        </PageScroll>
+      </Page>
+    </div>
+  )
+}
 
 export const layoutDemos: ComponentEntry[] = [
   {
@@ -518,7 +599,7 @@ export function ScrollAreaDemo() {
             { title: "The Birth of Venus", artist: "Sandro Botticelli" },
           ]
           return (
-            <ScrollArea className="w-full max-w-lg whitespace-nowrap rounded-md border">
+            <ScrollArea axis="x" className="w-full max-w-lg whitespace-nowrap rounded-md border">
               <div className="flex gap-4 p-4">
                 {artworks.map((work) => (
                   <div key={work.title} className="w-36 shrink-0">
@@ -581,6 +662,360 @@ export function ResizableDemo() {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={50}>Two</ResizablePanel>
     </ResizablePanelGroup>
+  )
+}`,
+  },
+  {
+    slug: "page-header",
+    name: "Page Header",
+    description:
+      "A page-level header with an eyebrow, title, description, and actions.",
+    category: "Layout",
+    Demo: () => (
+      <PageHeader className="w-full">
+        <PageHeaderContent>
+          <PageHeaderEyebrow>
+            <RocketIcon />
+            Projects
+          </PageHeaderEyebrow>
+          <PageHeaderTitle>Dashboard</PageHeaderTitle>
+          <PageHeaderDescription>
+            Monitor activity across your workspace and jump back into recent
+            work.
+          </PageHeaderDescription>
+        </PageHeaderContent>
+        <PageHeaderActions>
+          <Button variant="outline">
+            <DownloadIcon data-icon="inline-start" />
+            Export
+          </Button>
+          <Button>
+            <PlusIcon data-icon="inline-start" />
+            New project
+          </Button>
+        </PageHeaderActions>
+      </PageHeader>
+    ),
+    code: `import { DownloadIcon, PlusIcon, RocketIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  PageHeader,
+  PageHeaderActions,
+  PageHeaderContent,
+  PageHeaderDescription,
+  PageHeaderEyebrow,
+  PageHeaderTitle,
+} from "@/components/ui/page-header"
+
+export function PageHeaderDemo() {
+  return (
+    <PageHeader>
+      <PageHeaderContent>
+        <PageHeaderEyebrow>
+          <RocketIcon />
+          Projects
+        </PageHeaderEyebrow>
+        <PageHeaderTitle>Dashboard</PageHeaderTitle>
+        <PageHeaderDescription>
+          Monitor activity across your workspace and jump back into recent work.
+        </PageHeaderDescription>
+      </PageHeaderContent>
+      <PageHeaderActions>
+        <Button variant="outline">
+          <DownloadIcon data-icon="inline-start" />
+          Export
+        </Button>
+        <Button>
+          <PlusIcon data-icon="inline-start" />
+          New project
+        </Button>
+      </PageHeaderActions>
+    </PageHeader>
+  )
+}`,
+    examples: [
+      {
+        name: "Centered",
+        description: "A centered hero variant for landing and marketing pages.",
+        Demo: () => (
+          <PageHeader variant="centered" className="w-full">
+            <PageHeaderContent>
+              <PageHeaderEyebrow>Introducing OneDS</PageHeaderEyebrow>
+              <PageHeaderTitle>Build any page from blocks</PageHeaderTitle>
+              <PageHeaderDescription>
+                A tokenized set of composable layout primitives that keep every
+                page consistent.
+              </PageHeaderDescription>
+            </PageHeaderContent>
+            <PageHeaderActions>
+              <Button>Get started</Button>
+              <Button variant="outline">View components</Button>
+            </PageHeaderActions>
+          </PageHeader>
+        ),
+      },
+    ],
+  },
+  {
+    slug: "section",
+    name: "Section",
+    description:
+      "A titled content region with an optional description and actions.",
+    category: "Layout",
+    Demo: () => (
+      <Section className="w-full">
+        <SectionHeader>
+          <SectionHeading>
+            <SectionTitle>Team members</SectionTitle>
+            <SectionDescription>
+              People with access to this workspace.
+            </SectionDescription>
+          </SectionHeading>
+          <SectionActions>
+            <Button variant="outline" size="sm">
+              <PlusIcon data-icon="inline-start" />
+              Invite
+            </Button>
+          </SectionActions>
+        </SectionHeader>
+        <SectionContent>
+          <Card>
+            <CardContent className="text-muted-foreground text-sm">
+              Section content goes here.
+            </CardContent>
+          </Card>
+        </SectionContent>
+      </Section>
+    ),
+    code: `import { PlusIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Section,
+  SectionActions,
+  SectionContent,
+  SectionDescription,
+  SectionHeader,
+  SectionHeading,
+  SectionTitle,
+} from "@/components/ui/section"
+
+export function SectionDemo() {
+  return (
+    <Section>
+      <SectionHeader>
+        <SectionHeading>
+          <SectionTitle>Team members</SectionTitle>
+          <SectionDescription>
+            People with access to this workspace.
+          </SectionDescription>
+        </SectionHeading>
+        <SectionActions>
+          <Button variant="outline" size="sm">
+            <PlusIcon data-icon="inline-start" />
+            Invite
+          </Button>
+        </SectionActions>
+      </SectionHeader>
+      <SectionContent>
+        <Card>
+          <CardContent>Section content goes here.</CardContent>
+        </Card>
+      </SectionContent>
+    </Section>
+  )
+}`,
+  },
+  {
+    slug: "container",
+    name: "Container",
+    description:
+      "A centered, max-width page wrapper with responsive gutters and size variants.",
+    category: "Layout",
+    Demo: () => (
+      <div className="w-full space-y-3">
+        {(["prose", "md", "lg", "xl"] as const).map((size) => (
+          <Container
+            key={size}
+            size={size}
+            gutter={false}
+            className="rounded-lg border bg-card p-3 text-center text-sm text-muted-foreground"
+          >
+            size=&quot;{size}&quot;
+          </Container>
+        ))}
+      </div>
+    ),
+    code: `import { Container } from "@/components/ui/container"
+
+export function ContainerDemo() {
+  return (
+    <Container size="lg">
+      <p>Centered content constrained to a max width with responsive gutters.</p>
+    </Container>
+  )
+}`,
+  },
+  {
+    slug: "stack",
+    name: "Stack",
+    description: "A vertical layout primitive with tokenized gap and alignment.",
+    category: "Layout",
+    Demo: () => (
+      <Stack gap="md" className="w-full max-w-sm">
+        <Card>
+          <CardContent className="text-sm">First</CardContent>
+        </Card>
+        <Card>
+          <CardContent className="text-sm">Second</CardContent>
+        </Card>
+        <Card>
+          <CardContent className="text-sm">Third</CardContent>
+        </Card>
+      </Stack>
+    ),
+    code: `import { Stack } from "@/components/ui/stack"
+
+export function StackDemo() {
+  return (
+    <Stack gap="md">
+      <div>First</div>
+      <div>Second</div>
+      <div>Third</div>
+    </Stack>
+  )
+}`,
+  },
+  {
+    slug: "cluster",
+    name: "Cluster",
+    description:
+      "A horizontal layout primitive that wraps, with gap, align, and justify.",
+    category: "Layout",
+    Demo: () => (
+      <Cluster gap="sm" className="w-full">
+        <Badge>Design</Badge>
+        <Badge variant="secondary">Engineering</Badge>
+        <Badge variant="outline">Product</Badge>
+        <Badge variant="secondary">Marketing</Badge>
+        <Badge variant="outline">Research</Badge>
+      </Cluster>
+    ),
+    code: `import { Cluster } from "@/components/ui/cluster"
+import { Badge } from "@/components/ui/badge"
+
+export function ClusterDemo() {
+  return (
+    <Cluster gap="sm">
+      <Badge>Design</Badge>
+      <Badge variant="secondary">Engineering</Badge>
+      <Badge variant="outline">Product</Badge>
+    </Cluster>
+  )
+}`,
+  },
+  {
+    slug: "toolbar",
+    name: "Toolbar",
+    description:
+      "A horizontal action bar for filters, search, and view toggles.",
+    category: "Layout",
+    Demo: () => (
+      <Toolbar className="w-full">
+        <ToolbarGroup>
+          <Button variant="outline" size="sm">
+            <FilterIcon data-icon="inline-start" />
+            Filter
+          </Button>
+          <Button variant="ghost" size="sm">
+            <SearchIcon data-icon="inline-start" />
+            Search
+          </Button>
+        </ToolbarGroup>
+        <ToolbarSpacer />
+        <ToolbarGroup>
+          <Button variant="ghost" size="icon-sm" aria-label="List view">
+            <ListIcon />
+          </Button>
+          <ToolbarSeparator />
+          <Button variant="ghost" size="icon-sm" aria-label="Grid view">
+            <LayoutGridIcon />
+          </Button>
+        </ToolbarGroup>
+      </Toolbar>
+    ),
+    code: `import { FilterIcon, LayoutGridIcon, ListIcon, SearchIcon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarSpacer,
+} from "@/components/ui/toolbar"
+
+export function ToolbarDemo() {
+  return (
+    <Toolbar>
+      <ToolbarGroup>
+        <Button variant="outline" size="sm">
+          <FilterIcon data-icon="inline-start" />
+          Filter
+        </Button>
+      </ToolbarGroup>
+      <ToolbarSpacer />
+      <ToolbarGroup>
+        <Button variant="ghost" size="icon-sm" aria-label="List view">
+          <ListIcon />
+        </Button>
+        <ToolbarSeparator />
+        <Button variant="ghost" size="icon-sm" aria-label="Grid view">
+          <LayoutGridIcon />
+        </Button>
+      </ToolbarGroup>
+    </Toolbar>
+  )
+}`,
+  },
+  {
+    slug: "page",
+    name: "Page",
+    description:
+      "A page shell that owns the scroll region: lazy inertial scroll, edge fades, scrollbar, gutters, and content entrance.",
+    category: "Layout",
+    Demo: PageDemo,
+    code: `import { Page, PageContent, PageScroll } from "@/components/ui/page"
+import {
+  PageHeader,
+  PageHeaderContent,
+  PageHeaderDescription,
+  PageHeaderTitle,
+} from "@/components/ui/page-header"
+import { Section, SectionContent, SectionTitle } from "@/components/ui/section"
+
+export function PageDemo() {
+  return (
+    <Page>
+      {/* strength controls the lazy-scroll lag (lower = laggier) */}
+      <PageScroll strength={0.1} scrollbar="thin" fade>
+        <PageContent variant="docs">
+          <PageHeader>
+            <PageHeaderContent>
+              <PageHeaderTitle>Getting started</PageHeaderTitle>
+              <PageHeaderDescription>
+                Scroll to feel the lazy motion and edge fades.
+              </PageHeaderDescription>
+            </PageHeaderContent>
+          </PageHeader>
+          <Section>
+            <SectionTitle>Section</SectionTitle>
+            <SectionContent>Content goes here.</SectionContent>
+          </Section>
+        </PageContent>
+      </PageScroll>
+    </Page>
   )
 }`,
   },

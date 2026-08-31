@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { persona } from "@/lib/persona"
 import {
   Avatar,
   AvatarBadge,
@@ -218,21 +219,22 @@ export const dataDemos: ComponentEntry[] = [
     Demo: () => (
       <div className="flex items-center gap-4">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={persona.avatar} alt="" />
+          <AvatarFallback>{persona.initials}</AvatarFallback>
         </Avatar>
         <Avatar>
-          <AvatarFallback>OD</AvatarFallback>
+          <AvatarFallback>{persona.manager.initials}</AvatarFallback>
         </Avatar>
       </div>
     ),
     code: `import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { persona } from "@/lib/persona"
 
 export function AvatarDemo() {
   return (
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarImage src={persona.avatar} alt="" />
+      <AvatarFallback>{persona.initials}</AvatarFallback>
     </Avatar>
   )
 }`,
@@ -243,13 +245,13 @@ export function AvatarDemo() {
         Demo: () => (
           <div className="flex items-center gap-4">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
               <AvatarBadge />
             </Avatar>
             <Avatar size="lg">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
               <AvatarBadge />
             </Avatar>
           </div>
@@ -260,8 +262,8 @@ export function AvatarDemo() {
         description: "Avatar badge with a small icon overlay.",
         Demo: () => (
           <Avatar size="lg">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={persona.avatar} alt="" />
+            <AvatarFallback>{persona.initials}</AvatarFallback>
             <AvatarBadge>
               <ZapIcon />
             </AvatarBadge>
@@ -274,14 +276,14 @@ export function AvatarDemo() {
         Demo: () => (
           <AvatarGroup>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarFallback>AB</AvatarFallback>
+              <AvatarFallback>{persona.teammates[0].initials}</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarFallback>CD</AvatarFallback>
+              <AvatarFallback>{persona.teammates[1].initials}</AvatarFallback>
             </Avatar>
           </AvatarGroup>
         ),
@@ -292,14 +294,14 @@ export function AvatarDemo() {
         Demo: () => (
           <AvatarGroup>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarFallback>AB</AvatarFallback>
+              <AvatarFallback>{persona.teammates[0].initials}</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarFallback>CD</AvatarFallback>
+              <AvatarFallback>{persona.teammates[1].initials}</AvatarFallback>
             </Avatar>
             <AvatarGroupCount>+3</AvatarGroupCount>
           </AvatarGroup>
@@ -311,11 +313,11 @@ export function AvatarDemo() {
         Demo: () => (
           <AvatarGroup>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarFallback>AB</AvatarFallback>
+              <AvatarFallback>{persona.teammates[0].initials}</AvatarFallback>
             </Avatar>
             <AvatarGroupCount>
               <UsersIcon />
@@ -329,13 +331,13 @@ export function AvatarDemo() {
         Demo: () => (
           <div className="flex items-center gap-4">
             <Avatar size="sm">
-              <AvatarFallback>S</AvatarFallback>
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
             <Avatar>
-              <AvatarFallback>M</AvatarFallback>
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
             <Avatar size="lg">
-              <AvatarFallback>L</AvatarFallback>
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
           </div>
         ),
@@ -348,8 +350,8 @@ export function AvatarDemo() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full" aria-label="User menu">
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage src={persona.avatar} alt="" />
+                  <AvatarFallback>{persona.initials}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -689,9 +691,19 @@ export function TableDemo() {
         layout: "wide" as const,
         Demo: () => {
           const [rows, setRows] = useState([
-            { id: "u1", name: "Alice", role: "Admin", status: "Active" },
-            { id: "u2", name: "Bob", role: "Editor", status: "Active" },
-            { id: "u3", name: "Carol", role: "Viewer", status: "Inactive" },
+            { id: "u1", name: persona.name, role: "Admin", status: "Active" },
+            {
+              id: "u2",
+              name: persona.teammates[0].name,
+              role: "Editor",
+              status: "Active",
+            },
+            {
+              id: "u3",
+              name: persona.teammates[1].name,
+              role: "Viewer",
+              status: "Inactive",
+            },
           ])
 
           return (
@@ -749,12 +761,12 @@ export function TableDemo() {
       <Item className="w-full max-w-sm rounded-lg border">
         <ItemMedia>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={persona.avatar} alt="" />
+            <AvatarFallback>{persona.initials}</AvatarFallback>
           </Avatar>
         </ItemMedia>
         <ItemContent>
-          <ItemTitle>shadcn</ItemTitle>
+          <ItemTitle>{persona.name}</ItemTitle>
           <ItemDescription>Last seen 5 months ago</ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -778,11 +790,11 @@ export function ItemDemo() {
     <Item className="rounded-lg border">
       <ItemMedia>
         <Avatar>
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{persona.initials}</AvatarFallback>
         </Avatar>
       </ItemMedia>
       <ItemContent>
-        <ItemTitle>shadcn</ItemTitle>
+        <ItemTitle>{persona.name}</ItemTitle>
         <ItemDescription>Last seen 5 months ago</ItemDescription>
       </ItemContent>
       <ItemActions>
@@ -929,12 +941,12 @@ export function ItemDemo() {
           <Item variant="outline" className="w-full max-w-sm">
             <ItemMedia>
               <Avatar size="sm">
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>{persona.teammates[0].initials}</AvatarFallback>
               </Avatar>
             </ItemMedia>
             <ItemContent>
-              <ItemTitle>Jane Doe</ItemTitle>
-              <ItemDescription>jane@example.com</ItemDescription>
+              <ItemTitle>{persona.teammates[0].name}</ItemTitle>
+              <ItemDescription>{persona.teammates[0].email}</ItemDescription>
             </ItemContent>
             <ItemActions>
               <DropdownMenu>
@@ -1380,10 +1392,14 @@ export function EmptyDemo() {
               <EmptyMedia>
                 <AvatarGroup>
                   <Avatar size="sm">
-                    <AvatarFallback>A</AvatarFallback>
+                    <AvatarFallback>
+                      {persona.teammates[0].initials}
+                    </AvatarFallback>
                   </Avatar>
                   <Avatar size="sm">
-                    <AvatarFallback>B</AvatarFallback>
+                    <AvatarFallback>
+                      {persona.teammates[1].initials}
+                    </AvatarFallback>
                   </Avatar>
                   <AvatarGroupCount>+5</AvatarGroupCount>
                 </AvatarGroup>

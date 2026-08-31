@@ -2,6 +2,7 @@ import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
 
 import { cn } from "@/lib/utils"
+import { useScrollerRef } from "@/hooks/use-scroller"
 import {
   Dialog,
   DialogContent,
@@ -88,13 +89,16 @@ function CommandInput({
 
 function CommandList({
   className,
+  ref,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.List>) {
+  const setRef = useScrollerRef<HTMLDivElement>({}, ref)
   return (
     <CommandPrimitive.List
+      ref={setRef}
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        "no-scrollbar scroll-fade-y scroll-fade-6 max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
         className
       )}
       {...props}

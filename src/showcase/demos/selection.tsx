@@ -19,6 +19,7 @@ import {
   BellIcon,
   MoonIcon,
   SunIcon,
+  GlobeIcon,
 } from "lucide-react"
 import {
   Select,
@@ -44,7 +45,12 @@ import {
   ComboboxList,
   ComboboxGroup,
   ComboboxLabel,
+  ComboboxSeparator,
+  ComboboxTrigger,
+  ComboboxValue,
 } from "@/components/ui/combobox"
+import { Button } from "@/components/ui/button"
+import { InputGroupAddon } from "@/components/ui/input-group"
 import {
   Field,
   FieldContent,
@@ -280,11 +286,11 @@ export function RadioGroupDemo() {
             ].map((item) => (
               <FieldLabel key={item.value} className="cursor-pointer">
                 <Field orientation="horizontal">
-                  <RadioGroupItem value={item.value} id={`rg-card-${item.value}`} />
                   <FieldContent>
                     <span className="text-sm font-medium">{item.label}</span>
                     <FieldDescription>{item.desc}</FieldDescription>
                   </FieldContent>
+                  <RadioGroupItem value={item.value} id={`rg-card-${item.value}`} />
                 </Field>
               </FieldLabel>
             ))}
@@ -390,11 +396,11 @@ export function SwitchDemo() {
             ].map((item) => (
               <FieldLabel key={item.id} className="cursor-pointer">
                 <Field orientation="horizontal">
-                  <Switch id={item.id} defaultChecked={item.on} />
                   <FieldContent>
                     <span className="text-sm font-medium">{item.label}</span>
                     <FieldDescription>{item.desc}</FieldDescription>
                   </FieldContent>
+                  <Switch id={item.id} defaultChecked={item.on} />
                 </Field>
               </FieldLabel>
             ))}
@@ -864,7 +870,7 @@ export function SelectDemo() {
   },
   {
     slug: "native-select",
-    name: "Native Select",
+    name: "Select (native)",
     description: "A styled wrapper around the native select element.",
     category: "Selection",
     Demo: () => (
@@ -1021,7 +1027,7 @@ export function ComboboxDemo() {
       },
       {
         name: "Groups",
-        description: "Items organized in labeled groups.",
+        description: "Items organized in labeled groups, split by a separator.",
         Demo: () => {
           const all = ["Next.js", "Remix", "Nuxt.js", "SvelteKit", "Django", "Flask", "Rails"]
           return (
@@ -1036,6 +1042,7 @@ export function ComboboxDemo() {
                       <ComboboxItem key={f} value={f}>{f}</ComboboxItem>
                     ))}
                   </ComboboxGroup>
+                  <ComboboxSeparator />
                   <ComboboxGroup>
                     <ComboboxLabel>Backend</ComboboxLabel>
                     {["Django", "Flask", "Rails"].map((f) => (
@@ -1117,45 +1124,80 @@ export function ComboboxDemo() {
       },
       {
         name: "Auto Highlight",
-        description: "First matching item is highlighted automatically.",
+        description:
+          "Type a few letters in each field to compare. Without autoHighlight nothing is preselected, so Enter does nothing until you arrow down. With it, the best match is already highlighted and Enter picks it.",
+        layout: "wide",
         Demo: () => (
-          <Combobox items={frameworks} autoHighlight>
-            <ComboboxInput placeholder="Type to search..." className="w-full max-w-56" />
-            <ComboboxContent>
-              <ComboboxEmpty>No framework found.</ComboboxEmpty>
-              <ComboboxList>
-                {(item: string) => (
-                  <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
-                )}
-              </ComboboxList>
-            </ComboboxContent>
-          </Combobox>
+          <div className="flex flex-wrap items-start gap-6">
+            <Field className="w-56">
+              <FieldLabel>Default</FieldLabel>
+              <Combobox items={frameworks}>
+                <ComboboxInput placeholder="Type “re”..." className="w-full" />
+                <ComboboxContent>
+                  <ComboboxEmpty>No framework found.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item: string) => (
+                      <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              <FieldDescription>Nothing is highlighted until you press the arrow keys.</FieldDescription>
+            </Field>
+            <Field className="w-56">
+              <FieldLabel>autoHighlight</FieldLabel>
+              <Combobox items={frameworks} autoHighlight>
+                <ComboboxInput placeholder="Type “re”..." className="w-full" />
+                <ComboboxContent>
+                  <ComboboxEmpty>No framework found.</ComboboxEmpty>
+                  <ComboboxList>
+                    {(item: string) => (
+                      <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+              <FieldDescription>Top match is preselected, so Enter accepts it.</FieldDescription>
+            </Field>
+          </div>
         ),
       },
       {
         name: "Popup",
-        description: "Combobox opened with a trigger chevron.",
-        Demo: () => (
-          <Combobox items={frameworks}>
-            <ComboboxInput placeholder="Search..." className="w-full max-w-56" showTrigger />
-            <ComboboxContent>
-              <ComboboxEmpty>No matches.</ComboboxEmpty>
-              <ComboboxList>
-                {(item: string) => (
-                  <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
-                )}
-              </ComboboxList>
-            </ComboboxContent>
-          </Combobox>
-        ),
+        description:
+          "There is no text field on the page — a button opens the popup and the search input lives inside it. Pass render to ComboboxTrigger and move ComboboxInput into ComboboxContent.",
+        Demo: () => {
+          const countries = ["Australia", "Brazil", "Canada", "Germany", "India", "Japan", "Mexico", "Norway"]
+          return (
+            <Combobox items={countries}>
+              <ComboboxTrigger render={<Button variant="outline" className="w-56 justify-between font-normal" />}>
+                <ComboboxValue placeholder="Select country" />
+              </ComboboxTrigger>
+              <ComboboxContent>
+                <ComboboxInput placeholder="Search country..." showTrigger={false} />
+                <ComboboxEmpty>No country found.</ComboboxEmpty>
+                <ComboboxList>
+                  {(item: string) => (
+                    <ComboboxItem key={item} value={item}>{item}</ComboboxItem>
+                  )}
+                </ComboboxList>
+              </ComboboxContent>
+            </Combobox>
+          )
+        },
       },
       {
         name: "Input Group",
-        description: "Combobox with both a clear button and trigger chevron.",
+        description:
+          "The field is an input group, so you can slot addons into it. Here a leading globe icon sits inside the border, next to the trigger chevron.",
         layout: "wide",
         Demo: () => (
           <Combobox items={frameworks}>
-            <ComboboxInput placeholder="Search frameworks..." className="w-full max-w-80" showClear showTrigger />
+            <ComboboxInput placeholder="Search frameworks..." className="w-full max-w-80">
+              <InputGroupAddon>
+                <GlobeIcon />
+              </InputGroupAddon>
+            </ComboboxInput>
             <ComboboxContent>
               <ComboboxEmpty>No framework found.</ComboboxEmpty>
               <ComboboxList>

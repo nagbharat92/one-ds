@@ -25,6 +25,10 @@
     --color-input: var(--input);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
+    --color-presence-available: var(--presence-available);
+    --color-presence-busy: var(--presence-busy);
+    --color-presence-away: var(--presence-away);
+    --color-presence-offline: var(--presence-offline);
     --color-accent-foreground: var(--accent-foreground);
     --color-accent: var(--accent);
     --color-muted-foreground: var(--muted-foreground);
@@ -39,6 +43,7 @@
     --color-card: var(--card);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+    --radius-xs: calc(var(--radius) * 0.2);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -67,13 +72,45 @@
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.708 0 0);
+
+    /* Presence. The only chromatic accents in an otherwise neutral palette,
+       because a person's availability has to read at a glance. */
+    --presence-available: oklch(0.63 0.16 149);
+    --presence-busy: var(--destructive);
+    --presence-away: oklch(0.75 0.15 75);
+    --presence-offline: var(--muted-foreground);
+
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
+
+    /* Motion. Every token names a SPEED, never a count of milliseconds —
+       pick how the change should read and let the scale own the timing. */
+    --speed-instant: 100ms;
+    --speed-swift: 160ms;
+    --speed-brisk: 240ms;
+    --speed-gentle: 300ms;
+    --speed-slow: 450ms;
+    /* Repeating cadence rather than a transition, e.g. a blinking caret. */
+    --speed-pulse: 1000ms;
+    /* glide decelerates into place, settle is the neutral curve, exit accelerates away. */
+    --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+    /* Elevation. Two shadows per step: a tight ambient contact shadow plus a
+       wider key shadow, so a lifted surface reads without a heavy edge. */
+    --elevation-ambient: oklch(0.145 0 0 / 0.04);
+    --elevation-key: oklch(0.145 0 0 / 0.1);
+    --elevation-raised: 0 1px 2px var(--elevation-ambient),
+        0 2px 6px -2px var(--elevation-key);
+    --elevation-floating: 0 1px 2px var(--elevation-ambient),
+        0 12px 32px -8px var(--elevation-key);
+
+    --sidebar: oklch(1 0 0);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
     --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -81,24 +118,155 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
+    --sidebar-width: calc(var(--spacing) * 64);
+    --sidebar-width-icon: calc(var(--spacing) * 12);
+    /* A floating or inset panel is the same bar plus the container's inset on each side. */
+    --sidebar-width-icon-floating: calc(
+        var(--sidebar-width-icon) + var(--spacing) * 4
+    );
+    --sidebar-width-mobile: calc(var(--spacing) * 72);
+    --sidebar-width-min: calc(var(--spacing) * 44);
+    --sidebar-width-max: calc(var(--spacing) * 110);
+    --sidebar-snap-threshold: calc(var(--spacing) * 34);
+    /* Square collapsed corner: the header is as tall as the bar is wide. */
+    --sidebar-header-height: var(--sidebar-width-icon);
+    --sidebar-resize-handle-width: calc(var(--spacing) * 4);
+    --sidebar-resize-handle-offset: calc(var(--sidebar-resize-handle-width) / -2);
+    /* Keeps the line clear of an inset card's rounded corner (8px margin + 14px radius). */
+    --sidebar-resize-handle-inset: calc(var(--spacing) * 6);
+    --sidebar-resize-step: calc(var(--spacing) * 4);
+    --sidebar-peek-edge-width: calc(var(--spacing) * 6);
+    --sidebar-inset-backdrop: var(--muted);
+    --sidebar-ease: var(--ease-glide);
+    --sidebar-speed: var(--speed-slow);
+    /* Hover affordances only. Collapsing rides --sidebar-speed so width and fade move together. */
+    --sidebar-fade-speed: var(--speed-swift);
+    /* Grace periods before a peek commits, not motion. */
+    --sidebar-peek-open-delay: 90ms;
+    --sidebar-peek-close-delay: 320ms;
+    --dialog-max-height: calc(100svh - var(--spacing) * 16);
+    --drawer-inset: calc(var(--spacing) * 2);
+    --drawer-width: 75%;
+
+    /* Tabs. The pill crosses one pivot per --tabs-pivot-speed, so a two-tab
+       jump takes twice as long instead of travelling twice as fast. */
+    --tabs-pivot-speed: var(--speed-instant);
+    --tabs-ease: var(--ease-glide);
+    --tabs-padding: calc(var(--spacing) * 0.5);
+    --tabs-indicator-thickness: calc(var(--spacing) * 0.5);
+
+    /* Site header. A docked bar belongs to the window frame; a floating one is
+       a surface lifted above the content layer. */
+    --site-header-height: calc(var(--spacing) * 14);
+    --site-header-gap: calc(var(--spacing) * 4);
+    --site-header-gutter: clamp(
+        calc(var(--spacing) * 4),
+        4vw,
+        calc(var(--spacing) * 6)
+    );
+    /* Distance a floating shell keeps from the viewport edge. */
+    --site-header-inset: calc(var(--spacing) * 4);
+    --site-header-padding: calc(var(--spacing) * 1.5);
+    --site-header-border-width: 1px;
+    --site-header-cluster-gap: calc(var(--spacing) * 2);
+    /* Fixed at half the resting height, never a pill: it reads as a perfect
+       capsule on one row and as a rounded rectangle if the shell ever wraps. */
+    --site-header-radius: calc(var(--site-header-height) / 2);
+    /* Concentric: an item touching the corner shares the shell's centre. The
+       stroke counts — the item nests inside the border box, not the border. */
+    --site-header-item-radius: calc(
+        var(--site-header-radius) - var(--site-header-border-width) -
+            var(--site-header-padding)
+    );
+    /* An item that fills the shell's inner height, e.g. a dock icon. Filling it
+       is what MAKES the item radius concentric: item-size/2 == item-radius. */
+    --site-header-item-size: calc(
+        var(--site-header-height) -
+            (var(--site-header-border-width) + var(--site-header-padding)) * 2
+    );
+    --site-header-separator-height: calc(var(--spacing) * 6);
+    /* Padding equals the cap radius, so a label never crowds the curve and an
+       icon-only item stays exactly square. */
+    --site-header-item-padding-inline: var(--site-header-item-radius);
+    --site-header-shadow: var(--elevation-floating);
+    --site-header-speed: var(--speed-swift);
+
+    /* Docked scale. Items sit in a square, full-bleed bar, so they stay small
+       and only lightly rounded. */
+    --site-header-flat-item-height: calc(var(--spacing) * 8);
+    --site-header-flat-item-radius: var(--radius-md);
+    --site-header-flat-item-padding-inline: calc(var(--spacing) * 3);
+    --site-header-flat-menu-padding: calc(var(--spacing) * 1);
+
+    /* The overflow menu is a vertical slice of the bar it belongs to: a row is
+       shaped exactly like a bar item, and the sheet is that row plus its pad.
+       The sheet is ringed, not bordered, so it loses only the padding. */
+    --site-header-menu-width: calc(var(--spacing) * 52);
+    --site-header-menu-padding: var(--site-header-padding);
+    --site-header-menu-radius: calc(
+        var(--site-header-item-radius) + var(--site-header-menu-padding)
+    );
+    --site-header-flat-menu-radius: calc(
+        var(--site-header-flat-item-radius) + var(--site-header-flat-menu-padding)
+    );
+    /* The backplate crosses one link per pivot-speed, so a jump across the whole
+       nav moves at the same speed as a jump to its neighbour. */
+    --site-header-pivot-speed: var(--speed-instant);
+    --site-header-ease: var(--ease-glide);
     --showcase-header-height: calc(var(--spacing) * 14);
-    --showcase-sidebar-width: calc(var(--spacing) * 68);
-    --showcase-content-width: calc(var(--spacing) * 288);
     --showcase-copy-width: calc(var(--spacing) * 192);
     --showcase-preview-min-height: calc(var(--spacing) * 72);
     --showcase-preview-viewport-height: calc(var(--spacing) * 112);
-    --showcase-dialog-max-height: 80svh;
     --showcase-calendar-cell-size-lg: calc(var(--spacing) * 10);
     --showcase-preview-padding: calc(var(--spacing) * 8);
     --showcase-preview-grid: calc(var(--spacing) * 6);
     --showcase-preview-dot: 1px;
     --showcase-page-gutter: clamp(calc(var(--spacing) * 4), 4vw, calc(var(--spacing) * 10));
     --showcase-page-block-padding: calc(var(--spacing) * 10);
+    --showcase-header-row-height: calc(
+      var(--site-header-height) + var(--site-header-inset) * 2
+    );
+    --showcase-shell-content-inset: calc(var(--spacing) * 4);
+    --showcase-shell-divider-size: 1px;
+    --showcase-content-start: calc(
+      var(--showcase-header-row-height) + var(--showcase-shell-divider-size) +
+        var(--showcase-shell-content-inset)
+    );
     --showcase-section-gap: calc(var(--spacing) * 16);
     --showcase-example-gap: calc(var(--spacing) * 5);
-    --showcase-nav-gap: calc(var(--spacing) * 5);
-    --showcase-nav-item-height: calc(var(--spacing) * 8);
-    --showcase-stage-status-offset: calc(var(--spacing) * 3);
+    --showcase-sidebar-width: calc(var(--spacing) * 64);
+    --scroll-fade-size: min(12%, calc(var(--spacing) * 10));
+    --scroll-fade-reveal: calc(var(--spacing) * 8);
+    --scrollbar-size: calc(var(--spacing) * 1.5);
+    --scrollbar-radius: var(--radius-lg);
+    --scrollbar-thumb: color-mix(in oklab, var(--foreground) 25%, transparent);
+    --scrollbar-track: transparent;
+    --page-scroll-offset: 0px;
+    --page-pad-block-start: calc(var(--spacing) * 20);
+    --page-pad-block-end: calc(var(--spacing) * 24);
+    --page-content-gap: calc(var(--spacing) * 8);
+    --page-enter-duration: 600ms;
+    --page-enter-stagger: 60ms;
+    --page-enter-distance: calc(var(--spacing) * 4);
+    --page-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --coachmark-width: calc(var(--spacing) * 80);
+    --coachmark-width-sm: calc(var(--spacing) * 64);
+    --coachmark-width-lg: calc(var(--spacing) * 96);
+    --coachmark-padding-inline: calc(var(--spacing) * 4);
+    --coachmark-padding-block-start: calc(var(--spacing) * 4);
+    --coachmark-padding-block-end: calc(var(--spacing) * 4);
+    --coachmark-gap: calc(var(--spacing) * 6);
+    --coachmark-radius: var(--radius-3xl);
+    --coachmark-media-inset-inline: calc(var(--coachmark-padding-inline) * -1);
+    --coachmark-media-inset-block-start: calc(
+        var(--coachmark-padding-block-start) * -1
+    );
+    --coachmark-media-aspect: 16 / 9;
+    --coachmark-beacon-size: calc(var(--spacing) * 3);
+    --coachmark-beacon-scale: 2.5;
+    --coachmark-beacon-opacity: 0.5;
+    --coachmark-beacon-duration: 2000ms;
+    --coachmark-beacon-ease: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .dark {
@@ -117,6 +285,8 @@
     --accent: oklch(0.269 0 0);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
+    --presence-available: oklch(0.72 0.17 149);
+    --presence-away: oklch(0.81 0.15 75);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.556 0 0);
@@ -125,7 +295,10 @@
     --chart-3: oklch(0.439 0 0);
     --chart-4: oklch(0.371 0 0);
     --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
+    /* A shadow has to be far denser on a dark canvas to register at all. */
+    --elevation-ambient: oklch(0 0 0 / 0.3);
+    --elevation-key: oklch(0 0 0 / 0.55);
+    --sidebar: oklch(0.145 0 0);
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: oklch(0.488 0.243 264.376);
     --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -133,6 +306,54 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Layer zero: an inset panel owns no surface, so it reads as the grey layer the whole
+   shell sits on and only the content is raised. Item backplates lift to the raised
+   colour instead, because a grey chip on a grey layer would be invisible. */
+[data-slot="sidebar"][data-placement="inset"] {
+    --sidebar: transparent;
+    --sidebar-accent: var(--background);
+}
+
+/* Scrollbar utilities. The scroll-fade-* utilities and no-scrollbar already ship
+   in shadcn/tailwind.css (scroll-driven, so the fade only shows once content is
+   clipped); these fill the gaps it does not cover. Sizes and colours come from
+   the --scrollbar-* tokens above. */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  &::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--scrollbar-radius);
+    background: var(--scrollbar-thumb);
+  }
+}
+
+@utility scrollbar-thumb-transparent {
+  --scrollbar-thumb: transparent;
+}
+
+@utility scrollbar-track-transparent {
+  --scrollbar-track: transparent;
+}
+
+@utility scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer base {
@@ -145,109 +366,127 @@
   html {
     @apply font-sans;
     }
+
+  /* Native number spinners are unlabelled ~10px pointer-only targets. Arrow keys
+     still step the value once they are hidden. */
+  input[type="number"] {
+    -webkit-appearance: textfield;
+    appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
 }
 
 @layer components {
+  [data-slot="tabs-indicator"] {
+    --tabs-travel-duration: calc(
+      var(--tabs-pivot-speed) * var(--tabs-pivot-distance, 1)
+    );
+  }
+
+  [data-slot="site-header-indicator"] {
+    --site-header-travel-duration: calc(
+      var(--site-header-pivot-speed) * var(--site-header-pivot-distance, 1)
+    );
+  }
+
+  /* Set by the nav once it has collapsed everything it can and the row still
+     overflows. The mark stays; only the wordmark goes. */
+  [data-slot="site-header-shell"][data-compact="true"]
+    [data-slot="site-header-brand"]
+    span {
+    display: none;
+  }
+
   .showcase-app {
-    min-block-size: 100svh;
+    height: 100svh;
+    overflow: hidden;
     background: var(--background);
   }
 
-  .showcase-header {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 50;
-    border-block-end: var(--showcase-preview-dot) solid var(--border);
-    background: color-mix(in oklab, var(--background) 88%, transparent);
-    -webkit-backdrop-filter: blur(var(--showcase-preview-grid));
-    backdrop-filter: blur(var(--showcase-preview-grid));
+  .showcase-page-content {
+    --page-pad-block-start: var(--showcase-content-start);
   }
 
-  .showcase-header__inner {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--spacing) * 2);
-    block-size: var(--showcase-header-height);
-    max-inline-size: var(--showcase-content-width);
-    margin-inline: auto;
-    padding-inline: var(--showcase-page-gutter);
+  .page-scroll {
+    scroll-padding-block-start: var(--page-scroll-offset);
   }
 
-  .showcase-header__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing);
-    margin-inline-start: auto;
+  .page-content {
+    padding-block-start: var(--page-pad-block-start);
+    padding-block-end: var(--page-pad-block-end);
+    row-gap: var(--page-content-gap);
   }
 
-  .showcase-layout {
-    display: flex;
-    inline-size: 100%;
-    max-inline-size: var(--showcase-content-width);
-    margin-inline: auto;
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(var(--page-enter-distance));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
-  .showcase-sidebar {
-    position: sticky;
-    inset-block-start: var(--showcase-header-height);
-    flex: 0 0 var(--showcase-sidebar-width);
-    block-size: calc(100svh - var(--showcase-header-height));
-    overflow-y: auto;
-    border-inline-end: var(--showcase-preview-dot) solid var(--border);
-    padding: calc(var(--spacing) * 6) calc(var(--spacing) * 4);
+  @keyframes coachmark-beacon {
+    0% {
+      opacity: var(--coachmark-beacon-opacity);
+      transform: scale(1);
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: scale(var(--coachmark-beacon-scale));
+    }
   }
 
-  .showcase-mobile-nav {
-    inline-size: min(var(--showcase-sidebar-width), 88vw);
-    overflow-y: auto;
+  .coachmark-beacon-pulse {
+    animation: coachmark-beacon var(--coachmark-beacon-duration)
+      var(--coachmark-beacon-ease) infinite;
   }
 
-  .showcase-nav {
-    display: flex;
-    flex-direction: column;
-    gap: var(--showcase-nav-gap);
+  @media (prefers-reduced-motion: reduce) {
+    .coachmark-beacon-pulse {
+      animation: none;
+    }
   }
 
-  .showcase-nav__groups {
-    display: flex;
-    flex-direction: column;
-    gap: var(--showcase-nav-gap);
+  .page-content--animate > * {
+    animation: page-enter var(--page-enter-duration) var(--page-enter-ease) both;
   }
 
-  .showcase-nav__group,
-  .showcase-nav__items {
-    display: flex;
-    flex-direction: column;
+  .page-content--animate > *:nth-child(1) {
+    animation-delay: calc(var(--page-enter-stagger) * 0);
+  }
+  .page-content--animate > *:nth-child(2) {
+    animation-delay: calc(var(--page-enter-stagger) * 1);
+  }
+  .page-content--animate > *:nth-child(3) {
+    animation-delay: calc(var(--page-enter-stagger) * 2);
+  }
+  .page-content--animate > *:nth-child(4) {
+    animation-delay: calc(var(--page-enter-stagger) * 3);
+  }
+  .page-content--animate > *:nth-child(5) {
+    animation-delay: calc(var(--page-enter-stagger) * 4);
+  }
+  .page-content--animate > *:nth-child(6) {
+    animation-delay: calc(var(--page-enter-stagger) * 5);
+  }
+  .page-content--animate > *:nth-child(n + 7) {
+    animation-delay: calc(var(--page-enter-stagger) * 6);
   }
 
-  .showcase-nav__label {
-    margin: 0 0 var(--spacing);
-    padding-inline: calc(var(--spacing) * 2);
-    color: var(--muted-foreground);
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--text-xs--line-height);
-  }
-
-  .showcase-nav__item {
-    min-block-size: var(--showcase-nav-item-height);
-    border-radius: var(--radius-md);
-    padding-inline: calc(var(--spacing) * 2);
-    color: var(--muted-foreground);
-    font-size: var(--text-sm);
-    line-height: var(--text-sm--line-height);
-    text-align: start;
-    transition: color var(--default-transition-duration), background-color var(--default-transition-duration);
-  }
-
-  .showcase-nav__item:hover,
-  .showcase-nav__item[data-active] {
-    background: var(--accent);
-    color: var(--accent-foreground);
-  }
-
-  .showcase-nav__item[data-active] {
-    font-weight: var(--font-weight-medium);
+  @media (prefers-reduced-motion: reduce) {
+    .page-content--animate > * {
+      animation: none;
+    }
   }
 
   .showcase-main {
@@ -263,17 +502,8 @@
   }
 
   .showcase-component__header {
-    display: grid;
+    inline-size: 100%;
     gap: calc(var(--spacing) * 3);
-  }
-
-  .showcase-component__meta {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--spacing) * 3);
-    color: var(--muted-foreground);
-    font-size: var(--text-sm);
-    line-height: var(--text-sm--line-height);
   }
 
   .showcase-component__title {
@@ -293,37 +523,17 @@
   }
 
   .showcase-component__command {
-    justify-self: start;
     max-inline-size: 100%;
-    border-radius: var(--radius-md);
-    background: var(--muted);
-    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2.5);
-    font-size: var(--text-xs);
-    line-height: var(--text-xs--line-height);
     overflow-wrap: anywhere;
-  }
-
-  .showcase-component__index {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing);
-    margin-block: calc(var(--spacing) * 8);
   }
 
   .showcase-component__examples {
     display: grid;
     gap: var(--showcase-section-gap);
-    padding-block-start: calc(var(--spacing) * 10);
   }
 
   .showcase-example {
     scroll-margin-block-start: calc(var(--showcase-header-height) + var(--showcase-page-gutter));
-  }
-
-  .showcase-example__header {
-    display: grid;
-    gap: var(--spacing);
-    margin-block-end: calc(var(--spacing) * 3);
   }
 
   .showcase-example__title {
@@ -332,13 +542,6 @@
     font-weight: var(--font-weight-semibold);
     line-height: var(--text-xl--line-height);
     letter-spacing: 0;
-  }
-
-  .showcase-example__description {
-    margin: var(--spacing) 0 0;
-    color: var(--muted-foreground);
-    font-size: var(--text-sm);
-    line-height: var(--text-sm--line-height);
   }
 
   .showcase-example__tabs {
@@ -356,6 +559,7 @@
     position: relative;
     display: grid;
     min-inline-size: 0;
+    padding-inline: 0;
   }
 
   .showcase-example__preview-panel,
@@ -405,24 +609,6 @@
     min-block-size: var(--showcase-preview-viewport-height);
   }
 
-  .showcase-stage__status {
-    position: absolute;
-    inset-inline-end: var(--showcase-stage-status-offset);
-    inset-block-end: var(--showcase-stage-status-offset);
-    border: var(--showcase-preview-dot) solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--background);
-    padding: var(--spacing) calc(var(--spacing) * 2);
-    color: var(--muted-foreground);
-    font-size: var(--text-xs);
-    line-height: var(--text-xs--line-height);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .showcase-dialog-scroll {
-    max-block-size: var(--showcase-dialog-max-height);
-  }
-
   .showcase-calendar-large {
     --cell-size: var(--showcase-calendar-cell-size-lg);
   }
@@ -445,11 +631,6 @@
 
   .questionnaire-actions-layout {
     grid-template-columns: minmax(0, 1fr) auto auto;
-  }
-
-  [data-slot="questionnaire-choice"][data-type="radio"]
-    [data-slot="questionnaire-choice-indicator"] {
-    border-radius: var(--radius-4xl);
   }
 
   [data-slot="questionnaire-choice-indicator-dot"],

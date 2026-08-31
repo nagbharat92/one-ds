@@ -33,6 +33,7 @@ import {
 import { format, isValid } from "date-fns"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { team } from "@/lib/persona"
 import {
   Table,
   TableBody,
@@ -106,18 +107,18 @@ type Payment = {
 }
 
 const payments: Payment[] = [
-  { id: "pay-01", amount: 316.0, status: "success", email: "ken@example.com", date: "2024-01-15" },
-  { id: "pay-02", amount: 242.0, status: "success", email: "abe@example.com", date: "2024-02-20" },
-  { id: "pay-03", amount: 837.0, status: "processing", email: "monserrat@example.com", date: "2024-03-10" },
-  { id: "pay-04", amount: 874.0, status: "success", email: "silas@example.com", date: "2024-04-05" },
-  { id: "pay-05", amount: 721.0, status: "failed", email: "carmella@example.com", date: "2024-05-22" },
-  { id: "pay-06", amount: 456.0, status: "pending", email: "janet@example.com", date: "2024-06-11" },
-  { id: "pay-07", amount: 129.0, status: "success", email: "pedro@example.com", date: "2024-07-03" },
-  { id: "pay-08", amount: 593.0, status: "processing", email: "lila@example.com", date: "2024-08-19" },
-  { id: "pay-09", amount: 210.0, status: "pending", email: "omar@example.com", date: "2024-09-30" },
-  { id: "pay-10", amount: 685.0, status: "failed", email: "rosa@example.com", date: "2024-10-14" },
-  { id: "pay-11", amount: 320.0, status: "success", email: "nora@example.com", date: "2024-11-01" },
-  { id: "pay-12", amount: 950.0, status: "pending", email: "dave@example.com", date: "2024-12-25" },
+  { id: "pay-01", amount: 316.0, status: "success", email: team[0].email, date: "2024-01-15" },
+  { id: "pay-02", amount: 242.0, status: "success", email: team[1].email, date: "2024-02-20" },
+  { id: "pay-03", amount: 837.0, status: "processing", email: team[2].email, date: "2024-03-10" },
+  { id: "pay-04", amount: 874.0, status: "success", email: team[3].email, date: "2024-04-05" },
+  { id: "pay-05", amount: 721.0, status: "failed", email: team[4].email, date: "2024-05-22" },
+  { id: "pay-06", amount: 456.0, status: "pending", email: team[5].email, date: "2024-06-11" },
+  { id: "pay-07", amount: 129.0, status: "success", email: team[0].email, date: "2024-07-03" },
+  { id: "pay-08", amount: 593.0, status: "processing", email: team[1].email, date: "2024-08-19" },
+  { id: "pay-09", amount: 210.0, status: "pending", email: team[2].email, date: "2024-09-30" },
+  { id: "pay-10", amount: 685.0, status: "failed", email: team[3].email, date: "2024-10-14" },
+  { id: "pay-11", amount: 320.0, status: "success", email: team[4].email, date: "2024-11-01" },
+  { id: "pay-12", amount: 950.0, status: "pending", email: team[5].email, date: "2024-12-25" },
 ]
 
 const dataTableFeatures = tableFeatures({
@@ -1109,7 +1110,7 @@ function BasicQuestionnaire() {
   const [result, setResult] = useState<string | null>(null)
 
   return (
-    <div className="mx-auto w-full max-w-lg space-y-4">
+    <div className="mx-auto w-full max-w-md space-y-4">
       {result ? (
         <div className="rounded-lg border bg-muted/50 p-4 text-sm">
           <p className="font-medium">Submission received</p>
@@ -1162,9 +1163,9 @@ function BasicQuestionnaire() {
 function MultipleSelectionDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
-    <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="languages" multiple>
         <QuestionnaireTitle>Which languages do you use?</QuestionnaireTitle>
@@ -1185,9 +1186,9 @@ function MultipleSelectionDemo() {
 function FreeformAnswerDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
-    <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="thoughts">
         <QuestionnaireTitle>Share your thoughts</QuestionnaireTitle>
@@ -1206,9 +1207,9 @@ function ExplicitSkipDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setStatuses({}) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setStatuses({}) }}>Reset</Button></div>
   ) : (
-    <div className="space-y-4">
+    <div className="mx-auto w-full max-w-md space-y-4">
       <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify({ ...Object.fromEntries(new FormData(ev.currentTarget).entries()), skipped: statuses }, null, 2)) }}>
         <QuestionnaireProgress />
         <QuestionnaireItem name="color" onStatusChange={(status) => setStatuses((prev) => ({ ...prev, color: status }))}>
@@ -1245,9 +1246,9 @@ function ExplicitSkipDemo() {
 function ShortcutsDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
-    <Questionnaire shortcuts="letters" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire shortcuts="letters" className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="speed">
         <QuestionnaireTitle>Preferred speed?</QuestionnaireTitle>
@@ -1270,9 +1271,9 @@ function CustomValidationDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setInvalid(false) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setInvalid(false) }}>Reset</Button></div>
   ) : (
-    <Questionnaire onSubmit={(ev) => { ev.preventDefault(); if (invalid) return; setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); if (invalid) return; setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="age" invalid={invalid}>
         <QuestionnaireTitle>What is your age?</QuestionnaireTitle>
@@ -1298,9 +1299,9 @@ function ControlledDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setCurrentItem("team-size") }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setCurrentItem("team-size") }}>Reset</Button></div>
   ) : (
-    <div className="space-y-4">
+    <div className="mx-auto w-full max-w-md space-y-4">
       <p className="text-sm text-muted-foreground">Current item: <span className="font-medium text-foreground">{currentItem}</span></p>
       <Questionnaire item={currentItem} onItemChange={setCurrentItem} onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
         <QuestionnaireProgress />
@@ -1334,9 +1335,9 @@ function ResumeDemo() {
   const [key, setKey] = useState(0)
 
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setKey((prev) => prev + 1) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setKey((prev) => prev + 1) }}>Reset</Button></div>
   ) : (
-    <Questionnaire key={key} defaultItem="framework" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire key={key} defaultItem="framework" className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="language">
         <QuestionnaireTitle>Preferred language?</QuestionnaireTitle>
@@ -1367,9 +1368,9 @@ function ConditionalItemsDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setShowRegion(false) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setShowRegion(false) }}>Reset</Button></div>
   ) : (
-    <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="deploy">
         <QuestionnaireTitle>Where do you deploy?</QuestionnaireTitle>
@@ -1402,9 +1403,9 @@ function NavigationStateDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setCurrentItem("q1") }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setCurrentItem("q1") }}>Reset</Button></div>
   ) : (
-    <div className="space-y-4">
+    <div className="mx-auto w-full max-w-md space-y-4">
       <div className="flex gap-2">
         <Button variant="outline" size="sm" disabled={currentItem === "q1"} onClick={() => setCurrentItem("q1")}>Go to Q1</Button>
         <Button variant="outline" size="sm" disabled={currentItem === "q2"} onClick={() => setCurrentItem("q2")}>Go to Q2</Button>
@@ -1435,9 +1436,9 @@ function NavigationStateDemo() {
 function CustomProgressDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
-    <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress render={(props, state) => (
         <div {...props} className="flex items-center gap-3 text-sm">
           <Progress
@@ -1477,9 +1478,9 @@ function CustomProgressDemo() {
 function AnimatedItemsDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
-    <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
+    <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
       <QuestionnaireItem name="anim-q1" className="data-active:animate-in data-active:fade-in-0 data-active:slide-in-from-right-4">
         <QuestionnaireTitle>Animated step 1</QuestionnaireTitle>

@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { persona } from "@/lib/persona"
 import { Alert, AlertDescription, AlertTitle, AlertAction } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -316,7 +317,7 @@ export function SkeletonDemo() {
                   <div className="grid gap-1.5">
                     <span className="text-sm font-medium">Email</span>
                     <InputGroup>
-                      <InputGroupInput placeholder="Email" readOnly defaultValue="ada@example.com" />
+                      <InputGroupInput placeholder="Email" readOnly defaultValue={persona.email} />
                     </InputGroup>
                   </div>
                 </div>

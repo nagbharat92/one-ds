@@ -1,12 +1,15 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { useScrollerRef } from "@/hooks/use-scroller"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
+  const setRef = useScrollerRef<HTMLDivElement>({ axis: "x" })
   return (
     <div
+      ref={setRef}
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      className="scroll-fade-x scroll-fade-6 scrollbar-thin relative w-full overflow-x-auto"
     >
       <table
         data-slot="table"

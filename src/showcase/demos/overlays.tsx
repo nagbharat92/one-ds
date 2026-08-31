@@ -29,12 +29,37 @@ import {
   RedoIcon,
   ImageIcon,
   PencilIcon,
+  SparklesIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Scroller } from "@/components/ui/scroller"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Kbd } from "@/components/ui/kbd"
+import { Separator } from "@/components/ui/separator"
+import { persona } from "@/lib/persona"
+import {
+  Coachmark,
+  CoachmarkAction,
+  CoachmarkAnchor,
+  CoachmarkBadge,
+  CoachmarkBeacon,
+  CoachmarkClose,
+  CoachmarkContent,
+  CoachmarkDescription,
+  CoachmarkDismiss,
+  CoachmarkFooter,
+  CoachmarkHeader,
+  CoachmarkMedia,
+  CoachmarkNext,
+  CoachmarkPrevious,
+  CoachmarkProgress,
+  CoachmarkStep,
+  CoachmarkTitle,
+  CoachmarkTour,
+  CoachmarkTrigger,
+} from "@/components/ui/coachmark"
 import {
   Avatar,
   AvatarFallback,
@@ -43,6 +68,7 @@ import {
 import {
   Dialog,
   DialogClose,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -63,28 +89,22 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import {
   Drawer,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
+  DrawerNested,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import {
   Popover,
   PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import {
@@ -332,16 +352,16 @@ export const overlaysDemos: ComponentEntry[] = [
         <DialogTrigger asChild>
           <Button variant="outline">Edit profile</Button>
         </DialogTrigger>
-        <DialogContent className="max-w-sm sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
             <DialogDescription>
               Make changes to your profile here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3 py-2">
+          <div className="grid gap-3">
             <Label htmlFor="demo-dialog-name">Name</Label>
-            <Input id="demo-dialog-name" defaultValue="Pedro Duarte" />
+            <Input id="demo-dialog-name" defaultValue={persona.name} />
           </div>
           <DialogFooter>
             <DialogClose asChild>
@@ -429,22 +449,22 @@ export const overlaysDemos: ComponentEntry[] = [
             <DialogTrigger asChild>
               <Button variant="outline">Sticky footer</Button>
             </DialogTrigger>
-            <DialogContent className="showcase-dialog-scroll flex max-w-sm flex-col sm:max-w-md">
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>Release notes</DialogTitle>
                 <DialogDescription>
                   What's new in this version.
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex-1 space-y-3 overflow-y-auto pr-2">
+              <DialogBody>
                 {Array.from({ length: 12 }, (_, i) => (
                   <p key={i} className="text-sm text-muted-foreground">
                     Feature {i + 1}: Lorem ipsum dolor sit amet, consectetur
                     adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
                   </p>
                 ))}
-              </div>
-              <DialogFooter className="border-t pt-4">
+              </DialogBody>
+              <DialogFooter>
                 <DialogClose asChild>
                   <Button variant="outline">Close</Button>
                 </DialogClose>
@@ -456,139 +476,31 @@ export const overlaysDemos: ComponentEntry[] = [
       },
       {
         name: "Scrollable content",
-        description: "Dialog body scrolls when content overflows.",
+        description:
+          "The header stays pinned while the body scrolls underneath it.",
         layout: "viewport" as const,
         Demo: () => (
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">Scrollable content</Button>
             </DialogTrigger>
-            <DialogContent className="showcase-dialog-scroll max-w-sm overflow-y-auto sm:max-w-md">
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>Long article</DialogTitle>
                 <DialogDescription>
                   Scroll to read the full content.
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-3">
+              <DialogBody>
                 {Array.from({ length: 20 }, (_, i) => (
                   <p key={i} className="text-sm text-muted-foreground">
                     Paragraph {i + 1}: Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo.
                   </p>
                 ))}
-              </div>
+              </DialogBody>
             </DialogContent>
           </Dialog>
-        ),
-      },
-    ],
-  },
-
-  // ---------------------------------------------------------------------------
-  // Sheet
-  // ---------------------------------------------------------------------------
-  {
-    slug: "sheet",
-    name: "Sheet",
-    description: "Extends the dialog to slide in from the edge of the screen.",
-    category: "Overlays",
-    Demo: () => (
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline">Open sheet</Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Edit profile</SheetTitle>
-            <SheetDescription>
-              Make changes to your profile here. Click save when you're done.
-            </SheetDescription>
-          </SheetHeader>
-          <div className="grid gap-3 px-4">
-            <Label htmlFor="demo-sheet-name">Name</Label>
-            <Input id="demo-sheet-name" defaultValue="Pedro Duarte" />
-          </div>
-          <SheetFooter>
-            <Button type="submit">Save changes</Button>
-            <SheetClose asChild>
-              <Button variant="outline">Close</Button>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    ),
-    code: `<Sheet>
-  <SheetTrigger asChild>
-    <Button variant="outline">Open sheet</Button>
-  </SheetTrigger>
-  <SheetContent>
-    <SheetHeader>
-      <SheetTitle>Edit profile</SheetTitle>
-      <SheetDescription>Make changes to your profile here.</SheetDescription>
-    </SheetHeader>
-  </SheetContent>
-</Sheet>`,
-    examples: [
-      {
-        name: "Sides",
-        description: "Sheet can slide in from any edge.",
-        layout: "viewport" as const,
-        Demo: () => (
-          <div className="flex flex-wrap gap-2">
-            {(["top", "right", "bottom", "left"] as const).map((side) => (
-              <Sheet key={side}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="capitalize">
-                    {side}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side={side}>
-                  <SheetHeader>
-                    <SheetTitle>{side} sheet</SheetTitle>
-                    <SheetDescription>
-                      This sheet slides in from the {side}.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <div className="px-4">
-                    <p className="text-sm text-muted-foreground">
-                      Sheet content here.
-                    </p>
-                  </div>
-                  <SheetFooter>
-                    <SheetClose asChild>
-                      <Button variant="outline">Close</Button>
-                    </SheetClose>
-                  </SheetFooter>
-                </SheetContent>
-              </Sheet>
-            ))}
-          </div>
-        ),
-      },
-      {
-        name: "No close button",
-        description: "Sheet without the built-in close button.",
-        layout: "viewport" as const,
-        Demo: () => (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline">No close button</Button>
-            </SheetTrigger>
-            <SheetContent showCloseButton={false}>
-              <SheetHeader>
-                <SheetTitle>Manual close only</SheetTitle>
-                <SheetDescription>
-                  This sheet has no X button. Use the button below.
-                </SheetDescription>
-              </SheetHeader>
-              <SheetFooter>
-                <SheetClose asChild>
-                  <Button>Done</Button>
-                </SheetClose>
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
         ),
       },
     ],
@@ -600,7 +512,8 @@ export const overlaysDemos: ComponentEntry[] = [
   {
     slug: "drawer",
     name: "Drawer",
-    description: "A drawer that slides up from the bottom of the screen.",
+    description:
+      "A panel that slides in from the edge of the screen. Defaults to the right.",
     category: "Overlays",
     Demo: () => (
       <Drawer>
@@ -608,20 +521,16 @@ export const overlaysDemos: ComponentEntry[] = [
           <Button variant="outline">Open drawer</Button>
         </DrawerTrigger>
         <DrawerContent>
-          <div className="mx-auto w-full max-w-sm">
-            <DrawerHeader>
-              <DrawerTitle>Move goal</DrawerTitle>
-              <DrawerDescription>
-                Set your daily activity goal.
-              </DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>Submit</Button>
-              <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </div>
+          <DrawerHeader>
+            <DrawerTitle>Move goal</DrawerTitle>
+            <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>Submit</Button>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     ),
@@ -653,26 +562,24 @@ export const overlaysDemos: ComponentEntry[] = [
               <Button variant="outline">Scrollable drawer</Button>
             </DrawerTrigger>
             <DrawerContent>
-              <div className="mx-auto w-full max-w-sm">
-                <DrawerHeader>
-                  <DrawerTitle>Changelog</DrawerTitle>
-                  <DrawerDescription>
-                    Recent updates to the project.
-                  </DrawerDescription>
-                </DrawerHeader>
-                <div className="max-h-60 space-y-3 overflow-y-auto px-4">
-                  {Array.from({ length: 15 }, (_, i) => (
-                    <p key={i} className="text-sm text-muted-foreground">
-                      v1.{i + 1}.0 — Bug fixes and performance improvements.
-                    </p>
-                  ))}
-                </div>
-                <DrawerFooter>
-                  <DrawerClose asChild>
-                    <Button variant="outline">Close</Button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </div>
+              <DrawerHeader>
+                <DrawerTitle>Changelog</DrawerTitle>
+                <DrawerDescription>
+                  Recent updates to the project.
+                </DrawerDescription>
+              </DrawerHeader>
+              <Scroller fadeSize="sm" className="min-h-0 flex-1 space-y-3 px-4">
+                {Array.from({ length: 15 }, (_, i) => (
+                  <p key={i} className="text-sm text-muted-foreground">
+                    v1.{i + 1}.0 — Bug fixes and performance improvements.
+                  </p>
+                ))}
+              </Scroller>
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button variant="outline">Close</Button>
+                </DrawerClose>
+              </DrawerFooter>
             </DrawerContent>
           </Drawer>
         ),
@@ -711,6 +618,78 @@ export const overlaysDemos: ComponentEntry[] = [
         ),
       },
       {
+        name: "Without close button",
+        description:
+          "Hide the built-in close button and resolve from the footer instead.",
+        layout: "viewport" as const,
+        Demo: () => (
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="outline">No close button</Button>
+            </DrawerTrigger>
+            <DrawerContent showCloseButton={false}>
+              <DrawerHeader>
+                <DrawerTitle>Manual close only</DrawerTitle>
+                <DrawerDescription>
+                  This drawer has no X button. Use the button below.
+                </DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter>
+                <DrawerClose asChild>
+                  <Button>Done</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        ),
+      },
+      {
+        name: "Nested drawers",
+        description:
+          "Open a drawer from inside another drawer. The parent scales back and stays mounted.",
+        layout: "viewport" as const,
+        Demo: () => (
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="outline">Manage account</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>Account</DrawerTitle>
+                <DrawerDescription>
+                  Update your details or remove the account entirely.
+                </DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter>
+                <DrawerNested>
+                  <DrawerTrigger asChild>
+                    <Button variant="destructive">Delete account</Button>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <DrawerHeader>
+                      <DrawerTitle>Are you sure?</DrawerTitle>
+                      <DrawerDescription>
+                        This permanently deletes the account and all of its
+                        data.
+                      </DrawerDescription>
+                    </DrawerHeader>
+                    <DrawerFooter>
+                      <Button variant="destructive">Yes, delete it</Button>
+                      <DrawerClose asChild>
+                        <Button variant="outline">Back</Button>
+                      </DrawerClose>
+                    </DrawerFooter>
+                  </DrawerContent>
+                </DrawerNested>
+                <DrawerClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        ),
+      },
+      {
         name: "Responsive dialog",
         description:
           "A dialog on desktop that becomes a drawer on mobile viewports.",
@@ -723,7 +702,7 @@ export const overlaysDemos: ComponentEntry[] = [
 
           if (isMobile) {
             return (
-              <Drawer open={open} onOpenChange={setOpen}>
+              <Drawer open={open} onOpenChange={setOpen} direction="bottom">
                 <DrawerTrigger asChild>
                   <Button variant="outline">
                     Edit profile (responsive)
@@ -739,7 +718,7 @@ export const overlaysDemos: ComponentEntry[] = [
                       <Label htmlFor="resp-drawer-name">Name</Label>
                       <Input
                         id="resp-drawer-name"
-                        defaultValue="Pedro Duarte"
+                        defaultValue={persona.name}
                       />
                     </div>
                     <DrawerFooter>
@@ -770,7 +749,7 @@ export const overlaysDemos: ComponentEntry[] = [
                   <Label htmlFor="resp-dialog-name">Name</Label>
                   <Input
                     id="resp-dialog-name"
-                    defaultValue="Pedro Duarte"
+                    defaultValue={persona.name}
                   />
                 </div>
                 <DialogFooter>
@@ -828,10 +807,47 @@ export const overlaysDemos: ComponentEntry[] = [
 </Popover>`,
     examples: [
       {
-        name: "Align",
-        description: "Popover aligned to start, center, or end of the trigger.",
+        name: "Sides",
+        description:
+          "Popover positioned on each side of the trigger. Every side holds the same multi-line block.",
         Demo: () => (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-8 py-16">
+            {(["top", "right", "bottom", "left"] as const).map((s) => (
+              <Popover key={s}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="capitalize">
+                    {s}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent side={s} className="w-80">
+                  <PopoverHeader>
+                    <PopoverTitle className="capitalize">
+                      {s} side
+                    </PopoverTitle>
+                    <PopoverDescription>
+                      The popover is anchored to the {s} of its trigger and
+                      flips to the opposite side when the viewport runs out of
+                      room. Body copy wraps freely, so a popover can carry
+                      several lines without changing its anchor.
+                    </PopoverDescription>
+                  </PopoverHeader>
+                  <Separator />
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <CalendarIcon className="size-3.5" />
+                    <span>Preview · updated moments ago</span>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ))}
+          </div>
+        ),
+      },
+      {
+        name: "Align",
+        description:
+          "Popover aligned to the start, center, or end edge of the trigger.",
+        Demo: () => (
+          <div className="flex flex-wrap items-center justify-center gap-4 py-8">
             {(["start", "center", "end"] as const).map((a) => (
               <Popover key={a}>
                 <PopoverTrigger asChild>
@@ -839,10 +855,17 @@ export const overlaysDemos: ComponentEntry[] = [
                     {a}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align={a} className="w-60">
-                  <p className="text-sm">
-                    Aligned to <strong>{a}</strong>.
-                  </p>
+                <PopoverContent align={a} className="w-80">
+                  <PopoverHeader>
+                    <PopoverTitle className="capitalize">
+                      {a} aligned
+                    </PopoverTitle>
+                    <PopoverDescription>
+                      The content edge lines up with the {a} of the trigger.
+                      Alignment is independent of the side, so a wide popover
+                      can hug either edge and still open below its trigger.
+                    </PopoverDescription>
+                  </PopoverHeader>
                 </PopoverContent>
               </Popover>
             ))}
@@ -922,43 +945,136 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <HoverCard>
         <HoverCardTrigger asChild>
-          <Button variant="link">@shadcn</Button>
+          <Button variant="link">@{persona.handle}</Button>
         </HoverCardTrigger>
         <HoverCardContent className="w-80">
-          <div className="space-y-1">
-            <h4 className="text-sm font-semibold">@shadcn</h4>
-            <p className="text-sm">
-              The React framework — created and maintained by @vercel.
-            </p>
+          <div className="flex gap-3">
+            <Avatar>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h4 className="text-sm font-semibold">{persona.name}</h4>
+              <p className="text-sm">
+                {persona.title} · {persona.department} at {persona.company}.
+              </p>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <CalendarIcon className="size-3.5" />
+                <span>Joined {persona.startedLabel}</span>
+              </div>
+            </div>
           </div>
         </HoverCardContent>
       </HoverCard>
     ),
     code: `<HoverCard>
   <HoverCardTrigger asChild>
-    <Button variant="link">@shadcn</Button>
+    <Button variant="link">@{persona.handle}</Button>
   </HoverCardTrigger>
   <HoverCardContent className="w-80">
-    The React framework — created and maintained by @vercel.
+    <div className="flex gap-3">
+      <Avatar>
+        <AvatarImage src={persona.avatar} alt="" />
+        <AvatarFallback>{persona.initials}</AvatarFallback>
+      </Avatar>
+      <div className="space-y-1">
+        <h4 className="text-sm font-semibold">{persona.name}</h4>
+        <p className="text-sm">
+          {persona.title} · {persona.department} at {persona.company}.
+        </p>
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <CalendarIcon className="size-3.5" />
+          <span>Joined {persona.startedLabel}</span>
+        </div>
+      </div>
+    </div>
   </HoverCardContent>
 </HoverCard>`,
     examples: [
       {
-        name: "Sides",
-        description: "Hover card positioned on each side of the trigger.",
+        name: "Multi-line Content",
+        description:
+          "A hover card holds a full block: a heading, wrapping body copy, a separator and a meta row.",
         Demo: () => (
-          <div className="flex flex-wrap items-center gap-8 py-12">
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <Button variant="link">Design tokens</Button>
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold">Design tokens</h4>
+                <p className="text-sm text-muted-foreground">
+                  Named values for color, spacing, radius and type. Components
+                  read tokens instead of raw values, so a theme change is a
+                  one-place edit and every surface stays in step.
+                </p>
+                <Separator />
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <CalendarIcon className="size-3.5" />
+                  <span>Updated 2 days ago · 4 min read</span>
+                </div>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        ),
+      },
+      {
+        name: "Inline in Prose",
+        description:
+          "Triggers can sit inside a paragraph to preview what a link points at.",
+        Demo: () => (
+          <p className="max-w-md text-sm leading-relaxed">
+            The showcase is built with{" "}
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Button variant="link" className="h-auto p-0 align-baseline">
+                  Radix primitives
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-72">
+                <div className="space-y-1">
+                  <h4 className="text-sm font-semibold">Radix Primitives</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Unstyled, accessible components that own focus, keyboard and
+                    positioning behaviour. Styling stays entirely ours.
+                  </p>
+                </div>
+              </HoverCardContent>
+            </HoverCard>{" "}
+            so the behaviour is handled for us and the tokens do the rest.
+          </p>
+        ),
+      },
+      {
+        name: "Sides",
+        description:
+          "Hover card positioned on each side of the trigger. Every side holds the same multi-line block.",
+        Demo: () => (
+          <div className="flex flex-wrap items-center justify-center gap-8 py-16">
             {(["top", "right", "bottom", "left"] as const).map((s) => (
-              <HoverCard key={s} openDelay={100}>
+              <HoverCard key={s}>
                 <HoverCardTrigger asChild>
                   <Button variant="link" className="capitalize">
                     {s}
                   </Button>
                 </HoverCardTrigger>
-                <HoverCardContent side={s} className="w-60">
-                  <p className="text-sm">
-                    Card on the <strong>{s}</strong>.
-                  </p>
+                <HoverCardContent side={s} className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold capitalize">
+                      {s} side
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      The card is anchored to the <strong>{s}</strong> of its
+                      trigger and flips to the opposite side when the viewport
+                      runs out of room. Body copy wraps freely, so a card can
+                      carry several lines without changing its anchor.
+                    </p>
+                    <Separator />
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <CalendarIcon className="size-3.5" />
+                      <span>Preview · updated moments ago</span>
+                    </div>
+                  </div>
                 </HoverCardContent>
               </HoverCard>
             ))}
@@ -1051,6 +1167,246 @@ export const overlaysDemos: ComponentEntry[] = [
             </TooltipContent>
           </Tooltip>
         ),
+      },
+    ],
+  },
+
+  // ---------------------------------------------------------------------------
+  // Coachmark
+  // ---------------------------------------------------------------------------
+  {
+    slug: "coachmark",
+    name: "Coachmark",
+    description:
+      "A teaching tip the app opens itself, to point at a feature or upsell it.",
+    category: "Overlays",
+    Demo: () => (
+      <Coachmark defaultOpen openDelay={400}>
+        <CoachmarkTrigger asChild>
+          <Button variant="outline">Share</Button>
+        </CoachmarkTrigger>
+        <CoachmarkContent>
+          <CoachmarkHeader>
+            <CoachmarkTitle>Share beyond your team</CoachmarkTitle>
+            <CoachmarkDescription>
+              Guests can now open a read-only link without an account.
+            </CoachmarkDescription>
+            <CoachmarkClose />
+          </CoachmarkHeader>
+          <CoachmarkFooter>
+            <CoachmarkDismiss>Not now</CoachmarkDismiss>
+            <CoachmarkAction>Try it</CoachmarkAction>
+          </CoachmarkFooter>
+        </CoachmarkContent>
+      </Coachmark>
+    ),
+    code: `<Coachmark defaultOpen openDelay={400}>
+  <CoachmarkTrigger asChild>
+    <Button variant="outline">Share</Button>
+  </CoachmarkTrigger>
+  <CoachmarkContent>
+    <CoachmarkHeader>
+      <CoachmarkTitle>Share beyond your team</CoachmarkTitle>
+      <CoachmarkDescription>
+        Guests can now open a read-only link without an account.
+      </CoachmarkDescription>
+      <CoachmarkClose />
+    </CoachmarkHeader>
+    <CoachmarkFooter>
+      <CoachmarkDismiss>Not now</CoachmarkDismiss>
+      <CoachmarkAction>Try it</CoachmarkAction>
+    </CoachmarkFooter>
+  </CoachmarkContent>
+</Coachmark>`,
+    examples: [
+      {
+        name: "Beacon",
+        description:
+          "A pulsing dot that both anchors the tip and invites the click.",
+        Demo: () => (
+          <div className="flex items-center gap-2 rounded-lg border p-2">
+            <Button variant="ghost" size="sm">
+              <PencilIcon data-icon="inline-start" />
+              Compose
+            </Button>
+            <Button variant="ghost" size="sm">
+              <ImageIcon data-icon="inline-start" />
+              Media
+            </Button>
+            <Coachmark>
+              <div className="relative">
+                <Button variant="ghost" size="sm">
+                  <SparklesIcon data-icon="inline-start" />
+                  Rewrite
+                </Button>
+                <CoachmarkBeacon
+                  label="Learn about Rewrite"
+                  className="absolute -top-1 -right-1"
+                />
+              </div>
+              <CoachmarkContent size="sm" align="end">
+                <CoachmarkHeader>
+                  <CoachmarkTitle>Rewrite is here</CoachmarkTitle>
+                  <CoachmarkDescription>
+                    Turn a rough draft into three polished options.
+                  </CoachmarkDescription>
+                </CoachmarkHeader>
+                <CoachmarkFooter>
+                  <CoachmarkAction>Show me</CoachmarkAction>
+                </CoachmarkFooter>
+              </CoachmarkContent>
+            </Coachmark>
+          </div>
+        ),
+      },
+      {
+        name: "Upsell with media",
+        description:
+          "Media, a lead-in badge and a single call to action for promoting a paid feature.",
+        Demo: () => (
+          <Coachmark>
+            <CoachmarkTrigger asChild>
+              <Button variant="outline">See what's new</Button>
+            </CoachmarkTrigger>
+            <CoachmarkContent size="lg">
+              <CoachmarkMedia>
+                <div className="flex aspect-(--coachmark-media-aspect) items-center justify-center">
+                  <SparklesIcon className="size-8 text-muted-foreground" />
+                </div>
+              </CoachmarkMedia>
+              <CoachmarkHeader>
+                <CoachmarkBadge>Included in Pro</CoachmarkBadge>
+                <CoachmarkTitle>Summarise any thread</CoachmarkTitle>
+                <CoachmarkDescription>
+                  Catch up on a long conversation in a few lines, then jump
+                  straight to the decisions.
+                </CoachmarkDescription>
+                <CoachmarkClose />
+              </CoachmarkHeader>
+              <CoachmarkFooter>
+                <CoachmarkDismiss>Maybe later</CoachmarkDismiss>
+                <CoachmarkAction>Upgrade</CoachmarkAction>
+              </CoachmarkFooter>
+            </CoachmarkContent>
+          </Coachmark>
+        ),
+      },
+      {
+        name: "Tones",
+        description:
+          "Inverted is the default and the loudest; default and accent sit quietly on the page surface.",
+        Demo: () => (
+          <div className="flex flex-wrap items-center gap-4">
+            {(["inverted", "default", "accent"] as const).map((tone) => (
+              <Coachmark key={tone}>
+                <CoachmarkTrigger asChild>
+                  <Button variant="outline" className="capitalize">
+                    {tone}
+                  </Button>
+                </CoachmarkTrigger>
+                <CoachmarkContent tone={tone} size="sm">
+                  <CoachmarkHeader>
+                    <CoachmarkTitle className="capitalize">
+                      {tone} tone
+                    </CoachmarkTitle>
+                    <CoachmarkDescription>
+                      Every part inside picks up the tone automatically.
+                    </CoachmarkDescription>
+                    <CoachmarkClose />
+                  </CoachmarkHeader>
+                  <CoachmarkFooter>
+                    <CoachmarkAction>Got it</CoachmarkAction>
+                  </CoachmarkFooter>
+                </CoachmarkContent>
+              </Coachmark>
+            ))}
+          </div>
+        ),
+      },
+      {
+        name: "Multi-step tour",
+        description:
+          "One tour drives several coachmarks in sequence, with progress dots and Back / Next.",
+        layout: "wide" as const,
+        Demo: () => {
+          const [step, setStep] = useState(0)
+          const [open, setOpen] = useState(false)
+
+          const steps = [
+            {
+              icon: PencilIcon,
+              label: "Compose",
+              title: "Start a draft here",
+              description:
+                "Compose opens a blank note with your last template applied.",
+            },
+            {
+              icon: ImageIcon,
+              label: "Media",
+              title: "Drop in anything",
+              description:
+                "Images, clips and files all land in the same tray.",
+            },
+            {
+              icon: SettingsIcon,
+              label: "Settings",
+              title: "Tune it once",
+              description:
+                "Defaults set here apply to every note you write from now on.",
+            },
+          ]
+
+          return (
+            <CoachmarkTour
+              count={steps.length}
+              step={step}
+              onStepChange={setStep}
+              open={open}
+              onOpenChange={setOpen}
+            >
+              <div className="flex flex-col items-center gap-6">
+                <div className="flex items-center gap-2 rounded-lg border p-2">
+                  {steps.map((item, index) => (
+                    <CoachmarkStep key={item.label} index={index}>
+                      <CoachmarkAnchor asChild>
+                        <Button variant="ghost" size="sm">
+                          <item.icon data-icon="inline-start" />
+                          {item.label}
+                        </Button>
+                      </CoachmarkAnchor>
+                      <CoachmarkContent size="sm">
+                        <CoachmarkHeader>
+                          <CoachmarkTitle>{item.title}</CoachmarkTitle>
+                          <CoachmarkDescription>
+                            {item.description}
+                          </CoachmarkDescription>
+                          <CoachmarkClose />
+                        </CoachmarkHeader>
+                        <CoachmarkFooter>
+                          <CoachmarkProgress />
+                          <div className="flex items-center gap-1">
+                            <CoachmarkPrevious />
+                            <CoachmarkNext />
+                          </div>
+                        </CoachmarkFooter>
+                      </CoachmarkContent>
+                    </CoachmarkStep>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setStep(0)
+                    setOpen(true)
+                  }}
+                >
+                  Start tour
+                </Button>
+              </div>
+            </CoachmarkTour>
+          )
+        },
       },
     ],
   },
@@ -1361,20 +1717,19 @@ export const overlaysDemos: ComponentEntry[] = [
                 aria-label="User menu"
               >
                 <Avatar className="size-8">
-                  <AvatarImage
-                    src="https://github.com/shadcn.png"
-                    alt="User"
-                  />
-                  <AvatarFallback>SC</AvatarFallback>
+                  <AvatarImage src={persona.avatar} alt="" />
+                  <AvatarFallback>{persona.initials}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm font-medium leading-none">shadcn</p>
+                  <p className="text-sm font-medium leading-none">
+                    {persona.name}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    m@example.com
+                    {persona.email}
                   </p>
                 </div>
               </DropdownMenuLabel>
@@ -1403,7 +1758,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: function ComplexMenu() {
           const [bookmarks, setBookmarks] = useState(true)
           const [urls, setUrls] = useState(false)
-          const [person, setPerson] = useState("pedro")
+          const [person, setPerson] = useState(persona.handle)
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -1470,11 +1825,11 @@ export const overlaysDemos: ComponentEntry[] = [
                   value={person}
                   onValueChange={setPerson}
                 >
-                  <DropdownMenuRadioItem value="pedro">
-                    Pedro
+                  <DropdownMenuRadioItem value={persona.handle}>
+                    {persona.firstName}
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="colm">
-                    Colm
+                  <DropdownMenuRadioItem value={persona.manager.handle}>
+                    {persona.manager.firstName}
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
                 <DropdownMenuSeparator />
@@ -1666,7 +2021,7 @@ export const overlaysDemos: ComponentEntry[] = [
         name: "Radio",
         description: "Context menu with a single-selection radio group.",
         Demo: function CtxRadio() {
-          const [person, setPerson] = useState("pedro")
+          const [person, setPerson] = useState(persona.handle)
           return (
             <ContextMenu>
               <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
@@ -1679,11 +2034,11 @@ export const overlaysDemos: ComponentEntry[] = [
                   value={person}
                   onValueChange={setPerson}
                 >
-                  <ContextMenuRadioItem value="pedro">
-                    Pedro Duarte
+                  <ContextMenuRadioItem value={persona.handle}>
+                    {persona.name}
                   </ContextMenuRadioItem>
-                  <ContextMenuRadioItem value="colm">
-                    Colm Tuite
+                  <ContextMenuRadioItem value={persona.manager.handle}>
+                    {persona.manager.name}
                   </ContextMenuRadioItem>
                 </ContextMenuRadioGroup>
               </ContextMenuContent>
@@ -1697,9 +2052,9 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: function CtxDestructive() {
           const [status, setStatus] = useState("")
           return (
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex w-full max-w-sm flex-col items-center gap-2">
               <ContextMenu>
-                <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
+                <ContextMenuTrigger className="flex h-36 w-full items-center justify-center rounded-md border border-dashed text-sm">
                   Right click — destructive
                 </ContextMenuTrigger>
                 <ContextMenuContent className="w-52">

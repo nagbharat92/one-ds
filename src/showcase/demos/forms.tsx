@@ -4,18 +4,26 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import {
+  AlignCenterIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
   ArrowRightIcon,
+  ArrowUpRightIcon,
+  BoldIcon,
   ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
   HeartIcon,
+  ItalicIcon,
   Loader2Icon,
   MailIcon,
   PlusIcon,
   SearchIcon,
+  UnderlineIcon,
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { persona } from "@/lib/persona"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,6 +32,7 @@ import {
   ButtonGroupText,
 } from "@/components/ui/button-group"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Favicon } from "@/components/ui/favicon"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,7 +59,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { Input, SearchInput } from "@/components/ui/input"
 import {
   InputGroup,
   InputGroupAddon,
@@ -84,6 +93,7 @@ import { Slider } from "@/components/ui/slider"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+import { Toggle } from "@/components/ui/toggle"
 
 function FormDemo() {
   const schema = z.object({
@@ -107,7 +117,7 @@ function FormDemo() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder={persona.handle} {...field} />
               </FormControl>
               <FormDescription>This is your public display name.</FormDescription>
               <FormMessage />
@@ -117,6 +127,219 @@ function FormDemo() {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
+  )
+}
+
+function FormValidationDemo() {
+  const schema = z.object({
+    email: z.string().email({ message: "Enter a valid email address." }),
+    password: z.string().min(8, { message: "Use at least 8 characters." }),
+  })
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "", password: "" },
+  })
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(() => {})}
+        className="w-full max-w-sm space-y-6"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Create account</Button>
+      </form>
+    </Form>
+  )
+}
+
+function FormControlsDemo() {
+  const schema = z.object({
+    role: z.string().min(1, { message: "Pick a role." }),
+    marketing: z.boolean(),
+    terms: z
+      .boolean()
+      .refine((value) => value, { message: "You must accept the terms." }),
+  })
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { role: "", marketing: true, terms: false },
+  })
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(() => {})}
+        className="w-full max-w-sm space-y-6"
+      >
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="viewer">Viewer</SelectItem>
+                  <SelectItem value="editor">Editor</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="marketing"
+          render={({ field }) => (
+            <FormItem className="flex items-center justify-between gap-4">
+              <div className="grid gap-1">
+                <FormLabel>Product updates</FormLabel>
+                <FormDescription>Occasional release notes.</FormDescription>
+              </div>
+              <FormControl>
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="terms"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center gap-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Accept terms and conditions</FormLabel>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Save preferences</Button>
+      </form>
+    </Form>
+  )
+}
+
+function FormSubmittingDemo() {
+  const schema = z.object({
+    message: z.string().min(1, { message: "Write a message first." }),
+  })
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { message: "" },
+  })
+  const { isSubmitting } = form.formState
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(
+          () => new Promise((resolve) => setTimeout(resolve, 1500)),
+        )}
+        className="w-full max-w-sm space-y-6"
+      >
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea placeholder="How can we help?" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? <Spinner /> : null}
+          {isSubmitting ? "Sending" : "Send message"}
+        </Button>
+      </form>
+    </Form>
+  )
+}
+
+function NestedToolbarDemo() {
+  const [align, setAlign] = useState("left")
+  return (
+    <ButtonGroup>
+      <ButtonGroup>
+        <Toggle variant="outline" aria-label="Bold">
+          <BoldIcon />
+        </Toggle>
+        <Toggle variant="outline" aria-label="Italic">
+          <ItalicIcon />
+        </Toggle>
+        <Toggle variant="outline" aria-label="Underline">
+          <UnderlineIcon />
+        </Toggle>
+      </ButtonGroup>
+      <ButtonGroup>
+        <Toggle
+          variant="outline"
+          aria-label="Align left"
+          pressed={align === "left"}
+          onPressedChange={(pressed) => pressed && setAlign("left")}
+        >
+          <AlignLeftIcon />
+        </Toggle>
+        <Toggle
+          variant="outline"
+          aria-label="Align center"
+          pressed={align === "center"}
+          onPressedChange={(pressed) => pressed && setAlign("center")}
+        >
+          <AlignCenterIcon />
+        </Toggle>
+        <Toggle
+          variant="outline"
+          aria-label="Align right"
+          pressed={align === "right"}
+          onPressedChange={(pressed) => pressed && setAlign("right")}
+        >
+          <AlignRightIcon />
+        </Toggle>
+      </ButtonGroup>
+    </ButtonGroup>
   )
 }
 
@@ -322,6 +545,42 @@ export function ButtonDemo() {
         ),
       },
       {
+        name: "Favicon",
+        description:
+          "Site favicons (always fetched from DuckDuckGo) work as the icon in any button type.",
+        Demo: () => (
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="outline"><Favicon domain="github.com" data-icon="inline-start" />GitHub</Button>
+            <Button variant="secondary"><Favicon domain="figma.com" data-icon="inline-start" />Figma</Button>
+            <Button><Favicon domain="spotify.com" data-icon="inline-start" />Spotify</Button>
+            <Button variant="ghost" size="icon" aria-label="X"><Favicon domain="x.com" /></Button>
+            <Button variant="ghost" size="icon" aria-label="YouTube"><Favicon domain="youtube.com" /></Button>
+            <Button variant="outline" size="icon" aria-label="Google"><Favicon domain="google.com" /></Button>
+          </div>
+        ),
+      },
+      {
+        name: "Favicon Sizes",
+        description:
+          "The favicon scales with the button size, matching how icons size.",
+        Demo: () => (
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <Button size="xs" variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Extra small</Button>
+              <Button size="sm" variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Small</Button>
+              <Button variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Default</Button>
+              <Button size="lg" variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Large</Button>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button size="icon-xs" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
+              <Button size="icon-sm" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
+              <Button size="icon" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
+              <Button size="icon-lg" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
+            </div>
+          </div>
+        ),
+      },
+      {
         name: "Rounded",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
@@ -339,11 +598,26 @@ export function ButtonDemo() {
       },
       {
         name: "As Child",
-        description: "Renders button styling on a child element like a link.",
+        description:
+          "Renders button styling on a link. Links always show an arrow icon to signal navigation.",
         Demo: () => (
-          <Button asChild>
-            <a href="#" onClick={(e) => e.preventDefault()}>Login</a>
-          </Button>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {([
+              "default",
+              "secondary",
+              "destructive",
+              "outline",
+              "ghost",
+              "link",
+            ] as const).map((variant) => (
+              <Button key={variant} variant={variant} asChild>
+                <a href="#" onClick={(e) => e.preventDefault()}>
+                  Login
+                  <ArrowUpRightIcon />
+                </a>
+              </Button>
+            ))}
+          </div>
         ),
       },
     ],
@@ -417,17 +691,9 @@ export function ButtonGroupDemo() {
       },
       {
         name: "Nested",
-        description: "Button groups within button groups.",
-        Demo: () => (
-          <ButtonGroup>
-            <Button variant="outline">View</Button>
-            <ButtonGroup>
-              <Button variant="outline">Sort</Button>
-              <Button variant="outline">Filter</Button>
-            </ButtonGroup>
-            <Button variant="outline">Export</Button>
-          </ButtonGroup>
-        ),
+        description:
+          "Cluster related actions into their own groups within one toolbar \u2014 here text styling and alignment.",
+        Demo: () => <NestedToolbarDemo />,
       },
       {
         name: "Split",
@@ -700,6 +966,17 @@ export function InputDemo() {
         layout: "wide",
       },
       {
+        name: "Search",
+        description: "Rounded, self-contained search variant with a clear button.",
+        Demo: () => (
+          <div className="grid w-full max-w-sm gap-3">
+            <SearchInput placeholder="Search" />
+            <SearchInput defaultValue="Design tokens" />
+            <SearchInput disabled placeholder="Search" />
+          </div>
+        ),
+      },
+      {
         name: "Form",
         description: "Multiple inputs in a validated form.",
         Demo: () => <InputFormDemo />,
@@ -791,7 +1068,7 @@ export function InputGroupDemo() {
           <InputGroup className="w-full max-w-sm">
             <InputGroupInput placeholder="Search..." />
             <InputGroupAddon align="inline-end">
-              <InputGroupButton>
+              <InputGroupButton variant="secondary">
                 <SearchIcon />
                 Search
               </InputGroupButton>
@@ -849,14 +1126,33 @@ export function InputGroupDemo() {
       },
       {
         name: "Textarea",
-        Demo: () => (
-          <InputGroup className="w-full max-w-sm">
-            <InputGroupTextarea placeholder="Write a message..." rows={3} />
-            <InputGroupAddon align="block-end">
-              <InputGroupButton size="xs">Send</InputGroupButton>
-            </InputGroupAddon>
-          </InputGroup>
-        ),
+        Demo: () => {
+          const [message, setMessage] = useState("")
+          return (
+            <InputGroup className="w-full max-w-sm has-disabled:bg-transparent has-disabled:opacity-100 dark:has-disabled:bg-input/30">
+              <InputGroupTextarea
+                placeholder="Write a comment..."
+                rows={3}
+                maxLength={280}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <InputGroupAddon align="block-end">
+                <InputGroupText className="tabular-nums">
+                  {message.length}/280
+                </InputGroupText>
+                <InputGroupButton
+                  className="ml-auto"
+                  size="sm"
+                  variant="secondary"
+                  disabled={message.trim().length === 0}
+                >
+                  Send
+                </InputGroupButton>
+              </InputGroupAddon>
+            </InputGroup>
+          )
+        },
       },
       {
         name: "Custom Input",
@@ -1220,20 +1516,20 @@ export function FieldDemo() {
             <RadioGroup defaultValue="pro">
               <FieldLabel>
                 <Field orientation="horizontal">
-                  <RadioGroupItem value="free" id="demo-field-choice-free" />
                   <FieldContent>
                     <FieldTitle>Free</FieldTitle>
                     <FieldDescription>For hobby projects.</FieldDescription>
                   </FieldContent>
+                  <RadioGroupItem value="free" id="demo-field-choice-free" />
                 </Field>
               </FieldLabel>
               <FieldLabel>
                 <Field orientation="horizontal">
-                  <RadioGroupItem value="pro" id="demo-field-choice-pro" />
                   <FieldContent>
                     <FieldTitle>Pro</FieldTitle>
                     <FieldDescription>For production workloads.</FieldDescription>
                   </FieldContent>
+                  <RadioGroupItem value="pro" id="demo-field-choice-pro" />
                 </Field>
               </FieldLabel>
             </RadioGroup>
@@ -1247,7 +1543,7 @@ export function FieldDemo() {
           <FieldGroup className="w-full max-w-sm">
             <Field>
               <FieldLabel htmlFor="demo-field-grp-name">Full name</FieldLabel>
-              <Input id="demo-field-grp-name" placeholder="Jane Doe" />
+              <Input id="demo-field-grp-name" placeholder={persona.name} />
             </Field>
             <Field>
               <FieldLabel htmlFor="demo-field-grp-email">Email</FieldLabel>
@@ -1262,10 +1558,10 @@ export function FieldDemo() {
         name: "Responsive Layout",
         description: "Labels move beside controls on wider screens.",
         Demo: () => (
-          <FieldGroup className="w-full max-w-lg">
+          <FieldGroup className="w-full max-w-md">
             <Field orientation="responsive">
               <FieldLabel htmlFor="demo-field-resp-name">Name</FieldLabel>
-              <Input id="demo-field-resp-name" placeholder="Jane Doe" />
+              <Input id="demo-field-resp-name" placeholder={persona.name} />
             </Field>
             <Field orientation="responsive">
               <FieldLabel htmlFor="demo-field-resp-email">Email</FieldLabel>
@@ -1303,7 +1599,7 @@ export function FormDemo() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder={persona.handle} {...field} />
               </FormControl>
               <FormDescription>This is your public display name.</FormDescription>
               <FormMessage />
@@ -1315,5 +1611,23 @@ export function FormDemo() {
     </Form>
   )
 }`,
+    examples: [
+      {
+        name: "Validation",
+        description: "Submit while empty to surface zod messages in FormMessage.",
+        Demo: () => <FormValidationDemo />,
+      },
+      {
+        name: "Non-input controls",
+        description:
+          "Select, Switch and Checkbox bound through the FormField render prop.",
+        Demo: () => <FormControlsDemo />,
+      },
+      {
+        name: "Submitting state",
+        description: "Disable the action while formState.isSubmitting is true.",
+        Demo: () => <FormSubmittingDemo />,
+      },
+    ],
   },
 ]

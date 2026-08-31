@@ -21,6 +21,7 @@ import {
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { persona, team } from "@/lib/persona"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Bubble,
@@ -92,11 +93,7 @@ const scrollerMessages = Array.from({ length: 8 }).map((_, i) => ({
       : `Great question — here is answer ${i + 1}.`,
 }))
 
-const groupChatUsers = [
-  { name: "Alice", initials: "AL", img: "https://github.com/shadcn.png" },
-  { name: "Bob", initials: "BO", img: "" },
-  { name: "Carol", initials: "CA", img: "" },
-]
+const groupChatUsers = team.slice(0, 3)
 
 const groupChatMessages = [
   { user: 0, text: "Has anyone reviewed the pull request?" },
@@ -489,8 +486,8 @@ export function BubbleDemo() {
         <Message align="start">
           <MessageAvatar>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={persona.avatar} alt="" />
+              <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
           </MessageAvatar>
           <MessageContent>
@@ -525,7 +522,7 @@ export function MessageDemo() {
       <Message align="start">
         <MessageAvatar>
           <Avatar>
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>{persona.initials}</AvatarFallback>
           </Avatar>
         </MessageAvatar>
         <MessageContent>
@@ -784,8 +781,8 @@ export function MessageScrollerDemo() {
                           {!isMe && (
                             <MessageAvatar>
                               <Avatar className="size-7">
-                                {u.img ? (
-                                  <AvatarImage src={u.img} alt={u.name} />
+                                {u.avatar ? (
+                                  <AvatarImage src={u.avatar} alt={u.name} />
                                 ) : null}
                                 <AvatarFallback className="text-xs">
                                   {u.initials}
@@ -913,7 +910,7 @@ export function MessageScrollerDemo() {
                     <MessageScrollerContent>
                       {messages.map((m) => (
                         <MessageScrollerItem key={m.id} id={m.id}>
-                          <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300">
+                          <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-(--speed-brisk)">
                             <Message align={m.align}>
                               <MessageContent>
                                 <Bubble

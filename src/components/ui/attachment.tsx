@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { useScrollerRef } from "@/hooks/use-scroller"
 import { Button } from "@/components/ui/button"
 
 const attachmentVariants = cva(
@@ -179,11 +180,14 @@ function AttachmentTrigger({
 }
 
 function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
+  // No inertia here: a rAF lerp fights CSS scroll snapping.
+  const setRef = useScrollerRef<HTMLDivElement>({ axis: "x", inertia: false })
   return (
     <div
+      ref={setRef}
       data-slot="attachment-group"
       className={cn(
-        "flex min-w-0 scroll-fade-x snap-x snap-mandatory scroll-px-1 scrollbar-none gap-3 overflow-x-auto overscroll-x-contain py-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start",
+        "flex min-w-0 scroll-fade-x scroll-fade-6 snap-x snap-mandatory scroll-px-1 scrollbar-none gap-3 overflow-x-auto overscroll-x-contain py-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start",
         className
       )}
       {...props}

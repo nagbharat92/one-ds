@@ -3,6 +3,7 @@ import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionn
 
 import { cn } from "@/lib/utils"
 import { buttonVariants, type Button } from "@/components/ui/button"
+import { controlIndicatorVariants } from "@/components/ui/control-indicator"
 import { CheckIcon } from "lucide-react"
 
 function Questionnaire({
@@ -42,7 +43,7 @@ function QuestionnaireItem({
     <QuestionnairePrimitive.Item
       data-slot="questionnaire-item"
       className={cn(
-        "flex min-w-0 flex-col gap-4 border-0 p-0 outline-none",
+        "flex min-w-0 flex-col gap-2 border-0 p-0 outline-none",
         className
       )}
       {...props}
@@ -58,7 +59,9 @@ function QuestionnaireTitle({
     <QuestionnairePrimitive.Title
       data-slot="questionnaire-title"
       className={cn(
-        "font-heading text-base leading-snug font-medium text-pretty",
+        // Renders as a <legend>, which sits outside the fieldset's flex flow, so
+        // the item gap never applies after it (same reason FieldLegend has mb).
+        "mb-2 font-heading text-base leading-snug font-medium text-pretty",
         className
       )}
       {...props}
@@ -87,7 +90,7 @@ function QuestionnaireChoices({
     <QuestionnairePrimitive.Choices
       data-slot="questionnaire-choices"
       className={cn(
-        "group/questionnaire-choices grid min-w-0 gap-2",
+        "group/questionnaire-choices mt-2 grid min-w-0 gap-2",
         className
       )}
       {...props}
@@ -117,7 +120,11 @@ function QuestionnaireChoice({
       <span
         aria-hidden="true"
         data-slot="questionnaire-choice-indicator"
-        className="pointer-events-none relative flex size-4 shrink-0 translate-y-0.5 items-center justify-center rounded-sm border border-input group-data-checked/questionnaire-choice:border-primary group-data-checked/questionnaire-choice:bg-primary group-data-checked/questionnaire-choice:text-primary-foreground dark:bg-input/30 dark:group-data-checked/questionnaire-choice:bg-primary"
+        className={cn(
+          controlIndicatorVariants(),
+          // The real input is a sibling, so this copy mirrors the choice's state.
+          "pointer-events-none translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full group-data-checked/questionnaire-choice:border-primary group-data-checked/questionnaire-choice:bg-primary group-data-checked/questionnaire-choice:text-primary-foreground dark:group-data-checked/questionnaire-choice:bg-primary"
+        )}
       >
         <span
           data-slot="questionnaire-choice-indicator-dot"
@@ -162,7 +169,7 @@ function QuestionnaireInput({
   return (
     <div
       data-slot="questionnaire-input-wrapper"
-      className="group/questionnaire-input relative w-full min-w-0"
+      className="group/questionnaire-input relative mt-2 w-full min-w-0"
     >
       <QuestionnairePrimitive.Input
         data-slot="questionnaire-input"
@@ -182,11 +189,15 @@ function QuestionnaireError({
   ...props
 }: React.ComponentProps<typeof QuestionnairePrimitive.Error>) {
   return (
-    <QuestionnairePrimitive.Error
-      data-slot="questionnaire-error"
-      className={cn("mt-2 text-sm text-destructive", className)}
-      {...props}
-    />
+    // The slot holds a line whether or not the message is shown, so revealing an
+    // error never shifts the answer above it.
+    <div data-slot="questionnaire-error-slot" className="min-h-lh text-sm">
+      <QuestionnairePrimitive.Error
+        data-slot="questionnaire-error"
+        className={cn("text-sm text-destructive", className)}
+        {...props}
+      />
+    </div>
   )
 }
 
@@ -198,7 +209,7 @@ function QuestionnaireActions({
     <div
       data-slot="questionnaire-actions"
       className={cn(
-        "questionnaire-actions-layout grid min-h-11 w-full items-center gap-2 sm:min-h-8",
+        "questionnaire-actions-layout mt-1 grid min-h-11 w-full items-center gap-2 sm:min-h-8",
         className
       )}
       {...props}
