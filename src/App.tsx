@@ -64,14 +64,19 @@ import { CodeBlock } from "@/components/code-block"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Favicon } from "@/components/ui/favicon"
 
+const alphabeticalRegistry = [...registry].sort((left, right) =>
+  left.name.localeCompare(right.name),
+)
+const defaultComponentSlug = alphabeticalRegistry[0].slug
+
 function useHashRoute() {
   const [hash, setHash] = useState(
-    () => window.location.hash.replace(/^#\/?/, "") || registry[0].slug,
+    () => window.location.hash.replace(/^#\/?/, "") || defaultComponentSlug,
   )
 
   useEffect(() => {
     const onChange = () =>
-      setHash(window.location.hash.replace(/^#\/?/, "") || registry[0].slug)
+      setHash(window.location.hash.replace(/^#\/?/, "") || defaultComponentSlug)
     window.addEventListener("hashchange", onChange)
     return () => window.removeEventListener("hashchange", onChange)
   }, [])
@@ -223,9 +228,9 @@ function ComponentNavigation({
     }))
     .filter((group) => group.items.length > 0)
 
-  const alphabeticalItems = registry
-    .filter((item) => matches(item.name))
-    .sort((a, b) => a.name.localeCompare(b.name))
+  const alphabeticalItems = alphabeticalRegistry.filter((item) =>
+    matches(item.name),
+  )
 
   const renderItem = (component: (typeof registry)[number]) => (
     <SidebarMenuItem key={component.slug}>
