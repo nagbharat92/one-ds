@@ -10,6 +10,7 @@ import { chatDemos } from "@/showcase/demos/chat"
 import { miscDemos } from "@/showcase/demos/misc"
 import { personaDemos } from "@/showcase/demos/persona"
 import { composedDemos } from "@/showcase/demos/composed"
+import { colorDemos } from "@/showcase/demos/colors"
 
 export type { ComponentEntry, ComponentExample } from "@/showcase/types"
 
@@ -24,6 +25,7 @@ export const registry: ComponentEntry[] = [
   ...chatDemos,
   ...miscDemos,
   ...personaDemos,
+  ...colorDemos,
   ...composedDemos,
 ]
 

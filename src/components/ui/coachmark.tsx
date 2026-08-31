@@ -8,7 +8,7 @@ import { XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-type CoachmarkTone = "default" | "accent" | "inverted"
+type CoachmarkTone = "default" | "inverted"
 
 type CoachmarkDismissReason =
   | "action"
@@ -198,7 +198,6 @@ const coachmarkContentVariants = cva(
     variants: {
       tone: {
         default: "bg-popover text-popover-foreground ring-1 ring-foreground/10",
-        accent: "bg-accent text-accent-foreground ring-1 ring-border",
         inverted: "bg-foreground text-background",
       },
       size: {
@@ -223,7 +222,7 @@ const COACHMARK_ARROW_TIP = 2.4
 
 // Triangle whose tip is pulled back along both edges and closed with a curve, so the
 // beak rounds off like the tooltip. Base corners stay sharp to merge into the card edge.
-const coachmarkArrowPath = (() => {
+const coachmarkArrowPaths = (() => {
   const half = COACHMARK_ARROW_WIDTH / 2
   const edge = Math.hypot(half, COACHMARK_ARROW_HEIGHT)
   const insetX = (half / edge) * COACHMARK_ARROW_TIP
@@ -231,12 +230,15 @@ const coachmarkArrowPath = (() => {
   const left = (half - insetX).toFixed(2)
   const right = (half + insetX).toFixed(2)
   const y = (COACHMARK_ARROW_HEIGHT - insetY).toFixed(2)
-  return `M0 0L${left} ${y}Q${half} ${COACHMARK_ARROW_HEIGHT} ${right} ${y}L${COACHMARK_ARROW_WIDTH} 0Z`
+  const edgePath = `M0 0L${left} ${y}Q${half} ${COACHMARK_ARROW_HEIGHT} ${right} ${y}L${COACHMARK_ARROW_WIDTH} 0`
+  return {
+    fill: `${edgePath}Z`,
+    stroke: edgePath,
+  }
 })()
 
 const coachmarkArrowTone: Record<CoachmarkTone, string> = {
   default: "fill-popover",
-  accent: "fill-accent",
   inverted: "fill-foreground",
 }
 
@@ -300,9 +302,19 @@ function CoachmarkContent({
             <svg
               viewBox={`0 0 ${COACHMARK_ARROW_WIDTH} ${COACHMARK_ARROW_HEIGHT}`}
               preserveAspectRatio="none"
-              className={coachmarkArrowTone[tone ?? "inverted"]}
+              className={cn(
+                coachmarkArrowTone[tone ?? "inverted"],
+                tone === "default" && "overflow-visible"
+              )}
             >
-              <path d={coachmarkArrowPath} />
+              <path d={coachmarkArrowPaths.fill} />
+              {tone === "default" ? (
+                <path
+                  d={coachmarkArrowPaths.stroke}
+                  className="fill-none stroke-foreground/10"
+                  strokeWidth={1}
+                />
+              ) : null}
             </svg>
           </PopoverPrimitive.Arrow>
         ) : null}
@@ -344,7 +356,7 @@ function CoachmarkBadge({ className, ...props }: React.ComponentProps<"span">) {
     <span
       data-slot="coachmark-badge"
       className={cn(
-        "col-start-1 mb-1 w-fit rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground group-data-[tone=inverted]/coachmark:bg-background/15 group-data-[tone=inverted]/coachmark:text-background",
+        "col-start-1 mb-1 w-fit rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground group-data-[tone=inverted]/coachmark:bg-control/15 group-data-[tone=inverted]/coachmark:text-background",
         className
       )}
       {...props}
@@ -442,7 +454,7 @@ function CoachmarkFooter({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 const coachmarkPrimaryAction =
-  "rounded-full px-4 group-data-[tone=inverted]/coachmark:bg-background group-data-[tone=inverted]/coachmark:text-foreground group-data-[tone=inverted]/coachmark:hover:bg-background/90"
+  "rounded-full px-4 group-data-[tone=inverted]/coachmark:bg-control group-data-[tone=inverted]/coachmark:text-foreground group-data-[tone=inverted]/coachmark:hover:bg-control/90"
 
 const coachmarkQuietAction =
   "rounded-full group-data-[tone=inverted]/coachmark:text-background group-data-[tone=inverted]/coachmark:hover:bg-background/10 group-data-[tone=inverted]/coachmark:hover:text-background"

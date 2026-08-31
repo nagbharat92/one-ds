@@ -17,6 +17,8 @@ import {
   PlusIcon,
   LoaderIcon,
   BookmarkIcon,
+  GlobeIcon,
+  SearchIcon,
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
@@ -78,6 +80,28 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import {
+  AIComposer,
+  AIComposerAction,
+  AIComposerActions,
+  AIComposerFooter,
+  AIComposerHeader,
+  AIComposerInput,
+  AIComposerSubmit,
+  AIComposerTool,
+  AIComposerTools,
+  type AIComposerStatus,
+} from "@/components/ui/ai-composer"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 // ---------------------------------------------------------------------------
 // Shared data
@@ -264,11 +288,364 @@ function LoadEarlierDemo() {
   )
 }
 
+function AIComposerAddMenu() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const [webSearch, setWebSearch] = useState(false)
+  const [deepResearch, setDeepResearch] = useState(false)
+
+  return (
+    <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        className="sr-only"
+        aria-label="Add files"
+      />
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="sr-only"
+        aria-label="Add images"
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <AIComposerAction aria-label="Add to prompt" tooltip={false}>
+            <PlusIcon aria-hidden />
+          </AIComposerAction>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="top" align="start">
+          <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
+              <PaperclipIcon aria-hidden />
+              Add files
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => imageInputRef.current?.click()}>
+              <ImageIcon aria-hidden />
+              Add images
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel>Tools</DropdownMenuLabel>
+          <DropdownMenuCheckboxItem
+            checked={webSearch}
+            onCheckedChange={(checked) => setWebSearch(checked === true)}
+          >
+            <GlobeIcon aria-hidden />
+            Search web
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem
+            checked={deepResearch}
+            onCheckedChange={(checked) => setDeepResearch(checked === true)}
+          >
+            <SearchIcon aria-hidden />
+            Deep research
+          </DropdownMenuCheckboxItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {webSearch ? (
+        <AIComposerTool
+          variant="secondary"
+          aria-pressed="true"
+          onClick={() => setWebSearch(false)}
+        >
+          <GlobeIcon data-icon="inline-start" />
+          Search web
+        </AIComposerTool>
+      ) : null}
+      {deepResearch ? (
+        <AIComposerTool
+          variant="secondary"
+          aria-pressed="true"
+          onClick={() => setDeepResearch(false)}
+        >
+          <SearchIcon data-icon="inline-start" />
+          Deep research
+        </AIComposerTool>
+      ) : null}
+    </>
+  )
+}
+
+function AIComposerDemo() {
+  const [prompt, setPrompt] = useState("")
+  const [status, setStatus] = useState<AIComposerStatus>("ready")
+
+  return (
+    <AIComposer
+      status={status}
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (!prompt.trim()) return
+        setStatus("streaming")
+      }}
+    >
+      <AIComposerInput
+        aria-label="Message"
+        placeholder="Ask anything"
+        value={prompt}
+        onChange={(event) => setPrompt(event.target.value)}
+      />
+      <AIComposerFooter>
+        <AIComposerTools>
+          <AIComposerAddMenu />
+        </AIComposerTools>
+        <AIComposerActions>
+          <AIComposerSubmit
+            status={status}
+            onClick={
+              status === "streaming" ? () => setStatus("ready") : undefined
+            }
+          />
+        </AIComposerActions>
+      </AIComposerFooter>
+    </AIComposer>
+  )
+}
+
+function AIComposerAttachmentsDemo() {
+  const [attachments, setAttachments] = useState([
+    { name: "research-notes.pdf", size: "1.2 MB" },
+    { name: "interview-summary.docx", size: "840 KB" },
+    { name: "usage-metrics.csv", size: "2.1 MB" },
+    { name: "roadmap.png", size: "3.4 MB" },
+    { name: "project-brief.pdf", size: "960 KB" },
+    { name: "launch-plan.docx", size: "1.7 MB" },
+  ])
+
+  return (
+    <AIComposer>
+      {attachments.length > 0 ? (
+        <AIComposerHeader>
+          <AttachmentGroup>
+            {attachments.map((attachment) => (
+              <Attachment key={attachment.name} size="sm">
+                <AttachmentMedia variant="icon">
+                  <FileIcon aria-hidden />
+                </AttachmentMedia>
+                <AttachmentContent>
+                  <AttachmentTitle>{attachment.name}</AttachmentTitle>
+                  <AttachmentDescription>
+                    {attachment.size}
+                  </AttachmentDescription>
+                </AttachmentContent>
+                <AttachmentActions>
+                  <AttachmentAction
+                    aria-label={`Remove ${attachment.name}`}
+                    onClick={() =>
+                      setAttachments((current) =>
+                        current.filter(
+                          (item) => item.name !== attachment.name
+                        )
+                      )
+                    }
+                  >
+                    <XIcon aria-hidden />
+                  </AttachmentAction>
+                </AttachmentActions>
+              </Attachment>
+            ))}
+          </AttachmentGroup>
+        </AIComposerHeader>
+      ) : null}
+      <AIComposerInput
+        aria-label="Message"
+        defaultValue="Summarize the key findings in this document."
+      />
+      <AIComposerFooter>
+        <AIComposerTools>
+          <AIComposerAddMenu />
+        </AIComposerTools>
+        <AIComposerActions>
+          <AIComposerSubmit />
+        </AIComposerActions>
+      </AIComposerFooter>
+    </AIComposer>
+  )
+}
+
+function AIComposerToolsDemo() {
+  return (
+    <AIComposer>
+      <AIComposerInput aria-label="Message" placeholder="Ask anything" />
+      <AIComposerFooter>
+        <AIComposerTools>
+          <AIComposerAddMenu />
+        </AIComposerTools>
+        <AIComposerActions>
+          <AIComposerSubmit />
+        </AIComposerActions>
+      </AIComposerFooter>
+    </AIComposer>
+  )
+}
+
+function AIComposerStatesDemo() {
+  const states: Array<{
+    status: AIComposerStatus
+    label: string
+    prompt: string
+  }> = [
+    { status: "ready", label: "Ready", prompt: "Draft a project update" },
+    { status: "submitted", label: "Submitted", prompt: "Creating a draft…" },
+    { status: "streaming", label: "Streaming", prompt: "Creating a draft…" },
+    { status: "error", label: "Error", prompt: "Retry the last request" },
+  ]
+
+  return (
+    <div className="grid w-full max-w-(--ai-composer-max-width) gap-4">
+      {states.map(({ status, label, prompt }) => (
+        <div key={status} className="grid gap-2">
+          <span className="text-sm font-medium text-muted-foreground">
+            {label}
+          </span>
+          <AIComposer status={status}>
+            <AIComposerInput
+              aria-label={`${label} message`}
+              defaultValue={prompt}
+              readOnly
+            />
+            <AIComposerFooter>
+              <AIComposerTools>
+                <AIComposerAddMenu />
+              </AIComposerTools>
+              <AIComposerActions>
+                <AIComposerSubmit status={status} />
+              </AIComposerActions>
+            </AIComposerFooter>
+          </AIComposer>
+        </div>
+      ))}
+      <div className="grid gap-2">
+        <span className="text-sm font-medium text-muted-foreground">
+          Disabled
+        </span>
+        <AIComposer>
+          <fieldset disabled className="contents">
+            <AIComposerInput aria-label="Disabled message" placeholder="Ask anything" />
+            <AIComposerFooter>
+              <AIComposerTools>
+                <AIComposerAddMenu />
+              </AIComposerTools>
+              <AIComposerActions>
+                <AIComposerSubmit />
+              </AIComposerActions>
+            </AIComposerFooter>
+          </fieldset>
+        </AIComposer>
+      </div>
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------------------
 // Entries
 // ---------------------------------------------------------------------------
 
 export const chatDemos: ComponentEntry[] = [
+  // =======================================================================
+  // AI COMPOSER
+  // =======================================================================
+  {
+    slug: "ai-composer",
+    name: "AI Composer",
+    description:
+      "A flexible prompt composer with attachments, tools and generation states.",
+    category: "Chat",
+    installCommand: null,
+    Demo: AIComposerDemo,
+    code: `import { useState } from "react"
+  import { PaperclipIcon, PlusIcon } from "lucide-react"
+import {
+  AIComposer,
+  AIComposerAction,
+  AIComposerActions,
+  AIComposerFooter,
+  AIComposerInput,
+  AIComposerSubmit,
+  AIComposerTools,
+  type AIComposerStatus,
+} from "@/components/ui/ai-composer"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+export function AIComposerDemo() {
+  const [prompt, setPrompt] = useState("")
+  const [status, setStatus] = useState<AIComposerStatus>("ready")
+
+  return (
+    <AIComposer
+      status={status}
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (prompt.trim()) setStatus("streaming")
+      }}
+    >
+      <AIComposerInput
+        aria-label="Message"
+        placeholder="Ask anything"
+        value={prompt}
+        onChange={(event) => setPrompt(event.target.value)}
+      />
+      <AIComposerFooter>
+        <AIComposerTools>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <AIComposerAction aria-label="Add to prompt" tooltip={false}>
+                <PlusIcon />
+              </AIComposerAction>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="top" align="start">
+              <DropdownMenuItem>
+                <PaperclipIcon />
+                Add files
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </AIComposerTools>
+        <AIComposerActions>
+          <AIComposerSubmit
+            status={status}
+            onClick={status === "streaming" ? () => setStatus("ready") : undefined}
+          />
+        </AIComposerActions>
+      </AIComposerFooter>
+    </AIComposer>
+  )
+}`,
+    examples: [
+      {
+        name: "Attachments",
+        description:
+          "Place existing Attachment components in the composer's header region.",
+        layout: "wide",
+        Demo: AIComposerAttachmentsDemo,
+      },
+      {
+        name: "Tools",
+        description:
+          "Compose icon actions and persistent tools without changing the prompt layout.",
+        layout: "wide",
+        Demo: AIComposerToolsDemo,
+      },
+      {
+        name: "States",
+        description:
+          "Ready, submitted, streaming, error and disabled states keep one stable geometry.",
+        layout: "wide",
+        Demo: AIComposerStatesDemo,
+      },
+    ],
+  },
+
   // =======================================================================
   // BUBBLE
   // =======================================================================

@@ -137,7 +137,7 @@ const siteHeaderContainerVariants = cva(
       variant: {
         docked: "mx-auto w-full px-(--site-header-gutter)",
         floating:
-          "w-auto max-w-full rounded-(--site-header-radius) border bg-background px-(--site-header-padding) shadow-(--site-header-shadow)",
+          "w-auto max-w-full rounded-(--site-header-radius) border bg-popover px-(--site-header-padding) shadow-(--site-header-shadow)",
         // The shell stays invisible; each group carries its own chrome instead.
         clustered: "w-auto max-w-full gap-(--site-header-cluster-gap)",
       },
@@ -178,7 +178,7 @@ function SiteHeaderGroup({ className, ...props }: React.ComponentProps<"div">) {
       className={cn(
         "flex h-full items-center gap-1",
         variant === "clustered" &&
-          "rounded-(--site-header-radius) border bg-background px-(--site-header-padding) shadow-(--site-header-shadow)",
+          "rounded-(--site-header-radius) border bg-popover px-(--site-header-padding) shadow-(--site-header-shadow)",
         className
       )}
       {...props}

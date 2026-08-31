@@ -51,6 +51,7 @@
     --color-popover: var(--popover);
     --color-card-foreground: var(--card-foreground);
     --color-card: var(--card);
+    --color-control: var(--control);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
     --radius-xs: calc(var(--radius) * 0.2);
@@ -64,23 +65,38 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
+  /* One warm structural ground drives page and docked navigation backgrounds.
+     Cards, controls and floating surfaces stay independently white. */
+  --surface-ground: oklch(0.985 0.006 85);
+  --surface-backplate: color-mix(
+    in oklab,
+    var(--surface-ground) 94%,
+    var(--foreground)
+  );
+  --surface-stroke: color-mix(
+    in oklab,
+    var(--surface-ground) 90%,
+    var(--foreground)
+  );
+  --destructive-hue: 12;
+  --background: var(--surface-ground);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
+    --control: oklch(1 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.145 0 0);
     --primary: oklch(0.205 0 0);
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
+    --secondary: var(--surface-backplate);
     --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
+    --muted: var(--surface-backplate);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
+    --accent: var(--surface-backplate);
     --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
+    --destructive: oklch(0.58 0.2 var(--destructive-hue));
+    --border: var(--surface-stroke);
+    --input: var(--surface-stroke);
     --ring: oklch(0.708 0 0);
 
      /* Badge expressions. Pale surfaces keep compact labels legible while the
@@ -93,8 +109,8 @@
      --badge-sky-foreground: oklch(0.46 0.15 230);
      --badge-purple: oklch(0.96 0.05 300);
      --badge-purple-foreground: oklch(0.46 0.18 300);
-     --badge-red: oklch(0.95 0.04 25);
-     --badge-red-foreground: oklch(0.5 0.2 25);
+    --badge-red: oklch(0.95 0.04 var(--destructive-hue));
+    --badge-red-foreground: oklch(0.5 0.18 var(--destructive-hue));
 
     /* Presence. The only chromatic accents in an otherwise neutral palette,
        because a person's availability has to read at a glance. */
@@ -145,6 +161,40 @@
     --collapsible-speed: var(--speed-brisk);
     --collapsible-ease: var(--ease-glide);
 
+    /* AI composer. Its fixed radius is derived from the circular footer
+       control, the surrounding inset and the shell stroke. It therefore reads
+       as a pill at rest without turning into a stadium as the prompt grows. */
+    --ai-composer-max-width: calc(var(--spacing) * 192);
+    --ai-composer-control-size: calc(var(--spacing) * 8);
+    --ai-composer-padding: calc(var(--spacing) * 2);
+    --ai-composer-border-width: 1px;
+    --ai-composer-radius: calc(
+      var(--ai-composer-control-size) / 2 + var(--ai-composer-padding) +
+        var(--ai-composer-border-width)
+    );
+    --ai-composer-gap: calc(var(--spacing) * 2);
+    --ai-composer-tool-gap: calc(var(--spacing) * 1);
+    --ai-composer-tool-padding-inline: calc(var(--spacing) * 3);
+    --ai-composer-input-min-height: calc(var(--spacing) * 11);
+    --ai-composer-input-max-height: calc(var(--spacing) * 40);
+    --ai-composer-input-padding-inline: calc(var(--spacing) * 3);
+    --ai-composer-input-padding-block: calc(var(--spacing) * 2);
+    --ai-composer-input-line-height: calc(var(--spacing) * 5);
+    --ai-composer-compact-size: calc(
+      var(--ai-composer-control-size) + var(--ai-composer-padding) * 2 +
+        var(--ai-composer-border-width) * 2
+    );
+    --ai-composer-compact-input-inset: calc(
+      var(--ai-composer-control-size) + var(--ai-composer-gap)
+    );
+    --ai-composer-expanded-padding-block-end: calc(
+      var(--ai-composer-padding) + var(--ai-composer-control-size) +
+        var(--ai-composer-gap)
+    );
+    --ai-composer-speed: var(--speed-gentle);
+    --ai-composer-ease: var(--ease-glide);
+    --ai-composer-shadow: var(--elevation-raised);
+
      /* Skeleton. A high-contrast travelling highlight reads more clearly than
        a whole-surface opacity pulse while retaining the neutral palette. */
     --skeleton-shimmer-speed: calc(var(--speed-pulse) * 2);
@@ -164,13 +214,13 @@
     --elevation-floating: 0 1px 2px var(--elevation-ambient),
         0 12px 32px -8px var(--elevation-key);
 
-    --sidebar: oklch(1 0 0);
+    --sidebar: var(--surface-ground);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent: var(--surface-backplate);
     --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-border: var(--surface-stroke);
     --sidebar-ring: oklch(0.708 0 0);
     --sidebar-width: calc(var(--spacing) * 64);
     --sidebar-width-icon: calc(var(--spacing) * 12);
@@ -337,6 +387,7 @@
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
     --card-foreground: oklch(0.985 0 0);
+    --control: var(--background);
     --popover: oklch(0.205 0 0);
     --popover-foreground: oklch(0.985 0 0);
     --primary: oklch(0.922 0 0);
@@ -347,7 +398,7 @@
     --muted-foreground: oklch(0.708 0 0);
     --accent: oklch(0.269 0 0);
     --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
+    --destructive: oklch(0.7 0.16 var(--destructive-hue));
     --badge-blue: oklch(0.3 0.08 255);
     --badge-blue-foreground: oklch(0.84 0.11 255);
     --badge-green: oklch(0.3 0.07 150);
@@ -356,8 +407,8 @@
     --badge-sky-foreground: oklch(0.86 0.1 225);
     --badge-purple: oklch(0.31 0.08 300);
     --badge-purple-foreground: oklch(0.86 0.11 300);
-    --badge-red: oklch(0.31 0.08 25);
-    --badge-red-foreground: oklch(0.86 0.11 25);
+    --badge-red: oklch(0.31 0.07 var(--destructive-hue));
+    --badge-red-foreground: oklch(0.86 0.1 var(--destructive-hue));
     --presence-available: oklch(0.72 0.17 149);
     --presence-away: oklch(0.81 0.15 75);
     --border: oklch(1 0 0 / 10%);
@@ -387,6 +438,66 @@
 [data-slot="sidebar"][data-placement="inset"] {
     --sidebar: transparent;
     --sidebar-accent: var(--background);
+}
+
+/* The composer rests as one concentric row. Attachments, active tools or a
+   multiline prompt promote it to the stacked composition without changing
+   any of its component metrics. */
+[data-slot="ai-composer"] {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  block-size: var(--ai-composer-compact-size);
+  overflow: clip;
+  interpolate-size: allow-keywords;
+  transition-property: block-size, padding-block-end, border-color, box-shadow;
+  transition-duration: var(--ai-composer-speed);
+  transition-timing-function: var(--ai-composer-ease);
+}
+
+[data-slot="ai-composer"] > [data-slot="ai-composer-input"] {
+  block-size: var(--ai-composer-control-size);
+  min-block-size: var(--ai-composer-control-size);
+  max-block-size: var(--ai-composer-control-size);
+  padding-block: calc(
+    (var(--ai-composer-control-size) - var(--ai-composer-input-line-height)) / 2
+  );
+  padding-inline: var(--ai-composer-compact-input-inset);
+  line-height: var(--ai-composer-input-line-height);
+  transition-property: block-size, min-block-size, max-block-size, padding;
+  transition-duration: var(--ai-composer-speed);
+  transition-timing-function: var(--ai-composer-ease);
+}
+
+[data-slot="ai-composer"] > [data-slot="ai-composer-footer"] {
+  position: absolute;
+  inset-inline: var(--ai-composer-padding);
+  inset-block-end: var(--ai-composer-padding);
+  pointer-events: none;
+}
+
+[data-slot="ai-composer"] > [data-slot="ai-composer-footer"] button {
+  pointer-events: auto;
+}
+
+[data-slot="ai-composer"]:is(
+  :has(> [data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-tool"]),
+  :has(> [data-slot="ai-composer-input"][data-multiline="true"])
+) {
+  block-size: auto;
+  padding-block-end: var(--ai-composer-expanded-padding-block-end);
+}
+
+[data-slot="ai-composer"]:is(
+  :has(> [data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-tool"]),
+  :has(> [data-slot="ai-composer-input"][data-multiline="true"])
+) > [data-slot="ai-composer-input"] {
+  block-size: auto;
+  min-block-size: var(--ai-composer-input-min-height);
+  max-block-size: var(--ai-composer-input-max-height);
+  padding-block: var(--ai-composer-input-padding-block);
+  padding-inline: var(--ai-composer-input-padding-inline);
 }
 
 /* Scrollbar utilities. The scroll-fade-* utilities and no-scrollbar already ship
@@ -847,7 +958,7 @@
     border: var(--showcase-preview-dot) solid var(--border);
     border-radius: var(--radius-xl);
     padding: var(--showcase-preview-padding);
-    background-color: var(--card);
+    background-color: var(--background);
     background-image: radial-gradient(
       circle,
       color-mix(in oklab, var(--border) 70%, transparent) var(--showcase-preview-dot),

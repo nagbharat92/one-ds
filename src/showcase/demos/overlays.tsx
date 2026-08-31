@@ -1294,10 +1294,10 @@ export const overlaysDemos: ComponentEntry[] = [
       {
         name: "Tones",
         description:
-          "Inverted is the default and the loudest; default and accent sit quietly on the page surface.",
+          "Inverted is the default and the loudest; the light tone sits quietly on the page surface.",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-4">
-            {(["inverted", "default", "accent"] as const).map((tone) => (
+            {(["inverted", "default"] as const).map((tone) => (
               <Coachmark key={tone}>
                 <CoachmarkTrigger asChild>
                   <Button variant="outline" className="capitalize">
