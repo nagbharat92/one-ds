@@ -52,13 +52,16 @@ import {
 import { Button } from "@/components/ui/button"
 import { InputGroupAddon } from "@/components/ui/input-group"
 import {
+  ChoiceCard,
   Field,
   FieldContent,
   FieldDescription,
+  FieldGroup,
   FieldLabel,
   FieldSet,
   FieldLegend,
   FieldError,
+  FieldTitle,
 } from "@/components/ui/field"
 import {
   Table,
@@ -119,6 +122,77 @@ export function CheckboxDemo() {
               <FieldDescription>Receive emails about new products and features.</FieldDescription>
             </FieldContent>
           </Field>
+        ),
+      },
+      {
+        name: "Choice Card",
+        description: "Independently selectable checkbox cards.",
+        layout: "wide",
+        Demo: () => (
+          <FieldSet className="w-full max-w-2xl">
+            <FieldLegend>Project access</FieldLegend>
+            <FieldDescription>
+              Select every area this role can manage.
+            </FieldDescription>
+            <FieldGroup className="grid gap-3 sm:grid-cols-3">
+              {[
+                {
+                  id: "cb-card-content",
+                  label: "Content",
+                  description: "Pages and media.",
+                  checked: true,
+                },
+                {
+                  id: "cb-card-people",
+                  label: "People",
+                  description: "Members and roles.",
+                  checked: false,
+                },
+                {
+                  id: "cb-card-settings",
+                  label: "Settings",
+                  description: "Workspace controls.",
+                  checked: false,
+                },
+              ].map((item) => (
+                <ChoiceCard key={item.id}>
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>{item.label}</FieldTitle>
+                      <FieldDescription>{item.description}</FieldDescription>
+                    </FieldContent>
+                    <Checkbox id={item.id} defaultChecked={item.checked} />
+                  </Field>
+                </ChoiceCard>
+              ))}
+            </FieldGroup>
+          </FieldSet>
+        ),
+      },
+      {
+        name: "Single-line Choice Card",
+        description: "Compact checkbox cards without supporting descriptions.",
+        layout: "wide",
+        Demo: () => (
+          <FieldSet className="w-full max-w-2xl">
+            <FieldLegend>Review checklist</FieldLegend>
+            <FieldGroup className="grid gap-3 sm:grid-cols-3">
+              {[
+                { id: "cb-card-single-visual", label: "Visual review", checked: true },
+                { id: "cb-card-single-accessibility", label: "Accessibility", checked: false },
+                { id: "cb-card-single-motion", label: "Motion review", checked: false },
+              ].map((item) => (
+                <ChoiceCard key={item.id}>
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>{item.label}</FieldTitle>
+                    </FieldContent>
+                    <Checkbox id={item.id} defaultChecked={item.checked} />
+                  </Field>
+                </ChoiceCard>
+              ))}
+            </FieldGroup>
+          </FieldSet>
         ),
       },
       {
@@ -278,23 +352,65 @@ export function RadioGroupDemo() {
         description: "Radio items styled as selectable cards.",
         layout: "wide",
         Demo: () => (
-          <RadioGroup defaultValue="team" className="grid gap-3 sm:grid-cols-3">
-            {[
-              { value: "personal", label: "Personal", desc: "For individual use." },
-              { value: "team", label: "Team", desc: "Share with your team." },
-              { value: "enterprise", label: "Enterprise", desc: "Advanced security and support." },
-            ].map((item) => (
-              <FieldLabel key={item.value} className="cursor-pointer">
-                <Field orientation="horizontal">
-                  <FieldContent>
-                    <span className="text-sm font-medium">{item.label}</span>
-                    <FieldDescription>{item.desc}</FieldDescription>
-                  </FieldContent>
-                  <RadioGroupItem value={item.value} id={`rg-card-${item.value}`} />
-                </Field>
-              </FieldLabel>
-            ))}
-          </RadioGroup>
+          <FieldSet className="w-full max-w-2xl">
+            <FieldLegend id="rg-card-legend">Workspace type</FieldLegend>
+            <RadioGroup
+              defaultValue="team"
+              aria-labelledby="rg-card-legend"
+              className="grid gap-3 sm:grid-cols-3"
+            >
+              {[
+                { value: "personal", label: "Personal", desc: "For individual use." },
+                { value: "team", label: "Team", desc: "Share with your team." },
+                { value: "enterprise", label: "Enterprise", desc: "Advanced security and support." },
+              ].map((item) => (
+                <ChoiceCard key={item.value}>
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>{item.label}</FieldTitle>
+                      <FieldDescription>{item.desc}</FieldDescription>
+                    </FieldContent>
+                    <RadioGroupItem value={item.value} id={`rg-card-${item.value}`} />
+                  </Field>
+                </ChoiceCard>
+              ))}
+            </RadioGroup>
+          </FieldSet>
+        ),
+      },
+      {
+        name: "Single-line Choice Card",
+        description: "Compact radio cards without supporting descriptions.",
+        layout: "wide",
+        Demo: () => (
+          <FieldSet className="w-full max-w-2xl">
+            <FieldLegend id="rg-card-single-legend">
+              Review cadence
+            </FieldLegend>
+            <RadioGroup
+              defaultValue="weekly"
+              aria-labelledby="rg-card-single-legend"
+              className="grid gap-3 sm:grid-cols-3"
+            >
+              {[
+                { value: "daily", label: "Daily" },
+                { value: "weekly", label: "Weekly" },
+                { value: "monthly", label: "Monthly" },
+              ].map((item) => (
+                <ChoiceCard key={item.value}>
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>{item.label}</FieldTitle>
+                    </FieldContent>
+                    <RadioGroupItem
+                      value={item.value}
+                      id={`rg-card-single-${item.value}`}
+                    />
+                  </Field>
+                </ChoiceCard>
+              ))}
+            </RadioGroup>
+          </FieldSet>
         ),
       },
       {
@@ -389,22 +505,50 @@ export function SwitchDemo() {
         description: "Switches styled as selectable cards.",
         layout: "wide",
         Demo: () => (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              { id: "sw-card-wifi", icon: WifiIcon, label: "Wi-Fi", desc: "Connect to nearby networks.", on: true },
-              { id: "sw-card-bell", icon: BellIcon, label: "Notifications", desc: "Get alerts for new messages.", on: false },
-            ].map((item) => (
-              <FieldLabel key={item.id} className="cursor-pointer">
-                <Field orientation="horizontal">
-                  <FieldContent>
-                    <span className="text-sm font-medium">{item.label}</span>
-                    <FieldDescription>{item.desc}</FieldDescription>
-                  </FieldContent>
-                  <Switch id={item.id} defaultChecked={item.on} />
-                </Field>
-              </FieldLabel>
-            ))}
-          </div>
+          <FieldSet className="w-full max-w-2xl">
+            <FieldLegend>Connection settings</FieldLegend>
+            <FieldGroup className="grid gap-3 sm:grid-cols-2">
+              {[
+                { id: "sw-card-wifi", icon: WifiIcon, label: "Wi-Fi", desc: "Connect to nearby networks.", on: true },
+                { id: "sw-card-bell", icon: BellIcon, label: "Notifications", desc: "Get alerts for new messages.", on: false },
+              ].map((item) => (
+                <ChoiceCard key={item.id}>
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>{item.label}</FieldTitle>
+                      <FieldDescription>{item.desc}</FieldDescription>
+                    </FieldContent>
+                    <Switch id={item.id} defaultChecked={item.on} />
+                  </Field>
+                </ChoiceCard>
+              ))}
+            </FieldGroup>
+          </FieldSet>
+        ),
+      },
+      {
+        name: "Single-line Choice Card",
+        description: "Compact switch cards without supporting descriptions.",
+        layout: "wide",
+        Demo: () => (
+          <FieldSet className="w-full max-w-2xl">
+            <FieldLegend>Quick settings</FieldLegend>
+            <FieldGroup className="grid gap-3 sm:grid-cols-2">
+              {[
+                { id: "sw-card-single-sync", label: "Automatic sync", on: true },
+                { id: "sw-card-single-updates", label: "Product updates", on: false },
+              ].map((item) => (
+                <ChoiceCard key={item.id}>
+                  <Field orientation="horizontal">
+                    <FieldContent>
+                      <FieldTitle>{item.label}</FieldTitle>
+                    </FieldContent>
+                    <Switch id={item.id} defaultChecked={item.on} />
+                  </Field>
+                </ChoiceCard>
+              ))}
+            </FieldGroup>
+          </FieldSet>
         ),
       },
       {

@@ -88,6 +88,12 @@ export function useScroller(
     const onWheel = (event: WheelEvent) => {
       if (event.ctrlKey) return // pinch-zoom stays native
       if (event.defaultPrevented) return // a nested scroller already claimed it
+      const eventTarget = event.target
+      const boundary =
+        eventTarget instanceof Element
+          ? eventTarget.closest<HTMLElement>("[data-scroll-boundary]")
+          : null
+      if (boundary && boundary !== el && el.contains(boundary)) return
       // The element can be scrolled by other means (cmdk, keyboard, drag) between
       // wheel events, so measure rather than trust the last target.
       if (!running) target = position()

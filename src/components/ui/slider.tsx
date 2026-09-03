@@ -5,14 +5,23 @@ import { Slider as SliderPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+type SliderProps = React.ComponentProps<typeof SliderPrimitive.Root> & {
+  thumbLabels?: string[]
+  thumbValueTexts?: string[]
+}
+
 function Slider({
   className,
   defaultValue,
   value,
   min = 0,
   max = 100,
+  thumbLabels,
+  thumbValueTexts,
+  "aria-label": ariaLabel,
+  "aria-valuetext": ariaValueText,
   ...props
-}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+}: SliderProps) {
   const _values = React.useMemo(
     () =>
       Array.isArray(value)
@@ -30,6 +39,8 @@ function Slider({
       value={value}
       min={min}
       max={max}
+      aria-label={ariaLabel}
+      aria-valuetext={ariaValueText}
       className={cn(
         "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col",
         className
@@ -49,7 +60,15 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
-          className="relative block size-3 shrink-0 rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+          aria-label={
+            thumbLabels?.[index] ??
+            (_values.length === 1 ? ariaLabel : undefined)
+          }
+          aria-valuetext={
+            thumbValueTexts?.[index] ??
+            (_values.length === 1 ? ariaValueText : undefined)
+          }
+          className="relative block size-3 shrink-0 rounded-full border border-ring bg-white bg-clip-padding ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
     </SliderPrimitive.Root>
@@ -57,3 +76,4 @@ function Slider({
 }
 
 export { Slider }
+export type { SliderProps }

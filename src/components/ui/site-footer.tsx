@@ -3,13 +3,12 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-// The footer always renders in the dark palette so it contrasts with the page.
 function SiteFooter({ className, ...props }: React.ComponentProps<"footer">) {
   return (
     <footer
       data-slot="site-footer"
       className={cn(
-        "dark w-full border-t border-border/60 bg-background text-foreground",
+        "w-full border-t border-border/60 bg-background text-foreground",
         className
       )}
       {...props}
@@ -229,7 +228,7 @@ function SiteFooterSocialLink({
     <Comp
       data-slot="site-footer-social-link"
       className={cn(
-        "inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-4 [&_svg]:shrink-0",
+        "inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors outline-none hover:bg-(--state-layer-hover) active:bg-(--state-layer-pressed) hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}

@@ -35,7 +35,7 @@ function MessageAvatar({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="message-avatar"
       className={cn(
-        "flex w-fit min-w-8 shrink-0 items-center justify-center self-end overflow-hidden rounded-full bg-muted group-has-data-[slot=message-footer]/message:-translate-y-8",
+        "flex w-fit min-w-8 shrink-0 items-center justify-center self-end group-has-data-[slot=message-footer]/message:-translate-y-8",
         className
       )}
       {...props}
@@ -82,9 +82,23 @@ function MessageFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+function MessageActions({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="message-actions"
+      className={cn(
+        "flex min-w-0 items-center gap-(--message-actions-gap)",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
 export {
   MessageGroup,
   Message,
+  MessageActions,
   MessageAvatar,
   MessageContent,
   MessageFooter,

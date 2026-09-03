@@ -8,6 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { useScrollerRef } from "@/hooks/use-scroller"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { DragHandle } from "@/components/ui/drag-handle"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -18,6 +19,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Fab } from "@/components/ui/fab"
 import {
   Tooltip,
   TooltipContent,
@@ -572,6 +574,45 @@ function Sidebar({
     return () => window.removeEventListener("pointermove", onMove)
   }, [peekEnabled, isMobile, dock, side, startPeek, stopPeek])
 
+  // Checked before `collapsible="none"`: never-collapses is a DESKTOP layout
+  // contract, but on a phone a permanent panel would own the whole viewport.
+  if (isMobile) {
+    return (
+      <Drawer
+        open={openMobile}
+        onOpenChange={setOpenMobile}
+        direction={side === "start" ? "left" : "right"}
+      >
+        <DrawerContent
+          {...props}
+          dir={dir}
+          data-sidebar="sidebar"
+          data-slot="sidebar"
+          data-mobile="true"
+          data-form={form}
+          data-side={side}
+          data-placement="drawer"
+          data-edge={edge}
+          data-collapse="expanded"
+          showCloseButton={false}
+          className="overflow-hidden bg-sidebar p-0 text-sidebar-foreground"
+          style={
+            {
+              "--sidebar-width": "var(--sidebar-width-mobile)",
+              "--drawer-width": "var(--sidebar-width-mobile)",
+            } as React.CSSProperties
+          }
+        >
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Sidebar</DrawerTitle>
+            <DrawerDescription>Displays the mobile sidebar.</DrawerDescription>
+          </DrawerHeader>
+          <div className="flex h-full w-full flex-col">{children}</div>
+        </DrawerContent>
+      </Drawer>
+    )
+  }
+
   if (collapsible === "none") {
     return (
       <div
@@ -595,44 +636,6 @@ function Sidebar({
         {children}
         {edge === "faded" && <SidebarEdgeRule side={side} />}
       </div>
-    )
-  }
-
-  if (isMobile) {
-    return (
-      <Drawer
-        open={openMobile}
-        onOpenChange={setOpenMobile}
-        direction={side === "start" ? "left" : "right"}
-      >
-        <DrawerContent
-          {...props}
-          dir={dir}
-          data-sidebar="sidebar"
-          data-slot="sidebar"
-          data-mobile="true"
-          data-form={form}
-          data-side={side}
-          data-placement="drawer"
-          data-edge={edge}
-          data-collapse="expanded"
-          data-state="expanded"
-          showCloseButton={false}
-          className="overflow-hidden bg-sidebar p-0 text-sidebar-foreground"
-          style={
-            {
-              "--sidebar-width": "var(--sidebar-width-mobile)",
-              "--drawer-width": "var(--sidebar-width-mobile)",
-            } as React.CSSProperties
-          }
-        >
-          <DrawerHeader className="sr-only">
-            <DrawerTitle>Sidebar</DrawerTitle>
-            <DrawerDescription>Displays the mobile sidebar.</DrawerDescription>
-          </DrawerHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
-        </DrawerContent>
-      </Drawer>
     )
   }
 
@@ -712,7 +715,7 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="flex size-full flex-col overflow-hidden bg-sidebar transition-[border-radius,box-shadow] duration-(--sidebar-speed) ease-(--sidebar-ease) group-data-[placement=floating]:rounded-lg group-data-[placement=floating]:shadow-sm group-data-[placement=floating]:ring-1 group-data-[placement=floating]:ring-sidebar-border group-data-[placement=overlay]:rounded-lg group-data-[placement=overlay]:shadow-lg group-data-[placement=overlay]:ring-1 group-data-[placement=overlay]:ring-sidebar-border"
+          className="flex size-full flex-col overflow-hidden bg-sidebar transition-[border-radius,box-shadow] duration-(--sidebar-speed) ease-(--sidebar-ease) group-data-[placement=floating]:rounded-lg group-data-[placement=floating]:shadow-(--elevation-raised) group-data-[placement=floating]:ring-1 group-data-[placement=floating]:ring-sidebar-border group-data-[placement=overlay]:rounded-lg group-data-[placement=overlay]:shadow-(--elevation-floating) group-data-[placement=overlay]:ring-1 group-data-[placement=overlay]:ring-sidebar-border"
         >
           {children}
         </div>
@@ -727,17 +730,52 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  placement = "inline",
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar, open } = useSidebar()
+}: Omit<React.ComponentProps<typeof Button>, "variant" | "size"> & {
+  placement?: "inline" | "floating"
+}) {
+  const { toggleSidebar, open, openMobile, isMobile, dock } = useSidebar()
+  // `open` is the desktop dock; on mobile the panel is the drawer.
+  const expanded = isMobile ? openMobile : open
+  const label = expanded ? "Close sidebar" : "Open sidebar"
+  const toggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClick?.(event)
+    if (!event.defaultPrevented) toggleSidebar()
+  }
+
+  if (placement === "floating") {
+    // A panel that still occupies layout is its own way back, so the floating
+    // control only exists while the panel has left the page entirely.
+    if (!isMobile && dock !== "hidden") return null
+
+    return (
+      <Fab
+        data-sidebar="trigger"
+        data-slot="sidebar-trigger"
+        data-placement="floating"
+        // Surface, not primary: this opens navigation, it is not the page's
+        // primary action, and it must not outrank real content.
+        variant="surface"
+        placement="top-start"
+        aria-label={label}
+        className={className}
+        onClick={toggle}
+        {...props}
+      >
+        <PanelLeftIcon className="rtl:rotate-180" />
+      </Fab>
+    )
+  }
 
   return (
     <Button
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
+      data-placement={placement}
       variant="ghost"
-      size="icon-sm"
-      aria-label={open ? "Close sidebar" : "Open sidebar"}
+      size="icon"
+      aria-label={label}
       className={cn(
         "ms-auto transition-opacity duration-(--sidebar-speed) ease-(--sidebar-ease)",
         // Collapsed the toggle always fades away, so the bar stays clean.
@@ -745,15 +783,12 @@ function SidebarTrigger({
         // Without peek there is no other way back, so it parks over the brand
         // mark and returns whenever the bar is hovered. Anchoring to the END edge
         // means going absolute costs no movement — it slides in with the panel.
-        "group-data-[peek=false]:group-data-[collapsible=icon]:absolute group-data-[peek=false]:group-data-[collapsible=icon]:inset-e-0 group-data-[peek=false]:group-data-[collapsible=icon]:size-8!",
+        "group-data-[peek=false]:group-data-[collapsible=icon]:absolute group-data-[peek=false]:group-data-[collapsible=icon]:inset-e-0",
         "group-data-[peek=false]:group-data-[collapsible=icon]:group-hover:pointer-events-auto group-data-[peek=false]:group-data-[collapsible=icon]:group-hover:opacity-100",
         "group-data-[collapsible=icon]:focus-visible:pointer-events-auto group-data-[collapsible=icon]:focus-visible:opacity-100",
         className
       )}
-      onClick={(event) => {
-        onClick?.(event)
-        if (!event.defaultPrevented) toggleSidebar()
-      }}
+      onClick={toggle}
       {...props}
     >
       <PanelLeftIcon className="rtl:rotate-180" />
@@ -991,19 +1026,24 @@ function SidebarResizeHandle({
         if (!event.defaultPrevented) resetWidth()
       }}
       className={cn(
-        "absolute inset-y-0 z-20 hidden w-(--sidebar-resize-handle-width) cursor-col-resize touch-none outline-none select-none",
+        "group/sidebar-resize-handle absolute inset-y-0 z-20 hidden w-(--sidebar-resize-handle-width) cursor-col-resize touch-none outline-none select-none",
         "group-data-[side=start]:inset-e-0 group-data-[side=start]:me-(--sidebar-resize-handle-offset)",
         "group-data-[side=end]:inset-s-0 group-data-[side=end]:ms-(--sidebar-resize-handle-offset)",
         // Two attribute selectors outrank the base `hidden`, whatever the emit order.
         "[[data-slot=sidebar][data-dock=expanded]_&]:block",
         // A peek is transient, so it is not a thing you resize.
         "[[data-slot=sidebar][data-placement=overlay]_&]:hidden",
-        "after:absolute after:inset-y-(--sidebar-resize-handle-inset) after:inset-s-1/2 after:w-0.5 after:-translate-x-1/4 after:rounded-full after:bg-sidebar-ring after:opacity-0 after:transition-opacity after:duration-(--sidebar-fade-speed) after:ease-(--sidebar-ease)",
-        "hover:after:opacity-60 focus-visible:after:opacity-100 group-data-resizing:after:opacity-100",
         className
       )}
       {...props}
-    />
+    >
+      <DragHandle
+        aria-hidden="true"
+        variant="grip"
+        orientation="vertical"
+        className="pointer-events-none absolute top-1/2 inset-s-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-(--drag-handle-speed) ease-(--drag-handle-ease) group-hover/sidebar-resize-handle:h-(--drag-handle-active-length) group-hover/sidebar-resize-handle:w-(--drag-handle-active-thickness) group-hover/sidebar-resize-handle:bg-ring group-hover/sidebar-resize-handle:shadow-(--drag-handle-active-shadow) group-focus-visible/sidebar-resize-handle:h-(--drag-handle-active-length) group-focus-visible/sidebar-resize-handle:w-(--drag-handle-active-thickness) group-focus-visible/sidebar-resize-handle:bg-ring group-focus-visible/sidebar-resize-handle:shadow-(--drag-handle-active-shadow) group-data-resizing:h-(--drag-handle-active-length) group-data-resizing:w-(--drag-handle-active-thickness) group-data-resizing:bg-ring group-data-resizing:shadow-(--drag-handle-active-shadow)"
+      />
+    </div>
   )
 }
 
@@ -1012,7 +1052,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
     <main
       data-slot="sidebar-inset"
       className={cn(
-        "relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm",
+        "relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-(--elevation-raised)",
         className
       )}
       {...props}
@@ -1071,11 +1111,12 @@ function SidebarAccount({
       data-slot="sidebar-account"
       data-sidebar="account"
       className={cn(
-        "flex h-12 w-full items-center gap-2.5 overflow-hidden rounded-md px-1.5 py-1 text-left text-sm ring-sidebar-ring outline-hidden transition-[width,height] duration-(--sidebar-speed) ease-(--sidebar-ease) hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2",
-        // Collapsed it stops being a shrunken row and becomes an avatar chip: a
-        // 32px circle on the icon column, concentric with the 20px avatar (10 + 6).
-        "group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:rounded-full",
-        "*:data-[slot=avatar]:size-5 *:data-[slot=avatar]:shrink-0",
+        "flex h-12 w-full items-center gap-3 overflow-hidden rounded-full p-1.5 text-left text-sm ring-sidebar-ring outline-hidden transition-[width,height] duration-(--sidebar-speed) ease-(--sidebar-ease) hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2",
+        // Collapsed it stops being a row and becomes an avatar chip sized to the
+        // icon column; the pill radius already carries it from row to circle.
+        "group-data-[collapsible=icon]:size-8!",
+        // One 6px inset at both widths keeps the avatar concentric with the pill.
+        "*:data-[slot=avatar]:size-9 *:data-[slot=avatar]:shrink-0 *:data-[slot=avatar]:transition-[width,height] *:data-[slot=avatar]:duration-(--sidebar-speed) *:data-[slot=avatar]:ease-(--sidebar-ease) group-data-[collapsible=icon]:*:data-[slot=avatar]:size-5",
         "[&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:transition-opacity [&>svg]:duration-(--sidebar-speed) [&>svg]:ease-(--sidebar-ease) group-data-[collapsible=icon]:[&>svg]:opacity-0",
         className
       )}
@@ -1115,19 +1156,64 @@ function SidebarSeparator({
   )
 }
 
-function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+function SidebarContent({
+  children,
+  className,
+  fade = true,
+  scrollbar = "hidden",
+  stickyHeader,
+  ...props
+}: React.ComponentProps<"div"> & {
+  fade?: boolean
+  scrollbar?: "hidden" | "thin"
+  stickyHeader?: React.ReactNode
+}) {
   const setRef = useScrollerRef<HTMLDivElement>()
+
+  if (stickyHeader) {
+    return (
+      <div
+        data-slot="sidebar-content"
+        data-sidebar="content"
+        className={cn(
+          "flex min-h-0 flex-1 flex-col gap-0 overflow-hidden",
+          className
+        )}
+        {...props}
+      >
+        <div data-slot="sidebar-content-sticky" className="shrink-0">
+          {stickyHeader}
+        </div>
+        <div
+          ref={setRef}
+          data-slot="sidebar-content-viewport"
+          className={cn(
+            "flex min-h-0 flex-1 flex-col overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+            fade && "scroll-fade-y scroll-fade-6",
+            scrollbar === "hidden" ? "no-scrollbar" : "scrollbar-thin"
+          )}
+        >
+          {children}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       ref={setRef}
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "no-scrollbar scroll-fade-y scroll-fade-6 flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 flex-col gap-0 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        fade && "scroll-fade-y scroll-fade-6",
+        scrollbar === "hidden" ? "no-scrollbar" : "scrollbar-thin",
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </div>
   )
 }
 

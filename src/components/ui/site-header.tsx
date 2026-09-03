@@ -137,7 +137,7 @@ const siteHeaderContainerVariants = cva(
       variant: {
         docked: "mx-auto w-full px-(--site-header-gutter)",
         floating:
-          "w-auto max-w-full rounded-(--site-header-radius) border bg-popover px-(--site-header-padding) shadow-(--site-header-shadow)",
+          "w-auto max-w-full rounded-(--site-header-radius) border bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
         // The shell stays invisible; each group carries its own chrome instead.
         clustered: "w-auto max-w-full gap-(--site-header-cluster-gap)",
       },
@@ -178,7 +178,7 @@ function SiteHeaderGroup({ className, ...props }: React.ComponentProps<"div">) {
       className={cn(
         "flex h-full items-center gap-1",
         variant === "clustered" &&
-          "rounded-(--site-header-radius) border bg-popover px-(--site-header-padding) shadow-(--site-header-shadow)",
+          "rounded-(--site-header-radius) border bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
         className
       )}
       {...props}
@@ -203,6 +203,26 @@ function SiteHeaderBrand({
         // circle; a mark with a label pads out to clear the cap curve.
         variant !== "docked" &&
           "h-(--site-header-item-size) min-w-(--site-header-item-size) justify-center has-[span]:px-(--site-header-item-padding-inline)",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+/** A non-interactive header title, as opposed to the brand's home link. */
+function SiteHeaderTitle({
+  className,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"div"> & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "div"
+
+  return (
+    <Comp
+      data-slot="site-header-title"
+      className={cn(
+        "flex min-w-0 items-center gap-(--site-header-title-gap) text-sm font-semibold text-foreground [&_svg]:size-5 [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -504,9 +524,10 @@ function SiteHeaderActions({
     <div
       data-slot="site-header-actions"
       className={cn(
-        "flex shrink-0 items-center gap-2",
+        "flex shrink-0 items-center gap-(--site-header-action-gap) [&_[data-slot=button]]:bg-clip-border [&_[data-slot=dropdown-menu-trigger]]:bg-clip-border",
         // A shell that hugs its content has no slack to push actions into.
-        variant === "docked" && "ms-auto",
+        variant === "docked" &&
+          "ms-auto me-(--site-header-actions-edge-offset)",
         className
       )}
       {...props}
@@ -539,6 +560,7 @@ export {
   SiteHeaderContainer,
   SiteHeaderGroup,
   SiteHeaderBrand,
+  SiteHeaderTitle,
   SiteHeaderNav,
   SiteHeaderLink,
   SiteHeaderActions,

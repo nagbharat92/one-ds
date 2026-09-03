@@ -471,6 +471,38 @@ function SidebarPeekDemo() {
   )
 }
 
+function SidebarFloatingTriggerDemo() {
+  const [activeItem, setActiveItem] = useState("Home")
+  return (
+    <div className="showcase-contained-viewport h-80 w-full overflow-hidden rounded-lg border">
+      <SidebarProvider
+        id="showcase-sidebar-floating-trigger"
+        persist={false}
+        shortcut={false}
+        defaultOpen={false}
+        className="min-h-full"
+      >
+        <Sidebar collapsible="hidden">
+          <SidebarDemoBrand />
+          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
+          <SidebarDemoAccount />
+        </Sidebar>
+        <SidebarInset className="min-h-full">
+          <SidebarTrigger placement="floating" />
+          <div className="flex flex-col gap-3 p-4 ps-16">
+            <p className="text-muted-foreground text-sm">
+              This shell has no header to host the toggle, so the trigger floats
+              over the content instead. Open the panel and it disappears — a
+              sidebar you can see is already its own way back.
+            </p>
+            <SidebarStateReadout />
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </div>
+  )
+}
+
 function SidebarEdgeDemo() {
   const [activeItem, setActiveItem] = useState("Home")
   const [edge, setEdge] = useState<"line" | "faded" | "none">("faded")
@@ -1508,6 +1540,13 @@ export function SidebarDemo() {
         layout: "wide",
       },
       {
+        name: "Floating Trigger",
+        description:
+          "Where the toggle lives is the host's shape, not a call-site decision. A shell with a header keeps the toggle inline in it; a shell without one gets placement=\"floating\", which lifts the trigger into a toolbar over the content. The component hides it whenever the panel is still in layout, so the two never both appear.",
+        Demo: SidebarFloatingTriggerDemo,
+        layout: "wide",
+      },
+      {
         name: "Edge",
         description:
           "How the boundary reads is its own axis. A line is the flush hairline, faded dissolves the rule at both ends so it never hard-stops, and none hands the edge to the surfaces either side. Floating and inset panels ignore it — they already carry a ring.",
@@ -1605,7 +1644,7 @@ export function SiteHeaderDemo() {
     slug: "site-footer",
     name: "Site Footer",
     description:
-      "A comprehensive dark footer with link columns, a newsletter, social links, and legal.",
+      "A comprehensive themed footer with link columns, a newsletter, social links, and legal.",
     category: "Navigation",
     Demo: SiteFooterDemo,
     code: `import { ArrowRightIcon, BoxIcon } from "lucide-react"

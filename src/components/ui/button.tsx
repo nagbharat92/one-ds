@@ -17,11 +17,11 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80 active:bg-primary/70",
         outline:
-          "border-border bg-control hover:bg-muted hover:text-foreground active:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_8%)] active:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50 dark:active:bg-input/70",
+          "border-border bg-control hover:bg-(--state-layer-hover) hover:text-foreground active:bg-(--state-layer-pressed) active:text-foreground aria-expanded:bg-(--state-layer-focus) aria-expanded:text-foreground dark:border-input dark:bg-input/30",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] active:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_10%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
-          "hover:bg-muted hover:text-foreground active:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_8%)] active:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50 dark:active:bg-muted/70",
+          "hover:bg-(--state-layer-hover) hover:text-foreground active:bg-(--state-layer-pressed) active:text-foreground aria-expanded:bg-(--state-layer-focus) aria-expanded:text-foreground",
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 active:bg-destructive/30 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:active:bg-destructive/40 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline active:text-primary/70",
@@ -48,6 +48,15 @@ const buttonVariants = cva(
 )
 
 const ICON_ONLY_SIZES = new Set(["icon", "icon-xs", "icon-sm", "icon-lg"])
+const ButtonAutoTooltipContext = React.createContext(true)
+
+function ButtonTooltipSuppression({ children }: React.PropsWithChildren) {
+  return (
+    <ButtonAutoTooltipContext.Provider value={false}>
+      {children}
+    </ButtonAutoTooltipContext.Provider>
+  )
+}
 
 function Button({
   className,
@@ -65,11 +74,14 @@ function Button({
     tooltipSide?: React.ComponentProps<typeof TooltipContent>["side"]
   }) {
   const Comp = asChild ? Slot.Root : "button"
+    const automaticTooltip = React.useContext(ButtonAutoTooltipContext)
 
   // An icon-only button carries its name in aria-label; show it as a tooltip.
   const label =
     tooltip ??
-    (size && ICON_ONLY_SIZES.has(size) ? props["aria-label"] : undefined)
+      (automaticTooltip && size && ICON_ONLY_SIZES.has(size)
+        ? props["aria-label"]
+        : undefined)
   const hasTooltip = Boolean(label) && !props.disabled
 
   const button = (
@@ -98,4 +110,4 @@ function Button({
   )
 }
 
-export { Button, buttonVariants }
+export { Button, ButtonTooltipSuppression, buttonVariants }

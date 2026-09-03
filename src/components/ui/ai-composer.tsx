@@ -4,6 +4,7 @@ import {
   MicIcon,
   RefreshCwIcon,
   SquareIcon,
+  XIcon,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -40,7 +41,7 @@ function AIComposer({
         data-status={status}
         aria-busy={status === "submitted" || status === "streaming"}
         className={cn(
-          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-input bg-control p-(--ai-composer-padding) text-foreground shadow-(--ai-composer-shadow) transition-[border-color,box-shadow] duration-(--speed-swift) focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 data-[status=error]:border-destructive data-[status=error]:ring-3 data-[status=error]:ring-destructive/20 dark:data-[status=error]:ring-destructive/40",
+          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-input bg-control bg-clip-padding p-(--ai-composer-padding) text-foreground shadow-(--ai-composer-shadow) transition-[border-color,box-shadow] duration-(--speed-swift) focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 data-[status=error]:border-destructive data-[status=error]:ring-3 data-[status=error]:ring-destructive/20 dark:data-[status=error]:ring-destructive/40",
           className
         )}
         {...props}
@@ -208,13 +209,20 @@ function AIComposerAction({
 
 function AIComposerTool({
   className,
+  children,
+  dismissible = true,
   variant = "ghost",
   type = "button",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { dismissible?: boolean }) {
+  const toolChildren = React.Children.toArray(children)
+  const leading = toolChildren[0]
+  const content = toolChildren.slice(1)
+
   return (
     <Button
       data-slot="ai-composer-tool"
+      data-dismissible={dismissible}
       type={type}
       variant={variant}
       className={cn(
@@ -222,7 +230,25 @@ function AIComposerTool({
         className
       )}
       {...props}
-    />
+    >
+      {dismissible && leading ? (
+        <span
+          data-slot="ai-composer-tool-icon"
+          aria-hidden="true"
+          className="relative grid size-(--ai-composer-tool-icon-size) shrink-0 place-items-center [&>span]:absolute [&>span]:inset-0 [&>span]:grid [&>span]:place-items-center [&_svg]:size-(--ai-composer-tool-icon-size)"
+        >
+          <span className="scale-100 opacity-100 transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-hover/button:scale-75 group-hover/button:opacity-0 group-focus-visible/button:scale-75 group-focus-visible/button:opacity-0">
+            {leading}
+          </span>
+          <span className="scale-75 opacity-0 transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-hover/button:scale-100 group-hover/button:opacity-100 group-focus-visible/button:scale-100 group-focus-visible/button:opacity-100">
+            <XIcon />
+          </span>
+        </span>
+      ) : (
+        leading
+      )}
+      {content}
+    </Button>
   )
 }
 

@@ -6,6 +6,7 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { DragHandle } from "@/components/ui/drag-handle"
 
 // Web-first default: side drawer rather than vaul's bottom sheet.
 function Drawer({
@@ -69,10 +70,16 @@ function DrawerContent({
   className,
   children,
   showCloseButton = true,
+  grabber = "auto",
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
   showCloseButton?: boolean
+  /** Dragging is a touch idiom, so `auto` hides the grabber on fine pointers. */
+  grabber?: "auto" | "always" | "never"
 }) {
+  // A media query, not a JS check, so switching input device re-evaluates live.
+  const grabberGate = grabber === "auto" ? "pointer-fine:hidden!" : ""
+
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
@@ -91,7 +98,23 @@ function DrawerContent({
         )}
         {...props}
       >
-        <div className="mx-auto mt-4 hidden h-1 w-25 shrink-0 rounded-full bg-muted group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        <DragHandle
+          aria-hidden="true"
+          className={cn(
+            "mx-auto mt-4 hidden group-data-[vaul-drawer-direction=bottom]/drawer-content:block group-data-[vaul-drawer-direction=top]/drawer-content:order-last group-data-[vaul-drawer-direction=top]/drawer-content:mt-0 group-data-[vaul-drawer-direction=top]/drawer-content:mb-4 group-data-[vaul-drawer-direction=top]/drawer-content:block",
+            grabber === "never" && "hidden!",
+            grabberGate
+          )}
+        />
+        <DragHandle
+          aria-hidden="true"
+          orientation="vertical"
+          className={cn(
+            "absolute top-1/2 hidden -translate-y-1/2 group-data-[vaul-drawer-direction=left]/drawer-content:right-4 group-data-[vaul-drawer-direction=left]/drawer-content:block group-data-[vaul-drawer-direction=right]/drawer-content:left-4 group-data-[vaul-drawer-direction=right]/drawer-content:block",
+            grabber === "never" && "hidden!",
+            grabberGate
+          )}
+        />
         {children}
         {showCloseButton && (
           <DrawerPrimitive.Close data-slot="drawer-close" asChild>

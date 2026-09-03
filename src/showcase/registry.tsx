@@ -11,10 +11,26 @@ import { miscDemos } from "@/showcase/demos/misc"
 import { personaDemos } from "@/showcase/demos/persona"
 import { composedDemos } from "@/showcase/demos/composed"
 import { colorDemos } from "@/showcase/demos/colors"
+import { blockDemos } from "@/showcase/demos/blocks"
+import { experimentDemos } from "@/showcase/demos/experiments"
+import { concentricDemos } from "@/showcase/experiments/concentric"
+import { annotationDemos } from "@/showcase/demos/annotation"
+import { dragHandleDemos } from "@/showcase/demos/drag-handle"
+import { elevationDemos } from "@/showcase/demos/elevation"
+import { fabDemos } from "@/showcase/demos/fab"
+import { swapDemos } from "@/showcase/demos/swap"
 
 export type { ComponentEntry, ComponentExample } from "@/showcase/types"
 
 export const registry: ComponentEntry[] = [
+  ...blockDemos,
+  ...experimentDemos,
+  ...concentricDemos,
+  ...annotationDemos,
+  ...dragHandleDemos,
+  ...elevationDemos,
+  ...fabDemos,
+  ...swapDemos,
   ...formsDemos,
   ...selectionDemos,
   ...overlaysDemos,
@@ -28,6 +44,14 @@ export const registry: ComponentEntry[] = [
   ...colorDemos,
   ...composedDemos,
 ]
+
+export const blockRegistry = registry.filter((item) => item.category === "Blocks")
+export const experimentRegistry = registry.filter(
+  (item) => item.category === "Experiments",
+)
+export const componentRegistry = registry.filter(
+  (item) => item.category !== "Blocks" && item.category !== "Experiments",
+)
 
 export type CategoryGroup = {
   category: string

@@ -12,6 +12,7 @@ import {
   LinkIcon,
   LogOutIcon,
   MailIcon,
+  MoreHorizontalIcon,
   SearchIcon,
   SettingsIcon,
   StarIcon,
@@ -37,15 +38,24 @@ import {
   CardAction,
   CardContent,
   CardDescription,
+  CardEyebrow,
   CardFooter,
   CardHeader,
+  CardHeaderAside,
+  CardHeaderContent,
   CardMedia,
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
 import { Scroller } from "@/components/ui/scroller"
 import { Spinner } from "@/components/ui/spinner"
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSpacer,
+} from "@/components/ui/toolbar"
 import {
   Table,
   TableBody,
@@ -62,8 +72,10 @@ import {
   ItemContent,
   ItemDescription,
   ItemGroup,
+  ItemFooter,
   ItemHeader,
   ItemMedia,
+  ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item"
 import {
@@ -110,10 +122,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
 
 const chartData = [
   { date: "Apr 1", desktop: 222, mobile: 150 },
@@ -219,17 +227,6 @@ function ChartInteractiveDemo() {
   )
 }
 
-const cardSpacingOptions = [
-  { className: "card-spacing-default", label: "16px", value: "default" },
-  {
-    className: "card-spacing-comfortable",
-    label: "20px",
-    value: "comfortable",
-  },
-  { className: "card-spacing-roomy", label: "24px", value: "roomy" },
-  { className: "card-spacing-spacious", label: "32px", value: "spacious" },
-]
-
 function CardLoginDemo() {
   return (
     <Card className="w-full max-w-sm">
@@ -270,7 +267,7 @@ function CardLoginDemo() {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
+      <CardFooter className="flex-col">
         <Button type="submit" className="w-full">
           Login
         </Button>
@@ -282,77 +279,93 @@ function CardLoginDemo() {
   )
 }
 
-function CardSpacingDemo() {
-  const [spacing, setSpacing] = useState("default")
-  const selectedSpacing = cardSpacingOptions.find(
-    (option) => option.value === spacing,
-  )
-
+function CardRichContentDemo() {
   return (
-    <div className="mx-auto grid w-full max-w-sm gap-4">
-      <ToggleGroup
-        type="single"
-        value={spacing}
-        onValueChange={(value) => value && setSpacing(value)}
-        variant="outline"
-        size="sm"
-        className="justify-center"
-        aria-label="Card spacing"
-      >
-        {cardSpacingOptions.map((option) => (
-          <ToggleGroupItem key={option.value} value={option.value}>
-            {option.label}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-      <Card className={selectedSpacing?.className}>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardHeaderContent>
+          <CardEyebrow>
+            <Badge variant="secondary">Adoption</Badge>
+            <Badge variant="outline">In review</Badge>
+          </CardEyebrow>
+          <CardTitle>Design system rollout</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Track how teams are adopting shared components, which guidance
+            remains under review, and what needs attention before the next
+            release.
           </CardDescription>
-          <CardAction>
-            <Button variant="link">Sign Up</Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={(event) => event.preventDefault()}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="card-spacing-email">Email</Label>
-                <Input
-                  id="card-spacing-email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="card-spacing-password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    onClick={(event) => event.preventDefault()}
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="card-spacing-password" type="password" required />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+        </CardHeaderContent>
+        <CardHeaderAside>
+          <strong className="font-heading text-3xl leading-none font-semibold tabular-nums">
+            68%
+          </strong>
+          <span className="text-sm text-muted-foreground">Adopted</span>
+        </CardHeaderAside>
+      </CardHeader>
+      <CardContent className="grid gap-(--card-content-group-gap)">
+        <div className="grid gap-(--card-header-gap)">
+          <div className="flex items-center justify-between gap-(--card-header-gap) text-sm">
+            <span className="font-medium">17 of 25 components</span>
+            <span className="text-muted-foreground">Q3 target</span>
+          </div>
+          <Progress value={68} aria-label="Component adoption" />
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-(--card-header-gap)">
+          <div className="flex items-center gap-(--card-header-gap)">
+            <AvatarGroup>
+              <Avatar size="sm" aria-label={persona.name}>
+                <AvatarImage src={persona.avatar} alt="" />
+                <AvatarFallback>{persona.initials}</AvatarFallback>
+              </Avatar>
+              <Avatar size="sm" aria-label={persona.teammates[0].name}>
+                <AvatarFallback>
+                  {persona.teammates[0].initials}
+                </AvatarFallback>
+              </Avatar>
+              <Avatar size="sm" aria-label={persona.teammates[1].name}>
+                <AvatarFallback>
+                  {persona.teammates[1].initials}
+                </AvatarFallback>
+              </Avatar>
+              <AvatarGroupCount>+3</AvatarGroupCount>
+            </AvatarGroup>
+            <span className="text-sm text-muted-foreground">
+              Sophia and 5 teammates
+            </span>
+          </div>
+          <Badge variant="outline">Updated today</Badge>
+        </div>
+      </CardContent>
+      <CardFooter className="justify-end">
+        <Button variant="outline">View report</Button>
+        <Button>
+          Continue review
+          <ArrowRightIcon data-icon="inline-end" />
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function CardFooterActionsDemo() {
+  return (
+    <Card className="w-full max-w-sm">
+      <CardHeader>
+        <CardTitle>Publish changes?</CardTitle>
+        <CardDescription>
+          Review your updates before making them visible to the team.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">
+          Three component recipes and their usage guidance will be updated.
+        </p>
+      </CardContent>
+      <CardFooter className="justify-end">
+        <Button variant="ghost">Cancel</Button>
+        <Button>Publish</Button>
+      </CardFooter>
+    </Card>
   )
 }
 
@@ -388,7 +401,7 @@ function CardEdgeToEdgeDemo() {
           </Scroller>
         </div>
       </CardContent>
-      <CardFooter className="justify-end gap-2">
+      <CardFooter className="justify-end">
         <Button variant="outline">Decline</Button>
         <Button>Accept</Button>
       </CardFooter>
@@ -718,7 +731,7 @@ export function CardDemo() {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
+      <CardFooter className="flex-col">
         <Button type="submit" className="w-full">Login</Button>
         <Button variant="outline" className="w-full">Login with Google</Button>
       </CardFooter>
@@ -727,10 +740,16 @@ export function CardDemo() {
 }`,
     examples: [
       {
-        name: "Spacing",
+        name: "Rich Content",
         description:
-          "Adjust the spacing between sections and the inset of every card part.",
-        Demo: CardSpacingDemo,
+          "Compose tags, multi-line supporting copy, an intrinsic aside, progress, people, and actions without a new card variant.",
+        Demo: CardRichContentDemo,
+      },
+      {
+        name: "Footer Actions",
+        description:
+          "Place related actions side by side in a compact, end-aligned footer.",
+        Demo: CardFooterActionsDemo,
       },
       {
         name: "Edge to Edge",
@@ -745,7 +764,6 @@ export function CardDemo() {
         Demo: () => (
           <CodeBlock
             className="h-64 w-full max-w-md"
-            label="card.tsx"
             code={`import { Card, CardContent } from "@/components/ui/card"
 
 export function Example() {
@@ -762,6 +780,46 @@ export function Example() {
         name: "Image",
         description: "Add an image before the card header.",
         Demo: CardImageDemo,
+      },
+      {
+        name: "Toolbar canvas",
+        description:
+          "Canvas layout rule: a wide toolbar pins to the top of the preview while the card stays visually centered — the space below balances the toolbar above.",
+        layout: "wide" as const,
+        Demo: () => (
+          <div className="preview-canvas">
+            <Toolbar className="w-full">
+              <span className="text-sm font-medium">Billing</span>
+              <ToolbarSpacer />
+              <ToolbarGroup>
+                <Button variant="ghost" size="sm">
+                  <SearchIcon data-icon="inline-start" />
+                  Search
+                </Button>
+                <Button variant="ghost" size="icon-sm" aria-label="Settings">
+                  <SettingsIcon />
+                </Button>
+                <Button variant="ghost" size="icon-sm" aria-label="More options">
+                  <MoreHorizontalIcon />
+                </Button>
+              </ToolbarGroup>
+            </Toolbar>
+            <Card className="mx-auto w-full max-w-sm">
+              <CardHeader>
+                <CardTitle>Upgrade your plan</CardTitle>
+                <CardDescription>
+                  You're on the Free plan — upgrade for more seats.
+                </CardDescription>
+                <CardAction>
+                  <Badge variant="secondary">Free</Badge>
+                </CardAction>
+              </CardHeader>
+              <CardFooter>
+                <Button className="w-full">Upgrade to Pro</Button>
+              </CardFooter>
+            </Card>
+          </div>
+        ),
       },
     ],
   },
@@ -929,10 +987,12 @@ export function TableDemo() {
     ],
   },
   {
-    slug: "item",
-    name: "Item",
-    description: "A flexible container for lists, rows and content blocks.",
+    slug: "list-item",
+    name: "List Item",
+    description:
+      "A composable row for text, media, metadata, selection and trailing actions.",
     category: "Data Display",
+    installCommand: "npx shadcn@latest add item",
     Demo: () => (
       <Item className="w-full max-w-sm rounded-lg border">
         <ItemMedia>
@@ -980,6 +1040,171 @@ export function ItemDemo() {
   )
 }`,
     examples: [
+      {
+        name: "Text Only",
+        description: "Quiet rows with aligned titles and metadata.",
+        layout: "wide" as const,
+        Demo: () => (
+          <ItemGroup className="w-full max-w-md gap-0">
+            {[
+              ["OneDS navigation review", "Today"],
+              ["Design platform weekly update", "Yesterday"],
+              ["Accessibility audit", "Friday"],
+            ].map(([title, time], index) => (
+              <div key={title}>
+                <Item>
+                  <ItemContent>
+                    <ItemTitle>{title}</ItemTitle>
+                  </ItemContent>
+                  <ItemActions>
+                    <span className="text-xs text-muted-foreground">{time}</span>
+                  </ItemActions>
+                </Item>
+                {index < 2 ? <ItemSeparator className="my-0" /> : null}
+              </div>
+            ))}
+          </ItemGroup>
+        ),
+      },
+      {
+        name: "Leading Icon",
+        description: "Icons identify content type without changing row alignment.",
+        layout: "wide" as const,
+        Demo: () => {
+          const rows = [
+            { Icon: FolderIcon, title: "Design files", description: "24 items" },
+            { Icon: InboxIcon, title: "Team inbox", description: "6 unread" },
+            { Icon: BookmarkIcon, title: "Saved research", description: "12 notes" },
+          ]
+          return (
+            <ItemGroup className="w-full max-w-md gap-2">
+              {rows.map(({ Icon, title, description }) => (
+                <Item key={title} variant="outline">
+                  <ItemMedia variant="icon"><Icon /></ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{title}</ItemTitle>
+                    <ItemDescription>{description}</ItemDescription>
+                  </ItemContent>
+                </Item>
+              ))}
+            </ItemGroup>
+          )
+        },
+      },
+      {
+        name: "Metadata",
+        description: "Badges and trailing values remain subordinate to the title.",
+        Demo: () => (
+          <Item variant="outline" className="w-full max-w-sm">
+            <ItemContent>
+              <ItemTitle>
+                Component release
+                <Badge variant="secondary">Ready</Badge>
+              </ItemTitle>
+              <ItemDescription>Validated across supported themes.</ItemDescription>
+            </ItemContent>
+            <ItemActions>
+              <span className="text-xs text-muted-foreground">v2.4.0</span>
+            </ItemActions>
+          </Item>
+        ),
+      },
+      {
+        name: "States",
+        description: "Rest, selected and disabled rows for selectable collections.",
+        layout: "wide" as const,
+        Demo: function ListItemStatesDemo() {
+          const [selected, setSelected] = useState("Design")
+          return (
+            <ItemGroup className="w-full max-w-md gap-2">
+              {["Design", "Engineering", "Marketing"].map((team) => (
+                <Item key={team} asChild variant={selected === team ? "muted" : "default"}>
+                  <button type="button" aria-pressed={selected === team} onClick={() => setSelected(team)}>
+                    <ItemContent>
+                      <ItemTitle>{team}</ItemTitle>
+                      <ItemDescription>Team workspace</ItemDescription>
+                    </ItemContent>
+                    {selected === team ? <Badge>Selected</Badge> : null}
+                  </button>
+                </Item>
+              ))}
+              <Item aria-disabled="true">
+                <ItemContent>
+                  <ItemTitle>Archived workspace</ItemTitle>
+                  <ItemDescription>Unavailable to this account.</ItemDescription>
+                </ItemContent>
+              </Item>
+            </ItemGroup>
+          )
+        },
+      },
+      {
+        name: "Hosted Action",
+        description: "Trailing square actions work with descriptive and title-only rows.",
+        Demo: () => (
+          <ItemGroup className="w-full max-w-sm gap-2">
+            <Item variant="muted">
+              <ItemContent>
+                <ItemTitle>OneDS navigation review</ItemTitle>
+                <ItemDescription>Updated today</ItemDescription>
+              </ItemContent>
+              <ItemActions hosted>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon-sm" aria-label="Navigation review actions">
+                      <MoreHorizontalIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Rename</DropdownMenuItem>
+                    <DropdownMenuItem>Archive</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ItemActions>
+            </Item>
+            <Item variant="muted">
+              <ItemContent>
+                <ItemTitle>Design platform weekly update</ItemTitle>
+              </ItemContent>
+              <ItemActions hosted>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon-sm" aria-label="Weekly update actions">
+                      <MoreHorizontalIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>Rename</DropdownMenuItem>
+                    <DropdownMenuItem>Archive</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ItemActions>
+            </Item>
+          </ItemGroup>
+        ),
+      },
+      {
+        name: "Truncation",
+        description: "Long titles stay on one line and yield space to trailing content.",
+        Demo: () => (
+          <Item variant="muted" size="xs" className="w-full max-w-sm flex-nowrap">
+            <ItemContent>
+              <ItemTitle>
+                OneDS navigation review decisions and implementation follow-up
+              </ItemTitle>
+            </ItemContent>
+            <ItemActions hosted>
+              <Button variant="ghost" size="icon-sm" aria-label="Item actions">
+                <MoreHorizontalIcon />
+              </Button>
+            </ItemActions>
+          </Item>
+        ),
+      },
       {
         name: "Variants",
         description: "Default, outline, and muted item styles.",
@@ -1065,7 +1290,7 @@ export function ItemDemo() {
                   <ItemDescription>Team workspace</ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="icon" aria-label={`Open ${team}`}>
                     <ArrowRightIcon />
                   </Button>
                 </ItemActions>
@@ -1087,6 +1312,28 @@ export function ItemDemo() {
               <ItemTitle>Release notes</ItemTitle>
               <ItemDescription>Bug fixes and performance improvements.</ItemDescription>
             </ItemContent>
+          </Item>
+        ),
+      },
+      {
+        name: "Header and Footer",
+        description: "Full-width regions add context above and supporting actions below.",
+        Demo: () => (
+          <Item variant="outline" className="w-full max-w-sm">
+            <ItemHeader>
+              <Badge variant="outline">Draft</Badge>
+              <span className="text-xs text-muted-foreground">Today</span>
+            </ItemHeader>
+            <ItemContent>
+              <ItemTitle>Navigation proposal</ItemTitle>
+              <ItemDescription>
+                Review the updated sidebar hierarchy and interaction model.
+              </ItemDescription>
+            </ItemContent>
+            <ItemFooter>
+              <span className="text-xs text-muted-foreground">3 comments</span>
+              <Button variant="outline" size="sm">Review</Button>
+            </ItemFooter>
           </Item>
         ),
       },

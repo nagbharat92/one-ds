@@ -19,15 +19,28 @@ const alertVariants = cva(
   }
 )
 
+const alertLiveRoles = {
+  off: undefined,
+  polite: "status",
+  assertive: "alert",
+} as const
+
 function Alert({
   className,
   variant,
+  live = "off",
+  role,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof alertVariants>) {
+}: React.ComponentProps<"div"> &
+  VariantProps<typeof alertVariants> & {
+    live?: keyof typeof alertLiveRoles
+  }) {
   return (
     <div
       data-slot="alert"
-      role="alert"
+      // Only an alert that APPEARS in response to something should interrupt.
+      // Alerts present at load are page content, so they stay silent by default.
+      role={role ?? alertLiveRoles[live]}
       className={cn(alertVariants({ variant }), className)}
       {...props}
     />

@@ -9,12 +9,12 @@ import { useScrollerRef } from "@/hooks/use-scroller"
 export function CodeBlock({
   code,
   className,
-  label = "Code",
+  language,
   showLineNumbers = true,
 }: {
   code: string
   className?: string
-  label?: string
+  language?: string
   showLineNumbers?: boolean
 }) {
   const [copied, setCopied] = useState(false)
@@ -27,17 +27,20 @@ export function CodeBlock({
   }
 
   return (
-    <Card variant="code" className={cn("group/code-block", className)}>
-      <div
-        data-slot="code-block-header"
-        className="flex shrink-0 items-center justify-between border-b bg-muted/50 p-(--code-block-header-padding)"
-      >
-        <span className="font-mono text-xs font-medium text-muted-foreground">
-          {label}
+    <Card
+      variant="code"
+      className={cn(
+        "group/code-block min-h-(--code-block-min-height)",
+        className
+      )}
+    >
+      <div className="flex items-center justify-between gap-2 border-b bg-muted ps-(--code-block-padding-inline) pe-(--code-block-action-inset) py-(--code-block-header-padding-block)">
+        <span className="font-mono text-xs text-muted-foreground">
+          {language || "Code"}
         </span>
         <Button
-          variant="outline"
-          size="icon"
+          variant="ghost"
+          size="icon-sm"
           aria-label={copied ? "Copied" : "Copy code"}
           onClick={copy}
         >

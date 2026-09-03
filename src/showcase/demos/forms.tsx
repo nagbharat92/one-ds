@@ -41,6 +41,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
+  ChoiceCard,
   Field,
   FieldContent,
   FieldDescription,
@@ -1509,12 +1510,15 @@ export function FieldDemo() {
       },
       {
         name: "Choice Card",
-        description: "Selectable card using FieldLabel wrapping a Field.",
+        description: "A shared selectable surface that hosts any choice control.",
         Demo: () => (
           <FieldSet className="w-full max-w-sm">
-            <FieldLegend>Plan</FieldLegend>
-            <RadioGroup defaultValue="pro">
-              <FieldLabel>
+            <FieldLegend id="demo-field-choice-legend">Plan</FieldLegend>
+            <RadioGroup
+              defaultValue="pro"
+              aria-labelledby="demo-field-choice-legend"
+            >
+              <ChoiceCard>
                 <Field orientation="horizontal">
                   <FieldContent>
                     <FieldTitle>Free</FieldTitle>
@@ -1522,8 +1526,8 @@ export function FieldDemo() {
                   </FieldContent>
                   <RadioGroupItem value="free" id="demo-field-choice-free" />
                 </Field>
-              </FieldLabel>
-              <FieldLabel>
+              </ChoiceCard>
+              <ChoiceCard>
                 <Field orientation="horizontal">
                   <FieldContent>
                     <FieldTitle>Pro</FieldTitle>
@@ -1531,7 +1535,7 @@ export function FieldDemo() {
                   </FieldContent>
                   <RadioGroupItem value="pro" id="demo-field-choice-pro" />
                 </Field>
-              </FieldLabel>
+              </ChoiceCard>
             </RadioGroup>
           </FieldSet>
         ),

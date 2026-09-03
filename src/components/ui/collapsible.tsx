@@ -24,16 +24,22 @@ function CollapsibleTrigger({
 
 function CollapsibleContent({
   className,
+  containerClassName,
   children,
   ...props
-}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
+}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent> & {
+  containerClassName?: string
+}) {
   return (
     <CollapsiblePrimitive.CollapsibleContent
       data-slot="collapsible-content"
-      className="overflow-hidden"
+      className={cn("overflow-hidden", containerClassName)}
       {...props}
     >
-      <div className={cn("h-(--radix-collapsible-content-height)", className)}>
+      <div
+        data-slot="collapsible-content-inner"
+        className={cn("h-(--radix-collapsible-content-height)", className)}
+      >
         {children}
       </div>
     </CollapsiblePrimitive.CollapsibleContent>

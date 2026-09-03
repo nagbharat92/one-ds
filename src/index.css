@@ -67,7 +67,11 @@
 :root {
   /* One warm structural ground drives page and docked navigation backgrounds.
      Cards, controls and floating surfaces stay independently white. */
-  --surface-ground: oklch(0.985 0.006 85);
+  --surface-warm-chroma: 0.003;
+  --surface-warm-hue: 85;
+  --surface-ground: oklch(
+    0.988 var(--surface-warm-chroma) var(--surface-warm-hue)
+  );
   --surface-backplate: color-mix(
     in oklab,
     var(--surface-ground) 94%,
@@ -132,18 +136,35 @@
      --aspect-ratio-landscape: 16 / 9;
      --aspect-ratio-portrait: 3 / 4;
 
-    /* Card spacing scale. Every part resolves the same named inset. */
+    /* Card rhythm. Header, content, and footer share one 24px inset and gap. */
     --card-spacing-small: calc(var(--spacing) * 3);
-    --card-spacing-default: calc(var(--spacing) * 4);
-    --card-spacing-comfortable: calc(var(--spacing) * 5);
-    --card-spacing-roomy: calc(var(--spacing) * 6);
-    --card-spacing-spacious: calc(var(--spacing) * 8);
+    --card-spacing-default: calc(var(--spacing) * 6);
+    --card-header-gap: calc(var(--spacing) * 2);
+    --card-header-eyebrow-gap: calc(var(--spacing) * 2);
+    --card-header-aside-gap: calc(var(--spacing) * 6);
+    --card-header-aside-content-gap: calc(var(--spacing) * 1);
+    --card-header-content-min: calc(var(--spacing) * 56);
+    --card-content-group-gap: calc(var(--spacing) * 4);
+    --card-footer-gap: calc(var(--spacing) * 2);
+    --choice-card-padding: calc(var(--spacing) * 2.5);
+    --switch-height-default: calc(var(--spacing) * 4.6);
+    --tooltip-arrow-offset: calc(var(--spacing) * 0.5);
     --card-media-overlay: color-mix(in oklab, var(--primary) 35%, transparent);
-    --code-block-header-padding: calc(var(--spacing) * 4);
+    --code-block-action-inset: calc(var(--spacing) * 2);
+    --code-block-min-height: calc(var(--spacing) * 20);
     --code-block-padding-block: calc(var(--spacing) * 4);
     --code-block-padding-inline: calc(var(--spacing) * 4);
+    --code-block-header-padding-block: calc(var(--spacing) * 2);
     --code-block-line-number-width: calc(var(--spacing) * 10);
     --code-block-line-number-gap: calc(var(--spacing) * 4);
+
+     /* List Item. Hosted actions float above long text instead of consuming its
+       layout width; the fade preserves readability beneath the action. */
+     --item-muted-background: color-mix(in oklab, var(--muted) 50%, transparent);
+     --item-hosted-action-inset: calc(var(--spacing) * 1);
+     --item-hosted-action-fade-size: calc(var(--spacing) * 8);
+     --item-hosted-action-speed: var(--speed-swift);
+     --item-hosted-action-ease: var(--ease-settle);
 
     /* Motion. Every token names a SPEED, never a count of milliseconds —
        pick how the change should read and let the scale own the timing. */
@@ -158,8 +179,13 @@
     --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-    --collapsible-speed: var(--speed-brisk);
-    --collapsible-ease: var(--ease-glide);
+    --collapsible-collapse-height-speed: var(--sidebar-speed);
+    --collapsible-collapse-fade-speed: calc(
+      var(--collapsible-collapse-height-speed) / 2
+    );
+    --collapsible-expand-height-speed: var(--collapsible-collapse-fade-speed);
+    --collapsible-expand-fade-speed: var(--collapsible-collapse-height-speed);
+    --collapsible-ease: var(--sidebar-ease);
 
     /* AI composer. Its fixed radius is derived from the circular footer
        control, the surrounding inset and the shell stroke. It therefore reads
@@ -175,6 +201,7 @@
     --ai-composer-gap: calc(var(--spacing) * 2);
     --ai-composer-tool-gap: calc(var(--spacing) * 1);
     --ai-composer-tool-padding-inline: calc(var(--spacing) * 3);
+    --ai-composer-tool-icon-size: calc(var(--spacing) * 4);
     --ai-composer-input-min-height: calc(var(--spacing) * 11);
     --ai-composer-input-max-height: calc(var(--spacing) * 40);
     --ai-composer-input-padding-inline: calc(var(--spacing) * 3);
@@ -195,6 +222,186 @@
     --ai-composer-ease: var(--ease-glide);
     --ai-composer-shadow: var(--elevation-raised);
 
+    /* How much of the transcript column a directed message may occupy. */
+    --bubble-max-width: 80%;
+
+    /* Assistant response. The surface owns block rhythm and the streaming
+       caret; richer content keeps the metrics of its own component. */
+    /* The answer column matches the composer's text width (its box minus the
+       form padding and the input's inline padding), so answer text, user
+       bubbles and the composer text all sit on the same margins. */
+    --response-max-width: calc(
+      var(--ai-composer-max-width) - 2 *
+        (var(--ai-composer-padding) + var(--ai-composer-input-padding-inline))
+    );
+    --response-gap: calc(var(--spacing) * 3);
+    --response-list-indent: calc(var(--spacing) * 5);
+    --response-caret-width: 1px;
+    --response-caret-height: var(--text-sm);
+    --response-caret-gap: calc(var(--spacing) * 1);
+    --response-caret-speed: var(--speed-pulse);
+    /* Base reveal cadence: time to show one character at the floor rate. The
+       throttle speeds up or eases off from here to hold a small buffer. */
+    --response-stream-char-speed: 12ms;
+    /* Characters the reveal stays behind a growing source, the fraction it
+       speeds up by when it falls further behind, and the window it samples the
+       source rate over. */
+    --response-stream-buffer: 9;
+    --response-stream-adjust: 0.2;
+    --response-stream-rate-window: 10s;
+    /* Rich content flows in normal block order, so each relationship owns its
+       rhythm: a generous lead before a heading, a tight gap to the content it
+       introduces, and a calmer gap between everything else. */
+    --response-heading-gap: calc(var(--spacing) * 6);
+    --response-heading-gap-tight: calc(var(--spacing) * 2);
+    --response-list-gap: calc(var(--spacing) * 1.5);
+    /* Heading ladder, scaled for the 14px answer body. */
+    --response-h1-size: var(--text-xl);
+    --response-h1-line-height: var(--text-xl--line-height);
+    --response-h2-size: var(--text-lg);
+    --response-h2-line-height: var(--text-lg--line-height);
+    --response-h3-size: var(--text-base);
+    --response-h3-line-height: var(--text-base--line-height);
+    --response-h4-size: var(--text-sm);
+    --response-h4-line-height: var(--text-sm--line-height);
+    /* Element roles, so the whole surface re-themes from one place. */
+    --response-heading-color: var(--foreground);
+    --response-strong-color: var(--foreground);
+    --response-muted-color: var(--muted-foreground);
+    --response-rule-color: var(--border);
+    --response-rule-width: 1px;
+    --response-quote-color: var(--muted-foreground);
+    --response-quote-border-color: var(--border);
+    --response-quote-border-width: 2px;
+    --response-quote-padding-inline: calc(var(--spacing) * 3);
+    --response-code-color: var(--foreground);
+    --response-code-bg: var(--muted);
+    --response-code-padding-inline: calc(var(--spacing) * 1.5);
+    --response-code-padding-block: calc(var(--spacing) * 0.5);
+    --response-code-radius: var(--radius-sm);
+    --response-table-border-color: var(--border);
+    --response-table-header-bg: var(--muted);
+    --response-table-padding-inline: calc(var(--spacing) * 3);
+    --response-table-padding-block: calc(var(--spacing) * 2);
+    --response-table-radius: var(--radius-md);
+    --response-task-size: 1em;
+    --response-task-gap: calc(var(--spacing) * 2);
+    --response-image-radius: var(--radius-md);
+    --response-image-border-color: var(--border);
+    --response-caption-color: var(--muted-foreground);
+    --response-caption-gap: calc(var(--spacing) * 2);
+    --response-citation-color: var(--muted-foreground);
+    --response-citation-bg: var(--muted);
+    --response-citation-radius: var(--radius-xs);
+    --response-citation-padding-inline: calc(var(--spacing) * 1);
+    --response-citation-gap: calc(var(--spacing) * 0.5);
+    --response-sources-label-gap: calc(var(--spacing) * 2);
+    --message-actions-gap: calc(var(--spacing) * 1);
+
+    /* AI chat block. The block only owns composition-level geometry; every
+       control and message keeps the metrics of its source component. */
+    /* The turn box matches the composer box; its content is inset by the
+       composer's text margin (form padding + input inline padding) so answers
+       and user bubbles land on the composer text edges — identical in the
+       full-page and side-panel layouts. */
+    --ai-chat-content-width: var(--ai-composer-max-width);
+    --ai-chat-turn-inset: calc(
+      var(--ai-composer-padding) + var(--ai-composer-input-padding-inline)
+    );
+    --ai-chat-border-width: 1px;
+    --ai-chat-radius: var(--showcase-block-surface-radius);
+    --ai-chat-history-width: calc(var(--spacing) * 64);
+    --ai-chat-history-padding: calc(var(--spacing) * 4);
+    /* One inset for the brand row, Recents bar and list, so the rail keeps a
+       32px control centred at both widths and nothing shifts when collapsing. */
+    --ai-chat-history-rail-inset: calc(
+      (var(--sidebar-width-icon) - var(--ai-chat-history-recents-height)) / 2
+    );
+    --ai-chat-history-gap: calc(var(--spacing) * 3);
+    --ai-chat-history-content-padding-block: 0px;
+    --ai-chat-history-action-inset: calc(var(--spacing) * 0.5);
+    --ai-chat-history-item-gap: calc(var(--spacing) * 0.5);
+    /* Matches the list item's own inline padding. */
+    --ai-chat-history-item-text-inset: calc(var(--spacing) * 2.5);
+    --ai-chat-history-recents-height: calc(var(--spacing) * 8);
+    --ai-chat-history-recents-icon-size: calc(var(--spacing) * 4);
+    --ai-chat-header-height: calc(var(--spacing) * 12);
+    --ai-chat-top-band-height: var(--ai-chat-header-height);
+    --ai-chat-gutter: clamp(
+      calc(var(--spacing) * 4),
+      4vw,
+      calc(var(--spacing) * 8)
+    );
+    --ai-chat-transcript-padding-block: calc(var(--spacing) * 6);
+    --ai-chat-fade-clearance: max(
+      var(--ai-chat-transcript-padding-block),
+      var(--scroll-fade-size)
+    );
+    --ai-chat-scroll-settle-offset: calc(var(--spacing) * 2);
+    --ai-chat-scroll-inset: calc(
+      var(--ai-chat-fade-clearance) + var(--ai-chat-scroll-settle-offset)
+    );
+    --ai-chat-transcript-gap: calc(var(--spacing) * 6);
+    --ai-chat-action-gap: calc(var(--spacing) * 1);
+    --ai-chat-empty-greeting-gap: calc(var(--spacing) * 6);
+    --ai-chat-empty-suggestions-gap: calc(var(--spacing) * 4);
+    --ai-chat-empty-chip-gap: calc(var(--spacing) * 2);
+    /* The empty-state greeting and chips stay on the composer, not the turn column. */
+    --ai-chat-empty-suggestions-width: var(--ai-composer-max-width);
+    /* Equal flex growth divides the counterweight between both sides. Include
+       the header, then double the desired offset, to anchor against the full
+       block midpoint rather than the content area below the header. */
+    --ai-chat-empty-composer-anchor-offset: calc(var(--spacing) * 10);
+    --ai-chat-empty-composer-counterweight: calc(
+      var(--ai-chat-header-height) +
+        var(--ai-chat-empty-composer-anchor-offset) * 2
+    );
+    --ai-chat-greeting-size: var(--text-3xl);
+    --ai-chat-greeting-line-height: var(--text-3xl--line-height);
+    --ai-chat-greeting-tracking: var(--tracking-tight);
+    --ai-chat-message-enter-distance: calc(var(--spacing) * 2);
+    --ai-chat-message-speed: var(--speed-gentle);
+    --ai-chat-message-ease: var(--ease-glide);
+    --ai-chat-scroll-speed: var(--speed-slow);
+    --ai-chat-scroll-ease: var(--ease-glide);
+    --ai-chat-layout-speed: var(--speed-slow);
+    --ai-chat-layout-ease: var(--ease-glide);
+    --ai-chat-stream-speed: calc(var(--speed-pulse) * 2);
+    /* Intent timer, not motion: how long a copy confirmation is held before
+       the action returns to its resting icon and label. */
+    --ai-chat-copy-reset-delay: calc(var(--speed-pulse) * 1.5);
+    --ai-chat-shadow: var(--elevation-floating);
+
+    /* Side panel layout. 360px is Chrome's kSidePanelDefaultContentWidth,
+       which is both the default and the hard minimum a panel can be dragged
+       to, so it is the width this layout is designed against. The max-width
+       is the threshold at which `layout="auto"` adopts the panel treatment:
+       below it a docked history rail can no longer coexist with a usable
+       conversation column. */
+    --ai-chat-panel-min-width: calc(var(--spacing) * 90);
+    --ai-chat-panel-max-width: calc(var(--spacing) * 160);
+    --ai-chat-panel-gutter: calc(var(--spacing) * 4);
+    --ai-chat-panel-transcript-padding-block: calc(var(--spacing) * 4);
+    --ai-chat-panel-greeting-size: var(--text-xl);
+    --ai-chat-panel-greeting-line-height: var(--text-xl--line-height);
+    --ai-chat-panel-bubble-max-width: 92%;
+    /* Every gap around the docked composer is one value: greeting to
+       suggestions, suggestions to composer, and composer to the panel edge. */
+    --ai-chat-panel-stack-gap: var(--ai-chat-panel-gutter);
+    /* Lines a suggestion's leading glyph up with the composer's own leading
+       action glyph, which sits one composer padding plus half a control in. */
+    --ai-chat-panel-suggestion-indent: calc(var(--spacing) * 2);
+     /* The greeting joins the suggestion glyph column: suggestion indent plus
+       the chip's leading padding and border. */
+     --ai-chat-panel-greeting-indent: calc(
+      var(--ai-chat-panel-suggestion-indent) + var(--spacing) * 2 +
+        var(--ai-chat-border-width)
+     );
+    --ai-chat-panel-reveal-fade-speed: var(--speed-swift);
+    --ai-chat-recents-menu-width: calc(var(--spacing) * 64);
+    --ai-chat-recents-menu-min-height: calc(var(--spacing) * 24);
+    --ai-chat-recents-menu-max-height: calc(var(--spacing) * 80);
+
      /* Skeleton. A high-contrast travelling highlight reads more clearly than
        a whole-surface opacity pulse while retaining the neutral palette. */
     --skeleton-shimmer-speed: calc(var(--speed-pulse) * 2);
@@ -209,11 +416,44 @@
        wider key shadow, so a lifted surface reads without a heavy edge. */
     --elevation-ambient: oklch(0.145 0 0 / 0.04);
     --elevation-key: oklch(0.145 0 0 / 0.1);
+    --elevation-flat: none;
     --elevation-raised: 0 1px 2px var(--elevation-ambient),
         0 2px 6px -2px var(--elevation-key);
     --elevation-floating: 0 1px 2px var(--elevation-ambient),
         0 12px 32px -8px var(--elevation-key);
 
+    /* Interaction state layers. The foreground role automatically produces
+       dark overlays in light mode and light overlays in dark mode. */
+    --state-layer-hover-opacity: 8%;
+    --state-layer-focus-opacity: 10%;
+    --state-layer-pressed-opacity: 10%;
+    --state-layer-dragged-opacity: 16%;
+    --state-layer-hover: color-mix(
+      in oklab,
+      var(--foreground) var(--state-layer-hover-opacity),
+      transparent
+    );
+    --state-layer-focus: color-mix(
+      in oklab,
+      var(--foreground) var(--state-layer-focus-opacity),
+      transparent
+    );
+    --state-layer-pressed: color-mix(
+      in oklab,
+      var(--foreground) var(--state-layer-pressed-opacity),
+      transparent
+    );
+    --state-layer-dragged: color-mix(
+      in oklab,
+      var(--foreground) var(--state-layer-dragged-opacity),
+      transparent
+    );
+
+    --dialog-max-height: calc(100svh - var(--spacing) * 16);
+    --drawer-inset: calc(var(--spacing) * 2);
+    --drawer-width: 75%;
+
+    /* Sidebar geometry and motion. */
     --sidebar: var(--surface-ground);
     --sidebar-foreground: oklch(0.145 0 0);
     --sidebar-primary: oklch(0.205 0 0);
@@ -224,15 +464,15 @@
     --sidebar-ring: oklch(0.708 0 0);
     --sidebar-width: calc(var(--spacing) * 64);
     --sidebar-width-icon: calc(var(--spacing) * 12);
-    /* A floating or inset panel is the same bar plus the container's inset on each side. */
+    /* The collapsed float pads the bar, so gap and container share one value. */
     --sidebar-width-icon-floating: calc(
-        var(--sidebar-width-icon) + var(--spacing) * 4
+      var(--sidebar-width-icon) + var(--spacing) * 4
     );
     --sidebar-width-mobile: calc(var(--spacing) * 72);
     --sidebar-width-min: calc(var(--spacing) * 44);
     --sidebar-width-max: calc(var(--spacing) * 110);
     --sidebar-snap-threshold: calc(var(--spacing) * 34);
-    /* Square collapsed corner: the header is as tall as the bar is wide. */
+    /* The header is as tall as the bar is wide, so the collapsed corner is square. */
     --sidebar-header-height: var(--sidebar-width-icon);
     --sidebar-resize-handle-width: calc(var(--spacing) * 4);
     --sidebar-resize-handle-offset: calc(var(--sidebar-resize-handle-width) / -2);
@@ -245,12 +485,38 @@
     --sidebar-speed: var(--speed-slow);
     /* Hover affordances only. Collapsing rides --sidebar-speed so width and fade move together. */
     --sidebar-fade-speed: var(--speed-swift);
-    /* Grace periods before a peek commits, not motion. */
+    /* Intent timers, not motion. */
     --sidebar-peek-open-delay: 90ms;
     --sidebar-peek-close-delay: 320ms;
-    --dialog-max-height: calc(100svh - var(--spacing) * 16);
-    --drawer-inset: calc(var(--spacing) * 2);
-    --drawer-width: 75%;
+
+    /* Drag handle. One primitive: a grabber for drawers, a grip for resizers. */
+    --drag-handle-thickness: calc(var(--spacing) * 1);
+    --drag-handle-grip-length: calc(var(--spacing) * 6);
+    --drag-handle-grabber-length: calc(var(--spacing) * 25);
+    --drag-handle-active-thickness: calc(var(--spacing) * 1.5);
+    --drag-handle-active-length: calc(var(--spacing) * 8);
+    --drag-handle-active-shadow: var(--elevation-raised);
+    --drag-handle-proximity-size: calc(var(--spacing) * 6);
+    --drag-handle-speed: var(--speed-brisk);
+    --drag-handle-ease: var(--ease-glide);
+
+    /* Floating action button. One per screen, the primary constructive action. */
+    --fab-size-md: calc(var(--spacing) * 14);
+    --fab-size-lg: calc(var(--spacing) * 18);
+    --fab-icon-size-md: calc(var(--spacing) * 6);
+    --fab-icon-size-lg: calc(var(--spacing) * 7);
+    --fab-radius-md: var(--radius-xl);
+    --fab-radius-lg: var(--radius-3xl);
+    /* Inline padding equals the corner radius, so a label never crowds the curve. */
+    --fab-extended-padding-inline: var(--fab-radius-md);
+    --fab-extended-gap: calc(var(--spacing) * 2);
+    --fab-inset: calc(var(--spacing) * 4);
+    /* M3 widens the margin from 16 to 24 once the window is expanded. */
+    --fab-inset-expanded: calc(var(--spacing) * 6);
+    --fab-elevation-rest: var(--elevation-raised);
+    --fab-elevation-hover: var(--elevation-floating);
+    --fab-speed: var(--speed-swift);
+    --fab-ease: var(--ease-settle);
 
     /* Tabs. The pill crosses one pivot per --tabs-pivot-speed, so a two-tab
        jump takes twice as long instead of travelling twice as fast. */
@@ -264,29 +530,31 @@
     --site-header-height: calc(var(--spacing) * 14);
     --site-header-gap: calc(var(--spacing) * 4);
     --site-header-gutter: clamp(
-        calc(var(--spacing) * 4),
-        4vw,
-        calc(var(--spacing) * 6)
+      calc(var(--spacing) * 4),
+      4vw,
+      calc(var(--spacing) * 6)
     );
     /* Distance a floating shell keeps from the viewport edge. */
     --site-header-inset: calc(var(--spacing) * 4);
     --site-header-padding: calc(var(--spacing) * 1.5);
     --site-header-border-width: 1px;
     --site-header-cluster-gap: calc(var(--spacing) * 2);
+    --site-header-title-gap: calc(var(--spacing) * 2);
+    --site-header-action-gap: calc(var(--spacing) * 2);
     /* Fixed at half the resting height, never a pill: it reads as a perfect
        capsule on one row and as a rounded rectangle if the shell ever wraps. */
     --site-header-radius: calc(var(--site-header-height) / 2);
     /* Concentric: an item touching the corner shares the shell's centre. The
        stroke counts — the item nests inside the border box, not the border. */
     --site-header-item-radius: calc(
-        var(--site-header-radius) - var(--site-header-border-width) -
-            var(--site-header-padding)
+      var(--site-header-radius) - var(--site-header-border-width) -
+        var(--site-header-padding)
     );
     /* An item that fills the shell's inner height, e.g. a dock icon. Filling it
-       is what MAKES the item radius concentric: item-size/2 == item-radius. */
+       is what makes the item radius concentric: item-size/2 == item-radius. */
     --site-header-item-size: calc(
-        var(--site-header-height) -
-            (var(--site-header-border-width) + var(--site-header-padding)) * 2
+      var(--site-header-height) -
+        (var(--site-header-border-width) + var(--site-header-padding)) * 2
     );
     --site-header-separator-height: calc(var(--spacing) * 6);
     /* Padding equals the cap radius, so a label never crowds the curve and an
@@ -322,6 +590,15 @@
     --showcase-preview-min-height: calc(var(--spacing) * 72);
     --showcase-preview-viewport-height: calc(var(--spacing) * 112);
     --showcase-preview-padding: calc(var(--spacing) * 8);
+    --showcase-block-preview-padding: calc(var(--spacing) * 4);
+    --showcase-block-surface-radius: var(--radius-3xl);
+    --showcase-block-preview-radius: calc(
+      var(--showcase-block-surface-radius) + var(--showcase-block-preview-padding)
+    );
+    --showcase-block-preview-height: calc(
+      100svh - var(--showcase-header-row-height) -
+        var(--showcase-page-gutter) * 2
+    );
     --showcase-preview-grid: calc(var(--spacing) * 6);
     --showcase-preview-dot: 1px;
     --showcase-page-gutter: clamp(calc(var(--spacing) * 4), 4vw, calc(var(--spacing) * 10));
@@ -338,6 +615,25 @@
     --showcase-section-gap: calc(var(--spacing) * 16);
     --showcase-example-gap: calc(var(--spacing) * 5);
     --showcase-sidebar-width: calc(var(--spacing) * 64);
+
+    /* Expression lab. This is a neutral control condition: a stable app-sized
+       composition whose relationships can be changed one experiment at a time. */
+    --expression-lab-border-width: 1px;
+    --expression-lab-radius: var(--radius-3xl);
+    --expression-lab-header-padding: calc(var(--spacing) * 4);
+    --expression-lab-content-padding: calc(var(--spacing) * 6);
+    --expression-lab-gap: calc(var(--spacing) * 4);
+    --expression-lab-section-gap: calc(var(--spacing) * 6);
+    --expression-lab-item-gap: calc(var(--spacing) * 3);
+    --expression-lab-copy-gap: calc(var(--spacing) * 1);
+    --expression-lab-column-min: calc(var(--spacing) * 48);
+    --expression-lab-span-wide: 7;
+    --expression-lab-span-narrow: 5;
+    --expression-lab-progress-height: calc(var(--spacing) * 2);
+    --expression-lab-chat-min-height: calc(var(--spacing) * 96);
+    --expression-lab-chat-transcript-min-height: calc(var(--spacing) * 52);
+    --expression-lab-chat-padding: calc(var(--spacing) * 4);
+
     --scroll-fade-size: min(12%, calc(var(--spacing) * 10));
     --scroll-fade-reveal: calc(var(--spacing) * 8);
     --carousel-stroke-clearance: 1px;
@@ -383,20 +679,30 @@
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
+  --surface-ground: oklch(
+    0.145 var(--surface-warm-chroma) var(--surface-warm-hue)
+  );
+  --surface-backplate: oklch(
+    0.269 var(--surface-warm-chroma) var(--surface-warm-hue)
+  );
+  --background: var(--surface-ground);
     --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
+  --card: oklch(
+    0.205 var(--surface-warm-chroma) var(--surface-warm-hue)
+  );
     --card-foreground: oklch(0.985 0 0);
     --control: var(--background);
-    --popover: oklch(0.205 0 0);
+  --popover: oklch(
+    0.205 var(--surface-warm-chroma) var(--surface-warm-hue)
+  );
     --popover-foreground: oklch(0.985 0 0);
     --primary: oklch(0.922 0 0);
     --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
+  --secondary: var(--surface-backplate);
     --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
+  --muted: var(--surface-backplate);
     --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
+  --accent: var(--surface-backplate);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.7 0.16 var(--destructive-hue));
     --badge-blue: oklch(0.3 0.08 255);
@@ -422,11 +728,11 @@
     /* A shadow has to be far denser on a dark canvas to register at all. */
     --elevation-ambient: oklch(0 0 0 / 0.3);
     --elevation-key: oklch(0 0 0 / 0.55);
-    --sidebar: oklch(0.145 0 0);
+    --sidebar: var(--surface-ground);
     --sidebar-foreground: oklch(0.985 0 0);
     --sidebar-primary: oklch(0.488 0.243 264.376);
     --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent: var(--surface-backplate);
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
@@ -498,6 +804,1055 @@
   max-block-size: var(--ai-composer-input-max-height);
   padding-block: var(--ai-composer-input-padding-block);
   padding-inline: var(--ai-composer-input-padding-inline);
+}
+
+@keyframes ai-chat-message-enter {
+  from {
+    opacity: 0;
+    translate: 0 var(--ai-chat-message-enter-distance);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes response-caret-pulse {
+  50% {
+    opacity: 0;
+  }
+}
+
+@layer components {
+  .item-actions--hosted {
+    position: absolute;
+    inset-block: var(--item-hosted-action-inset);
+    inset-inline-end: var(--item-hosted-action-inset);
+    z-index: 1;
+    justify-content: flex-end;
+    background: var(--muted);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--item-hosted-action-speed)
+      var(--item-hosted-action-ease);
+  }
+
+  .item-actions--hosted::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 100%;
+    inline-size: var(--item-hosted-action-fade-size);
+    background: linear-gradient(to right, transparent, var(--muted));
+    pointer-events: none;
+  }
+
+  [dir="rtl"] .item-actions--hosted::before {
+    background: linear-gradient(to left, transparent, var(--muted));
+  }
+
+  [data-slot="item"]:hover > .item-actions--hosted,
+  [data-slot="item"]:has(
+      > .item-actions--hosted [data-slot="dropdown-menu-trigger"]:focus-visible
+    )
+    > .item-actions--hosted,
+  [data-slot="item"]:has(
+      > .item-actions--hosted
+        [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
+    )
+    > .item-actions--hosted {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ai-chat-workspace {
+    --sidebar-width: var(--ai-chat-history-width);
+    --site-header-height: var(--ai-chat-header-height);
+    --site-header-gutter: var(--ai-chat-history-padding);
+    /* Header actions and message actions are both icon clusters, so they
+       share one gap. */
+    --site-header-action-gap: var(--ai-chat-action-gap);
+    --swap-speed: var(--ai-chat-layout-speed);
+    --swap-ease: var(--ai-chat-layout-ease);
+    position: relative;
+    block-size: 100%;
+    min-block-size: 0;
+    overflow: hidden;
+    border: var(--ai-chat-border-width) solid var(--border);
+    border-radius: var(--ai-chat-radius);
+    background: var(--background);
+    box-shadow: var(--ai-chat-shadow);
+  }
+
+  .ai-chat-workspace .ai-chat-block {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .ai-chat-workspace [data-slot="sidebar-inset"] {
+    min-inline-size: 0;
+  }
+
+  .ai-chat-history__content {
+    padding-block: var(--ai-chat-history-content-padding-block);
+  }
+
+  .ai-chat-history__chats {
+    position: relative;
+  }
+
+  .ai-chat-history__recents-bar {
+    position: relative;
+    background: var(--sidebar);
+  }
+
+  .ai-chat-history__recents-trigger {
+    position: absolute;
+    inset-block-start: 0;
+    /* Sits on the list's text column, not the rail edge. */
+    inset-inline-start: calc(
+      var(--ai-chat-history-rail-inset) + var(--ai-chat-history-item-text-inset)
+    );
+    z-index: 1;
+    display: flex;
+    block-size: var(--ai-chat-history-recents-height);
+    align-items: center;
+    gap: var(--ai-chat-history-action-inset);
+    color: var(--muted-foreground);
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-xs--line-height);
+    outline: none;
+  }
+
+  .ai-chat-history__recents-trigger > svg {
+    inline-size: var(--ai-chat-history-recents-icon-size);
+    block-size: var(--ai-chat-history-recents-icon-size);
+    transition: rotate var(--collapsible-collapse-height-speed)
+      var(--collapsible-ease);
+  }
+
+  .ai-chat-history__recents-trigger[data-state="open"] > svg {
+    rotate: 180deg;
+    transition-duration: var(--collapsible-expand-height-speed);
+  }
+
+  .ai-chat-history__recents-header {
+    display: flex;
+    inline-size: calc(100% - var(--ai-chat-history-rail-inset) * 2);
+    min-inline-size: 0;
+    align-items: center;
+    justify-content: flex-end;
+    margin-inline: var(--ai-chat-history-rail-inset);
+    transition-property: inline-size, margin-inline;
+    transition-duration: var(--sidebar-speed);
+    transition-timing-function: var(--sidebar-ease);
+  }
+
+  .ai-chat-history__recents-actions {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--ai-chat-history-action-inset);
+    transition: gap var(--sidebar-speed) var(--sidebar-ease);
+  }
+
+  .ai-chat-history__compose {
+    flex: none;
+  }
+
+  .ai-chat-history__recents-trigger {
+    transition-property: opacity, visibility;
+    transition-duration: var(--sidebar-fade-speed);
+    transition-timing-function: var(--sidebar-ease);
+  }
+
+  [data-slot="sidebar"][data-collapsible="icon"]
+    .ai-chat-history__recents-header {
+    inline-size: var(--sidebar-width-icon);
+    margin-inline: 0;
+    padding-inline: var(--ai-chat-history-rail-inset);
+  }
+
+  [data-slot="sidebar"][data-collapsible="icon"]
+    .ai-chat-history__recents-trigger {
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  [data-slot="sidebar"][data-collapsible="icon"]
+    .ai-chat-history__recents-actions {
+    gap: 0;
+  }
+
+  .ai-chat-history__recents-trigger:hover,
+  .ai-chat-history__recents-trigger:focus-visible {
+    color: var(--sidebar-foreground);
+  }
+
+  .ai-chat-history__recents-content {
+    padding-block-end: var(--ai-chat-history-gap);
+  }
+
+  .ai-chat-history [data-slot="sidebar-group"] {
+    padding-inline: var(--ai-chat-history-rail-inset);
+  }
+
+  .ai-chat-history__item {
+    position: relative;
+  }
+
+  .ai-chat-history__item-button {
+    display: flex;
+    min-inline-size: 0;
+    flex: 1;
+    align-items: center;
+    text-align: start;
+    outline: none;
+  }
+
+  .ai-chat-history__item-button:hover,
+  .ai-chat-history__item-button:active {
+    background: transparent;
+  }
+
+  .ai-chat-history__item-action {
+    background: transparent;
+    color: var(--muted-foreground);
+  }
+
+  .ai-chat-history__item-action:hover,
+  .ai-chat-history__item-action:focus-visible,
+  .ai-chat-history__item-action[aria-expanded="true"] {
+    background: transparent;
+    color: var(--sidebar-foreground);
+  }
+
+  .ai-chat-block {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    max-inline-size: none;
+    block-size: 100%;
+    overflow: hidden;
+    border: var(--ai-chat-border-width) solid var(--border);
+    border-radius: var(--ai-chat-radius);
+    background: var(--background);
+    box-shadow: var(--ai-chat-shadow);
+  }
+
+  .ai-chat-block__header {
+    flex: none;
+  }
+
+  /* The empty and docked layouts are one interpolable box model, so the
+     composer travels because the regions around it resize, not because a
+     transform is measured in script. */
+  .ai-chat-block__reveal {
+    display: grid;
+    flex: none;
+    /* The explicit zero minimum is required: a bare `0fr` track is floored by
+       the item's content-based minimum and never fully collapses. */
+    grid-template-rows: minmax(0, 0fr);
+    /* Inline padding matches the composer and does not affect the collapse. */
+    padding-inline: var(--ai-chat-gutter);
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      grid-template-rows var(--ai-chat-layout-speed) var(--ai-chat-layout-ease),
+      opacity var(--ai-chat-layout-speed) var(--ai-chat-layout-ease);
+  }
+
+  .ai-chat-block__reveal > * {
+    min-block-size: 0;
+  }
+
+  /* Each region is anchored to the edge it shares with the composer, so the
+     collapsing box slides its content under the composer instead of wiping it. */
+  .ai-chat-block__reveal[data-anchor="start"] {
+    align-items: start;
+  }
+
+  .ai-chat-block__reveal[data-anchor="end"] {
+    align-items: end;
+  }
+
+  .ai-chat-block[data-empty="true"] .ai-chat-block__reveal {
+    grid-template-rows: minmax(0, 1fr);
+    opacity: 1;
+  }
+
+  .ai-chat-block__spacer {
+    flex: 0 1 0;
+    transition:
+      flex-grow var(--ai-chat-layout-speed) var(--ai-chat-layout-ease),
+      flex-basis var(--ai-chat-layout-speed) var(--ai-chat-layout-ease);
+  }
+
+  .ai-chat-block[data-empty="true"] .ai-chat-block__spacer {
+    flex-grow: 1;
+  }
+
+  .ai-chat-workspace[data-layout="workspace"]
+    .ai-chat-block[data-empty="true"]
+    .ai-chat-block__spacer {
+    flex-basis: var(--ai-chat-empty-composer-counterweight);
+  }
+
+  /* Panel is a token swap, not a second stylesheet. Only the history surface
+     and the composer/suggestion order are real structural forks. */
+  .ai-chat-workspace[data-layout="panel"] {
+    --ai-chat-gutter: var(--ai-chat-panel-gutter);
+    --ai-chat-transcript-padding-block: var(
+      --ai-chat-panel-transcript-padding-block
+    );
+    --ai-chat-greeting-size: var(--ai-chat-panel-greeting-size);
+    --ai-chat-greeting-line-height: var(--ai-chat-panel-greeting-line-height);
+    --bubble-max-width: var(--ai-chat-panel-bubble-max-width);
+    /* The suggestions own the whole gap on both sides, so the greeting and the
+       composer region contribute nothing and all three spaces stay equal. */
+    --ai-chat-empty-greeting-gap: 0px;
+    --ai-chat-empty-suggestions-gap: var(--ai-chat-panel-stack-gap);
+  }
+
+  /* Collapsing content is anchored to the track's moving top edge, so it
+     travels down and disappears at the composer instead of being eaten in
+     place. The fade outruns the collapse so the clip line never reads. */
+  .ai-chat-workspace[data-layout="panel"] .ai-chat-block__reveal {
+    transition:
+      grid-template-rows var(--ai-chat-layout-speed) var(--ai-chat-layout-ease),
+      opacity var(--ai-chat-panel-reveal-fade-speed) var(--ai-chat-layout-ease);
+  }
+
+  .ai-chat-workspace[data-layout="panel"] .ai-chat-block__suggestions {
+    margin-inline: 0;
+    padding-inline-start: var(--ai-chat-panel-suggestion-indent);
+  }
+
+  /* In a full-page empty chat, the composer is the visual anchor. Greeting
+     and suggestions attach to it without contributing to its flex position. */
+  .ai-chat-block__composer-lockup {
+    flex: none;
+    inline-size: 100%;
+  }
+
+  .ai-chat-workspace[data-layout="workspace"]
+    .ai-chat-block__composer-lockup {
+    position: relative;
+  }
+
+  .ai-chat-workspace[data-layout="workspace"]
+    .ai-chat-block__greeting-region,
+  .ai-chat-workspace[data-layout="workspace"]
+    .ai-chat-block__suggestions-region {
+    position: absolute;
+    inset-inline: 0;
+  }
+
+  .ai-chat-workspace[data-layout="workspace"]
+    .ai-chat-block__greeting-region {
+    inset-block-end: 100%;
+  }
+
+  .ai-chat-workspace[data-layout="workspace"]
+    .ai-chat-block__suggestions-region {
+    inset-block-start: 100%;
+  }
+
+  .ai-chat-block__scroller {
+    flex: 1 1 0;
+    min-block-size: 0;
+  }
+
+  .ai-chat-block__viewport {
+    padding-block: var(--ai-chat-transcript-padding-block);
+    padding-inline: var(--ai-chat-gutter);
+  }
+
+  .ai-chat-block__transcript {
+    gap: var(--ai-chat-transcript-gap);
+  }
+
+  .ai-chat-block__turn {
+    inline-size: 100%;
+    max-inline-size: var(--ai-chat-content-width);
+    margin-inline: auto;
+    padding-inline: var(--ai-chat-turn-inset);
+    animation: ai-chat-message-enter var(--ai-chat-message-speed)
+      var(--ai-chat-message-ease) both;
+  }
+
+  [data-slot="response"] > * {
+    margin-block: 0;
+  }
+
+  [data-slot="response"] > * + * {
+    margin-block-start: var(--response-gap);
+  }
+
+  [data-slot="response"] > :is(h1, h2, h3, h4, h5, h6) {
+    margin-block-start: var(--response-heading-gap);
+  }
+
+  [data-slot="response"] :is(h1, h2, h3, h4, h5, h6) + * {
+    margin-block-start: var(--response-heading-gap-tight);
+  }
+
+  [data-slot="response"] > :first-child {
+    margin-block-start: 0;
+  }
+
+  [data-slot="response"] :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--response-heading-color);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  [data-slot="response"] h1 {
+    font-size: var(--response-h1-size);
+    line-height: var(--response-h1-line-height);
+    font-weight: var(--font-weight-bold);
+  }
+
+  [data-slot="response"] h2 {
+    font-size: var(--response-h2-size);
+    line-height: var(--response-h2-line-height);
+  }
+
+  [data-slot="response"] h3 {
+    font-size: var(--response-h3-size);
+    line-height: var(--response-h3-line-height);
+  }
+
+  [data-slot="response"] :is(h4, h5, h6) {
+    font-size: var(--response-h4-size);
+    line-height: var(--response-h4-line-height);
+  }
+
+  [data-slot="response"] :is(h5, h6) {
+    color: var(--response-muted-color);
+  }
+
+  [data-slot="response"] strong {
+    font-weight: var(--font-weight-semibold);
+    color: var(--response-strong-color);
+  }
+
+  [data-slot="response"] em {
+    font-style: italic;
+  }
+
+  [data-slot="response"] del {
+    text-decoration: line-through;
+    color: var(--response-muted-color);
+  }
+
+  [data-slot="response"] a {
+    text-decoration: underline;
+    text-underline-offset: var(--spacing);
+    text-decoration-color: var(--response-muted-color);
+    transition: text-decoration-color var(--speed-instant) var(--ease-settle);
+  }
+
+  [data-slot="response"] a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  [data-slot="response"] :is(ul, ol) {
+    padding-inline-start: var(--response-list-indent);
+  }
+
+  [data-slot="response"] ul {
+    list-style-type: disc;
+  }
+
+  [data-slot="response"] ul ul {
+    list-style-type: circle;
+  }
+
+  [data-slot="response"] ul ul ul {
+    list-style-type: square;
+  }
+
+  [data-slot="response"] ol {
+    list-style-type: decimal;
+  }
+
+  [data-slot="response"] li::marker {
+    color: var(--response-muted-color);
+  }
+
+  [data-slot="response"] li + li,
+  [data-slot="response"] li > :is(ul, ol),
+  [data-slot="response"] li > p + p {
+    margin-block-start: var(--response-list-gap);
+  }
+
+  [data-slot="response"] blockquote {
+    padding-inline-start: var(--response-quote-padding-inline);
+    border-inline-start: var(--response-quote-border-width) solid
+      var(--response-quote-border-color);
+    color: var(--response-quote-color);
+  }
+
+  [data-slot="response"] blockquote > * + * {
+    margin-block-start: var(--response-gap);
+  }
+
+  [data-slot="response"] hr {
+    border: 0;
+    border-block-start: var(--response-rule-width) solid
+      var(--response-rule-color);
+  }
+
+  /* Inline code only; a fenced block is a CodeBlock, not a bare <pre>. */
+  [data-slot="response"] :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--response-code-color);
+    background: var(--response-code-bg);
+    padding-inline: var(--response-code-padding-inline);
+    padding-block: var(--response-code-padding-block);
+    border-radius: var(--response-code-radius);
+  }
+
+  [data-slot="response"] table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  [data-slot="response"] :is(th, td) {
+    padding-inline: var(--response-table-padding-inline);
+    padding-block: var(--response-table-padding-block);
+    border: var(--response-rule-width) solid var(--response-table-border-color);
+    text-align: start;
+  }
+
+  [data-slot="response"] th {
+    background: var(--response-table-header-bg);
+    color: var(--response-heading-color);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* A wrapped table owns its horizontal scroll inside a narrow bubble; the
+     wrapper draws the rounded outer edge so the collapsed cell borders stay
+     as clean interior gridlines. */
+  [data-slot="response"] .response-table {
+    overflow-x: auto;
+    border: var(--response-rule-width) solid var(--response-table-border-color);
+    border-radius: var(--response-table-radius);
+  }
+
+  [data-slot="response"] .response-table > table {
+    width: max-content;
+    min-width: 100%;
+    border-style: hidden;
+  }
+
+  /* Task lists (GFM) drop the marker and sit a checkbox against the text. */
+  [data-slot="response"] :is(ul, ol).contains-task-list {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  [data-slot="response"] .task-list-item {
+    list-style: none;
+  }
+
+  [data-slot="response"] .task-list-item input[type="checkbox"] {
+    inline-size: var(--response-task-size);
+    block-size: var(--response-task-size);
+    margin-inline-end: var(--response-task-gap);
+    vertical-align: -0.15em;
+    accent-color: var(--primary);
+  }
+
+  [data-slot="response"] img {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+    border: var(--response-rule-width) solid var(--response-image-border-color);
+    border-radius: var(--response-image-radius);
+  }
+
+  [data-slot="response"] figure > img {
+    inline-size: 100%;
+  }
+
+  [data-slot="response"] figcaption {
+    margin-block-start: var(--response-caption-gap);
+    color: var(--response-caption-color);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    text-align: center;
+  }
+
+  /* Footnotes power citations: an inline numbered chip (a popover trigger) and
+     a Sources list. react-markdown drops the data-footnote-* hooks. */
+  [data-slot="response"] .response-citation {
+    cursor: pointer;
+    border: 0;
+    font: inherit;
+    line-height: 1;
+    text-decoration: none;
+    color: var(--response-citation-color);
+    background: var(--response-citation-bg);
+    border-radius: var(--response-citation-radius);
+    padding-inline: var(--response-citation-padding-inline);
+    margin-inline-start: var(--response-citation-gap);
+    font-weight: var(--font-weight-medium);
+  }
+
+  [data-slot="response"] .response-citation:hover {
+    color: var(--response-strong-color);
+  }
+
+  [data-slot="response"] [data-footnotes] {
+    border-block-start: var(--response-rule-width) solid
+      var(--response-rule-color);
+    padding-block-start: var(--response-gap);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  /* The GFM footnote label is sr-only; name the section for readers instead. */
+  [data-slot="response"] [data-footnotes]::before {
+    content: "Sources";
+    display: block;
+    margin-block-end: var(--response-sources-label-gap);
+    color: var(--response-heading-color);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  [data-slot="response"] [data-footnotes] :is(p, li) {
+    color: var(--response-muted-color);
+  }
+
+  /* The ↩ backref jump is dead (react-markdown drops the ids) and the popover
+     replaces it, so hide it for a clean Sources list. */
+  [data-slot="response"] [data-footnotes] a[href*="fnref"] {
+    display: none;
+  }
+
+  /* The caret trails the last block, so a multi-part answer marks one edge. */
+  [data-slot="response"][data-streaming="true"] > :last-child::after {
+    content: "";
+    display: inline-block;
+    inline-size: var(--response-caret-width);
+    block-size: var(--response-caret-height);
+    margin-inline-start: var(--response-caret-gap);
+    vertical-align: text-bottom;
+    background: currentColor;
+    animation: response-caret-pulse var(--response-caret-speed) steps(1, end)
+      infinite;
+  }
+
+  .ai-chat-block__suggestions {
+    margin-inline: auto;
+    /* Block padding doubles as focus-ring clearance inside the clipped
+       reveal, and as the gap between the composer and the chips. */
+    padding-block: var(--ai-chat-empty-suggestions-gap);
+  }
+
+  .ai-chat-block__composer-region {
+    flex: none;
+    padding-inline: var(--ai-chat-gutter);
+    padding-block: var(--ai-chat-gutter);
+    background: transparent;
+    transition: padding-block var(--ai-chat-layout-speed)
+      var(--ai-chat-layout-ease);
+  }
+
+  .ai-chat-block[data-empty="true"] .ai-chat-block__composer-region {
+    padding-block: 0;
+  }
+
+  /* The panel composer is docked in both states, so it never takes a top
+     gap (the suggestions or the transcript already own that) and always
+     keeps the gutter below. */
+  .ai-chat-workspace[data-layout="panel"] .ai-chat-block__composer-region,
+  .ai-chat-workspace[data-layout="panel"]
+    .ai-chat-block[data-empty="true"]
+    .ai-chat-block__composer-region {
+    padding-block: 0 var(--ai-chat-gutter);
+  }
+
+  .ai-chat-block__composer-region > [data-slot="ai-composer"] {
+    margin-inline: auto;
+  }
+
+  .expression-lab {
+    --site-header-height: var(--sidebar-header-height);
+    --site-header-gutter: var(--expression-lab-header-padding);
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    overflow: hidden;
+    border: var(--expression-lab-border-width) solid var(--border);
+    border-radius: var(--expression-lab-radius);
+    background: var(--surface-ground);
+  }
+
+  .expression-lab__header {
+    flex: none;
+  }
+
+  .expression-lab__progress-copy,
+  .expression-lab__slider-labels,
+  .expression-lab__lenses-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .expression-lab__page-title {
+    margin-inline-end: auto;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-sm--line-height);
+  }
+
+  .expression-lab__session,
+  .expression-lab__session-value,
+  .expression-lab__capture-stack,
+  .expression-lab__lenses-copy {
+    display: grid;
+  }
+
+  .expression-lab__lenses-copy {
+    gap: var(--expression-lab-copy-gap);
+  }
+
+  .expression-lab__session-label,
+  .expression-lab__slider-labels,
+  .expression-lab__lenses-description {
+    color: var(--muted-foreground);
+  }
+
+  .expression-lab__slider-labels {
+    font-size: var(--text-xs);
+    line-height: var(--text-xs--line-height);
+  }
+
+  .expression-lab__view {
+    flex: none;
+  }
+
+  .expression-lab__scroll {
+    min-block-size: 0;
+    flex: 1;
+    padding: var(--expression-lab-content-padding);
+  }
+
+  .expression-lab__heading {
+    margin: 0;
+  }
+
+  .expression-lab__heading {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-2xl--line-height);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .expression-lab__grid {
+    display: grid;
+    gap: var(--expression-lab-gap);
+  }
+
+  .expression-lab__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--expression-lab-gap);
+  }
+
+  .expression-lab__hero,
+  .expression-lab__focus,
+  .expression-lab__capture-stack {
+    min-inline-size: min(100%, var(--expression-lab-column-min));
+    flex-basis: 0;
+    flex-shrink: 1;
+  }
+
+  .expression-lab__hero,
+  .expression-lab__capture-stack {
+    flex-grow: var(--expression-lab-span-wide);
+  }
+
+  .expression-lab__focus {
+    flex-grow: var(--expression-lab-span-narrow);
+  }
+
+  .expression-lab__hero-content {
+    display: flex;
+    flex: 1;
+    align-items: center;
+  }
+
+  .expression-lab__progress-block {
+    display: grid;
+    gap: var(--expression-lab-item-gap);
+  }
+
+  .expression-lab__progress-copy,
+  .expression-lab__slider-labels {
+    justify-content: space-between;
+    gap: var(--expression-lab-gap);
+  }
+
+  .expression-lab__progress-copy {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--text-sm--line-height);
+  }
+
+  .expression-lab__progress-block {
+    inline-size: 100%;
+  }
+
+  .expression-lab__progress {
+    block-size: var(--expression-lab-progress-height);
+  }
+
+  .expression-lab__session-duration {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .expression-lab__session-label {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  .expression-lab__hero-footer,
+  .expression-lab__capture-footer {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .expression-lab__hero-footer {
+    gap: var(--expression-lab-gap);
+    justify-content: space-between;
+  }
+
+  .expression-lab__next-step {
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  .expression-lab__card {
+    min-inline-size: 0;
+  }
+
+  .expression-lab__capture-stack {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: var(--expression-lab-gap);
+  }
+
+  .expression-lab__plan {
+    display: grid;
+    gap: var(--expression-lab-item-gap);
+  }
+
+  .expression-lab__plan-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--expression-lab-gap);
+  }
+
+  .expression-lab__plan-copy {
+    display: grid;
+    min-inline-size: 0;
+    gap: var(--expression-lab-copy-gap);
+  }
+
+  .expression-lab__plan-title,
+  .expression-lab__plan-description {
+    margin: 0;
+  }
+
+  .expression-lab__plan-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-xl--line-height);
+  }
+
+  .expression-lab__plan-description {
+    color: var(--muted-foreground);
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  .expression-lab__capture,
+  .expression-lab__lenses-card {
+    min-inline-size: 0;
+  }
+
+  .expression-lab__chat {
+    display: flex;
+    min-inline-size: min(100%, var(--expression-lab-column-min));
+    min-block-size: var(--expression-lab-chat-min-height);
+    flex: var(--expression-lab-span-narrow) 1 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: var(--expression-lab-border-width) solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--card);
+  }
+
+  .expression-lab__chat-header,
+  .expression-lab__chat-heading {
+    display: flex;
+    align-items: center;
+  }
+
+  .expression-lab__chat-header {
+    justify-content: space-between;
+    gap: var(--expression-lab-gap);
+    padding: var(--expression-lab-chat-padding);
+    border-block-end: var(--expression-lab-border-width) solid var(--border);
+  }
+
+  .expression-lab__chat-heading {
+    min-inline-size: 0;
+    gap: var(--expression-lab-item-gap);
+  }
+
+  .expression-lab__chat-heading > div {
+    display: grid;
+    min-inline-size: 0;
+    gap: var(--expression-lab-copy-gap);
+  }
+
+  .expression-lab__chat-heading strong,
+  .expression-lab__chat-heading span {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  .expression-lab__chat-heading span {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .expression-lab__chat-scroller {
+    min-block-size: var(--expression-lab-chat-transcript-min-height);
+    flex: 1;
+  }
+
+  .expression-lab__chat-viewport {
+    padding: var(--expression-lab-chat-padding);
+  }
+
+  .expression-lab__chat-composer-region {
+    padding: var(--expression-lab-chat-padding);
+    border-block-start: var(--expression-lab-border-width) solid var(--border);
+  }
+
+  .expression-lab__chat-composer {
+    max-inline-size: none;
+    margin-inline: auto;
+  }
+
+  .expression-lab__capture > [data-slot="card-content"] {
+    flex: 1;
+  }
+
+  .expression-lab__session {
+    flex: 1;
+    align-content: space-between;
+    gap: var(--expression-lab-item-gap);
+  }
+
+  .expression-lab__session-value {
+    justify-items: center;
+    gap: var(--expression-lab-copy-gap);
+    text-align: center;
+  }
+
+  .expression-lab__session-duration {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-4xl--line-height);
+  }
+
+  .expression-lab__lenses-title {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .expression-lab__lenses-content {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--expression-lab-section-gap);
+  }
+
+  .expression-lab__lenses-title,
+  .expression-lab__lenses-description {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ai-chat-block__turn {
+      animation: none;
+    }
+
+    .ai-chat-block__reveal,
+    .ai-chat-block__spacer,
+    .ai-chat-block__composer-region,
+    [data-slot="swap-item"] {
+      transition: none;
+    }
+
+    [data-slot="response"][data-streaming="true"] > :last-child::after {
+      animation: none;
+    }
+
+  }
+}
+
+/* Hosted actions are a nested component state. These rules are deliberately
+   unlayered so they outrank Button's utility-layer variant colors without
+   resorting to !important. */
+.item-actions--hosted > button {
+  transition-property: color, background-color, transform;
+  transition-duration: var(--item-hosted-action-speed);
+  transition-timing-function: var(--item-hosted-action-ease);
+}
+
+.item-actions--hosted > button:hover {
+  background: var(--state-layer-hover);
+  box-shadow: none;
+}
+
+.item-actions--hosted > button:is(:focus-visible, [aria-expanded="true"]) {
+  background: var(--state-layer-focus);
+  box-shadow: none;
+}
+
+.item-actions--hosted > button:active {
+  background: var(--state-layer-pressed);
+  box-shadow: none;
+}
+
+[data-slot="item"]:has(
+    [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
+  ) {
+  background: var(--state-layer-hover);
+}
+
+[data-slot="item"]:has(
+    > .item-actions--hosted [data-slot="dropdown-menu-trigger"]:focus-visible
+  ) {
+  background: var(--state-layer-focus);
 }
 
 /* Scrollbar utilities. The scroll-fade-* utilities and no-scrollbar already ship
@@ -574,35 +1929,67 @@
   }
 }
 
-@keyframes collapsible-down {
+@keyframes oneds-collapsible-expand {
   from {
     height: 0;
-    opacity: 0;
   }
   to {
     height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes oneds-collapsible-collapse {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes oneds-collapsible-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }
 
-@keyframes collapsible-up {
+@keyframes oneds-collapsible-fade-out {
   from {
-    height: var(--radix-collapsible-content-height);
     opacity: 1;
   }
   to {
-    height: 0;
     opacity: 0;
   }
 }
 
 @layer components {
+  [data-slot="tooltip-arrow"] {
+    translate: 0 calc(-50% - var(--tooltip-arrow-offset));
+  }
+
   [data-slot="collapsible-content"][data-state="open"] {
-    animation: collapsible-down var(--collapsible-speed) var(--collapsible-ease);
+    animation: oneds-collapsible-expand var(--collapsible-expand-height-speed)
+      var(--collapsible-ease) both;
   }
 
   [data-slot="collapsible-content"][data-state="closed"] {
-    animation: collapsible-up var(--collapsible-speed) var(--collapsible-ease);
+    animation: oneds-collapsible-collapse var(--collapsible-collapse-height-speed)
+      var(--collapsible-ease) both;
+  }
+
+  [data-slot="collapsible-content"][data-state="open"]
+    > [data-slot="collapsible-content-inner"] {
+    animation: oneds-collapsible-fade-in var(--collapsible-expand-fade-speed)
+      var(--collapsible-ease) both;
+  }
+
+  [data-slot="collapsible-content"][data-state="closed"]
+    > [data-slot="collapsible-content-inner"] {
+    animation: oneds-collapsible-fade-out var(--collapsible-collapse-fade-speed)
+      var(--collapsible-ease) both;
   }
 
   [data-slot="carousel"] {
@@ -633,7 +2020,38 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-slot="collapsible-content"] {
+  /* Every transition and animation in the system reads a --speed-* token, so
+     collapsing the scale here is the one place that covers all of them. */
+  :root {
+    --speed-instant: 1ms;
+    --speed-swift: 1ms;
+    --speed-brisk: 1ms;
+    --speed-gentle: 1ms;
+    --speed-slow: 1ms;
+  }
+
+  /* Anything driven by a raw duration (third-party keyframes, tw-animate-css)
+     still needs the blanket rule. Capping iterations is what stops an infinite
+     keyframe from strobing once its duration collapses. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* A busy indicator is state, not decoration — it has to keep turning, so it
+     opts back out of the cap at a calm cadence. */
+  [data-slot="spinner"],
+  [data-slot="spinner"] * {
+    animation-duration: var(--speed-pulse) !important;
+    animation-iteration-count: infinite !important;
+  }
+
+  [data-slot="collapsible-content"],
+  [data-slot="collapsible-content-inner"] {
     animation: none;
   }
 
@@ -677,22 +2095,6 @@
     --card-spacing: var(--card-spacing-small);
   }
 
-  .card-spacing-default[data-slot="card"] {
-    --card-spacing: var(--card-spacing-default);
-  }
-
-  .card-spacing-comfortable[data-slot="card"] {
-    --card-spacing: var(--card-spacing-comfortable);
-  }
-
-  .card-spacing-roomy[data-slot="card"] {
-    --card-spacing: var(--card-spacing-roomy);
-  }
-
-  .card-spacing-spacious[data-slot="card"] {
-    --card-spacing: var(--card-spacing-spacious);
-  }
-
   .card-media-overlay {
     background-color: var(--card-media-overlay);
   }
@@ -706,6 +2108,18 @@
   [data-slot="site-header-indicator"] {
     --site-header-travel-duration: calc(
       var(--site-header-pivot-speed) * var(--site-header-pivot-distance, 1)
+    );
+  }
+
+  /* Resolve against each header's scoped height and gutter. Declaring this at
+     :root freezes the default header dimensions before a nested app can retune
+     them. */
+  [data-slot="site-header-actions"] {
+    --site-header-flat-edge-inset: calc(
+      (var(--site-header-height) - var(--site-header-flat-item-height)) / 2
+    );
+    --site-header-actions-edge-offset: calc(
+      var(--site-header-flat-edge-inset) - var(--site-header-gutter)
     );
   }
 
@@ -971,6 +2385,38 @@
     min-block-size: var(--showcase-preview-viewport-height);
   }
 
+  .card-preview[data-layout="application"] {
+    block-size: var(--showcase-block-preview-height);
+    min-block-size: var(--showcase-preview-viewport-height);
+    align-items: stretch;
+    justify-content: stretch;
+    border-radius: var(--showcase-block-preview-radius);
+    padding: var(--showcase-block-preview-padding);
+  }
+
+  /* Canvas layout rule: pair a wide toolbar with a UI. The toolbar pins to the
+     top of the canvas and spans its width, while the UI stays visually centered
+     in the full height — the space below balances the toolbar above. Opt in by
+     wrapping a [data-slot=toolbar] plus one content element; the content owns
+     its own horizontal centering (e.g. max-width + margin-inline: auto). */
+  .preview-canvas {
+    flex: 1 0 auto;
+    inline-size: 100%;
+    min-block-size: calc(var(--spacing) * 96);
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .preview-canvas > [data-slot="toolbar"] {
+    grid-area: 1 / 1;
+    align-self: start;
+  }
+
+  .preview-canvas > :not([data-slot="toolbar"]) {
+    grid-area: 1 / 1;
+    align-self: center;
+  }
+
   .showcase-contained-viewport {
     position: relative;
     contain: layout paint;
@@ -1006,5 +2452,381 @@
 
   [data-slot="questionnaire-choice-shortcut"][data-shortcut] {
     display: inline-flex;
+  }
+}
+
+@layer experiment {
+.form-experiment {
+    --form-experiment-gap: calc(var(--spacing) * 3);
+    --form-experiment-toolbar-padding: calc(var(--spacing) * 2);
+    --form-experiment-compact-width: calc(var(--spacing) * 144);
+    --form-experiment-tools-layer: 10;
+    --form-experiment-squint-blur: calc(var(--spacing) * 2);
+    --form-experiment-preview-speed: var(--speed-gentle);
+    --form-experiment-preview-ease: var(--ease-glide);
+    --form-experiment-card-radius: var(--radius-xl);
+    --form-experiment-circle-radius: 50%;
+    --form-experiment-hero-radius: calc(
+      var(--radius-3xl) + var(--spacing) * 2
+    );
+    --form-experiment-square-radius: var(--radius-md);
+    --form-experiment-squircle-radius: var(--radius-4xl);
+    --form-experiment-island-padding: calc(var(--spacing) * 1);
+    --form-experiment-island-gap: calc(var(--spacing) * 1);
+    --form-experiment-island-radius: calc(
+      var(--form-experiment-island-item-radius) +
+        var(--form-experiment-island-padding)
+    );
+    --form-experiment-island-item-radius: var(--radius-lg);
+    --form-experiment-progress-height: calc(var(--spacing) * 3);
+    --form-experiment-progress-radius: calc(
+      var(--form-experiment-progress-height) / 2
+    );
+    --form-experiment-control-standard: calc(var(--spacing) * 11);
+    --form-experiment-control-large: calc(var(--spacing) * 14);
+    --form-experiment-control-focal: calc(var(--spacing) * 17);
+    --form-experiment-action-standard: calc(var(--spacing) * 11);
+    --form-experiment-action-large: calc(var(--spacing) * 12);
+    --form-experiment-action-focal: calc(var(--spacing) * 13);
+    --form-experiment-action-padding-inline: calc(var(--spacing) * 4);
+    --form-experiment-icon-standard: calc(var(--spacing) * 4);
+    --form-experiment-icon-large: calc(var(--spacing) * 5);
+    --form-experiment-icon-focal: calc(var(--spacing) * 6);
+    --form-experiment-density-compact: calc(var(--spacing) * 4);
+    --form-experiment-density-balanced: calc(var(--spacing) * 6);
+    --form-experiment-density-spacious: calc(var(--spacing) * 8);
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    gap: var(--form-experiment-gap);
+    overflow: hidden;
+}
+
+.form-experiment[data-tools-hidden="true"] {
+    grid-template-rows: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .form-experiment__toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--form-experiment-toolbar-padding);
+    overflow-x: auto;
+  }
+
+  .form-experiment__toolbar > [data-slot="toolbar-group"] {
+    flex: none;
+  }
+
+  .form-experiment__button-group {
+    flex: none;
+  }
+
+  .form-experiment__viewport {
+    min-inline-size: 0;
+    min-block-size: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    margin-inline: auto;
+    overflow: hidden;
+    transition-property: inline-size;
+    transition-duration: var(--form-experiment-preview-speed);
+    transition-timing-function: var(--form-experiment-preview-ease);
+  }
+
+  .form-experiment__viewport[data-preview-size="compact"] {
+    inline-size: min(100%, var(--form-experiment-compact-width));
+  }
+
+  .form-experiment__reveal {
+    position: absolute;
+    inset-block-start: var(--form-experiment-toolbar-padding);
+    inset-inline-end: var(--form-experiment-toolbar-padding);
+    z-index: var(--form-experiment-tools-layer);
+    border-radius: var(--form-experiment-circle-radius);
+  }
+
+  /* Expressive theme — one coherent token overlay for the whole lab.
+     Baseline stays stock OneDS; flipping the mode only re-values these scales. */
+  .expression-lab[data-experiment="expressive"] {
+    --expressive-pill: 9999px;
+    --expressive-radius-control: var(--radius-2xl);
+    --expressive-radius-surface: var(--radius-3xl);
+    --expressive-radius-nav: var(--radius-xl);
+    --expressive-control-min: calc(var(--spacing) * 11);
+    --expressive-weight-title: 700;
+    --card-spacing: calc(var(--spacing) * 7);
+  }
+
+  .expression-lab[data-experiment="expressive"] [data-slot="button"] {
+    border-radius: var(--expressive-pill);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    [data-slot="button"]:not([data-size^="icon"]) {
+    min-block-size: var(--expressive-control-min);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    [data-slot="button"]:is([data-size="icon"], [data-size="icon-lg"]) {
+    inline-size: var(--expressive-control-min);
+    block-size: var(--expressive-control-min);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    :is([data-slot="toggle-group-item"], [data-slot="tabs-trigger"]) {
+    border-radius: var(--expressive-pill);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    :is([data-slot="card"], [data-slot="choice-card"]) {
+    border-radius: var(--expressive-radius-surface);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    :is([data-slot="input"], [data-slot="textarea"], [data-slot="native-select"]) {
+    border-radius: var(--expressive-radius-control);
+    min-block-size: var(--expressive-control-min);
+  }
+
+  .expression-lab[data-experiment="expressive"] [data-slot="progress"] {
+    block-size: calc(var(--spacing) * 3);
+    border-radius: var(--expressive-pill);
+  }
+
+  .expression-lab[data-experiment="expressive"] [data-slot="alert"] {
+    border-radius: var(--expressive-radius-surface);
+  }
+
+  .expression-lab[data-experiment="expressive"] [data-slot="sidebar-brand-mark"] {
+    border-radius: var(--expressive-radius-nav);
+  }
+
+  .expression-lab[data-experiment="expressive"] [data-slot="sidebar-menu-button"] {
+    border-radius: var(--expressive-radius-nav);
+    min-block-size: calc(var(--spacing) * 10);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    [data-slot="sidebar-menu-button"][data-active="true"] {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .expression-lab[data-experiment="expressive"]
+    :is([data-slot="card-title"], .expression-lab__heading, .expression-lab__plan-title) {
+    font-weight: var(--expressive-weight-title);
+  }
+
+  .expression-lab[data-experiment="expressive"] .expression-lab__heading {
+    font-size: var(--text-3xl);
+    line-height: var(--text-3xl--line-height);
+    letter-spacing: var(--tracking-tight);
+  }
+
+
+
+  .form-experiment__viewport[data-evaluation="squint"] .expression-lab {
+    filter: blur(var(--form-experiment-squint-blur));
+  }
+
+  .form-experiment__viewport[data-evaluation="silhouette"] .expression-lab,
+  .form-experiment__viewport[data-evaluation="silhouette"]
+    .expression-lab
+    * {
+    color: transparent;
+    text-shadow: none;
+  }
+
+  .form-experiment__viewport[data-evaluation="silhouette"]
+    .expression-lab
+    :is(svg, img) {
+    opacity: 0;
+  }
+
+  .form-experiment__viewport[data-evaluation="silhouette"]
+    .expression-lab
+    :is(input, textarea)::placeholder {
+    color: transparent;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-experiment__viewport {
+    transition: none;
+  }
+}
+
+/* Concentric radius playground — one --concentric-r drives every corner and
+   gap via calc(); late layer so overrides win over component utilities. */
+@layer concentric {
+  .concentric-demo {
+    --concentric-pad-ratio: 0.5;
+    --concentric-r: 20px;
+    --concentric-pad: calc(var(--concentric-r) * var(--concentric-pad-ratio));
+    --concentric-inner: calc(var(--concentric-r) - var(--concentric-pad));
+    --concentric-media-size: calc(var(--spacing) * 16);
+    /* Layout (fill + toolbar-top + centered UI) comes from .preview-canvas; this
+       only widens the canvas so the toolbar can run past the card. */
+    max-inline-size: calc(var(--spacing) * 200);
+  }
+
+  .concentric-toolbar {
+    justify-content: space-between;
+    gap: calc(var(--spacing) * 4);
+  }
+
+  .concentric-toolbar__control {
+    flex: 1;
+    min-inline-size: 0;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+  }
+
+  .concentric-toolbar__label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+  }
+
+  .concentric-toolbar__slider {
+    max-inline-size: calc(var(--spacing) * 112);
+  }
+
+  .concentric-toolbar__readout {
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+
+  .concentric-card {
+    display: flex;
+    align-items: center;
+    gap: var(--concentric-pad);
+    padding: var(--concentric-pad);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+    border-radius: var(--concentric-r);
+    transition-property: border-radius, padding, gap;
+    transition-duration: var(--speed-swift);
+    transition-timing-function: var(--ease-settle);
+  }
+
+  .concentric-card__media {
+    flex: none;
+    inline-size: var(--concentric-media-size);
+    block-size: var(--concentric-media-size);
+    display: grid;
+    place-items: center;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    border-radius: var(--concentric-inner);
+    transition: border-radius var(--speed-swift) var(--ease-settle);
+  }
+
+  .concentric-card__media svg {
+    inline-size: calc(var(--spacing) * 6);
+    block-size: calc(var(--spacing) * 6);
+  }
+
+  .concentric-card__body {
+    flex: 1;
+    min-inline-size: 0;
+    display: grid;
+    gap: calc(var(--spacing) * 1);
+  }
+
+  .concentric-card__title {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-base--line-height);
+  }
+
+  .concentric-card__description {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+    color: var(--muted-foreground);
+  }
+
+  .concentric-card__actions {
+    flex: none;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+  }
+
+  .concentric-card__actions [data-slot="button"] {
+    border-radius: var(--concentric-inner);
+    transition: border-radius var(--speed-swift) var(--ease-settle);
+  }
+
+  /* Live equation readout: inner = outer − padding. */
+  .concentric-equation {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+
+  .concentric-equation__term {
+    display: inline-flex;
+    align-items: baseline;
+    gap: calc(var(--spacing) * 1);
+  }
+
+  .concentric-equation__term b {
+    min-inline-size: calc(var(--spacing) * 5);
+    font-weight: var(--font-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    color: var(--foreground);
+  }
+
+  .concentric-toolbar__toggle {
+    flex: none;
+  }
+
+  .concentric-toolbar__toggle-label {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  /* The stage is sized to the card so the annotation layer's inset-0 maps to
+     the card's border box (where the padding frame belongs). */
+  .concentric-stage {
+    position: relative;
+    inline-size: 100%;
+    /* The stage/card keeps its comfortable reading width and centers, so the
+       toolbar above can run wider than the content for extra slider room. */
+    max-inline-size: calc(var(--spacing) * 160);
+    margin-inline: auto;
+  }
+
+  /* A rounded border painted over the padding gap: the outer corner is the card
+     radius and the browser draws the inner edge concentrically, so this single
+     element visualises the whole outer/inner/padding relationship live. */
+  .concentric-annotations__frame {
+    position: absolute;
+    inset: 0;
+    border-style: solid;
+    border-width: var(--concentric-pad);
+    border-color: color-mix(in oklch, var(--destructive) 20%, transparent);
+    border-radius: var(--concentric-r);
+    transition-property: border-width, border-radius;
+    transition-duration: var(--speed-swift);
+    transition-timing-function: var(--ease-settle);
   }
 }

@@ -24,7 +24,7 @@ function CalendarDemo() {
       mode="single"
       selected={date}
       onSelect={setDate}
-      className="rounded-md border shadow-sm"
+      className="rounded-md border shadow-(--elevation-raised)"
     />
   )
 }
@@ -43,7 +43,7 @@ function RangeCalendarDemo() {
         resetOnSelect
         numberOfMonths={2}
         showOutsideDays={false}
-        className="rounded-md border shadow-sm"
+        className="rounded-md border shadow-(--elevation-raised)"
       />
       <p className="text-sm text-muted-foreground">
         {range?.from
@@ -67,7 +67,7 @@ function MonthYearSelectorDemo() {
         captionLayout="dropdown"
         startMonth={new Date(2020, 0)}
         endMonth={addMonths(new Date(), 12)}
-        className="rounded-md border shadow-sm"
+        className="rounded-md border shadow-(--elevation-raised)"
       />
       <p className="text-sm text-muted-foreground">
         {date ? format(date, "PPP") : "Pick a date"}
@@ -105,7 +105,7 @@ function PresetsDemo() {
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="rounded-md border shadow-sm"
+        className="rounded-md border shadow-(--elevation-raised)"
       />
     </div>
   )
@@ -145,7 +145,7 @@ function DateTimePickerDemo() {
         mode="single"
         selected={date}
         onSelect={handleDateSelect}
-        className="rounded-md border shadow-sm"
+        className="rounded-md border shadow-(--elevation-raised)"
       />
       <div className="flex items-center gap-2 px-1">
         <span className="text-sm font-medium">Time</span>
@@ -228,7 +228,7 @@ function BookedDatesDemo() {
         disabled={BOOKED_DAYS}
         modifiers={{ booked: BOOKED_DAYS }}
         modifiersClassNames={{ booked: "line-through opacity-50" }}
-        className="rounded-md border shadow-sm"
+        className="rounded-md border shadow-(--elevation-raised)"
       />
       <p className="text-sm text-muted-foreground">
         {date
@@ -260,7 +260,7 @@ export function CalendarDemo() {
       mode="single"
       selected={date}
       onSelect={setDate}
-      className="rounded-md border shadow-sm"
+      className="rounded-md border shadow-(--elevation-raised)"
     />
   )
 }`,

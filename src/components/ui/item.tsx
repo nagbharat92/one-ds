@@ -34,13 +34,13 @@ function ItemSeparator({
 }
 
 const itemVariants = cva(
-  "group/item flex w-full flex-wrap items-center rounded-lg border text-sm transition-colors duration-(--speed-swift) outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted",
+  "group/item relative flex w-full flex-wrap items-center rounded-lg border bg-clip-padding text-sm transition-colors duration-(--speed-swift) outline-none has-data-[hosted=true]:hover:bg-(--state-layer-hover) focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [a]:transition-colors [a]:hover:bg-(--state-layer-hover) [button]:transition-colors [button]:hover:bg-(--state-layer-hover) [button]:active:bg-(--state-layer-pressed)",
   {
     variants: {
       variant: {
         default: "border-transparent",
         outline: "border-border",
-        muted: "border-transparent bg-muted/50",
+        muted: "border-transparent bg-(--item-muted-background)",
       },
       size: {
         default: "gap-2.5 px-3 py-2.5",
@@ -112,7 +112,7 @@ function ItemContent({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="item-content"
       className={cn(
-        "flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none",
+        "flex min-w-0 flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none",
         className
       )}
       {...props}
@@ -120,16 +120,38 @@ function ItemContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function ItemTitle({ className, ...props }: React.ComponentProps<"div">) {
+function ItemTitle({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const parts = React.Children.toArray(children)
+  const text = parts.filter(
+    (part) => typeof part === "string" || typeof part === "number"
+  )
+  const accessories = parts.filter(
+    (part) => typeof part !== "string" && typeof part !== "number"
+  )
+
   return (
     <div
       data-slot="item-title"
       className={cn(
-        "line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4",
+        "flex w-full min-w-0 items-center gap-2 overflow-hidden text-sm leading-snug font-medium underline-offset-4",
         className
       )}
       {...props}
-    />
+    >
+      {text.length > 0 ? (
+        <span
+          data-slot="item-title-text"
+          className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+        >
+          {text}
+        </span>
+      ) : null}
+      {accessories}
+    </div>
   )
 }
 
@@ -146,11 +168,20 @@ function ItemDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
-function ItemActions({ className, ...props }: React.ComponentProps<"div">) {
+function ItemActions({
+  className,
+  hosted = false,
+  ...props
+}: React.ComponentProps<"div"> & { hosted?: boolean }) {
   return (
     <div
       data-slot="item-actions"
-      className={cn("flex items-center gap-2", className)}
+      data-hosted={hosted}
+      className={cn(
+        "flex items-center gap-2",
+        hosted && "item-actions--hosted",
+        className
+      )}
       {...props}
     />
   )

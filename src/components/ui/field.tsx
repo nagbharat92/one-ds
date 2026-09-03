@@ -56,9 +56,9 @@ const fieldVariants = cva(
       orientation: {
         vertical: "flex-col *:w-full [&>.sr-only]:w-auto",
         horizontal:
-          "flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+          "flex-row items-center has-data-[slot=field-description]:items-start *:data-[slot=field-label]:flex-auto has-data-[slot=field-description]:[&>[role=checkbox],[role=radio]]:mt-0.5 has-data-[slot=field-description]:[&>[role=switch]]:mt-px",
         responsive:
-          "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+          "flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-data-[slot=field-description]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-data-[slot=field-description]:[&>[role=checkbox],[role=radio]]:mt-0.5 @md/field-group:has-data-[slot=field-description]:[&>[role=switch]]:mt-px",
       },
     },
     defaultVariants: {
@@ -104,8 +104,24 @@ function FieldLabel({
     <Label
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-[:focus-visible]:border-ring has-[>[data-slot=field]]:has-[:focus-visible]:ring-3 has-[>[data-slot=field]]:has-[:focus-visible]:ring-ring/50 *:data-[slot=field]:p-2.5 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
+        "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:transition-colors has-[>[data-slot=field]]:duration-(--speed-swift) has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-(--state-layer-hover) has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:active:bg-(--state-layer-pressed) has-[>[data-slot=field]]:has-focus-visible:border-ring has-[>[data-slot=field]]:has-focus-visible:ring-3 has-[>[data-slot=field]]:has-focus-visible:ring-ring/50 *:data-[slot=field]:p-(--choice-card-padding) dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function ChoiceCard({
+  className,
+  ...props
+}: React.ComponentProps<typeof FieldLabel>) {
+  return (
+    <FieldLabel
+      data-slot="choice-card"
+      className={cn(
+        "min-h-11 cursor-pointer justify-center p-(--choice-card-padding) has-[:disabled,[data-disabled]]:cursor-not-allowed has-[:disabled,[data-disabled]]:opacity-50 *:data-[slot=field]:p-0 [&_[data-slot=checkbox]:focus-visible]:ring-0! [&_[data-slot=radio-group-item]:focus-visible]:ring-0! [&_[data-slot=switch]:focus-visible]:ring-0!",
         className
       )}
       {...props}
@@ -224,6 +240,7 @@ function FieldError({
 
 export {
   Field,
+  ChoiceCard,
   FieldLabel,
   FieldDescription,
   FieldError,

@@ -24,6 +24,12 @@ import {
   RocketIcon,
   ListIcon,
   LayoutGridIcon,
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  AlignLeftIcon,
+  AlignCenterIcon,
+  AlignRightIcon,
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
@@ -46,6 +52,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -1059,6 +1066,114 @@ export function ToolbarDemo() {
     </Toolbar>
   )
 }`,
+    examples: [
+      {
+        name: "Variants",
+        description:
+          "default has a card surface and border, muted sits on the muted token, and ghost is transparent to float over any background.",
+        layout: "wide",
+        Demo: () => (
+          <div className="flex w-full flex-col gap-3">
+            {(["default", "muted", "ghost"] as const).map((variant) => (
+              <Toolbar key={variant} variant={variant} className="w-full">
+                <ToolbarGroup>
+                  <Button variant="outline" size="sm">
+                    <FilterIcon data-icon="inline-start" />
+                    Filter
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <SearchIcon data-icon="inline-start" />
+                    Search
+                  </Button>
+                </ToolbarGroup>
+                <ToolbarSpacer />
+                <Badge variant="secondary">{variant}</Badge>
+              </Toolbar>
+            ))}
+          </div>
+        ),
+      },
+      {
+        name: "Text formatting",
+        description:
+          "Cluster related controls into groups with separators between them \u2014 style, then alignment.",
+        Demo: () => (
+          <Toolbar>
+            <ToolbarGroup>
+              <Button variant="ghost" size="icon-sm" aria-label="Bold">
+                <BoldIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Italic">
+                <ItalicIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Underline">
+                <UnderlineIcon />
+              </Button>
+            </ToolbarGroup>
+            <ToolbarSeparator />
+            <ToolbarGroup>
+              <Button variant="ghost" size="icon-sm" aria-label="Align left">
+                <AlignLeftIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Align center">
+                <AlignCenterIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Align right">
+                <AlignRightIcon />
+              </Button>
+            </ToolbarGroup>
+          </Toolbar>
+        ),
+      },
+      {
+        name: "Vertical",
+        description:
+          "orientation=\"vertical\" stacks the toolbar into a rail; separators and the spacer flip to match.",
+        Demo: () => (
+          <Toolbar orientation="vertical">
+            <ToolbarGroup>
+              <Button variant="ghost" size="icon-sm" aria-label="Home">
+                <HomeIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Search">
+                <SearchIcon />
+              </Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Bookmarks">
+                <BookmarkIcon />
+              </Button>
+            </ToolbarGroup>
+            <ToolbarSeparator />
+            <ToolbarGroup>
+              <Button variant="ghost" size="icon-sm" aria-label="Settings">
+                <SettingsIcon />
+              </Button>
+            </ToolbarGroup>
+          </Toolbar>
+        ),
+      },
+      {
+        name: "With title",
+        description:
+          "A text label leads the bar while actions trail it \u2014 the toolbar padding keeps the title off the left edge and the buttons off the right.",
+        layout: "wide",
+        Demo: () => (
+          <Toolbar className="w-full">
+            <span className="text-sm font-medium">Documents</span>
+            <ToolbarSpacer />
+            <ToolbarGroup>
+              <Button variant="ghost" size="sm">
+                <FilterIcon data-icon="inline-start" />
+                Filter
+              </Button>
+              <Button variant="outline" size="sm">
+                <PlusIcon data-icon="inline-start" />
+                New
+              </Button>
+            </ToolbarGroup>
+          </Toolbar>
+        ),
+      },
+    ],
   },
   {
     slug: "page",

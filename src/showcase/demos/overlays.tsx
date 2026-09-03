@@ -2258,7 +2258,7 @@ export const overlaysDemos: ComponentEntry[] = [
     description: "A fast, composable command menu for React.",
     category: "Overlays",
     Demo: () => (
-      <Command className="w-full max-w-sm rounded-lg border shadow-sm">
+      <Command className="w-full max-w-sm rounded-lg border shadow-(--elevation-raised)">
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
@@ -2294,7 +2294,7 @@ export const overlaysDemos: ComponentEntry[] = [
         </CommandList>
       </Command>
     ),
-    code: `<Command className="rounded-lg border shadow-sm">
+    code: `<Command className="rounded-lg border shadow-(--elevation-raised)">
   <CommandInput placeholder="Type a command or search..." />
   <CommandList>
     <CommandEmpty>No results found.</CommandEmpty>
@@ -2340,7 +2340,7 @@ export const overlaysDemos: ComponentEntry[] = [
         name: "Shortcuts",
         description: "Command items displaying keyboard shortcuts.",
         Demo: () => (
-          <Command className="w-full max-w-sm rounded-lg border shadow-sm">
+          <Command className="w-full max-w-sm rounded-lg border shadow-(--elevation-raised)">
             <CommandInput placeholder="Search..." />
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
@@ -2416,7 +2416,7 @@ export const overlaysDemos: ComponentEntry[] = [
         description:
           "Command list with enough items to demonstrate scrolling.",
         Demo: () => (
-          <Command className="w-full max-w-sm rounded-lg border shadow-sm">
+          <Command className="w-full max-w-sm rounded-lg border shadow-(--elevation-raised)">
             <CommandInput placeholder="Search items..." />
             <CommandList className="max-h-48">
               <CommandEmpty>No results found.</CommandEmpty>

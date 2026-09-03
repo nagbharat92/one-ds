@@ -10,11 +10,44 @@ import {
   LayoutListIcon,
   PaletteIcon,
   RotateCcwIcon,
+  TriangleAlertIcon,
 } from "lucide-react"
 
-import { groupedRegistry, registry } from "@/showcase/registry"
+import {
+  blockRegistry,
+  componentRegistry,
+  experimentRegistry,
+  groupedRegistry,
+  registry,
+} from "@/showcase/registry"
 import { generatedExampleCode } from "@/showcase/generated-example-code"
-import type { ComponentExample } from "@/showcase/types"
+import type { ComponentEntry, ComponentExample } from "@/showcase/types"
+
+// Three sizing tiers, each built from EXISTING PageContent variants + preview
+// canvas layouts (nothing new is invented):
+//   component   -> docs page (max-w-3xl) + compact centered canvas
+//   medium      -> app page (max-w-6xl)  + roomy centered viewport canvas
+//   application -> full-width page        + full-height application canvas
+type SurfaceTier = NonNullable<ComponentEntry["surface"]>
+
+function surfaceTier(entry: ComponentEntry): SurfaceTier {
+  if (entry.surface) return entry.surface
+  return entry.category === "Blocks" || entry.category === "Experiments"
+    ? "application"
+    : "component"
+}
+
+const PAGE_VARIANT_BY_SURFACE = {
+  component: "docs",
+  medium: "app",
+  application: "marketing",
+} as const
+
+const DEFAULT_LAYOUT_BY_SURFACE = {
+  component: "center",
+  medium: "viewport",
+  application: "application",
+} as const
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -38,13 +71,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
-import {
-  SiteHeader,
-  SiteHeaderContainer,
-  SiteHeaderGroup,
-} from "@/components/ui/site-header"
 import { Page, PageContent, PageScroll } from "@/components/ui/page"
 import { SearchInput } from "@/components/ui/input"
 import {
@@ -62,9 +91,18 @@ import {
 } from "@/components/ui/section"
 import { CodeBlock } from "@/components/code-block"
 import { ModeToggle } from "@/components/mode-toggle"
+import { ErrorBoundary } from "@/components/error-boundary"
 import { Favicon } from "@/components/ui/favicon"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Kbd } from "@/components/ui/kbd"
 
-const alphabeticalRegistry = [...registry].sort((left, right) =>
+const alphabeticalRegistry = [...componentRegistry].sort((left, right) =>
+  left.name.localeCompare(right.name),
+)
+const alphabeticalBlocks = [...blockRegistry].sort((left, right) =>
+  left.name.localeCompare(right.name),
+)
+const alphabeticalExperiments = [...experimentRegistry].sort((left, right) =>
   left.name.localeCompare(right.name),
 )
 const defaultComponentSlug = alphabeticalRegistry[0].slug
@@ -95,6 +133,32 @@ function exampleId(componentSlug: string, exampleName: string) {
     .replace(/(^-|-$)/g, "")}`
 }
 
+function canScrollWithin(
+  target: EventTarget | null,
+  boundary: Element,
+  horizontal: boolean,
+  delta: number,
+) {
+  if (!(target instanceof Element)) return false
+
+  for (
+    let element: Element | null = target;
+    element && element !== boundary;
+    element = element.parentElement
+  ) {
+    const style = getComputedStyle(element)
+    const overflow = horizontal ? style.overflowX : style.overflowY
+    if (!/(auto|scroll|overlay)/.test(overflow)) continue
+
+    const position = horizontal ? element.scrollLeft : element.scrollTop
+    const extent = horizontal ? element.scrollWidth : element.scrollHeight
+    const viewport = horizontal ? element.clientWidth : element.clientHeight
+    if (delta < 0 ? position > 0 : position < extent - viewport) return true
+  }
+
+  return false
+}
+
 function DemoSandbox({
   children,
   layout = "center",
@@ -102,11 +166,33 @@ function DemoSandbox({
   children: ReactNode
   layout?: ComponentExample["layout"]
 }) {
+  const stageRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage) return
+
+    const preventScrollHandoff = (event: WheelEvent) => {
+      if (event.ctrlKey || event.defaultPrevented) return
+
+      const horizontal = Math.abs(event.deltaX) >= Math.abs(event.deltaY)
+      const delta = horizontal ? event.deltaX : event.deltaY
+      if (delta && !canScrollWithin(event.target, stage, horizontal, delta)) {
+        event.preventDefault()
+      }
+    }
+
+    stage.addEventListener("wheel", preventScrollHandoff, { passive: false })
+    return () => stage.removeEventListener("wheel", preventScrollHandoff)
+  }, [])
+
   return (
     <Card
+      ref={stageRef}
       variant="preview"
       className="showcase-stage"
       data-layout={layout}
+      data-scroll-boundary
       onClickCapture={(event) => {
         if (!(event.target instanceof Element)) return
 
@@ -136,9 +222,6 @@ function ExampleSection({
   const id = exampleId(componentSlug, example.name)
   const code =
     example.code ?? generatedExampleCode[`${componentSlug}:${example.name}`]
-  if (!code) {
-    throw new Error(`Missing generated code for ${componentSlug}:${example.name}`)
-  }
   const reset = (
     <Button
       variant="outline"
@@ -151,7 +234,9 @@ function ExampleSection({
   )
   const preview = (
     <DemoSandbox key={resetKey} layout={example.layout}>
-      <example.Demo />
+      <ErrorBoundary title={`${example.name} failed to render`}>
+        <example.Demo />
+      </ErrorBoundary>
     </DemoSandbox>
   )
 
@@ -199,7 +284,18 @@ function ExampleSection({
             inert={view !== "code"}
             className="showcase-example__code-panel"
           >
-            <CodeBlock code={code} className="showcase-example__code-block" />
+            {code ? (
+              <CodeBlock code={code} className="showcase-example__code-block" />
+            ) : (
+              <Alert variant="destructive" className="m-6 w-auto">
+                <TriangleAlertIcon />
+                <AlertTitle>No generated code for this example</AlertTitle>
+                <AlertDescription>
+                  Run <Kbd>node scripts/generate-showcase-code.mjs</Kbd> to
+                  regenerate {componentSlug}:{example.name}.
+                </AlertDescription>
+              </Alert>
+            )}
           </TabsContent>
         </CardContent>
       </Tabs>
@@ -231,6 +327,12 @@ function ComponentNavigation({
   const alphabeticalItems = alphabeticalRegistry.filter((item) =>
     matches(item.name),
   )
+  const alphabeticalBlockItems = alphabeticalBlocks.filter((item) =>
+    matches(item.name),
+  )
+  const alphabeticalExperimentItems = alphabeticalExperiments.filter((item) =>
+    matches(item.name),
+  )
 
   const renderItem = (component: (typeof registry)[number]) => (
     <SidebarMenuItem key={component.slug}>
@@ -249,7 +351,7 @@ function ComponentNavigation({
 
   return (
     <>
-      <SidebarHeader className="h-(--showcase-header-row-height) min-h-0 items-stretch justify-center px-4 py-0">
+      <SidebarHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
         <SidebarBrand>
           <SidebarBrandMark>
             <PaletteIcon className="size-5" />
@@ -258,6 +360,22 @@ function ComponentNavigation({
             OneDS
           </SidebarBrandLabel>
         </SidebarBrand>
+        <div
+          className="flex shrink-0 items-center gap-1"
+          role="toolbar"
+          aria-label="Site controls"
+        >
+          <Button asChild variant="ghost" size="icon" aria-label="GitHub">
+            <a
+              href="https://github.com/bhna_microsoft/oneds"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Favicon domain="github.com" alt="" className="dark:invert" />
+            </a>
+          </Button>
+          <ModeToggle />
+        </div>
       </SidebarHeader>
       <Separator variant="faded" />
       <div className="flex min-h-0 flex-1 flex-col pt-(--showcase-shell-content-inset)">
@@ -265,8 +383,8 @@ function ComponentNavigation({
           <SearchInput
             value={query}
             onValueChange={setQuery}
-            placeholder="Search components"
-            aria-label="Search components"
+            placeholder="Search library"
+            aria-label="Search library"
           />
           <Button
             type="button"
@@ -289,14 +407,39 @@ function ComponentNavigation({
         <SidebarContent
           className="gap-7 px-2 pt-4 pb-6"
           role="navigation"
-          aria-label="Components"
+          aria-label="OneDS library"
         >
           {sort === "alphabetical" ? (
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>{alphabeticalItems.map(renderItem)}</SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            <>
+              {alphabeticalBlockItems.length > 0 ? (
+                <SidebarGroup>
+                  <SidebarGroupLabel>Blocks</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {alphabeticalBlockItems.map(renderItem)}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ) : null}
+              {alphabeticalExperimentItems.length > 0 ? (
+                <SidebarGroup>
+                  <SidebarGroupLabel>Experiments</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {alphabeticalExperimentItems.map(renderItem)}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ) : null}
+              {alphabeticalItems.length > 0 ? (
+                <SidebarGroup>
+                  <SidebarGroupLabel>Components</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>{alphabeticalItems.map(renderItem)}</SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ) : null}
+            </>
           ) : (
             visibleGroups.map((group) => (
               <SidebarGroup key={group.category}>
@@ -315,6 +458,7 @@ function ComponentNavigation({
 
 function ComponentPage({ slug }: { slug: string }) {
   const entry = registry.find((component) => component.slug === slug) ?? registry[0]
+  const tier = surfaceTier(entry)
   const installCommand =
     entry.installCommand === undefined
       ? `npx shadcn@latest add ${entry.slug}`
@@ -324,6 +468,7 @@ function ComponentPage({ slug }: { slug: string }) {
       name: "Default",
       Demo: entry.Demo,
       code: entry.code,
+      layout: DEFAULT_LAYOUT_BY_SURFACE[tier],
     },
     ...(entry.examples ?? []),
   ]
@@ -341,7 +486,6 @@ function ComponentPage({ slug }: { slug: string }) {
           {installCommand ? (
             <CodeBlock
               code={installCommand}
-              label="Install"
               showLineNumbers={false}
               className="showcase-component__command"
             />
@@ -365,6 +509,14 @@ function ComponentPage({ slug }: { slug: string }) {
 function App() {
   const [slug, navigate] = useHashRoute()
   const scrollRef = useRef<HTMLDivElement>(null)
+  const activeEntry = registry.find((entry) => entry.slug === slug) ?? registry[0]
+  const contentKind =
+    activeEntry.category === "Blocks"
+      ? "block"
+      : activeEntry.category === "Experiments"
+        ? "experiment"
+        : "component"
+  const pageVariant = PAGE_VARIANT_BY_SURFACE[surfaceTier(activeEntry)]
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: "auto" })
@@ -379,38 +531,19 @@ function App() {
         } as CSSProperties
       }
     >
-      <SiteHeader
-        variant="clustered"
-        align="end"
-        className="absolute inset-x-0 top-0"
-      >
-        <SiteHeaderContainer>
-          <SiteHeaderGroup role="toolbar" aria-label="Site controls">
-            <Button asChild variant="ghost" size="icon" aria-label="GitHub">
-              <a
-                href="https://github.com/bhna_microsoft/oneds"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Favicon domain="github.com" alt="" className="dark:invert" />
-              </a>
-            </Button>
-            <ModeToggle />
-          </SiteHeaderGroup>
-        </SiteHeaderContainer>
-      </SiteHeader>
-
       <Sidebar collapsible="none" edge="faded">
         <ComponentNavigation activeSlug={slug} onNavigate={navigate} />
       </Sidebar>
 
       <SidebarInset className="min-h-0 overflow-hidden">
+        <SidebarTrigger placement="floating" />
         <Page>
           <PageScroll ref={scrollRef}>
             <PageContent
-              variant="docs"
+              variant={pageVariant}
               key={slug}
               className="showcase-page-content"
+              data-content-kind={contentKind}
             >
               <ComponentPage slug={slug} />
             </PageContent>

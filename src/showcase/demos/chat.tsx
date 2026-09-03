@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   FileIcon,
   XIcon,
@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/bubble"
 import {
   Message,
+  MessageActions,
   MessageAvatar,
   MessageContent,
   MessageGroup,
@@ -61,7 +62,17 @@ import {
   AttachmentTrigger,
 } from "@/components/ui/attachment"
 import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"
+import { Markdown, Response, ResponseStream } from "@/components/ui/response"
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { CodeBlock } from "@/components/code-block"
+import { Favicon } from "@/components/ui/favicon"
 import {
   Tooltip,
   TooltipContent,
@@ -313,7 +324,7 @@ function AIComposerAddMenu() {
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <AIComposerAction aria-label="Add to prompt" tooltip={false}>
+          <AIComposerAction aria-label="Add to prompt">
             <PlusIcon aria-hidden />
           </AIComposerAction>
         </DropdownMenuTrigger>
@@ -543,6 +554,568 @@ function AIComposerStatesDemo() {
 }
 
 // ---------------------------------------------------------------------------
+// Response
+// ---------------------------------------------------------------------------
+
+const responseAnswers = [
+  "Start with the smallest complete experience, keep every visual decision token-driven, and introduce a new abstraction only when the pattern repeats.",
+  "Ship the smallest thing that works end to end, drive every visual decision from a token, and only reach for a new abstraction once the same pattern appears a third time.",
+]
+
+/** How fast the simulated source grows, not a design value. ResponseStream's
+    throttle smooths this into a steady character reveal regardless. */
+const responseStreamStepMs = 45
+/** Mirrors --ai-chat-copy-reset-delay so the confirmation reads the same. */
+const responseCopyResetMs = 1500
+
+function ResponseDemo() {
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <p>{responseAnswers[0]}</p>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+function ResponseStreamingDemo() {
+  const [text, setText] = useState(responseAnswers[0])
+  const [streaming, setStreaming] = useState(false)
+  const timerRef = useRef<number | null>(null)
+
+  const clear = useCallback(() => {
+    if (timerRef.current === null) return
+    window.clearInterval(timerRef.current)
+    timerRef.current = null
+  }, [])
+
+  useEffect(() => clear, [clear])
+
+  function start() {
+    clear()
+    const words = responseAnswers[0].split(" ")
+    let shown = 0
+    setText("")
+    setStreaming(true)
+    timerRef.current = window.setInterval(() => {
+      shown += 1
+      setText(words.slice(0, shown).join(" "))
+      if (shown < words.length) return
+      clear()
+      setStreaming(false)
+    }, responseStreamStepMs)
+  }
+
+  function stop() {
+    clear()
+    setStreaming(false)
+  }
+
+  return (
+    <div className="flex w-full max-w-(--response-max-width) flex-col gap-4">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>
+            {streaming ? "Responding" : "Assistant"}
+          </MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <ResponseStream text={text} streaming={streaming} />
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={start}
+          disabled={streaming}
+        >
+          Stream response
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={stop}
+          disabled={!streaming}
+        >
+          Stop
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+const responseMarkdownSample = `A response can render straight from a **markdown string**, so real model output arrives with full structure instead of hand-authored markup.
+
+## What you get
+
+- GitHub-flavored lists with \`inline code\` and [links](#/message)
+- Tables, quotes and fenced code, all from tokens
+- ~~Guesswork~~ replaced by a real type scale
+
+### Checklist
+
+- [x] Parse the markdown
+- [x] Close partial tokens while streaming
+- [ ] Wire callouts and citations
+
+### Coverage
+
+| Element | Source |
+| --- | --- |
+| Code block | CodeBlock |
+| Divider | Separator tokens |
+| Callout | Alert |
+
+> Rendered from text, styled by the surface.
+
+### Callouts
+
+> [!TIP]
+> GitHub alert syntax maps straight onto the Alert component.
+
+> [!CAUTION]
+> The most severe type carries the destructive treatment.
+
+![A generated preview](https://picsum.photos/seed/oneds/640/320)
+
+\`\`\`tsx
+<Response>
+  <Markdown>{answer}</Markdown>
+</Response>
+\`\`\`
+`
+
+const responseMarkdownStreamSample = `Streaming keeps the structure intact **as it arrives**[^1], so partial tokens never flash raw syntax.
+
+## How it stays clean
+
+1. Preprocess the partial string.
+2. Close any open \`**\`, links, and fences.
+3. Render the completed block[^2].
+
+> [!TIP]
+> Callouts and citations stream through the same pipeline.
+
+\`\`\`ts
+const stream = createStream(answer)
+\`\`\`
+
+[^1]: [Streaming reveal](#/response) — the throttle that paces the text.
+[^2]: [Remend](https://github.com/vercel/streamdown) — closes partial tokens.
+`
+
+function ResponseMarkdownDemo() {
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <Markdown>{responseMarkdownSample}</Markdown>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+function ResponseStreamingMarkdownDemo() {
+  const [text, setText] = useState(responseMarkdownStreamSample)
+  const [streaming, setStreaming] = useState(false)
+  const timerRef = useRef<number | null>(null)
+
+  const clear = useCallback(() => {
+    if (timerRef.current === null) return
+    window.clearInterval(timerRef.current)
+    timerRef.current = null
+  }, [])
+
+  useEffect(() => clear, [clear])
+
+  function start() {
+    clear()
+    // Deliver word bursts; the throttle inside Markdown smooths them.
+    const tokens = responseMarkdownStreamSample.match(/\S+\s*/g) ?? []
+    let shown = 0
+    setText("")
+    setStreaming(true)
+    timerRef.current = window.setInterval(() => {
+      shown += 1
+      setText(tokens.slice(0, shown).join(""))
+      if (shown < tokens.length) return
+      clear()
+      setStreaming(false)
+    }, responseStreamStepMs)
+  }
+
+  return (
+    <div className="flex w-full max-w-(--response-max-width) flex-col gap-4">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>
+            {streaming ? "Responding" : "Assistant"}
+          </MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response streaming={streaming}>
+                <Markdown streaming={streaming}>{text}</Markdown>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={start}
+          disabled={streaming}
+        >
+          Stream markdown
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+const responseMathSample = `Inline math like $E = mc^2$ sits in the sentence, and a block equation stands on its own:
+
+$$
+x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
+$$
+
+The sum $\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}$ renders inline too.
+`
+
+function ResponseMathDemo() {
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <Markdown>{responseMathSample}</Markdown>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+function ResponseRichContentDemo() {
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <p>
+                  A response is ordinary markup, so{" "}
+                  <strong>anything the library already ships</strong> can sit
+                  inside one — <code>Response</code> just owns the rhythm and{" "}
+                  <a href="#/message">message parts</a> stay responsible for the
+                  turn around it.
+                </p>
+                <h2>What changed</h2>
+                <p>Hierarchy now comes from tokens, not guesswork:</p>
+                <ul>
+                  <li>Headings carry a real type scale.</li>
+                  <li>
+                    Spacing is relationship-aware:
+                    <ul>
+                      <li>more lead above a heading,</li>
+                      <li>a tighter gap to what it introduces.</li>
+                    </ul>
+                  </li>
+                  <li>
+                    Inline elements like <del>the old defaults</del> read
+                    clearly.
+                  </li>
+                </ul>
+                <h3>Order of operations</h3>
+                <ol>
+                  <li>Style the elements from tokens.</li>
+                  <li>Compose existing components.</li>
+                  <li>Keep motion communicating state.</li>
+                </ol>
+                <blockquote>
+                  <p>Motion communicates state instead of decorating it.</p>
+                </blockquote>
+                <figure>
+                  <img
+                    src="https://picsum.photos/seed/oneds/640/360"
+                    alt="A generated preview"
+                  />
+                  <figcaption>Figures and captions are tokenized too.</figcaption>
+                </figure>
+                <hr />
+                <h3>Coverage</h3>
+                <div className="response-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Element</th>
+                        <th>Source</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Code block</td>
+                        <td>CodeBlock</td>
+                      </tr>
+                      <tr>
+                        <td>Divider</td>
+                        <td>Separator tokens</td>
+                      </tr>
+                      <tr>
+                        <td>Callout</td>
+                        <td>Alert</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <CodeBlock
+                  language="tsx"
+                  code={
+                    "<Response>\n  <h2>Heading</h2>\n  <p>Rich <code>markup</code>.</p>\n</Response>"
+                  }
+                  showLineNumbers={false}
+                />
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+function ResponseActionsDemo() {
+  const [index, setIndex] = useState(0)
+  const [copied, setCopied] = useState(false)
+  const [rating, setRating] = useState<"up" | "down" | null>(null)
+  const resetRef = useRef<number | null>(null)
+
+  useEffect(
+    () => () => {
+      if (resetRef.current !== null) window.clearTimeout(resetRef.current)
+    },
+    []
+  )
+
+  function copy() {
+    navigator.clipboard.writeText(responseAnswers[index]).catch(() => {})
+    setCopied(true)
+    if (resetRef.current !== null) window.clearTimeout(resetRef.current)
+    resetRef.current = window.setTimeout(
+      () => setCopied(false),
+      responseCopyResetMs
+    )
+  }
+
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <p>{responseAnswers[index]}</p>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+          <MessageFooter>
+            <MessageActions>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label={copied ? "Copied" : "Copy response"}
+                onClick={copy}
+              >
+                {copied ? <CheckIcon aria-hidden /> : <CopyIcon aria-hidden />}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Helpful"
+                aria-pressed={rating === "up"}
+                onClick={() => setRating((v) => (v === "up" ? null : "up"))}
+              >
+                <ThumbsUpIcon aria-hidden />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Not helpful"
+                aria-pressed={rating === "down"}
+                onClick={() => setRating((v) => (v === "down" ? null : "down"))}
+              >
+                <ThumbsDownIcon aria-hidden />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Regenerate"
+                onClick={() =>
+                  setIndex((v) => (v + 1) % responseAnswers.length)
+                }
+              >
+                <RotateCwIcon aria-hidden />
+              </Button>
+            </MessageActions>
+          </MessageFooter>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+const responseCitationsSample = `The review settled on three priorities[^1], and both documents agree on the ordering[^2].
+
+[^1]: [Design review notes](#/message) — priorities and their rationale.
+[^2]: [Component inventory](#/bubble) — coverage and current gaps.
+`
+
+function ResponseCitationsDemo() {
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <Markdown>{responseCitationsSample}</Markdown>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+function ResponseSourcesDemo() {
+  const sources = [
+    {
+      label: "Fluent UI components",
+      href: "https://github.com/microsoft/fluentui",
+    },
+    {
+      label: "shadcn/ui components",
+      href: "https://github.com/shadcn-ui/ui",
+    },
+  ]
+
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          <Bubble variant="ghost">
+            <BubbleContent>
+              <Response>
+                <p>
+                  The review compared two component libraries before settling
+                  on three priorities.
+                </p>
+              </Response>
+            </BubbleContent>
+          </Bubble>
+          <MessageFooter>
+            <MessageActions>
+              {sources.map((source) => (
+                <Badge key={source.label} asChild variant="outline">
+                  <a
+                    href={source.href}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <Favicon
+                      domain={source.href}
+                      alt=""
+                      data-icon="inline-start"
+                      className="dark:invert"
+                    />
+                    {source.label}
+                  </a>
+                </Badge>
+              ))}
+            </MessageActions>
+          </MessageFooter>
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+function ResponseErrorDemo() {
+  const [failed, setFailed] = useState(true)
+
+  return (
+    <MessageGroup className="w-full max-w-(--response-max-width)">
+      <Message align="start">
+        <MessageContent>
+          <MessageHeader>Assistant</MessageHeader>
+          {failed ? (
+            <Alert variant="destructive" live="assertive">
+              <AlertCircleIcon aria-hidden />
+              <AlertTitle>Response stopped</AlertTitle>
+              <AlertDescription>
+                The connection dropped before the answer finished.
+              </AlertDescription>
+              <AlertAction>
+                <Button
+                  variant="outline"
+                  size="xs"
+                  onClick={() => setFailed(false)}
+                >
+                  <RotateCwIcon aria-hidden />
+                  Retry
+                </Button>
+              </AlertAction>
+            </Alert>
+          ) : (
+            <Bubble variant="ghost">
+              <BubbleContent>
+                <Response>
+                  <p>{responseAnswers[0]}</p>
+                </Response>
+              </BubbleContent>
+            </Bubble>
+          )}
+        </MessageContent>
+      </Message>
+    </MessageGroup>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Entries
 // ---------------------------------------------------------------------------
 
@@ -554,7 +1127,7 @@ export const chatDemos: ComponentEntry[] = [
     slug: "ai-composer",
     name: "AI Composer",
     description:
-      "A flexible prompt composer with attachments, tools and generation states.",
+      "A flexible prompt composer with attachments, tools and generation states. Full-page rule: anchor the composer above the viewport center, then attach the greeting and suggestions around it instead of centering the combined lockup.",
     category: "Chat",
     installCommand: null,
     Demo: AIComposerDemo,
@@ -599,7 +1172,7 @@ export function AIComposerDemo() {
         <AIComposerTools>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <AIComposerAction aria-label="Add to prompt" tooltip={false}>
+              <AIComposerAction aria-label="Add to prompt">
                 <PlusIcon />
               </AIComposerAction>
             </DropdownMenuTrigger>
@@ -963,7 +1536,7 @@ export function MessageDemo() {
                     </BubbleContent>
                   </Bubble>
                   <MessageFooter>
-                    <div className="flex gap-1">
+                    <MessageActions>
                       <Button
                         variant="ghost"
                         size="icon-xs"
@@ -1003,7 +1576,7 @@ export function MessageDemo() {
                       >
                         <ShareIcon aria-hidden />
                       </Button>
-                    </div>
+                    </MessageActions>
                   </MessageFooter>
                 </MessageContent>
               </Message>
@@ -1046,6 +1619,93 @@ export function MessageDemo() {
             </Message>
           </MessageGroup>
         ),
+      },
+    ],
+  },
+
+  // =======================================================================
+  // RESPONSE
+  // =======================================================================
+  {
+    slug: "response",
+    name: "Response",
+    description:
+      "The assistant's answer surface: streaming text, rich content, and the actions a reader takes on it.",
+    category: "Chat",
+    installCommand: null,
+    Demo: ResponseDemo,
+    code: `import { Bubble, BubbleContent } from "@/components/ui/bubble"
+import { Message, MessageContent, MessageHeader } from "@/components/ui/message"
+import { Response } from "@/components/ui/response"
+
+export function ResponseDemo() {
+  return (
+    <Message align="start">
+      <MessageContent>
+        <MessageHeader>Assistant</MessageHeader>
+        <Bubble variant="ghost">
+          <BubbleContent>
+            <Response streaming>
+              <p>Partial answer…</p>
+            </Response>
+          </BubbleContent>
+        </Bubble>
+      </MessageContent>
+    </Message>
+  )
+}`,
+    examples: [
+      {
+        name: "Streaming",
+        description:
+          "A caret trails the last block while the answer is still arriving.",
+        Demo: ResponseStreamingDemo,
+      },
+      {
+        name: "From Markdown",
+        description:
+          "Real model output is a markdown string; it renders as tokenized content.",
+        Demo: ResponseMarkdownDemo,
+      },
+      {
+        name: "Streaming Markdown",
+        description:
+          "Unterminated markdown is closed on the fly, so partial tokens never flash raw syntax.",
+        Demo: ResponseStreamingMarkdownDemo,
+      },
+      {
+        name: "Rich Content",
+        description:
+          "Headings, lists and a real code block inside one response.",
+        Demo: ResponseRichContentDemo,
+      },
+      {
+        name: "Math",
+        description: "Inline and block LaTeX render with KaTeX.",
+        Demo: ResponseMathDemo,
+      },
+      {
+        name: "Actions",
+        description:
+          "Copy, rate and regenerate sit in the message footer, not the answer.",
+        Demo: ResponseActionsDemo,
+      },
+      {
+        name: "Sources",
+        description: "Cited documents follow the answer as real links.",
+        Demo: ResponseSourcesDemo,
+      },
+      {
+        name: "Citations",
+        description:
+          "Inline footnote markers link to an auto-generated Sources list.",
+        Demo: ResponseCitationsDemo,
+      },
+      {
+        name: "Error and Retry",
+        description:
+          "A failed answer replaces the bubble and offers the retry.",
+        Demo: ResponseErrorDemo,
       },
     ],
   },
