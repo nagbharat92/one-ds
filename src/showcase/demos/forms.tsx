@@ -28,6 +28,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   ButtonGroup,
+  ButtonGroupChoice,
+  ButtonGroupChoiceItem,
   ButtonGroupSeparator,
   ButtonGroupText,
 } from "@/components/ui/button-group"
@@ -654,6 +656,19 @@ export function ButtonGroupDemo() {
   )
 }`,
     examples: [
+      {
+        name: "Choice",
+        description:
+          "Select one value immediately. Labels center at rest and animate aside for the selected checkmark; button widths already include its space.",
+        Demo: () => (
+          <ButtonGroupChoice defaultValue="8" aria-label="Serving size">
+            <ButtonGroupChoiceItem value="8">8 oz</ButtonGroupChoiceItem>
+            <ButtonGroupChoiceItem value="12">12 oz</ButtonGroupChoiceItem>
+            <ButtonGroupChoiceItem value="16">16 oz</ButtonGroupChoiceItem>
+            <ButtonGroupChoiceItem value="20" disabled>20 oz</ButtonGroupChoiceItem>
+          </ButtonGroupChoice>
+        ),
+      },
       {
         name: "Orientation",
         Demo: () => (

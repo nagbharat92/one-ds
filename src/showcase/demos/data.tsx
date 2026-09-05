@@ -52,11 +52,6 @@ import { Progress } from "@/components/ui/progress"
 import { Scroller } from "@/components/ui/scroller"
 import { Spinner } from "@/components/ui/spinner"
 import {
-  Toolbar,
-  ToolbarGroup,
-  ToolbarSpacer,
-} from "@/components/ui/toolbar"
-import {
   Table,
   TableBody,
   TableCaption,
@@ -780,46 +775,6 @@ export function Example() {
         name: "Image",
         description: "Add an image before the card header.",
         Demo: CardImageDemo,
-      },
-      {
-        name: "Toolbar canvas",
-        description:
-          "Canvas layout rule: a wide toolbar pins to the top of the preview while the card stays visually centered — the space below balances the toolbar above.",
-        layout: "wide" as const,
-        Demo: () => (
-          <div className="preview-canvas">
-            <Toolbar className="w-full">
-              <span className="text-sm font-medium">Billing</span>
-              <ToolbarSpacer />
-              <ToolbarGroup>
-                <Button variant="ghost" size="sm">
-                  <SearchIcon data-icon="inline-start" />
-                  Search
-                </Button>
-                <Button variant="ghost" size="icon-sm" aria-label="Settings">
-                  <SettingsIcon />
-                </Button>
-                <Button variant="ghost" size="icon-sm" aria-label="More options">
-                  <MoreHorizontalIcon />
-                </Button>
-              </ToolbarGroup>
-            </Toolbar>
-            <Card className="mx-auto w-full max-w-sm">
-              <CardHeader>
-                <CardTitle>Upgrade your plan</CardTitle>
-                <CardDescription>
-                  You're on the Free plan — upgrade for more seats.
-                </CardDescription>
-                <CardAction>
-                  <Badge variant="secondary">Free</Badge>
-                </CardAction>
-              </CardHeader>
-              <CardFooter>
-                <Button className="w-full">Upgrade to Pro</Button>
-              </CardFooter>
-            </Card>
-          </div>
-        ),
       },
     ],
   },

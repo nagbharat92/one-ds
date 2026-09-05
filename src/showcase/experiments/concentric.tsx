@@ -6,8 +6,10 @@ import type { ComponentEntry } from "@/showcase/types"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
-import { Toolbar, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar"
+import { ToolbarGroup } from "@/components/ui/toolbar"
+import { Canvas, CanvasWorkbench, CanvasToolbar, CanvasContent, CanvasFooter } from "@/components/ui/canvas"
 import {
+  AnnotationBand,
   AnnotationCallouts,
   AnnotationLayer,
 } from "@/components/ui/annotation"
@@ -15,18 +17,35 @@ import {
 // One control (the outer radius) drives padding and every inner corner; the
 // relationships live in CSS calc(), so only the raw radius is injected here.
 const PAD_RATIO = 0.5
-const MIN_RADIUS = 4
+const MIN_RADIUS = 8
 const MAX_RADIUS = 48
+// Padding (and every gap) never drops below this, so tight radii stay legible.
+const MIN_PAD = 8
 
 function Concentric() {
   const [radius, setRadius] = useState(20)
   const [annotate, setAnnotate] = useState(true)
-  const padding = Math.round(radius * PAD_RATIO)
+  const padding = Math.max(Math.round(radius * PAD_RATIO), MIN_PAD)
   const inner = radius - padding
+
+  // The media keeps a square minimum but stretches to the lockup height, so its
+  // aspect ratio is measured live rather than assumed.
+  const mediaRef = React.useRef<HTMLDivElement>(null)
+  const [aspect, setAspect] = useState("1")
+  React.useLayoutEffect(() => {
+    const el = mediaRef.current
+    if (!el) return
+    const measure = () =>
+      setAspect(el.offsetHeight ? (el.offsetWidth / el.offsetHeight).toFixed(2) : "1")
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   return (
     <div
-      className="preview-canvas concentric-demo"
+      className="concentric-demo w-full min-w-0"
       style={
         {
           "--concentric-r": `${radius}px`,
@@ -34,7 +53,13 @@ function Concentric() {
         } as React.CSSProperties
       }
     >
-      <Toolbar className="concentric-toolbar" aria-label="Concentric controls">
+      <Canvas layout="viewport" className="w-full">
+      <CanvasWorkbench>
+      <CanvasToolbar
+        className="concentric-toolbar"
+        aria-label="Concentric controls"
+        data-annotate-avoid
+      >
         <ToolbarGroup className="concentric-toolbar__control">
           <span className="concentric-toolbar__label">Corner radius</span>
           <Slider
@@ -48,28 +73,6 @@ function Concentric() {
             aria-valuetext={`${radius} pixels`}
           />
         </ToolbarGroup>
-        <ToolbarSeparator />
-        <ToolbarGroup className="concentric-toolbar__readout">
-          {/* The relationship, live: inner = outer − padding. */}
-          <span className="concentric-equation">
-            <span className="concentric-equation__term">
-              inner <b>{inner}</b>
-            </span>
-            <span className="concentric-equation__op" aria-hidden="true">
-              =
-            </span>
-            <span className="concentric-equation__term">
-              outer <b>{radius}</b>
-            </span>
-            <span className="concentric-equation__op" aria-hidden="true">
-              −
-            </span>
-            <span className="concentric-equation__term">
-              padding <b>{padding}</b>
-            </span>
-          </span>
-        </ToolbarGroup>
-        <ToolbarSeparator />
         <ToolbarGroup className="concentric-toolbar__toggle">
           <label className="concentric-toolbar__toggle-label">
             <Checkbox
@@ -80,18 +83,25 @@ function Concentric() {
             Annotations
           </label>
         </ToolbarGroup>
-      </Toolbar>
+      </CanvasToolbar>
 
-      <div className="concentric-stage">
+      <CanvasContent className="concentric-stage">
         <div data-annotate="card" className="concentric-card">
           <div
+            ref={mediaRef}
             data-annotate="media"
             className="concentric-card__media"
             aria-hidden="true"
           >
             <ImageIcon />
           </div>
-          <div className="concentric-card__body">
+          <AnnotationBand
+            data-active={annotate}
+            data-annotate="gap-media-text"
+            kind="gap"
+            className="concentric-gap-band"
+          />
+          <div data-annotate="body" className="concentric-card__body">
             <strong className="concentric-card__title">
               Concentric corners
             </strong>
@@ -100,13 +110,25 @@ function Concentric() {
               the outer radius minus the padding.
             </span>
           </div>
-          <div className="concentric-card__actions">
+          <AnnotationBand
+            data-active={annotate}
+            data-annotate="gap-text-actions"
+            kind="gap"
+            className="concentric-gap-band"
+          />
+          <div data-annotate="actions" className="concentric-card__actions">
             <Button variant="outline">Details</Button>
-            <Button>Open</Button>
+            <AnnotationBand
+              data-active={annotate}
+              data-annotate="gap-buttons"
+              kind="gap"
+              className="concentric-gap-band"
+            />
+            <Button data-annotate="action">Open</Button>
           </div>
         </div>
 
-        <AnnotationLayer active={annotate} className="concentric-annotations">
+        <AnnotationLayer active={annotate} kind="padding" className="concentric-annotations">
           {/* A rounded border sitting over the padding: its outer corner is the
               card radius and the inner corner is automatically concentric, so it
               redraws the whole relationship as the slider moves. */}
@@ -127,6 +149,7 @@ function Concentric() {
             },
             {
               id: "padding",
+              kind: "padding",
               target: "card",
               side: "right",
               content: `padding ${padding}`,
@@ -139,9 +162,70 @@ function Concentric() {
               content: `inner ${inner}`,
               label: true,
             },
+            {
+              id: "button",
+              target: "action",
+              side: "bottom-right",
+              content: `button ${inner}`,
+              label: true,
+            },
+            {
+              id: "aspect",
+              target: "media",
+              side: "top",
+              content: `aspect ${aspect}`,
+              label: true,
+            },
+            {
+              id: "gap-media-text",
+              kind: "gap",
+              target: "gap-media-text",
+              side: "bottom",
+              content: `gap ${padding}`,
+              label: true,
+              markerAlign: "target",
+            },
+            {
+              id: "gap-text-actions",
+              kind: "gap",
+              target: "gap-text-actions",
+              side: "bottom",
+              content: `gap ${padding}`,
+              label: true,
+              markerAlign: "target",
+            },
+            {
+              id: "gap-buttons",
+              kind: "gap",
+              target: "gap-buttons",
+              side: "bottom",
+              content: `gap ${padding}`,
+              label: true,
+              markerAlign: "target",
+            },
           ]}
         />
-      </div>
+      </CanvasContent>
+      </CanvasWorkbench>
+      </Canvas>
+
+      <CanvasFooter className="concentric-equation">
+        <span className="concentric-equation__term">
+          inner <b>{inner}</b>
+        </span>
+        <span className="concentric-equation__op" aria-hidden="true">
+          =
+        </span>
+        <span className="concentric-equation__term">
+          outer <b>{radius}</b>
+        </span>
+        <span className="concentric-equation__op" aria-hidden="true">
+          −
+        </span>
+        <span className="concentric-equation__term">
+          padding <b>{padding}</b>
+        </span>
+      </CanvasFooter>
     </div>
   )
 }
@@ -155,55 +239,88 @@ export const concentricDemos: ComponentEntry[] = [
     category: "Experiments",
     surface: "medium",
     installCommand: null,
+    ownsCanvas: true,
     Demo: Concentric,
-    code: `import { useState } from "react"
+    code: `import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
+import { ToolbarGroup } from "@/components/ui/toolbar"
+import { Canvas, CanvasWorkbench, CanvasToolbar, CanvasContent, CanvasFooter } from "@/components/ui/canvas"
 import {
+  AnnotationBand,
   AnnotationCallouts,
   AnnotationLayer,
 } from "@/components/ui/annotation"
 
-// padding = radius * 0.5; inner radius = radius - padding (concentric rule)
+// padding (and every gap) = max(radius * 0.5, 8); inner = radius - padding
 export function Concentric() {
-  const [radius, setRadius] = useState(20)
-  const [annotate, setAnnotate] = useState(true)
-  const padding = Math.round(radius * 0.5)
+  const [radius, setRadius] = React.useState(20)
+  const [annotate, setAnnotate] = React.useState(true)
+  const padding = Math.max(Math.round(radius * 0.5), 8)
   const inner = radius - padding
 
-  return (
-    <div className="concentric-demo" style={{ "--concentric-r": radius + "px" }}>
-      <div className="flex items-center gap-4">
-        <Slider value={[radius]} min={4} max={48} onValueChange={([v]) => setRadius(v)} />
-        {/* Live equation: inner = outer − padding */}
-        <span>
-          inner <b>{inner}</b> = outer <b>{radius}</b> − padding <b>{padding}</b>
-        </span>
-        <label className="flex items-center gap-2">
-          <Checkbox checked={annotate} onCheckedChange={(v) => setAnnotate(v === true)} />
-          Annotations
-        </label>
-      </div>
+  // Media keeps a square minimum but stretches to the lockup height.
+  const mediaRef = React.useRef<HTMLDivElement>(null)
+  const [aspect, setAspect] = React.useState("1")
+  React.useLayoutEffect(() => {
+    const el = mediaRef.current
+    if (!el) return
+    const measure = () =>
+      setAspect(el.offsetHeight ? (el.offsetWidth / el.offsetHeight).toFixed(2) : "1")
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
-      <div className="concentric-stage">
+  return (
+    <div className="concentric-demo w-full min-w-0" style={{ "--concentric-r": radius + "px" }}>
+      <Canvas layout="viewport" className="w-full">
+      <CanvasWorkbench>
+      <CanvasToolbar className="concentric-toolbar" aria-label="Concentric controls">
+        <ToolbarGroup className="concentric-toolbar__control">
+          <span className="concentric-toolbar__label">Corner radius</span>
+          <Slider
+            className="concentric-toolbar__slider"
+            value={[radius]}
+            min={8}
+            max={48}
+            step={1}
+            onValueChange={([value]) => setRadius(value)}
+            aria-label="Corner radius"
+            aria-valuetext={radius + " pixels"}
+          />
+        </ToolbarGroup>
+        <ToolbarGroup className="concentric-toolbar__toggle">
+          <label className="concentric-toolbar__toggle-label">
+            <Checkbox checked={annotate} onCheckedChange={(value) => setAnnotate(value === true)} />
+            Annotations
+          </label>
+        </ToolbarGroup>
+      </CanvasToolbar>
+
+      <CanvasContent className="concentric-stage">
         <div data-annotate="card" className="concentric-card">
-          <div data-annotate="media" className="concentric-card__media" />
-          <div className="concentric-card__body">
+          <div ref={mediaRef} data-annotate="media" className="concentric-card__media" />
+          <AnnotationBand kind="gap" data-active={annotate} data-annotate="gap-media-text" className="concentric-gap-band" />
+          <div data-annotate="body" className="concentric-card__body">
             <strong>Concentric corners</strong>
             <span>Inner radius = outer radius − padding.</span>
           </div>
-          <div className="concentric-card__actions">
+          <AnnotationBand kind="gap" data-active={annotate} data-annotate="gap-text-actions" className="concentric-gap-band" />
+          <div data-annotate="actions" className="concentric-card__actions">
             <Button variant="outline">Details</Button>
-            <Button>Open</Button>
+            <AnnotationBand kind="gap" data-active={annotate} data-annotate="gap-buttons" className="concentric-gap-band" />
+            <Button data-annotate="action">Open</Button>
           </div>
         </div>
 
         {/* The frame draws the concentric relationship; the callouts label the
             live values with measured leaders, hover highlight, and collision-safe
             placement — the same system as the Annotation component. */}
-        <AnnotationLayer active={annotate} className="concentric-annotations">
+        <AnnotationLayer active={annotate} kind="padding" className="concentric-annotations">
           <div className="concentric-annotations__frame" />
         </AnnotationLayer>
 
@@ -211,11 +328,26 @@ export function Concentric() {
           active={annotate}
           items={[
             { id: "outer", target: "card", side: "top-left", content: \`outer \${radius}\`, label: true },
-            { id: "padding", target: "card", side: "right", content: \`padding \${padding}\`, label: true },
+            { id: "aspect", target: "media", side: "top", content: \`aspect \${aspect}\`, label: true },
+            { id: "padding", kind: "padding", target: "card", side: "right", content: \`padding \${padding}\`, label: true },
             { id: "inner", target: "media", side: "bottom-left", content: \`inner \${inner}\`, label: true },
+            { id: "button", target: "action", side: "bottom-right", content: \`button \${inner}\`, label: true },
+            { id: "gap-media-text", kind: "gap", target: "gap-media-text", side: "bottom", content: \`gap \${padding}\`, label: true, markerAlign: "target" },
+            { id: "gap-text-actions", kind: "gap", target: "gap-text-actions", side: "bottom", content: \`gap \${padding}\`, label: true, markerAlign: "target" },
+            { id: "gap-buttons", kind: "gap", target: "gap-buttons", side: "bottom", content: \`gap \${padding}\`, label: true, markerAlign: "target" },
           ]}
         />
-      </div>
+      </CanvasContent>
+      </CanvasWorkbench>
+      </Canvas>
+
+      <CanvasFooter className="concentric-equation">
+        <span className="concentric-equation__term">inner <b>{inner}</b></span>
+        <span className="concentric-equation__op" aria-hidden="true">=</span>
+        <span className="concentric-equation__term">outer <b>{radius}</b></span>
+        <span className="concentric-equation__op" aria-hidden="true">−</span>
+        <span className="concentric-equation__term">padding <b>{padding}</b></span>
+      </CanvasFooter>
     </div>
   )
 }`,

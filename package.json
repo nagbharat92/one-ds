@@ -9,6 +9,7 @@
     "prebuild": "node scripts/generate-showcase-code.mjs",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "test:annotations": "node --experimental-strip-types --test scripts/test-annotation-layout.mjs",
     "showcase:code": "node scripts/generate-showcase-code.mjs",
     "preview": "vite preview"
   },

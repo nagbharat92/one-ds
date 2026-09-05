@@ -3,21 +3,27 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { placeAnnotations, type AnnotationSide } from "@/lib/annotation-layout"
+
+type AnnotationKind = "bounds" | "padding" | "border" | "margin" | "gap"
+type AnnotationColorProps = { kind?: AnnotationKind }
 
 /**
  * Annotation — a design-spec overlay for documenting a component's anatomy:
  * numbered callouts, dimension labels, and spacing bands drawn on top of a
- * relatively-positioned target. The layer is non-interactive and can be toggled
- * on and off; hidden it fades out and is removed from the accessibility tree.
+ * relatively-positioned target. The layer is pointer-transparent; callout
+ * buttons provide hover and selection. Hidden layers leave the accessibility tree.
  */
 function AnnotationLayer({
   className,
   active = true,
+  kind,
   ...props
-}: React.ComponentProps<"div"> & { active?: boolean }) {
+}: React.ComponentProps<"div"> & AnnotationColorProps & { active?: boolean }) {
   return (
     <div
       data-slot="annotation-layer"
+      data-annotation-kind={kind}
       data-active={active}
       aria-hidden={!active}
       className={cn(
@@ -34,12 +40,14 @@ function AnnotationLayer({
 function Annotation({
   className,
   asChild = false,
+  kind,
   ...props
-}: React.ComponentProps<"div"> & { asChild?: boolean }) {
+}: React.ComponentProps<"div"> & AnnotationColorProps & { asChild?: boolean }) {
   const Comp = asChild ? Slot.Root : "div"
   return (
     <Comp
       data-slot="annotation"
+      data-annotation-kind={kind}
       className={cn("absolute flex items-center gap-1.5", className)}
       {...props}
     />
@@ -47,7 +55,7 @@ function Annotation({
 }
 
 const annotationMarkerVariants = cva(
-  "pointer-events-auto flex shrink-0 select-none items-center justify-center border border-destructive bg-background text-destructive shadow-xs",
+  "pointer-events-auto flex shrink-0 select-none items-center justify-center border border-(--annotation-color) bg-(--annotation-label-background) text-(--annotation-color) shadow-xs",
   {
     variants: {
       variant: {
@@ -64,12 +72,16 @@ const annotationMarkerVariants = cva(
 function AnnotationMarker({
   className,
   variant,
+  asChild = false,
+  kind,
   ...props
 }: React.ComponentProps<"div"> &
-  VariantProps<typeof annotationMarkerVariants>) {
+  VariantProps<typeof annotationMarkerVariants> & AnnotationColorProps & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "div"
   return (
-    <div
+    <Comp
       data-slot="annotation-marker"
+      data-annotation-kind={kind}
       className={cn(annotationMarkerVariants({ variant, className }))}
       {...props}
     />
@@ -77,12 +89,14 @@ function AnnotationMarker({
 }
 
 // A small chip that carries a measurement or short caption.
-function AnnotationLabel({ className, ...props }: React.ComponentProps<"span">) {
+function AnnotationLabel({ className, asChild = false, kind, ...props }: React.ComponentProps<"span"> & AnnotationColorProps & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "span"
   return (
-    <span
+    <Comp
       data-slot="annotation-label"
+      data-annotation-kind={kind}
       className={cn(
-        "pointer-events-auto inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-destructive bg-background px-1.5 py-0.5 text-xs tabular-nums text-destructive shadow-xs",
+        "pointer-events-auto inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-(--annotation-color) bg-(--annotation-label-background) px-1.5 py-0.5 text-xs tabular-nums text-(--annotation-color) shadow-xs",
         className
       )}
       {...props}
@@ -91,7 +105,7 @@ function AnnotationLabel({ className, ...props }: React.ComponentProps<"span">) 
 }
 
 const annotationLineVariants = cva(
-  "pointer-events-none border-dotted border-destructive",
+  "pointer-events-none border-dotted border-(--annotation-color)",
   {
     variants: {
       orientation: {
@@ -109,11 +123,13 @@ const annotationLineVariants = cva(
 function AnnotationLine({
   className,
   orientation,
+  kind,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof annotationLineVariants>) {
+}: React.ComponentProps<"div"> & AnnotationColorProps & VariantProps<typeof annotationLineVariants>) {
   return (
     <div
       data-slot="annotation-line"
+      data-annotation-kind={kind}
       className={cn(annotationLineVariants({ orientation, className }))}
       {...props}
     />
@@ -123,7 +139,7 @@ function AnnotationLine({
 // A dotted SVG leader that can bend (elbow) and reach outside the layer to point
 // precisely at a target. Pass `d` for a measured pixel path (rounded corners
 // baked in) or `points` for a quick percentage polyline in a 0–100 viewBox.
-// `anchor` draws a filled dot where the leader starts, on the target's edge.
+// `anchor` draws a filled dot where the leader starts, on the highlighted bounds.
 // `arc` overlays a solid stroke tracing a rounded corner, highlighting the curve
 // the leader measures.
 function AnnotationConnector({
@@ -132,40 +148,55 @@ function AnnotationConnector({
   points,
   anchor,
   arc,
+  outline,
+  kind,
   ...props
-}: React.ComponentProps<"svg"> & {
+}: React.ComponentProps<"svg"> & AnnotationColorProps & {
   d?: string
   points?: string
   anchor?: [number, number]
   arc?: string
+  outline?: { left: number; top: number; right: number; bottom: number; radius: number }
 }) {
   const percent = points != null && d == null
   const stroke = {
     stroke: "currentColor",
-    strokeWidth: 1.5,
+    strokeWidth: "var(--annotation-line-width)",
     strokeLinecap: "round",
     strokeLinejoin: "round",
-    strokeDasharray: "1 5",
+    strokeDasharray: "var(--annotation-line-dash) var(--annotation-line-gap)",
     vectorEffect: "non-scaling-stroke",
   } as const
   return (
     <svg
       data-slot="annotation-connector"
+      data-annotation-kind={kind}
       viewBox={percent ? "0 0 100 100" : undefined}
       preserveAspectRatio={percent ? "none" : undefined}
       fill="none"
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute inset-0 size-full overflow-visible text-destructive",
+        "pointer-events-none absolute inset-0 size-full overflow-visible text-(--annotation-color)",
         className
       )}
       {...props}
     >
+      {outline ? (
+        <rect
+          data-slot="annotation-hover-bounds"
+          x={outline.left}
+          y={outline.top}
+          width={outline.right - outline.left}
+          height={outline.bottom - outline.top}
+          rx={outline.radius}
+          {...stroke}
+        />
+      ) : null}
       {arc ? (
         <path
           d={arc}
           stroke="currentColor"
-          strokeWidth={3}
+          strokeWidth="var(--annotation-corner-stroke)"
           strokeLinecap="round"
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
@@ -173,22 +204,23 @@ function AnnotationConnector({
       ) : null}
       {d != null ? (
         <path d={d} {...stroke} />
-      ) : (
+      ) : points ? (
         <polyline points={points} {...stroke} />
-      )}
-      {anchor ? <circle cx={anchor[0]} cy={anchor[1]} r={3} fill="currentColor" /> : null}
+      ) : null}
+      {anchor ? <circle cx={anchor[0]} cy={anchor[1]} r="var(--annotation-anchor-radius)" fill="currentColor" /> : null}
     </svg>
   )
 }
 
 // A tinted band that highlights a spacing region (padding, margin or gap). It
 // rounds with the surface it documents so nested bands stay concentric.
-function AnnotationBand({ className, ...props }: React.ComponentProps<"div">) {
+function AnnotationBand({ className, kind, ...props }: React.ComponentProps<"div"> & AnnotationColorProps) {
   return (
     <div
       data-slot="annotation-band"
+      data-annotation-kind={kind}
       className={cn(
-        "pointer-events-none flex items-center justify-center rounded-md bg-destructive/10 text-xs font-medium tabular-nums text-destructive",
+        "pointer-events-none flex items-center justify-center rounded-md bg-(--annotation-fill) text-xs font-medium tabular-nums text-(--annotation-color)",
         className
       )}
       {...props}
@@ -208,6 +240,7 @@ const CALLOUT_CORNERS = new Set<string>([
 
 type AnnotationCalloutItem = {
   id: string | number
+  kind?: AnnotationKind
   // Matches a `data-annotate` attribute on an element inside the container.
   target: string
   // An edge (left/right/top/bottom) measures spacing; a corner
@@ -217,6 +250,11 @@ type AnnotationCalloutItem = {
   content: React.ReactNode
   // Render as a labelled chip instead of a numbered dot marker.
   label?: boolean
+  // Compatibility hint: all placements now prefer alignment to the target.
+  markerAlign?: "stack" | "target"
+  placement?: AnnotationSide
+  allowedSides?: AnnotationSide[]
+  locked?: boolean
 }
 
 type CalloutRect = {
@@ -225,34 +263,21 @@ type CalloutRect = {
   right: number
   bottom: number
 }
-type CalloutBox = CalloutRect & { radius: number }
+type CalloutBox = CalloutRect & { radius: number; radii: Record<CalloutCorner, number> }
 type CalloutGeometry = {
   frame: { width: number; height: number }
   targets: Record<string, CalloutBox>
   bounds: CalloutRect | null
   obstacles: CalloutRect[]
-}
-
-// One tuning source for the whole callout system so every consumer stays
-// consistent: change a value here and every annotated surface follows.
-const CALLOUT = {
-  gap: 64,
-  elbow: 28,
-  markerRadius: 13,
-  spacing: 40,
-  corner: 10,
-  outlinePad: 4,
-  boundsMargin: 8,
-  cornerGap: 4,
-  cornerEdge: 14,
-  cornerStroke: 3,
-}
-
-// Half-size estimate used to keep a marker inside the preview bounds and off
-// obstacles (a compact dot marker vs a wider label chip).
-const CALLOUT_HALF = {
-  marker: { w: 16, h: 16 },
-  label: { w: 46, h: 14 },
+  labels: Record<string, { width: number; height: number }>
+  specimen: CalloutRect
+  clearance: number
+  distance: number
+  minDistance: number
+  corner: number
+  outlinePad: number
+  arcGap: number
+  arcStroke: number
 }
 
 // A rounded polyline: each interior vertex is cut back and joined with a
@@ -313,401 +338,397 @@ function calloutClipAncestor(el: HTMLElement) {
   return null
 }
 
-// Place a marker past its frame edge, then pull it inside the bounds and nudge it
-// along the edge off any obstacle it lands on.
-function resolveMarkerPosition(
-  side: CalloutSide,
-  cross: number,
-  frame: { width: number; height: number },
-  half: { w: number; h: number },
-  bounds: CalloutRect | null,
-  obstacles: CalloutRect[]
-) {
-  let mx: number, my: number
-  if (side === "right") {
-    mx = frame.width + CALLOUT.gap
-    my = cross
-  } else if (side === "left") {
-    mx = -CALLOUT.gap
-    my = cross
-  } else if (side === "top") {
-    mx = cross
-    my = -CALLOUT.gap
-  } else {
-    mx = cross
-    my = frame.height + CALLOUT.gap
-  }
-
-  const clamp = () => {
-    if (!bounds) return
-    mx = Math.min(Math.max(mx, bounds.left + half.w), bounds.right - half.w)
-    my = Math.min(Math.max(my, bounds.top + half.h), bounds.bottom - half.h)
-  }
-  clamp()
-
-  const vertical = side === "left" || side === "right"
-  for (let pass = 0; pass <= obstacles.length; pass++) {
-    let moved = false
-    for (const ob of obstacles) {
-      const overlapX = Math.min(mx + half.w, ob.right) - Math.max(mx - half.w, ob.left)
-      const overlapY = Math.min(my + half.h, ob.bottom) - Math.max(my - half.h, ob.top)
-      if (overlapX > 0 && overlapY > 0) {
-        if (vertical) {
-          const c = (ob.top + ob.bottom) / 2
-          my = my <= c ? ob.top - half.h - 4 : ob.bottom + half.h + 4
-        } else {
-          const c = (ob.left + ob.right) / 2
-          mx = mx <= c ? ob.left - half.w - 4 : ob.right + half.w + 4
-        }
-        moved = true
-      }
-    }
-    clamp()
-    if (!moved) break
-  }
-  return { mx, my }
-}
-
-// Anchor each leader on its target element's edge (subdividing only when several
-// share one element edge), stack the markers in a column/row centred on the
-// group, keep them inside the preview and off obstacles, and return a rounded path.
-function buildAnnotationCallouts(items: AnnotationCalloutItem[], geo: CalloutGeometry) {
-  const { frame, targets, bounds, obstacles } = geo
-  const cornerItems = items.filter((it) => CALLOUT_CORNERS.has(it.side))
-  const edgeItems = items.filter(
-    (it): it is AnnotationCalloutItem & { side: CalloutSide } =>
-      !CALLOUT_CORNERS.has(it.side)
-  )
-  const anchorGroups = new Map<string, AnnotationCalloutItem["id"][]>()
-  for (const it of edgeItems) {
-    const key = `${it.target}:${it.side}`
-    const g = anchorGroups.get(key)
-    if (g) g.push(it.id)
-    else anchorGroups.set(key, [it.id])
-  }
-
-  const anchored = edgeItems
-    .map((it) => {
-      const t = targets[it.target]
-      if (!t) return null
-      const group = anchorGroups.get(`${it.target}:${it.side}`)!
-      const af = (group.indexOf(it.id) + 0.5) / group.length
-      const vertical = it.side === "left" || it.side === "right"
-      let ax: number, ay: number
-      if (it.side === "right") {
-        ax = t.right
-        ay = t.top + (t.bottom - t.top) * af
-      } else if (it.side === "left") {
-        ax = t.left
-        ay = t.top + (t.bottom - t.top) * af
-      } else if (it.side === "top") {
-        ax = t.left + (t.right - t.left) * af
-        ay = t.top
-      } else {
-        ax = t.left + (t.right - t.left) * af
-        ay = t.bottom
-      }
-      return { it, ax, ay, vertical }
-    })
-    .filter((v): v is NonNullable<typeof v> => v !== null)
-
-  // Markers stack in a centred column/row so a single one aligns with its
-  // element (straight) and several bunch into a tidy stack (rounded elbows).
-  const markerCross = new Map<AnnotationCalloutItem["id"], number>()
-  const sides = new Map<CalloutSide, typeof anchored>()
-  for (const a of anchored) {
-    const g = sides.get(a.it.side)
-    if (g) g.push(a)
-    else sides.set(a.it.side, [a])
-  }
-  for (const [, group] of sides) {
-    const crossOf = (a: (typeof anchored)[number]) => (a.vertical ? a.ay : a.ax)
-    const mean = group.reduce((sum, a) => sum + crossOf(a), 0) / group.length
-    const sorted = [...group].sort((x, y) => crossOf(x) - crossOf(y))
-    const k = sorted.length
-    sorted.forEach((a, j) =>
-      markerCross.set(a.it.id, mean + (j - (k - 1) / 2) * CALLOUT.spacing)
-    )
-  }
-
-  const edgeBuilt = anchored.map(({ it, ax, ay }) => {
-    const half = it.label ? CALLOUT_HALF.label : CALLOUT_HALF.marker
-    const { mx, my } = resolveMarkerPosition(
-      it.side,
-      markerCross.get(it.id)!,
-      frame,
-      half,
-      bounds,
-      obstacles
-    )
-    // The gutter turns ELBOW px past the frame edge but never overshoots the
-    // (possibly clamped) marker, so a pulled-in leader stays a clean elbow.
-    let pts: [number, number][]
-    if (it.side === "right") {
-      const gx = Math.min(frame.width + CALLOUT.elbow, mx - CALLOUT.markerRadius)
-      pts = [[ax, ay], [gx, ay], [gx, my], [mx - CALLOUT.markerRadius, my]]
-    } else if (it.side === "left") {
-      const gx = Math.max(-CALLOUT.elbow, mx + CALLOUT.markerRadius)
-      pts = [[ax, ay], [gx, ay], [gx, my], [mx + CALLOUT.markerRadius, my]]
-    } else if (it.side === "top") {
-      const gy = Math.max(-CALLOUT.elbow, my + CALLOUT.markerRadius)
-      pts = [[ax, ay], [ax, gy], [mx, gy], [mx, my + CALLOUT.markerRadius]]
-    } else {
-      const gy = Math.min(frame.height + CALLOUT.elbow, my - CALLOUT.markerRadius)
-      pts = [[ax, ay], [ax, gy], [mx, gy], [mx, my - CALLOUT.markerRadius]]
-    }
-    return {
-      id: it.id,
-      content: it.content,
-      label: it.label,
-      ax,
-      ay,
-      mx,
-      my,
-      d: calloutRoundedPath(calloutSimplify(pts), CALLOUT.corner),
-      arc: undefined as string | undefined,
-    }
-  })
-
-  return [...edgeBuilt, ...buildCornerCallouts(cornerItems, geo)]
-}
-
-// Trace a target's rounded corner as an outer stroke: a quarter-circle arc sat a
-// small gap OUTSIDE the corner (concentric — outer radius = inner radius + gap),
-// with short straight tails continuing along each edge. `anchor` is the arc's 45°
-// midpoint where the radius leader connects.
-function calloutCornerArc(t: CalloutBox, corner: CalloutCorner) {
+function calloutCornerArc(t: CalloutBox, corner: CalloutCorner, geometry: CalloutGeometry) {
   const r = Math.max(
     0,
-    Math.min(t.radius, (t.right - t.left) / 2, (t.bottom - t.top) / 2)
+    Math.min(t.radii[corner], (t.right - t.left) / 2, (t.bottom - t.top) / 2)
   )
   if (r < 0.5) return null
   const { left, top, right, bottom } = t
   const k = Math.SQRT1_2 // cos/sin 45°
   // Push the stroke's centreline past a clear gap so the whole stroke reads OUTSIDE
   // the surface with the gap intact.
-  const off = CALLOUT.cornerGap + CALLOUT.cornerStroke / 2
+  const off = geometry.arcGap + geometry.arcStroke / 2
   const R = r + off
-  const ext = CALLOUT.cornerEdge
   let arc: string
   let anchor: [number, number]
   if (corner === "top-left") {
     const cx = left + r
     const cy = top + r
-    arc = `M ${left - off} ${cy + ext} L ${left - off} ${cy} A ${R} ${R} 0 0 1 ${cx} ${top - off} L ${cx + ext} ${top - off}`
+    arc = `M ${left - off} ${cy} A ${R} ${R} 0 0 1 ${cx} ${top - off}`
     anchor = [cx - R * k, cy - R * k]
   } else if (corner === "top-right") {
     const cx = right - r
     const cy = top + r
-    arc = `M ${cx - ext} ${top - off} L ${cx} ${top - off} A ${R} ${R} 0 0 1 ${right + off} ${cy} L ${right + off} ${cy + ext}`
+    arc = `M ${cx} ${top - off} A ${R} ${R} 0 0 1 ${right + off} ${cy}`
     anchor = [cx + R * k, cy - R * k]
   } else if (corner === "bottom-right") {
     const cx = right - r
     const cy = bottom - r
-    arc = `M ${right + off} ${cy - ext} L ${right + off} ${cy} A ${R} ${R} 0 0 1 ${cx} ${bottom + off} L ${cx - ext} ${bottom + off}`
+    arc = `M ${right + off} ${cy} A ${R} ${R} 0 0 1 ${cx} ${bottom + off}`
     anchor = [cx + R * k, cy + R * k]
   } else {
     const cx = left + r
     const cy = bottom - r
-    arc = `M ${cx + ext} ${bottom + off} L ${cx} ${bottom + off} A ${R} ${R} 0 0 1 ${left - off} ${cy} L ${left - off} ${cy - ext}`
+    arc = `M ${cx} ${bottom + off} A ${R} ${R} 0 0 1 ${left - off} ${cy}`
     anchor = [cx - R * k, cy + R * k]
   }
   return { arc, anchor, r: R }
 }
 
-// Corner callouts: highlight the arc and float a radius chip out along the
-// diagonal, its straight leader anchored on the arc's midpoint.
-function buildCornerCallouts(
-  items: (AnnotationCalloutItem & { side: string })[],
-  geo: CalloutGeometry
-) {
-  const { targets, bounds } = geo
-  return items
-    .map((it) => {
-      const t = targets[it.target]
-      if (!t) return null
-      const corner = it.side as CalloutCorner
-      const geoCorner = calloutCornerArc(t, corner)
-      if (!geoCorner) return null
-      const { arc, anchor } = geoCorner
-      const sx = corner.endsWith("left") ? -1 : 1
-      const sy = corner.startsWith("top") ? -1 : 1
-      const k = Math.SQRT1_2
-      const half = it.label ? CALLOUT_HALF.label : CALLOUT_HALF.marker
-      let mx = anchor[0] + sx * k * CALLOUT.gap
-      let my = anchor[1] + sy * k * CALLOUT.gap
-      if (bounds) {
-        mx = Math.min(Math.max(mx, bounds.left + half.w), bounds.right - half.w)
-        my = Math.min(Math.max(my, bounds.top + half.h), bounds.bottom - half.h)
-      }
-      // A straight leader from the arc to the chip, pulled back off the marker.
-      const dx = mx - anchor[0]
-      const dy = my - anchor[1]
-      const len = Math.hypot(dx, dy) || 1
-      const ex = mx - (dx / len) * CALLOUT.markerRadius
-      const ey = my - (dy / len) * CALLOUT.markerRadius
-      return {
-        id: it.id,
-        content: it.content,
-        label: it.label,
-        ax: anchor[0],
-        ay: anchor[1],
-        mx,
-        my,
-        d: `M ${anchor[0].toFixed(1)} ${anchor[1].toFixed(1)} L ${ex.toFixed(1)} ${ey.toFixed(1)}`,
-        arc,
-      }
-    })
-    .filter((v): v is NonNullable<typeof v> => v !== null)
+function calloutHighlightBounds(target: CalloutBox, padding: number) {
+  return {
+    left: target.left - padding,
+    top: target.top - padding,
+    right: target.right + padding,
+    bottom: target.bottom + padding,
+    radius: target.radius + padding,
+  }
 }
 
-/**
- * AnnotationCallouts — a measured, reusable numbered-callout overlay. Mark
- * target elements inside a relatively-positioned container with `data-annotate`,
- * then declare `items` referencing those keys. Each leader anchors on its
- * element's edge midpoint (subdividing a shared edge), stacks its number/label
- * in the margin with a rounded elbow, and on hover highlights itself, outlines
- * its element, and fades the rest to faint. Render it as a child of the container.
- */
+function buildAnnotationCallouts(items: AnnotationCalloutItem[], geo: CalloutGeometry) {
+  const anchors = items.flatMap(item => {
+    const target = geo.targets[item.target]
+    const size = geo.labels[String(item.id)]
+    if (!size || !target) return []
+    const peers = items.filter(peer => peer.target === item.target && peer.side === item.side)
+    const fraction = (peers.findIndex(peer => peer.id === item.id) + 0.5) / peers.length
+    const highlight = calloutHighlightBounds(target, geo.outlinePad)
+    const corner = CALLOUT_CORNERS.has(item.side) ? calloutCornerArc(target, item.side as CalloutCorner, geo) : null
+    const anchor: [number, number] = corner?.anchor ?? (
+      item.side === "left" ? [highlight.left, highlight.top + (highlight.bottom - highlight.top) * fraction] :
+      item.side === "right" ? [highlight.right, highlight.top + (highlight.bottom - highlight.top) * fraction] :
+      item.side === "top" ? [highlight.left + (highlight.right - highlight.left) * fraction, highlight.top] :
+      item.side === "bottom" ? [highlight.left + (highlight.right - highlight.left) * fraction, highlight.bottom] :
+      [item.side.endsWith("left") ? highlight.left : highlight.right, item.side.startsWith("top") ? highlight.top : highlight.bottom]
+    )
+    const preferredSide = item.placement ?? (CALLOUT_CORNERS.has(item.side)
+      ? item.side.startsWith("top") ? "top" : "bottom"
+      : item.side as CalloutSide)
+    const automaticCorner = CALLOUT_CORNERS.has(item.side) && !item.placement && !item.locked
+    const adjacentSide: CalloutSide = item.side.endsWith("left") ? "left" : "right"
+    const edgeAnchors: Partial<Record<AnnotationSide, [number, number]>> | undefined =
+      CALLOUT_CORNERS.has(item.side) ? undefined : {
+        left: [highlight.left, highlight.top + (highlight.bottom - highlight.top) * fraction],
+        right: [highlight.right, highlight.top + (highlight.bottom - highlight.top) * fraction],
+        top: [highlight.left + (highlight.right - highlight.left) * fraction, highlight.top],
+        bottom: [highlight.left + (highlight.right - highlight.left) * fraction, highlight.bottom],
+      }
+    return [{ ...item, ...size, anchor, preferredSide, arc: corner?.arc,
+      anchors: edgeAnchors,
+      preferRoom: automaticCorner,
+      allowedSides: item.allowedSides ?? (automaticCorner ? [adjacentSide] : undefined) }]
+  })
+  const layout = placeAnnotations({
+    items: anchors,
+    bounds: geo.bounds ?? { left: -geo.distance * 2, top: -geo.distance * 2,
+      right: geo.frame.width + geo.distance * 2, bottom: geo.frame.height + geo.distance * 2 },
+    specimen: geo.specimen,
+    obstacles: geo.obstacles,
+    gap: geo.clearance,
+    distance: geo.distance,
+    minDistance: geo.minDistance,
+  })
+  return {
+    unplaced: layout.unplaced,
+    callouts: layout.placed.map(placement => {
+      const anchor = anchors.find(anchor => anchor.id === placement.id)!
+      return { ...anchor, ax: placement.points[0][0], ay: placement.points[0][1], side: placement.side,
+        mx: (placement.rect.left + placement.rect.right) / 2,
+        my: (placement.rect.top + placement.rect.bottom) / 2,
+        d: calloutRoundedPath(calloutSimplify(placement.points), geo.corner) }
+    }),
+  }
+}
+
 function AnnotationCallouts({
   items,
   active = true,
+  onLayoutOverflow,
   className,
   ...props
-}: Omit<React.ComponentProps<"div">, "content"> & {
+}: Omit<React.ComponentProps<"div">, "content"> & AnnotationColorProps & {
   items: AnnotationCalloutItem[]
   active?: boolean
+  onLayoutOverflow?: (ids: AnnotationCalloutItem["id"][]) => void
 }) {
   const layerRef = React.useRef<HTMLDivElement>(null)
+  const measurementRef = React.useRef<HTMLDivElement>(null)
   const [geo, setGeo] = React.useState<CalloutGeometry | null>(null)
   const [hovered, setHovered] = React.useState<AnnotationCalloutItem["id"] | null>(null)
+  const [selected, setSelected] = React.useState<AnnotationCalloutItem["id"] | null>(null)
+  const [previousActive, setPreviousActive] = React.useState(active)
+  if (previousActive !== active) {
+    setPreviousActive(active)
+    setSelected(null)
+    setHovered(null)
+  }
   const [lastHovered, setLastHovered] = React.useState<
     AnnotationCalloutItem["id"] | null
   >(items[0]?.id ?? null)
 
+  React.useEffect(() => {
+    if (selected === null || !active) return
+    const dismissOutside = (event: PointerEvent) => {
+      const target = event.target
+      if (target instanceof Element && layerRef.current?.contains(target.closest("[data-callout-id]"))) return
+      setSelected(null)
+    }
+    const dismissOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      setSelected(null)
+      setHovered(null)
+    }
+    document.addEventListener("pointerdown", dismissOutside, true)
+    document.addEventListener("keydown", dismissOnEscape)
+    return () => {
+      document.removeEventListener("pointerdown", dismissOutside, true)
+      document.removeEventListener("keydown", dismissOnEscape)
+    }
+  }, [selected, active])
+
   React.useLayoutEffect(() => {
-    const container = layerRef.current?.parentElement
-    if (!container) return
+    const layer = layerRef.current
+    const measurement = measurementRef.current
+    const container = layer?.parentElement
+    if (!container || !layer || !measurement) return
 
     const measure = () => {
       const base = container.getBoundingClientRect()
+      const containerStyle = getComputedStyle(container)
+      const scaleX = base.width / parseFloat(containerStyle.width) || 1
+      const scaleY = base.height / parseFloat(containerStyle.height) || 1
       const toRect = (el: Element): CalloutRect => {
         const r = el.getBoundingClientRect()
         return {
-          left: r.left - base.left,
-          top: r.top - base.top,
-          right: r.right - base.left,
-          bottom: r.bottom - base.top,
+          left: (r.left - base.left) / scaleX,
+          top: (r.top - base.top) / scaleY,
+          right: (r.right - base.left) / scaleX,
+          bottom: (r.bottom - base.top) / scaleY,
         }
       }
 
+      const tokenStyle = getComputedStyle(measurement)
+      const clearance = parseFloat(tokenStyle.paddingTop)
+      const distance = parseFloat(tokenStyle.paddingRight)
+      const minDistance = parseFloat(tokenStyle.paddingLeft)
+      const margin = parseFloat(tokenStyle.paddingBottom)
+      const corner = parseFloat(tokenStyle.borderRadius)
+      const outlinePad = parseFloat(tokenStyle.marginBottom)
+      const arcGap = parseFloat(tokenStyle.marginLeft)
+      const arcStroke = parseFloat(tokenStyle.marginRight)
       const targets: Record<string, CalloutBox> = {}
-      container.querySelectorAll<HTMLElement>("[data-annotate]").forEach((el) => {
+      const targetElements = [...container.querySelectorAll<HTMLElement>("[data-annotate]")]
+      targetElements.forEach((el) => {
         const key = el.dataset.annotate
         if (!key) return
+        const style = getComputedStyle(el)
         targets[key] = {
           ...toRect(el),
-          radius: Number.parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0,
+          radius: Number.parseFloat(style.borderTopLeftRadius) || 0,
+          radii: {
+            "top-left": parseFloat(style.borderTopLeftRadius) || 0,
+            "top-right": parseFloat(style.borderTopRightRadius) || 0,
+            "bottom-left": parseFloat(style.borderBottomLeftRadius) || 0,
+            "bottom-right": parseFloat(style.borderBottomRightRadius) || 0,
+          },
         }
       })
 
       // Keep markers inside the clipping ancestor (the preview canvas) and off
       // any element opted out with data-annotate-avoid (a toolbar, a checkbox…).
-      const clip = calloutClipAncestor(container)
+      const canvas = container.closest<HTMLElement>('[data-slot="canvas"]')
+      const clip = canvas ?? calloutClipAncestor(container)
       const bounds = clip
         ? (() => {
             const b = toRect(clip)
             return {
-              left: b.left + CALLOUT.boundsMargin,
-              top: b.top + CALLOUT.boundsMargin,
-              right: b.right - CALLOUT.boundsMargin,
-              bottom: b.bottom - CALLOUT.boundsMargin,
+              left: b.left + margin,
+              top: b.top + margin,
+              right: b.right - margin,
+              bottom: b.bottom - margin,
             }
           })()
         : null
+      if (bounds) {
+        for (let ancestor = container.parentElement; ancestor && ancestor !== clip; ancestor = ancestor.parentElement) {
+          const style = getComputedStyle(ancestor)
+          const rect = toRect(ancestor)
+          if (/(auto|scroll|hidden|clip)/.test(style.overflowX)) {
+            bounds.left = Math.max(bounds.left, rect.left + margin)
+            bounds.right = Math.min(bounds.right, rect.right - margin)
+          }
+          if (/(auto|scroll|hidden|clip)/.test(style.overflowY)) {
+            bounds.top = Math.max(bounds.top, rect.top + margin)
+            bounds.bottom = Math.min(bounds.bottom, rect.bottom - margin)
+          }
+        }
+        const grid = canvas?.querySelector('[data-slot="canvas-grid"]')
+        const metrics = grid?.querySelector('.canvas-measure__metrics')
+        if (grid && metrics) {
+          const ruler = parseFloat(getComputedStyle(metrics).height)
+          const gridRect = toRect(grid)
+          bounds.left = Math.max(bounds.left, gridRect.left + ruler + margin)
+          bounds.top = Math.max(bounds.top, gridRect.top + ruler + margin)
+        }
+      }
       const obstacles: CalloutRect[] = []
       ;(clip ?? container)
-        .querySelectorAll<HTMLElement>("[data-annotate-avoid]")
-        .forEach((el) => obstacles.push(toRect(el)))
+        .querySelectorAll<HTMLElement>('[data-annotate-avoid], [data-slot="toolbar"], button, input, select, textarea, label, a[href], [role="checkbox"]')
+        .forEach(el => {
+          if (!layer.contains(el) && !el.contains(container)) obstacles.push(toRect(el))
+        })
+      const rootTargets = targetElements.filter(el => {
+        const parent = el.parentElement?.closest("[data-annotate]")
+        return !parent || !container.contains(parent)
+      })
+      const targetRects = rootTargets.map(toRect)
+      const specimen = targetRects.length ? {
+        left: Math.min(...targetRects.map(rect => rect.left)),
+        top: Math.min(...targetRects.map(rect => rect.top)),
+        right: Math.max(...targetRects.map(rect => rect.right)),
+        bottom: Math.max(...targetRects.map(rect => rect.bottom)),
+      } : { left: 0, top: 0, right: base.width / scaleX, bottom: base.height / scaleY }
+      const labels: CalloutGeometry["labels"] = {}
+      measurement.querySelectorAll<HTMLElement>("[data-measure-id]").forEach(el => {
+        const rect = el.getBoundingClientRect()
+        labels[el.dataset.measureId!] = { width: rect.width / scaleX, height: rect.height / scaleY }
+      })
 
-      setGeo({
-        frame: { width: base.width, height: base.height },
+      const next = {
+        frame: { width: base.width / scaleX, height: base.height / scaleY },
         targets,
         bounds,
         obstacles,
-      })
+        labels, specimen, clearance, distance, minDistance, corner, outlinePad, arcGap, arcStroke,
+      }
+      setGeo(previous => JSON.stringify(previous) === JSON.stringify(next) ? previous : next)
     }
 
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(container)
-    const clip = calloutClipAncestor(container)
+    container.querySelectorAll<HTMLElement>("[data-annotate]").forEach(el => observer.observe(el))
+    measurement.querySelectorAll<HTMLElement>("[data-measure-id]").forEach(el => observer.observe(el))
+    const clip = container.closest<HTMLElement>('[data-slot="canvas"]') ?? calloutClipAncestor(container)
     if (clip) observer.observe(clip)
-    return () => observer.disconnect()
-  }, [])
+    let frame = 0
+    const schedule = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(measure)
+    }
+    const mutation = new MutationObserver(records => {
+      if (records.some(record => !layer.contains(record.target))) schedule()
+    })
+    mutation.observe(clip ?? container, { attributes: true, childList: true, characterData: true, subtree: true })
+    container.addEventListener("transitionend", schedule)
+    window.addEventListener("resize", schedule)
+    return () => {
+      observer.disconnect()
+      mutation.disconnect()
+      cancelAnimationFrame(frame)
+      container.removeEventListener("transitionend", schedule)
+      window.removeEventListener("resize", schedule)
+    }
+  }, [items])
 
-  const built = geo ? buildAnnotationCallouts(items, geo) : []
+  const layout = geo ? buildAnnotationCallouts(items, geo) : { callouts: [], unplaced: [] }
+  const built = layout.callouts
+  const overflowKey = JSON.stringify(layout.unplaced)
+  React.useEffect(() => {
+    onLayoutOverflow?.(JSON.parse(overflowKey))
+  }, [overflowKey, onLayoutOverflow])
   const outlineItem = items.find((it) => it.id === lastHovered)
   const outline = geo && outlineItem ? geo.targets[outlineItem.target] : undefined
+  const selectedItem = built.find(item => item.id === selected)
+  const selectedOutline = geo && selectedItem ? geo.targets[selectedItem.target] : undefined
 
   return (
-    <AnnotationLayer ref={layerRef} active={active} className={className} {...props}>
-      {outline ? (
-        <div
-          aria-hidden="true"
+    <AnnotationLayer ref={layerRef} active={active} inert={!active} data-layout-status={layout.unplaced.length ? "insufficient-space" : "placed"} className={className} {...props}>
+      <div ref={measurementRef} className="annotation-measurements" aria-hidden="true">
+        {items.map(item => item.label ? (
+          <AnnotationLabel key={item.id} data-measure-id={String(item.id)}>{item.content}</AnnotationLabel>
+        ) : (
+          <AnnotationMarker key={item.id} data-measure-id={String(item.id)}>{item.content}</AnnotationMarker>
+        ))}
+      </div>
+      {active && layout.unplaced.length ? (
+        <span role="status" className="sr-only">{layout.unplaced.length} annotations need more canvas space.</span>
+      ) : null}
+      {selectedOutline ? (
+        <AnnotationConnector
+          data-selected-bounds={String(selected)}
+          kind={selectedItem?.kind}
+          outline={calloutHighlightBounds(selectedOutline, geo?.outlinePad ?? 0)}
+        />
+      ) : null}
+      {outline && outlineItem?.target !== selectedItem?.target ? (
+        <AnnotationConnector
+          kind={outlineItem?.kind}
+          outline={calloutHighlightBounds(outline, geo?.outlinePad ?? 0)}
           className={cn(
-            "pointer-events-none absolute border border-dotted border-destructive transition-opacity duration-(--speed-swift) ease-(--ease-settle)",
+            "transition-opacity duration-(--speed-swift) ease-(--ease-settle)",
             hovered !== null ? "opacity-100" : "opacity-0"
           )}
-          style={{
-            left: outline.left - CALLOUT.outlinePad,
-            top: outline.top - CALLOUT.outlinePad,
-            width: outline.right - outline.left + CALLOUT.outlinePad * 2,
-            height: outline.bottom - outline.top + CALLOUT.outlinePad * 2,
-            borderRadius: outline.radius + CALLOUT.outlinePad,
-          }}
         />
       ) : null}
       {built.map((c) => {
-        const dimmed = hovered !== null && hovered !== c.id
+        const isSelected = selectedItem?.id === c.id
+        const isHovered = hovered === c.id
+        const dimmed = (hovered !== null || selectedItem !== undefined) && !isHovered && !isSelected
         const fade = cn(
           "transition-opacity duration-(--speed-swift) ease-(--ease-settle)",
           dimmed && "opacity-20"
         )
-        const isActive = hovered === c.id
         const hover = {
           onPointerEnter: () => {
             setLastHovered(c.id)
             setHovered(c.id)
           },
           onPointerLeave: () => setHovered(null),
+          onFocus: (event: React.FocusEvent<HTMLElement>) => {
+            if (!event.currentTarget.matches(":focus-visible")) return
+            setLastHovered(c.id)
+            setHovered(c.id)
+          },
+          onBlur: () => setHovered(null),
+          onClick: () => setSelected(c.id),
+          "aria-pressed": isSelected,
+          "aria-label": typeof c.content === "number" ? `Annotation ${c.content}` : undefined,
+          "data-highlighted": isSelected || isHovered,
         }
+        const interactionStyle = "cursor-pointer data-[highlighted=true]:bg-(--annotation-highlight-background) data-[highlighted=true]:text-(--annotation-highlight-foreground) active:bg-(--annotation-pressed-background)! active:text-(--annotation-highlight-foreground)! focus-visible:outline-solid focus-visible:outline-(length:--annotation-line-width) focus-visible:outline-(--annotation-color) focus-visible:outline-offset-(--annotation-outline-inset)"
         return (
           <React.Fragment key={c.id}>
-            <AnnotationConnector d={c.d} arc={c.arc} anchor={[c.ax, c.ay]} className={fade} />
+            <AnnotationConnector kind={c.kind} d={c.d} arc={c.arc} anchor={[c.ax, c.ay]} className={fade} />
             <Annotation
+              kind={c.kind}
+              data-callout-id={String(c.id)}
+              data-placement={c.side}
               className={cn("-translate-x-1/2 -translate-y-1/2", fade)}
               style={{ left: c.mx, top: c.my }}
             >
               {c.label ? (
                 <AnnotationLabel
+                  asChild
                   {...hover}
                   className={cn(
                     "relative transition-colors duration-(--speed-swift) after:absolute after:-inset-1",
-                    isActive && "border-destructive bg-destructive text-white"
+                    interactionStyle
                   )}
                 >
-                  {c.content}
+                  <button type="button">{c.content}</button>
                 </AnnotationLabel>
               ) : (
                 <AnnotationMarker
+                  asChild
                   {...hover}
                   className={cn(
                     "relative transition-colors duration-(--speed-swift) after:absolute after:-inset-2",
-                    isActive && "bg-destructive text-white"
+                    interactionStyle
                   )}
                 >
-                  {c.content}
+                  <button type="button">{c.content}</button>
                 </AnnotationMarker>
               )}
             </Annotation>
@@ -729,4 +750,4 @@ export {
   AnnotationCallouts,
   annotationMarkerVariants,
 }
-export type { AnnotationCalloutItem }
+export type { AnnotationCalloutItem, AnnotationKind }

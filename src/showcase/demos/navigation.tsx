@@ -109,6 +109,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Page, PageScroll, PageContent } from "@/components/ui/page"
 
 function PaginationSimpleDemo() {
   const [page, setPage] = useState(2)
@@ -480,23 +481,25 @@ function SidebarFloatingTriggerDemo() {
         persist={false}
         shortcut={false}
         defaultOpen={false}
-        className="min-h-full"
+        className="h-full min-h-0"
       >
         <Sidebar collapsible="hidden">
           <SidebarDemoBrand />
           <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
           <SidebarDemoAccount />
         </Sidebar>
-        <SidebarInset className="min-h-full">
+        <SidebarInset className="min-h-0">
           <SidebarTrigger placement="floating" />
-          <div className="flex flex-col gap-3 p-4 ps-16">
-            <p className="text-muted-foreground text-sm">
-              This shell has no header to host the toggle, so the trigger floats
-              over the content instead. Open the panel and it disappears — a
-              sidebar you can see is already its own way back.
-            </p>
-            <SidebarStateReadout />
-          </div>
+          <Page>
+            <PageScroll>
+              <PageContent
+                animate={false}
+                className="px-4 [--page-pad-block-start:var(--sidebar-floating-trigger-inset)]"
+              >
+                <SidebarStateReadout />
+              </PageContent>
+            </PageScroll>
+          </Page>
         </SidebarInset>
       </SidebarProvider>
     </div>
@@ -1542,7 +1545,7 @@ export function SidebarDemo() {
       {
         name: "Floating Trigger",
         description:
-          "Where the toggle lives is the host's shape, not a call-site decision. A shell with a header keeps the toggle inline in it; a shell without one gets placement=\"floating\", which lifts the trigger into a toolbar over the content. The component hides it whenever the panel is still in layout, so the two never both appear.",
+          "A compact, neutral navigation control floating over a full-height page. Initial content padding clears the button, then scrolls away; the scroll fade stays at the page edge. The trigger fades out when navigation opens, hands keyboard focus into the panel, and provides a return target when it closes.",
         Demo: SidebarFloatingTriggerDemo,
         layout: "wide",
       },

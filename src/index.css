@@ -175,6 +175,13 @@
     --speed-slow: 450ms;
     /* Repeating cadence rather than a transition, e.g. a blinking caret. */
     --speed-pulse: 1000ms;
+    --button-group-choice-icon-size: calc(var(--spacing) * 4);
+    --button-group-choice-icon-size-sm: calc(var(--spacing) * 3.5);
+    --button-group-choice-icon-size-xs: calc(var(--spacing) * 3);
+    --button-group-choice-gap: calc(var(--spacing) * 1.5);
+    --button-group-choice-gap-small: var(--spacing);
+    --button-group-choice-speed: var(--speed-swift);
+    --button-group-choice-ease: var(--ease-glide);
     /* glide decelerates into place, settle is the neutral curve, exit accelerates away. */
     --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
@@ -474,6 +481,14 @@
     --sidebar-snap-threshold: calc(var(--spacing) * 34);
     /* The header is as tall as the bar is wide, so the collapsed corner is square. */
     --sidebar-header-height: var(--sidebar-width-icon);
+    --sidebar-floating-trigger-size: calc(var(--spacing) * 12);
+    --sidebar-floating-trigger-icon-size: calc(var(--spacing) * 6);
+    --sidebar-floating-trigger-radius: var(--radius-xl);
+    --sidebar-floating-trigger-inset: calc(var(--spacing) * 4);
+    --sidebar-floating-trigger-clearance: calc(
+      var(--sidebar-floating-trigger-size) + var(--sidebar-floating-trigger-inset) * 2
+    );
+    --sidebar-floating-trigger-elevation: var(--elevation-raised);
     --sidebar-resize-handle-width: calc(var(--spacing) * 4);
     --sidebar-resize-handle-offset: calc(var(--sidebar-resize-handle-width) / -2);
     /* Keeps the line clear of an inset card's rounded corner (8px margin + 14px radius). */
@@ -587,9 +602,88 @@
     --site-header-ease: var(--ease-glide);
     --showcase-header-height: calc(var(--spacing) * 14);
     --showcase-copy-width: calc(var(--spacing) * 192);
-    --showcase-preview-min-height: calc(var(--spacing) * 72);
-    --showcase-preview-viewport-height: calc(var(--spacing) * 112);
-    --showcase-preview-padding: calc(var(--spacing) * 8);
+    --canvas-min-height: calc(var(--spacing) * 72);
+    --annotation-clearance: calc(var(--spacing) * 2);
+    --annotation-label-distance-min: calc(var(--spacing) * 4);
+    --annotation-label-distance-max: calc(var(--spacing) * 16);
+    --annotation-boundary-inset: calc(var(--spacing) * 6);
+    --annotation-label-reserve: calc(var(--spacing) * 10);
+    --annotation-connector-radius: var(--radius-lg);
+    --annotation-outline-inset: var(--spacing);
+    --annotation-line-width: calc(var(--spacing) * 0.375);
+    --annotation-line-dash: calc(var(--spacing) * 0.25);
+    --annotation-line-gap: calc(var(--spacing) * 1.25);
+    --annotation-anchor-radius: calc(var(--spacing) * 0.75);
+    --annotation-corner-gap: var(--spacing);
+    --annotation-corner-stroke: calc(var(--spacing) * 0.75);
+    --annotation-bounds-color: var(--badge-blue-foreground);
+    --annotation-padding-color: var(--badge-green-foreground);
+    --annotation-border-color: oklch(0.48 0.1 90);
+    --annotation-margin-color: oklch(0.5 0.13 55);
+    --annotation-gap-color: var(--badge-purple-foreground);
+    --annotation-color: var(--annotation-bounds-color);
+    --annotation-label-background: var(--background);
+    --annotation-fill-opacity: 12%;
+    --annotation-pressed-mix: 85%;
+    --annotation-highlight-foreground: var(--primary-foreground);
+    --canvas-viewport-height: calc(var(--spacing) * 112);
+    --canvas-padding: calc(var(--spacing) * 8);
+    --canvas-annotation-padding-block: max(
+      calc(var(--spacing) * 20),
+      calc(var(--canvas-measure-ruler-size) + var(--annotation-boundary-inset) +
+        var(--annotation-label-distance-min) + var(--annotation-label-reserve))
+    );
+    --canvas-radius: var(--radius-xl);
+    --canvas-background: var(--background);
+    --canvas-border-color: var(--border);
+    --canvas-border-width: 1px;
+    --canvas-grid-size: calc(var(--spacing) * 6);
+    --canvas-grid-dot: 1px;
+    --canvas-grid-color: color-mix(in oklab, var(--border) 70%, transparent);
+    --canvas-measure-step: var(--spacing);
+    --canvas-measure-major-every: 5;
+    --canvas-measure-label-step: calc(var(--canvas-measure-step) * var(--canvas-measure-major-every) * 2);
+    --canvas-measure-ruler-size: calc(var(--spacing) * 8);
+    --canvas-measure-tick-size: calc(var(--spacing) * 2);
+    --canvas-measure-marker-size: calc(var(--spacing) * 1.5);
+    --cursor-follower-offset: calc(var(--spacing) * 4);
+    --cursor-follower-inset: calc(var(--spacing) * 2);
+    --cursor-follower-padding-inline: calc(var(--spacing) * 2);
+    --cursor-follower-padding-block: var(--spacing);
+    --cursor-follower-radius: var(--radius-4xl);
+    --cursor-follower-shadow: var(--elevation-raised);
+    --cursor-follower-background: var(--popover);
+    --cursor-follower-foreground: var(--popover-foreground);
+    --cursor-follower-border: var(--border);
+    --cursor-follower-border-width: 1px;
+    --cursor-follower-accent: var(--primary);
+    --cursor-follower-on-accent: var(--primary-foreground);
+    --cursor-follower-font-size: var(--text-xs);
+    --cursor-follower-line-height: var(--text-xs--line-height);
+    --cursor-follower-layer: 20;
+    --cursor-follower-origin-x: 0px;
+    --cursor-follower-origin-y: 0px;
+    --canvas-measure-stroke: 1px;
+    --canvas-measure-grid-layer: 0;
+    --canvas-measure-cursor-layer: calc(var(--cursor-follower-layer) + 1);
+    --canvas-measure-font-size: calc(var(--text-xs) * 5 / 6);
+    --canvas-measure-accent: var(--primary);
+    --canvas-measure-guide-color: color-mix(in oklab, var(--canvas-measure-accent) 20%, transparent);
+    --canvas-measure-major-color: color-mix(in oklab, var(--foreground) 12%, transparent);
+    --canvas-measure-minor-color: color-mix(in oklab, var(--foreground) 2%, transparent);
+    --canvas-measure-label-color: var(--muted-foreground);
+    --canvas-measure-ruler-background: var(--background);
+    --canvas-workbench-height: calc(var(--spacing) * 96);
+    --canvas-region-gap: calc(var(--spacing) * 20);
+    --canvas-footer-gap: calc(var(--spacing) * 3);
+    --canvas-footer-font-size: var(--text-xs);
+    --canvas-footer-line-height: var(--text-xs--line-height);
+    --canvas-application-padding: calc(var(--spacing) * 4);
+    --canvas-application-radius: calc(var(--radius-3xl) + var(--canvas-application-padding));
+    --canvas-application-height: calc(100svh - var(--spacing) * 32);
+    --showcase-preview-min-height: var(--canvas-min-height);
+    --showcase-preview-viewport-height: var(--canvas-viewport-height);
+    --showcase-preview-padding: var(--canvas-padding);
     --showcase-block-preview-padding: calc(var(--spacing) * 4);
     --showcase-block-surface-radius: var(--radius-3xl);
     --showcase-block-preview-radius: calc(
@@ -599,8 +693,8 @@
       100svh - var(--showcase-header-row-height) -
         var(--showcase-page-gutter) * 2
     );
-    --showcase-preview-grid: calc(var(--spacing) * 6);
-    --showcase-preview-dot: 1px;
+    --showcase-preview-grid: var(--canvas-grid-size);
+    --showcase-preview-dot: var(--canvas-grid-dot);
     --showcase-page-gutter: clamp(calc(var(--spacing) * 4), 4vw, calc(var(--spacing) * 10));
     --showcase-page-block-padding: calc(var(--spacing) * 10);
     --showcase-header-row-height: calc(
@@ -608,10 +702,7 @@
     );
     --showcase-shell-content-inset: calc(var(--spacing) * 4);
     --showcase-shell-divider-size: 1px;
-    --showcase-content-start: calc(
-      var(--showcase-header-row-height) + var(--showcase-shell-divider-size) +
-        var(--showcase-shell-content-inset)
-    );
+    --showcase-content-start: var(--showcase-shell-content-inset);
     --showcase-section-gap: calc(var(--spacing) * 16);
     --showcase-example-gap: calc(var(--spacing) * 5);
     --showcase-sidebar-width: calc(var(--spacing) * 64);
@@ -715,6 +806,8 @@
     --badge-purple-foreground: oklch(0.86 0.11 300);
     --badge-red: oklch(0.31 0.07 var(--destructive-hue));
     --badge-red-foreground: oklch(0.86 0.1 var(--destructive-hue));
+    --annotation-border-color: oklch(0.86 0.14 90);
+    --annotation-margin-color: oklch(0.84 0.12 55);
     --presence-available: oklch(0.72 0.17 149);
     --presence-away: oklch(0.81 0.15 75);
     --border: oklch(1 0 0 / 10%);
@@ -2152,6 +2245,13 @@
     row-gap: var(--page-content-gap);
   }
 
+  [data-slot="sidebar-inset"]:has(> [data-slot="sidebar-trigger"][data-placement="floating"])
+    > [data-slot="page"] > [data-slot="page-scroll"] > [data-slot="page-content"] {
+    padding-block-start: calc(
+      var(--page-pad-block-start) + var(--sidebar-floating-trigger-clearance)
+    );
+  }
+
   @keyframes page-enter {
     from {
       opacity: 0;
@@ -2363,58 +2463,287 @@
     min-block-size: 0;
   }
 
-  .card-preview {
+  .button-group-choice {
+    --choice-icon-size: var(--button-group-choice-icon-size);
+    --choice-gap: var(--button-group-choice-gap);
+    --choice-label-offset: calc((var(--choice-icon-size) + var(--choice-gap)) / 2);
+    gap: var(--choice-gap);
+  }
+
+  .button-group-choice[data-size="sm"] {
+    --choice-icon-size: var(--button-group-choice-icon-size-sm);
+    --choice-gap: var(--button-group-choice-gap-small);
+  }
+
+  .button-group-choice[data-size="xs"] {
+    --choice-icon-size: var(--button-group-choice-icon-size-xs);
+    --choice-gap: var(--button-group-choice-gap-small);
+  }
+
+  .button-group-choice > .button-group-choice__check {
+    width: var(--choice-icon-size);
+    height: var(--choice-icon-size);
+    opacity: 0;
+    transition: opacity var(--button-group-choice-speed) var(--button-group-choice-ease);
+  }
+
+  .button-group-choice__label {
+    transform: translateX(calc(-1 * var(--choice-label-offset)));
+    transition: transform var(--button-group-choice-speed) var(--button-group-choice-ease);
+  }
+
+  .button-group-choice[data-state="on"] > .button-group-choice__check {
+    opacity: 1;
+  }
+
+  .button-group-choice[data-state="on"] > .button-group-choice__label {
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .button-group-choice > .button-group-choice__check,
+    .button-group-choice > .button-group-choice__label {
+      transition: none;
+    }
+  }
+
+  [data-slot^="annotation"] {
+    --annotation-fill: color-mix(in oklab, var(--annotation-color) var(--annotation-fill-opacity), transparent);
+    --annotation-highlight-background: var(--annotation-color);
+    --annotation-pressed-background: color-mix(in oklab, var(--annotation-color) var(--annotation-pressed-mix), var(--foreground));
+  }
+
+  [data-annotation-kind="bounds"] {
+    --annotation-color: var(--annotation-bounds-color);
+  }
+
+  [data-annotation-kind="padding"] {
+    --annotation-color: var(--annotation-padding-color);
+  }
+
+  [data-annotation-kind="border"] {
+    --annotation-color: var(--annotation-border-color);
+  }
+
+  [data-annotation-kind="margin"] {
+    --annotation-color: var(--annotation-margin-color);
+  }
+
+  [data-annotation-kind="gap"] {
+    --annotation-color: var(--annotation-gap-color);
+  }
+
+  .annotation-measurements {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    align-items: flex-start;
+    width: max-content;
+    padding: var(--annotation-clearance) var(--annotation-label-distance-max) var(--annotation-boundary-inset) var(--annotation-label-distance-min);
+    border-radius: var(--annotation-connector-radius);
+    margin: 0 var(--annotation-corner-stroke) var(--annotation-outline-inset) var(--annotation-corner-gap);
+  }
+
+  .annotation-measurements > * {
+    pointer-events: none;
+  }
+
+  .canvas {
     position: relative;
-    min-block-size: var(--showcase-preview-min-height);
+    min-inline-size: 0;
+    min-block-size: var(--canvas-min-height);
     align-items: center;
     justify-content: center;
     overflow: clip;
-    border: var(--showcase-preview-dot) solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: var(--showcase-preview-padding);
-    background-color: var(--background);
+    border: var(--canvas-border-width) solid var(--canvas-border-color);
+    border-radius: var(--canvas-radius);
+    padding: var(--canvas-padding);
+    background-color: var(--canvas-background);
     background-image: radial-gradient(
       circle,
-      color-mix(in oklab, var(--border) 70%, transparent) var(--showcase-preview-dot),
-      transparent var(--showcase-preview-dot)
+      var(--canvas-grid-color) var(--canvas-grid-dot),
+      transparent var(--canvas-grid-dot)
     );
-    background-size: var(--showcase-preview-grid) var(--showcase-preview-grid);
+    background-size: var(--canvas-grid-size) var(--canvas-grid-size);
   }
 
-  .card-preview[data-layout="viewport"] {
-    min-block-size: var(--showcase-preview-viewport-height);
+  .canvas[data-background="plain"],
+  .canvas:has(> [data-slot="canvas-grid"]) {
+    background-image: none;
   }
 
-  .card-preview[data-layout="application"] {
-    block-size: var(--showcase-block-preview-height);
-    min-block-size: var(--showcase-preview-viewport-height);
+  .canvas:has(> [data-slot="canvas-grid"]) {
+    isolation: isolate;
+  }
+
+  .canvas-measure {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    color: var(--canvas-measure-accent);
+    background-color: var(--canvas-measure-ruler-background);
+    border-color: var(--canvas-measure-major-color);
+    outline-color: var(--canvas-measure-minor-color);
+  }
+
+  .canvas-measure[data-active="false"] {
+    visibility: hidden;
+  }
+
+  .canvas:has(> [data-slot="canvas-grid"][data-active="true"][data-tracking="true"]),
+  .canvas:has(> [data-slot="canvas-grid"][data-active="true"][data-tracking="true"]) * {
+    cursor: none !important;
+  }
+
+  .canvas-measure__grid,
+  .canvas-measure__cursor {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .canvas-measure__grid {
+    z-index: var(--canvas-measure-grid-layer);
+    background: var(--canvas-background);
+  }
+
+  .canvas-measure__cursor {
+    z-index: var(--canvas-measure-cursor-layer);
+  }
+
+  .canvas-measure__metrics {
+    position: absolute;
+    visibility: hidden;
+    box-sizing: content-box;
+    width: var(--canvas-measure-step);
+    height: var(--canvas-measure-ruler-size);
+    padding-left: var(--canvas-measure-label-step);
+    padding-top: var(--canvas-measure-tick-size);
+    padding-right: var(--canvas-measure-marker-size);
+    border-top: var(--canvas-measure-stroke) solid;
+    color: var(--canvas-measure-label-color);
+    background-color: var(--canvas-measure-guide-color);
+    font-family: var(--font-mono);
+    font-size: var(--canvas-measure-font-size);
+    line-height: 1;
+  }
+
+  .cursor-follower {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: var(--cursor-follower-layer);
+    visibility: hidden;
+  }
+
+  .cursor-follower[data-visible="true"] {
+    visibility: visible;
+  }
+
+  .cursor-follower__bubble {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(var(--cursor-follower-x, 0px), var(--cursor-follower-y, 0px));
+    width: max-content;
+    max-width: calc(100% - var(--cursor-follower-origin-x) - var(--cursor-follower-inset) * 2);
+    padding: var(--cursor-follower-padding-block) var(--cursor-follower-padding-inline);
+    border: var(--cursor-follower-border-width) solid var(--cursor-follower-border);
+    border-radius: var(--cursor-follower-radius);
+    background: var(--cursor-follower-background);
+    color: var(--cursor-follower-foreground);
+    box-shadow: var(--cursor-follower-shadow);
+    font-size: var(--cursor-follower-font-size);
+    line-height: var(--cursor-follower-line-height);
+    overflow-wrap: anywhere;
+  }
+
+  .cursor-follower[data-variant="accent"] {
+    --cursor-follower-background: var(--cursor-follower-accent);
+    --cursor-follower-foreground: var(--cursor-follower-on-accent);
+    --cursor-follower-border: var(--cursor-follower-accent);
+  }
+
+  .cursor-follower__metrics {
+    position: absolute;
+    visibility: hidden;
+    box-sizing: content-box;
+    width: var(--cursor-follower-offset);
+    height: var(--cursor-follower-inset);
+    padding-left: var(--cursor-follower-origin-x);
+    padding-top: var(--cursor-follower-origin-y);
+  }
+
+  .canvas-grid-follower {
+    --cursor-follower-origin-x: var(--canvas-measure-ruler-size);
+    --cursor-follower-origin-y: var(--canvas-measure-ruler-size);
+    --cursor-follower-accent: var(--canvas-measure-accent);
+    --cursor-follower-foreground: var(--canvas-measure-accent);
+  }
+
+  .canvas[data-annotation-space] {
+    padding-block: var(--canvas-annotation-padding-block);
+  }
+
+  .canvas[data-layout="start"] {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .canvas[data-layout="viewport"] {
+    min-block-size: var(--canvas-viewport-height);
+  }
+
+  .canvas[data-layout="application"] {
+    block-size: var(--canvas-application-height);
+    min-block-size: var(--canvas-viewport-height);
     align-items: stretch;
     justify-content: stretch;
-    border-radius: var(--showcase-block-preview-radius);
-    padding: var(--showcase-block-preview-padding);
+    border-radius: var(--canvas-application-radius);
+    padding: var(--canvas-application-padding);
   }
 
-  /* Canvas layout rule: pair a wide toolbar with a UI. The toolbar pins to the
-     top of the canvas and spans its width, while the UI stays visually centered
-     in the full height — the space below balances the toolbar above. Opt in by
-     wrapping a [data-slot=toolbar] plus one content element; the content owns
-     its own horizontal centering (e.g. max-width + margin-inline: auto). */
-  .preview-canvas {
+  .showcase-stage {
+    --canvas-application-height: var(--showcase-block-preview-height);
+  }
+
+  .canvas-workbench {
     flex: 1 0 auto;
     inline-size: 100%;
-    min-block-size: calc(var(--spacing) * 96);
+    min-inline-size: 0;
+    min-block-size: var(--canvas-workbench-height);
     display: grid;
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
+    row-gap: var(--canvas-region-gap);
   }
 
-  .preview-canvas > [data-slot="toolbar"] {
+  .canvas-toolbar {
     grid-area: 1 / 1;
     align-self: start;
+    min-inline-size: 0;
+    inline-size: 100%;
   }
 
-  .preview-canvas > :not([data-slot="toolbar"]) {
-    grid-area: 1 / 1;
+  .canvas-content {
+    position: relative;
+    grid-area: 2 / 1;
     align-self: center;
+    justify-self: center;
+    min-inline-size: 0;
+    inline-size: 100%;
+  }
+
+  .canvas-footer {
+    margin-block-start: var(--canvas-footer-gap);
+    inline-size: 100%;
+    max-inline-size: 100%;
+    text-align: center;
+    color: var(--muted-foreground);
+    font-size: var(--canvas-footer-font-size);
+    line-height: var(--canvas-footer-line-height);
   }
 
   .showcase-contained-viewport {
@@ -2667,11 +2996,17 @@
   .concentric-demo {
     --concentric-pad-ratio: 0.5;
     --concentric-r: 20px;
-    --concentric-pad: calc(var(--concentric-r) * var(--concentric-pad-ratio));
+    /* Padding — and every gap — tracks the radius but never drops below 8px. */
+    --concentric-pad: max(
+      calc(var(--concentric-r) * var(--concentric-pad-ratio)),
+      calc(var(--spacing) * 2)
+    );
     --concentric-inner: calc(var(--concentric-r) - var(--concentric-pad));
-    --concentric-media-size: calc(var(--spacing) * 16);
-    /* Layout (fill + toolbar-top + centered UI) comes from .preview-canvas; this
-       only widens the canvas so the toolbar can run past the card. */
+    /* Media keeps a square minimum but stretches taller with the lockup, so it
+       is never narrower than its min — its live aspect ratio is annotated. */
+    --concentric-media-min: calc(var(--spacing) * 16);
+     --concentric-control-basis: calc(var(--spacing) * 80);
+     --concentric-slider-min-width: calc(var(--spacing) * 32);
     max-inline-size: calc(var(--spacing) * 200);
   }
 
@@ -2681,7 +3016,8 @@
   }
 
   .concentric-toolbar__control {
-    flex: 1;
+    flex: 1 1 var(--concentric-control-basis);
+    flex-wrap: wrap;
     min-inline-size: 0;
     align-items: center;
     gap: calc(var(--spacing) * 3);
@@ -2694,22 +3030,15 @@
   }
 
   .concentric-toolbar__slider {
+    flex: 1 1 var(--concentric-slider-min-width);
+    min-inline-size: min(100%, var(--concentric-slider-min-width));
     max-inline-size: calc(var(--spacing) * 112);
-  }
-
-  .concentric-toolbar__readout {
-    align-items: center;
-    gap: calc(var(--spacing) * 3);
-    font-size: var(--text-xs);
-    font-variant-numeric: tabular-nums;
-    color: var(--muted-foreground);
-    white-space: nowrap;
   }
 
   .concentric-card {
     display: flex;
     align-items: center;
-    gap: var(--concentric-pad);
+    gap: 0;
     padding: var(--concentric-pad);
     border: 1px solid var(--border);
     background: var(--card);
@@ -2722,8 +3051,9 @@
 
   .concentric-card__media {
     flex: none;
-    inline-size: var(--concentric-media-size);
-    block-size: var(--concentric-media-size);
+    align-self: stretch;
+    min-inline-size: var(--concentric-media-min);
+    min-block-size: var(--concentric-media-min);
     display: grid;
     place-items: center;
     background: var(--muted);
@@ -2744,6 +3074,21 @@
     gap: calc(var(--spacing) * 1);
   }
 
+  .concentric-gap-band {
+    align-self: stretch;
+    flex: 0 0 var(--concentric-pad);
+    min-inline-size: var(--concentric-pad);
+    border-radius: 0;
+    opacity: 1;
+    transition-property: flex-basis, min-inline-size, opacity;
+    transition-duration: var(--speed-swift);
+    transition-timing-function: var(--ease-settle);
+  }
+
+  .concentric-gap-band[data-active="false"] {
+    opacity: 0;
+  }
+
   .concentric-card__title {
     font-size: var(--text-base);
     font-weight: var(--font-weight-semibold);
@@ -2758,8 +3103,9 @@
 
   .concentric-card__actions {
     flex: none;
+    display: flex;
     align-items: center;
-    gap: calc(var(--spacing) * 2);
+    gap: 0;
   }
 
   .concentric-card__actions [data-slot="button"] {
@@ -2769,8 +3115,10 @@
 
   /* Live equation readout: inner = outer − padding. */
   .concentric-equation {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     gap: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     color: var(--muted-foreground);
@@ -2792,6 +3140,7 @@
 
   .concentric-toolbar__toggle {
     flex: none;
+    margin-inline-start: auto;
   }
 
   .concentric-toolbar__toggle-label {
@@ -2807,8 +3156,6 @@
   /* The stage is sized to the card so the annotation layer's inset-0 maps to
      the card's border box (where the padding frame belongs). */
   .concentric-stage {
-    position: relative;
-    inline-size: 100%;
     /* The stage/card keeps its comfortable reading width and centers, so the
        toolbar above can run wider than the content for extra slider room. */
     max-inline-size: calc(var(--spacing) * 160);
@@ -2823,7 +3170,7 @@
     inset: 0;
     border-style: solid;
     border-width: var(--concentric-pad);
-    border-color: color-mix(in oklch, var(--destructive) 20%, transparent);
+    border-color: var(--annotation-fill);
     border-radius: var(--concentric-r);
     transition-property: border-width, border-radius;
     transition-duration: var(--speed-swift);

@@ -1,12 +1,18 @@
 import type { ReactNode } from "react"
+import type { CanvasLayout, CanvasBackground } from "@/components/ui/canvas"
 
 export type ComponentExample = {
   name: string
   description?: string
   Demo: () => ReactNode
   code?: string
-  layout?: "center" | "start" | "wide" | "viewport" | "application"
-}
+  layout?: CanvasLayout
+  background?: CanvasBackground
+  ownsCanvas?: boolean
+} & (
+  | { header?: "standard" }
+  | { header: "inline"; description: string }
+)
 
 export type ComponentEntry = {
   slug: string
@@ -17,6 +23,8 @@ export type ComponentEntry = {
   code: string
   examples?: ComponentExample[]
   installCommand?: string | null
+  defaultExampleHeader?: { style: "inline"; description: string }
+  ownsCanvas?: boolean
   // Sizing tier for the page column + default preview canvas. Defaults to
   // "component" for library primitives and "application" for Blocks/Experiments;
   // set "medium" for a wider-than-docs page with a roomy but non-fullscreen canvas.
@@ -26,6 +34,7 @@ export type ComponentEntry = {
 export const CATEGORY_ORDER = [
   "Blocks",
   "Experiments",
+  "Preview Tools",
   "Forms",
   "Selection",
   "Overlays",

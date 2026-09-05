@@ -15,6 +15,8 @@ import { blockDemos } from "@/showcase/demos/blocks"
 import { experimentDemos } from "@/showcase/demos/experiments"
 import { concentricDemos } from "@/showcase/experiments/concentric"
 import { annotationDemos } from "@/showcase/demos/annotation"
+import { canvasDemos, canvasGridDemos } from "@/showcase/demos/canvas"
+import { cursorFollowerDemos } from "@/showcase/demos/cursor-follower"
 import { dragHandleDemos } from "@/showcase/demos/drag-handle"
 import { elevationDemos } from "@/showcase/demos/elevation"
 import { fabDemos } from "@/showcase/demos/fab"
@@ -27,6 +29,9 @@ export const registry: ComponentEntry[] = [
   ...experimentDemos,
   ...concentricDemos,
   ...annotationDemos,
+  ...canvasDemos,
+  ...canvasGridDemos,
+  ...cursorFollowerDemos,
   ...dragHandleDemos,
   ...elevationDemos,
   ...fabDemos,
@@ -50,8 +55,10 @@ export const experimentRegistry = registry.filter(
   (item) => item.category === "Experiments",
 )
 export const componentRegistry = registry.filter(
-  (item) => item.category !== "Blocks" && item.category !== "Experiments",
+  (item) => item.category !== "Blocks" && item.category !== "Experiments" && item.category !== "Preview Tools",
 )
+
+export const previewRegistry = registry.filter((item) => item.category === "Preview Tools")
 
 export type CategoryGroup = {
   category: string

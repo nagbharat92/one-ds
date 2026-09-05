@@ -207,6 +207,7 @@ function SidebarProvider({
   )
   const [peeking, setPeeking] = React.useState(false)
   const [isResizing, setResizing] = React.useState(false)
+  const pendingFocus = React.useRef<"panel" | "trigger" | null>(null)
 
   const collapsedDock: SidebarDock =
     config.collapsible === "bar" ? "bar" : "hidden"
@@ -246,16 +247,37 @@ function SidebarProvider({
   const setDock = React.useCallback(
     (value: SidebarDock) => {
       const next = value === "expanded" ? "expanded" : collapsedDock
+      const panel = document.getElementById(`${id}-panel`)
+      const trigger = document.getElementById(`${id}-floating-trigger`)
+      if (next === "expanded" && document.activeElement === trigger) {
+        pendingFocus.current = "panel"
+      } else if (next === "hidden" && panel?.contains(document.activeElement)) {
+        pendingFocus.current = "trigger"
+      }
       clearPeekTimer()
       setPeeking(false)
       if (setOpenProp) setOpenProp(next === "expanded")
       else setDockState(next)
       persistPatch({ dock: next })
     },
-    [collapsedDock, clearPeekTimer, setOpenProp, persistPatch]
+    [id, collapsedDock, clearPeekTimer, setOpenProp, persistPatch]
   )
 
   const open = dock === "expanded"
+
+  React.useLayoutEffect(() => {
+    const request = pendingFocus.current
+    if (!request || isMobile) return
+    if ((request === "panel") !== open) return
+    pendingFocus.current = null
+    const panel = document.getElementById(`${id}-panel`)
+    const target = request === "panel"
+      ? panel?.querySelector<HTMLElement>(
+          'button:not(:disabled), a[href], input:not(:disabled), [tabindex="0"]'
+        ) ?? panel
+      : document.getElementById(`${id}-floating-trigger`)
+    target?.focus({ preventScroll: true })
+  }, [id, open, isMobile])
 
   const setOpen = React.useCallback(
     (value: boolean) => setDock(value ? "expanded" : collapsedDock),
@@ -477,6 +499,7 @@ function Sidebar({
   const floats = authored === "floating" || authored === "inset"
 
   const {
+    id,
     isMobile,
     openMobile,
     setOpenMobile,
@@ -581,10 +604,18 @@ function Sidebar({
       <Drawer
         open={openMobile}
         onOpenChange={setOpenMobile}
+        autoFocus
         direction={side === "start" ? "left" : "right"}
       >
         <DrawerContent
           {...props}
+          id={`${id}-panel`}
+          onCloseAutoFocus={(event) => {
+            const trigger = document.getElementById(`${id}-floating-trigger`)
+            if (!trigger) return
+            event.preventDefault()
+            trigger.focus({ preventScroll: true })
+          }}
           dir={dir}
           data-sidebar="sidebar"
           data-slot="sidebar"
@@ -632,6 +663,7 @@ function Sidebar({
           className
         )}
         {...props}
+        id={`${id}-panel`}
       >
         {children}
         {edge === "faded" && <SidebarEdgeRule side={side} />}
@@ -715,6 +747,9 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
+          id={`${id}-panel`}
+          tabIndex={-1}
+          inert={collapse === "hidden"}
           className="flex size-full flex-col overflow-hidden bg-sidebar transition-[border-radius,box-shadow] duration-(--sidebar-speed) ease-(--sidebar-ease) group-data-[placement=floating]:rounded-lg group-data-[placement=floating]:shadow-(--elevation-raised) group-data-[placement=floating]:ring-1 group-data-[placement=floating]:ring-sidebar-border group-data-[placement=overlay]:rounded-lg group-data-[placement=overlay]:shadow-(--elevation-floating) group-data-[placement=overlay]:ring-1 group-data-[placement=overlay]:ring-sidebar-border"
         >
           {children}
@@ -735,7 +770,7 @@ function SidebarTrigger({
 }: Omit<React.ComponentProps<typeof Button>, "variant" | "size"> & {
   placement?: "inline" | "floating"
 }) {
-  const { toggleSidebar, open, openMobile, isMobile, dock } = useSidebar()
+  const { id, toggleSidebar, open, openMobile, isMobile, collapsible, collapse } = useSidebar()
   // `open` is the desktop dock; on mobile the panel is the drawer.
   const expanded = isMobile ? openMobile : open
   const label = expanded ? "Close sidebar" : "Open sidebar"
@@ -745,21 +780,32 @@ function SidebarTrigger({
   }
 
   if (placement === "floating") {
-    // A panel that still occupies layout is its own way back, so the floating
-    // control only exists while the panel has left the page entirely.
-    if (!isMobile && dock !== "hidden") return null
+    if (!isMobile && collapsible !== "hidden") return null
+    const visible = isMobile ? !openMobile : collapse === "hidden"
 
     return (
       <Fab
+        id={`${id}-floating-trigger`}
         data-sidebar="trigger"
         data-slot="sidebar-trigger"
         data-placement="floating"
+        data-visible={visible}
+        inert={!visible}
+        aria-hidden={!visible}
         // Surface, not primary: this opens navigation, it is not the page's
         // primary action, and it must not outrank real content.
         variant="surface"
-        placement="top-start"
+        placement="none"
         aria-label={label}
-        className={className}
+        aria-expanded={expanded}
+        aria-controls={!isMobile || openMobile ? `${id}-panel` : undefined}
+        className={cn(
+          "absolute top-(--sidebar-floating-trigger-inset) inset-s-(--sidebar-floating-trigger-inset) z-20",
+          "[--fab-size-md:var(--sidebar-floating-trigger-size)] [--fab-icon-size-md:var(--sidebar-floating-trigger-icon-size)] [--fab-radius-md:var(--sidebar-floating-trigger-radius)]",
+          "[--fab-elevation-rest:var(--sidebar-floating-trigger-elevation)] [--fab-elevation-hover:var(--sidebar-floating-trigger-elevation)]",
+          "transition-opacity duration-(--sidebar-speed) ease-(--sidebar-ease) data-[visible=false]:pointer-events-none data-[visible=false]:opacity-0",
+          className
+        )}
         onClick={toggle}
         {...props}
       >
@@ -776,8 +822,11 @@ function SidebarTrigger({
       variant="ghost"
       size="icon"
       aria-label={label}
+      aria-expanded={expanded}
+      aria-controls={!isMobile || openMobile ? `${id}-panel` : undefined}
       className={cn(
         "ms-auto transition-opacity duration-(--sidebar-speed) ease-(--sidebar-ease)",
+        "aria-expanded:bg-transparent aria-expanded:hover:bg-(--state-layer-hover) aria-expanded:active:bg-(--state-layer-pressed)",
         // Collapsed the toggle always fades away, so the bar stays clean.
         "group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0",
         // Without peek there is no other way back, so it parks over the brand

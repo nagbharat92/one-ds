@@ -13,6 +13,7 @@ const fabVariants = cva(
     "bg-(--fab-fill) text-(--fab-ink) hover:text-(--fab-ink) active:text-(--fab-ink)",
     "hover:bg-[color-mix(in_oklch,var(--fab-fill),var(--fab-ink)_var(--state-layer-hover-opacity))]",
     "active:bg-[color-mix(in_oklch,var(--fab-fill),var(--fab-ink)_var(--state-layer-pressed-opacity))]",
+    "aria-expanded:bg-[color-mix(in_oklch,var(--fab-fill),var(--fab-ink)_var(--state-layer-focus-opacity))] aria-expanded:text-(--fab-ink) motion-reduce:transition-none motion-reduce:active:translate-none",
   ],
   {
     variants: {

@@ -7,6 +7,8 @@ import {
 } from "react"
 import {
   ArrowDownAZIcon,
+  CodeIcon,
+  EyeIcon,
   LayoutListIcon,
   PaletteIcon,
   RotateCcwIcon,
@@ -17,6 +19,7 @@ import {
   blockRegistry,
   componentRegistry,
   experimentRegistry,
+  previewRegistry,
   groupedRegistry,
   registry,
 } from "@/showcase/registry"
@@ -50,11 +53,11 @@ const DEFAULT_LAYOUT_BY_SURFACE = {
 } as const
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Separator } from "@/components/ui/separator"
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
+import { Canvas } from "@/components/ui/canvas"
 import { ItemActions } from "@/components/ui/item"
 import {
   Sidebar,
@@ -84,6 +87,7 @@ import {
 } from "@/components/ui/page-header"
 import {
   Section,
+  SectionActions,
   SectionDescription,
   SectionHeader,
   SectionHeading,
@@ -103,6 +107,9 @@ const alphabeticalBlocks = [...blockRegistry].sort((left, right) =>
   left.name.localeCompare(right.name),
 )
 const alphabeticalExperiments = [...experimentRegistry].sort((left, right) =>
+  left.name.localeCompare(right.name),
+)
+const alphabeticalPreviewTools = [...previewRegistry].sort((left, right) =>
   left.name.localeCompare(right.name),
 )
 const defaultComponentSlug = alphabeticalRegistry[0].slug
@@ -162,11 +169,16 @@ function canScrollWithin(
 function DemoSandbox({
   children,
   layout = "center",
+  background = "grid",
+  ownsCanvas = false,
 }: {
   children: ReactNode
   layout?: ComponentExample["layout"]
+  background?: ComponentExample["background"]
+  ownsCanvas?: boolean
 }) {
   const stageRef = useRef<HTMLDivElement>(null)
+  const Surface = ownsCanvas ? "div" : Canvas
 
   useEffect(() => {
     const stage = stageRef.current
@@ -187,11 +199,10 @@ function DemoSandbox({
   }, [])
 
   return (
-    <Card
+    <Surface
       ref={stageRef}
-      variant="preview"
-      className="showcase-stage"
-      data-layout={layout}
+      {...(ownsCanvas ? {} : { layout, background })}
+      className={ownsCanvas ? "showcase-stage flex min-w-0 w-full flex-col" : "showcase-stage"}
       data-scroll-boundary
       onClickCapture={(event) => {
         if (!(event.target instanceof Element)) return
@@ -206,7 +217,7 @@ function DemoSandbox({
       }}
     >
       {children}
-    </Card>
+    </Surface>
   )
 }
 
@@ -219,6 +230,7 @@ function ExampleSection({
 }) {
   const [resetKey, setResetKey] = useState(0)
   const [view, setView] = useState("preview")
+  const inlineHeader = example.header === "inline"
   const id = exampleId(componentSlug, example.name)
   const code =
     example.code ?? generatedExampleCode[`${componentSlug}:${example.name}`]
@@ -233,40 +245,87 @@ function ExampleSection({
     </Button>
   )
   const preview = (
-    <DemoSandbox key={resetKey} layout={example.layout}>
+    <DemoSandbox key={resetKey} layout={example.layout} background={example.background} ownsCanvas={example.ownsCanvas}>
       <ErrorBoundary title={`${example.name} failed to render`}>
         <example.Demo />
       </ErrorBoundary>
     </DemoSandbox>
   )
+  const header = (
+    <SectionHeader className={inlineHeader ? "flex-row items-start gap-4" : undefined}>
+      <SectionHeading>
+        <SectionTitle className={inlineHeader ? "showcase-example__title flex min-h-9 items-center" : "showcase-example__title"}>
+          {example.name}
+        </SectionTitle>
+        {example.description ? (
+          <SectionDescription>{example.description}</SectionDescription>
+        ) : null}
+      </SectionHeading>
+      {inlineHeader ? (
+        <SectionActions>
+          <ButtonGroup aria-label={`${example.name} preview controls`}>
+            <ButtonGroup>
+            <TabsList iconOnly aria-label={`${example.name} view`}>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex h-full">
+                      <TabsTrigger value="preview" aria-label="Preview">
+                        <EyeIcon />
+                      </TabsTrigger>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Preview</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex h-full">
+                      <TabsTrigger value="code" aria-label="Code">
+                        <CodeIcon />
+                      </TabsTrigger>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Code</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </TabsList>
+            </ButtonGroup>
+            <ButtonGroup>
+            <Button
+              variant="secondary"
+              size="icon-lg"
+              aria-label="Reset example"
+              onClick={() => setResetKey((value) => value + 1)}
+            >
+              <RotateCcwIcon />
+            </Button>
+            </ButtonGroup>
+          </ButtonGroup>
+        </SectionActions>
+      ) : null}
+    </SectionHeader>
+  )
 
   return (
     <Section className="showcase-example" id={id}>
-      <SectionHeader>
-        <SectionHeading>
-          <SectionTitle className="showcase-example__title">
-            {example.name}
-          </SectionTitle>
-          {example.description ? (
-            <SectionDescription>{example.description}</SectionDescription>
-          ) : null}
-        </SectionHeading>
-      </SectionHeader>
+      {!inlineHeader ? header : null}
       <Tabs
         value={view}
         onValueChange={(value) => {
           setView(value)
           if (value === "code") setResetKey((current) => current + 1)
         }}
-        className="showcase-example__tabs"
+        className={inlineHeader ? "showcase-example__tabs gap-6" : "showcase-example__tabs"}
       >
-        <ItemActions className="showcase-example__toolbar">
+        {inlineHeader ? header : (
+          <ItemActions className="showcase-example__toolbar">
           <TabsList aria-label={`${example.name} view`}>
             <TabsTrigger value="preview">Preview</TabsTrigger>
             <TabsTrigger value="code">Code</TabsTrigger>
           </TabsList>
           {reset}
-        </ItemActions>
+          </ItemActions>
+        )}
         <CardContent className="showcase-example__panels">
           <TabsContent
             value="preview"
@@ -333,6 +392,9 @@ function ComponentNavigation({
   const alphabeticalExperimentItems = alphabeticalExperiments.filter((item) =>
     matches(item.name),
   )
+  const alphabeticalPreviewItems = alphabeticalPreviewTools.filter((item) =>
+    matches(item.name),
+  )
 
   const renderItem = (component: (typeof registry)[number]) => (
     <SidebarMenuItem key={component.slug}>
@@ -375,6 +437,7 @@ function ComponentNavigation({
             </a>
           </Button>
           <ModeToggle />
+          <SidebarTrigger />
         </div>
       </SidebarHeader>
       <Separator variant="faded" />
@@ -431,6 +494,16 @@ function ComponentNavigation({
                   </SidebarGroupContent>
                 </SidebarGroup>
               ) : null}
+              {alphabeticalPreviewItems.length > 0 ? (
+                <SidebarGroup>
+                  <SidebarGroupLabel>Preview Tools</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {alphabeticalPreviewItems.map(renderItem)}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ) : null}
               {alphabeticalItems.length > 0 ? (
                 <SidebarGroup>
                   <SidebarGroupLabel>Components</SidebarGroupLabel>
@@ -463,13 +536,17 @@ function ComponentPage({ slug }: { slug: string }) {
     entry.installCommand === undefined
       ? `npx shadcn@latest add ${entry.slug}`
       : entry.installCommand
+  const defaultExample = {
+    name: "Default",
+    Demo: entry.Demo,
+    code: entry.code,
+    layout: DEFAULT_LAYOUT_BY_SURFACE[tier],
+    ownsCanvas: entry.ownsCanvas,
+  }
   const examples: ComponentExample[] = [
-    {
-      name: "Default",
-      Demo: entry.Demo,
-      code: entry.code,
-      layout: DEFAULT_LAYOUT_BY_SURFACE[tier],
-    },
+    entry.defaultExampleHeader
+      ? { ...defaultExample, header: entry.defaultExampleHeader.style, description: entry.defaultExampleHeader.description }
+      : defaultExample,
     ...(entry.examples ?? []),
   ]
 
@@ -531,7 +608,7 @@ function App() {
         } as CSSProperties
       }
     >
-      <Sidebar collapsible="none" edge="faded">
+      <Sidebar collapsible="hidden" edge="faded">
         <ComponentNavigation activeSlug={slug} onNavigate={navigate} />
       </Sidebar>
 

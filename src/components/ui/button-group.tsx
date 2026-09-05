@@ -1,7 +1,10 @@
+import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
+import { Slot, ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
+import { CheckIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 const buttonGroupVariants = cva(
@@ -34,6 +37,68 @@ function ButtonGroup({
       className={cn(buttonGroupVariants({ orientation }), className)}
       {...props}
     />
+  )
+}
+
+type ButtonGroupChoiceProps = Omit<
+  React.ComponentProps<typeof ToggleGroupPrimitive.Root>,
+  "type" | "value" | "defaultValue" | "onValueChange" | "asChild"
+> & {
+  onValueChange?: (value: string) => void
+} & (
+  | { value: string; defaultValue?: never }
+  | { value?: never; defaultValue: string }
+)
+
+function ButtonGroupChoice({
+  value,
+  defaultValue,
+  onValueChange,
+  orientation = "horizontal",
+  className,
+  ...props
+}: ButtonGroupChoiceProps) {
+  const [internalValue, setInternalValue] = React.useState(defaultValue ?? value)
+
+  return (
+    <ToggleGroupPrimitive.Root
+      {...props}
+      type="single"
+      value={value ?? internalValue}
+      onValueChange={(nextValue) => {
+        if (!nextValue) return
+        if (value === undefined) setInternalValue(nextValue)
+        onValueChange?.(nextValue)
+      }}
+      orientation={orientation}
+      data-slot="button-group"
+      data-selection="single"
+      data-orientation={orientation}
+      className={cn(buttonGroupVariants({ orientation }), className)}
+    />
+  )
+}
+
+function ButtonGroupChoiceItem({
+  children,
+  className,
+  size = "default",
+  variant = "outline",
+  ...props
+}: Omit<React.ComponentProps<typeof ToggleGroupPrimitive.Item>, "asChild"> & {
+  size?: React.ComponentProps<typeof Button>["size"]
+  variant?: React.ComponentProps<typeof Button>["variant"]
+}) {
+  return (
+    <ToggleGroupPrimitive.Item {...props} asChild>
+      <Button variant={variant} size={size} tooltip={false} className={cn("button-group-choice", className)}>
+        <CheckIcon
+          aria-hidden="true"
+          className="button-group-choice__check"
+        />
+        <span className="button-group-choice__label">{children}</span>
+      </Button>
+    </ToggleGroupPrimitive.Item>
   )
 }
 
@@ -77,6 +142,8 @@ function ButtonGroupSeparator({
 
 export {
   ButtonGroup,
+  ButtonGroupChoice,
+  ButtonGroupChoiceItem,
   ButtonGroupSeparator,
   ButtonGroupText,
   buttonGroupVariants,
