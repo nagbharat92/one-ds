@@ -1,6 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import ts from "typescript"
+import { completeDemoSource } from "./showcase-code-source.mjs"
 
 const root = process.cwd()
 const demosDirectory = path.join(root, "src", "showcase", "demos")
@@ -90,17 +91,17 @@ const files = fs
   .sort()
 
 const generated = new Map()
+const program = ts.createProgram(files.map(file => path.join(demosDirectory, file)), {
+  jsx: ts.JsxEmit.ReactJSX,
+  target: ts.ScriptTarget.Latest,
+  noResolve: true,
+  noLib: true,
+})
+const checker = program.getTypeChecker()
 
 for (const file of files) {
   const filePath = path.join(demosDirectory, file)
-  const sourceText = fs.readFileSync(filePath, "utf8")
-  const sourceFile = ts.createSourceFile(
-    filePath,
-    sourceText,
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TSX,
-  )
+  const sourceFile = program.getSourceFile(filePath)
   const declarations = new Map()
 
   function collectDeclarations(node) {
@@ -118,6 +119,14 @@ for (const file of files) {
     if (ts.isObjectLiteralExpression(node)) {
       const slug = stringValue(findProperty(node, "slug"))
       const examplesProperty = findProperty(node, "examples")
+      const complete = stringValue(findProperty(node, "category")) === "Preview Tools" || stringValue(findProperty(node, "codeSource")) === "complete"
+      if (slug && complete) {
+        const demoProperty = findProperty(node, "Demo")
+        if (!demoProperty || !ts.isPropertyAssignment(demoProperty)) throw new Error(`${file}: ${slug} needs an explicit Demo`)
+        const key = `${slug}:Default`
+        if (generated.has(key)) throw new Error(`Duplicate showcase example key: ${key}`)
+        generated.set(key, completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, root))
+      }
 
       if (
         slug &&
@@ -144,11 +153,9 @@ for (const file of files) {
             throw new Error(`Duplicate showcase example key: ${key}`)
           }
 
-          const code = demoSource(
-            demoProperty.initializer,
-            declarations,
-            sourceFile,
-          )
+          const code = complete
+            ? completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, root)
+            : demoSource(demoProperty.initializer, declarations, sourceFile)
           if (!code?.trim()) {
             throw new Error(`Could not extract showcase code for ${key}`)
           }

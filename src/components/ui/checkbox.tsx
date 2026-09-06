@@ -30,4 +30,42 @@ function Checkbox({
   )
 }
 
-export { Checkbox }
+function CheckboxGroup({
+  orientation = "horizontal",
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { orientation?: "horizontal" | "vertical" }) {
+  return (
+    <div
+      role="group"
+      data-slot="checkbox-group"
+      data-orientation={orientation}
+      className={cn(
+        "flex min-w-0 gap-x-(--checkbox-group-column-gap) gap-y-(--checkbox-group-gap)",
+        orientation === "horizontal" ? "flex-wrap items-center" : "flex-col items-start",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function CheckboxGroupItem({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<typeof Checkbox>) {
+  return (
+    <label
+      data-slot="checkbox-group-item"
+      className="flex items-center gap-(--checkbox-group-label-gap) text-sm font-medium"
+    >
+      <Checkbox className={className} {...props} />
+      <span data-slot="checkbox-group-text" className="block pr-(--checkbox-group-text-padding-right)">
+        {children}
+      </span>
+    </label>
+  )
+}
+
+export { Checkbox, CheckboxGroup, CheckboxGroupItem }

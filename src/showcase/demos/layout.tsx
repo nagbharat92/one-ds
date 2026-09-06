@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 import {
   ChevronsUpDownIcon,
   ChevronRightIcon,
@@ -33,6 +33,11 @@ import {
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { generatedExampleCode } from "@/showcase/generated-example-code"
+import { CanvasPreview } from "@/components/ui/canvas-preview"
+import { AnnotationLegend } from "@/components/ui/annotation-legend"
+import { AnnotationMeasurements, type AnnotationMeasurementTarget } from "@/components/ui/annotation-measurements"
+import type { AnnotationKind } from "@/components/ui/annotation"
 import {
   Accordion,
   AccordionContent,
@@ -83,7 +88,50 @@ import {
   ToolbarGroup,
   ToolbarSeparator,
   ToolbarSpacer,
+  ToolbarTitle,
 } from "@/components/ui/toolbar"
+
+const toolbarMeasurementTargets: AnnotationMeasurementTarget[] = [
+  { target: "toolbar", label: "Toolbar", kinds: ["padding", "border"] },
+  { target: "primary", label: "Primary group", kinds: ["gap"] },
+]
+
+const toolbarVariantMeasurementTargets: AnnotationMeasurementTarget[] = [
+  { target: "variants", label: "Variants", kinds: ["gap"] },
+  ...(["default", "muted", "ghost"] as const).flatMap<AnnotationMeasurementTarget>(variant => [
+    { target: `toolbar-${variant}`, label: `${variant} toolbar`, kinds: ["padding", "border"] },
+    { target: `group-${variant}`, label: `${variant} group`, kinds: ["gap"] },
+  ]),
+]
+
+function ToolbarPreview({
+  name,
+  targets = toolbarMeasurementTargets,
+  contentClassName = "max-w-xl",
+  children,
+}: {
+  name: string
+  targets?: AnnotationMeasurementTarget[]
+  contentClassName?: string
+  children: ReactNode
+}) {
+  const kinds: AnnotationKind[] = ["bounds", "padding", "border", "margin", "gap"]
+  return (
+    <CanvasPreview
+      annotationsAvailable
+      name={name}
+      contentClassName={contentClassName}
+      footnote={({ annotations }) => annotations
+        ? <AnnotationLegend kinds={kinds.filter(kind => targets.some(target => target.kinds.includes(kind)))} />
+        : "Annotations hidden"}
+    >
+      {({ annotations }) => <>
+        <div data-annotate="toolbar-specimen" className="w-full">{children}</div>
+        <AnnotationMeasurements active={annotations} targets={targets} />
+      </>}
+    </CanvasPreview>
+  )
+}
 
 const tags = Array.from({ length: 12 }).map((_, i) => `v1.2.0-beta.${12 - i}`)
 
@@ -1010,9 +1058,17 @@ export function ClusterDemo() {
     description:
       "A horizontal action bar for filters, search, and view toggles.",
     category: "Layout",
+    surface: "medium",
+    ownsCanvas: true,
+    codeSource: "complete",
+    defaultExampleHeader: {
+      style: "inline",
+      description: "Inspect the toolbar's padding, border, and group gaps while keeping its controls available.",
+    },
     Demo: () => (
-      <Toolbar className="w-full">
-        <ToolbarGroup>
+      <ToolbarPreview name="Toolbar">
+      <Toolbar data-measure="toolbar" className="w-full">
+        <ToolbarGroup data-measure="primary">
           <Button variant="outline" size="sm">
             <FilterIcon data-icon="inline-start" />
             Filter
@@ -1033,50 +1089,23 @@ export function ClusterDemo() {
           </Button>
         </ToolbarGroup>
       </Toolbar>
+      </ToolbarPreview>
     ),
-    code: `import { FilterIcon, LayoutGridIcon, ListIcon, SearchIcon } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-  Toolbar,
-  ToolbarGroup,
-  ToolbarSeparator,
-  ToolbarSpacer,
-} from "@/components/ui/toolbar"
-
-export function ToolbarDemo() {
-  return (
-    <Toolbar>
-      <ToolbarGroup>
-        <Button variant="outline" size="sm">
-          <FilterIcon data-icon="inline-start" />
-          Filter
-        </Button>
-      </ToolbarGroup>
-      <ToolbarSpacer />
-      <ToolbarGroup>
-        <Button variant="ghost" size="icon-sm" aria-label="List view">
-          <ListIcon />
-        </Button>
-        <ToolbarSeparator />
-        <Button variant="ghost" size="icon-sm" aria-label="Grid view">
-          <LayoutGridIcon />
-        </Button>
-      </ToolbarGroup>
-    </Toolbar>
-  )
-}`,
+    code: generatedExampleCode["toolbar:Default"],
     examples: [
       {
         name: "Variants",
+        ownsCanvas: true,
+        header: "inline",
         description:
           "default has a card surface and border, muted sits on the muted token, and ghost is transparent to float over any background.",
         layout: "wide",
         Demo: () => (
-          <div className="flex w-full flex-col gap-3">
+          <ToolbarPreview name="Variants" targets={toolbarVariantMeasurementTargets}>
+          <div data-measure="variants" className="flex w-full flex-col gap-3">
             {(["default", "muted", "ghost"] as const).map((variant) => (
-              <Toolbar key={variant} variant={variant} className="w-full">
-                <ToolbarGroup>
+              <Toolbar key={variant} data-measure={`toolbar-${variant}`} variant={variant} className="w-full">
+                <ToolbarGroup data-measure={`group-${variant}`}>
                   <Button variant="outline" size="sm">
                     <FilterIcon data-icon="inline-start" />
                     Filter
@@ -1091,15 +1120,22 @@ export function ToolbarDemo() {
               </Toolbar>
             ))}
           </div>
+          </ToolbarPreview>
         ),
       },
       {
         name: "Text formatting",
+        ownsCanvas: true,
+        header: "inline",
         description:
           "Cluster related controls into groups with separators between them \u2014 style, then alignment.",
         Demo: () => (
-          <Toolbar>
-            <ToolbarGroup>
+          <ToolbarPreview name="Text formatting" targets={[
+            ...toolbarMeasurementTargets,
+            { target: "secondary", label: "Alignment group", kinds: ["gap"] },
+          ]}>
+          <Toolbar data-measure="toolbar">
+            <ToolbarGroup data-measure="primary">
               <Button variant="ghost" size="icon-sm" aria-label="Bold">
                 <BoldIcon />
               </Button>
@@ -1111,7 +1147,7 @@ export function ToolbarDemo() {
               </Button>
             </ToolbarGroup>
             <ToolbarSeparator />
-            <ToolbarGroup>
+            <ToolbarGroup data-measure="secondary">
               <Button variant="ghost" size="icon-sm" aria-label="Align left">
                 <AlignLeftIcon />
               </Button>
@@ -1123,15 +1159,19 @@ export function ToolbarDemo() {
               </Button>
             </ToolbarGroup>
           </Toolbar>
+          </ToolbarPreview>
         ),
       },
       {
         name: "Vertical",
+        ownsCanvas: true,
+        header: "inline",
         description:
           "orientation=\"vertical\" stacks the toolbar into a rail; separators and the spacer flip to match.",
         Demo: () => (
-          <Toolbar orientation="vertical">
-            <ToolbarGroup>
+          <ToolbarPreview name="Vertical" contentClassName="max-w-24">
+          <Toolbar data-measure="toolbar" orientation="vertical" className="mx-auto">
+            <ToolbarGroup data-measure="primary">
               <Button variant="ghost" size="icon-sm" aria-label="Home">
                 <HomeIcon />
               </Button>
@@ -1149,18 +1189,28 @@ export function ToolbarDemo() {
               </Button>
             </ToolbarGroup>
           </Toolbar>
+          </ToolbarPreview>
         ),
       },
       {
         name: "With title",
+        ownsCanvas: true,
+        header: "inline",
         description:
-          "A text label leads the bar while actions trail it \u2014 the toolbar padding keeps the title off the left edge and the buttons off the right.",
+          "The title has its own padded container, separate from the toolbar padding and trailing action group.",
         layout: "wide",
         Demo: () => (
-          <Toolbar className="w-full">
-            <span className="text-sm font-medium">Documents</span>
+          <ToolbarPreview name="With title" targets={[
+            ...toolbarMeasurementTargets,
+            { target: "title", label: "Title", kinds: ["bounds"] },
+            { target: "title-container", label: "Title container", kinds: ["padding"] },
+          ]}>
+          <Toolbar data-measure="toolbar" className="w-full">
+            <ToolbarTitle data-measure="title-container">
+              <span data-measure="title">Documents</span>
+            </ToolbarTitle>
             <ToolbarSpacer />
-            <ToolbarGroup>
+            <ToolbarGroup data-measure="primary">
               <Button variant="ghost" size="sm">
                 <FilterIcon data-icon="inline-start" />
                 Filter
@@ -1171,6 +1221,7 @@ export function ToolbarDemo() {
               </Button>
             </ToolbarGroup>
           </Toolbar>
+          </ToolbarPreview>
         ),
       },
     ],

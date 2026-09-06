@@ -1,9 +1,9 @@
 import { useState } from "react"
 import type { ComponentEntry } from "@/showcase/types"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox, CheckboxGroup, CheckboxGroupItem } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Switch } from "@/components/ui/switch"
+import { RadioGroup, RadioGroupItem, RadioGroupOption } from "@/components/ui/radio-group"
+import { Switch, SwitchGroup, SwitchGroupItem } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
 import { Toggle } from "@/components/ui/toggle"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
@@ -81,20 +81,13 @@ export const selectionDemos: ComponentEntry[] = [
     description: "A control that toggles between checked and not checked.",
     category: "Selection",
     Demo: () => (
-      <div className="flex items-center gap-3">
-        <Checkbox id="demo-terms" defaultChecked />
-        <Label htmlFor="demo-terms">Accept terms and conditions</Label>
-      </div>
+      <CheckboxGroupItem id="demo-terms" defaultChecked>Accept terms and conditions</CheckboxGroupItem>
     ),
-    code: `import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+    code: `import { CheckboxGroupItem } from "@/components/ui/checkbox"
 
 export function CheckboxDemo() {
   return (
-    <div className="flex items-center gap-3">
-      <Checkbox id="terms" defaultChecked />
-      <Label htmlFor="terms">Accept terms and conditions</Label>
-    </div>
+    <CheckboxGroupItem id="terms" defaultChecked>Accept terms and conditions</CheckboxGroupItem>
   )
 }`,
     examples: [
@@ -103,10 +96,7 @@ export function CheckboxDemo() {
         description: "Checkbox with validation error styling.",
         Demo: () => (
           <Field data-invalid="true">
-            <div className="flex items-center gap-3">
-              <Checkbox id="cb-invalid-agree" aria-invalid="true" />
-              <Label htmlFor="cb-invalid-agree">I agree to the terms</Label>
-            </div>
+            <CheckboxGroupItem id="cb-invalid-agree" aria-invalid="true">I agree to the terms</CheckboxGroupItem>
             <FieldError>You must accept the terms to continue.</FieldError>
           </Field>
         ),
@@ -199,34 +189,24 @@ export function CheckboxDemo() {
         name: "Disabled",
         Demo: () => (
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <Checkbox id="cb-dis-unchecked" disabled />
-              <Label htmlFor="cb-dis-unchecked" className="opacity-50">Unchecked</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <Checkbox id="cb-dis-checked" disabled defaultChecked />
-              <Label htmlFor="cb-dis-checked" className="opacity-50">Checked</Label>
-            </div>
+            <CheckboxGroupItem id="cb-dis-unchecked" disabled><span className="opacity-50">Unchecked</span></CheckboxGroupItem>
+            <CheckboxGroupItem id="cb-dis-checked" disabled defaultChecked><span className="opacity-50">Checked</span></CheckboxGroupItem>
           </div>
         ),
       },
       {
         name: "Group",
-        description: "A fieldset of checkboxes.",
+        description: "Independent options in horizontal and vertical groups.",
         Demo: () => (
-          <FieldSet>
-            <FieldLegend>Notifications</FieldLegend>
-            {[
-              { id: "cb-grp-email", label: "Email", checked: true },
-              { id: "cb-grp-sms", label: "SMS", checked: false },
-              { id: "cb-grp-push", label: "Push notifications", checked: false },
-            ].map((item) => (
-              <div key={item.id} className="flex items-center gap-3">
-                <Checkbox id={item.id} defaultChecked={item.checked} />
-                <Label htmlFor={item.id}>{item.label}</Label>
-              </div>
+          <div className="flex flex-wrap items-start gap-6">
+            {(["horizontal", "vertical"] as const).map(orientation => (
+                <CheckboxGroup key={orientation} aria-label={`${orientation} notifications`} orientation={orientation}>
+                  <CheckboxGroupItem defaultChecked>Email</CheckboxGroupItem>
+                  <CheckboxGroupItem>SMS</CheckboxGroupItem>
+                  <CheckboxGroupItem>Push notifications</CheckboxGroupItem>
+                </CheckboxGroup>
             ))}
-          </FieldSet>
+          </div>
         ),
       },
       {
@@ -294,38 +274,38 @@ export function CheckboxDemo() {
     category: "Selection",
     Demo: () => (
       <RadioGroup defaultValue="comfortable">
-        <div className="flex items-center gap-3">
-          <RadioGroupItem value="default" id="demo-r1" />
-          <Label htmlFor="demo-r1">Default</Label>
-        </div>
-        <div className="flex items-center gap-3">
-          <RadioGroupItem value="comfortable" id="demo-r2" />
-          <Label htmlFor="demo-r2">Comfortable</Label>
-        </div>
-        <div className="flex items-center gap-3">
-          <RadioGroupItem value="compact" id="demo-r3" />
-          <Label htmlFor="demo-r3">Compact</Label>
-        </div>
+        <RadioGroupOption value="default" id="demo-r1">Default</RadioGroupOption>
+        <RadioGroupOption value="comfortable" id="demo-r2">Comfortable</RadioGroupOption>
+        <RadioGroupOption value="compact" id="demo-r3">Compact</RadioGroupOption>
       </RadioGroup>
     ),
-    code: `import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+    code: `import { RadioGroup, RadioGroupOption } from "@/components/ui/radio-group"
 
 export function RadioGroupDemo() {
   return (
     <RadioGroup defaultValue="comfortable">
-      <div className="flex items-center gap-3">
-        <RadioGroupItem value="default" id="r1" />
-        <Label htmlFor="r1">Default</Label>
-      </div>
-      <div className="flex items-center gap-3">
-        <RadioGroupItem value="comfortable" id="r2" />
-        <Label htmlFor="r2">Comfortable</Label>
-      </div>
+      <RadioGroupOption value="default">Default</RadioGroupOption>
+      <RadioGroupOption value="comfortable">Comfortable</RadioGroupOption>
+      <RadioGroupOption value="compact">Compact</RadioGroupOption>
     </RadioGroup>
   )
 }`,
     examples: [
+      {
+        name: "Group",
+        description: "Single-choice options in horizontal and vertical groups.",
+        Demo: () => (
+          <div className="flex flex-wrap items-start gap-6">
+            {(["horizontal", "vertical"] as const).map(orientation => (
+              <RadioGroup key={orientation} aria-label={`${orientation} density`} orientation={orientation} defaultValue="comfortable" className="w-auto">
+                {(["Default", "Comfortable", "Compact"] as const).map(label => (
+                  <RadioGroupOption key={label} value={label.toLowerCase()}>{label}</RadioGroupOption>
+                ))}
+              </RadioGroup>
+            ))}
+          </div>
+        ),
+      },
       {
         name: "Description",
         description: "Each radio option with a supporting description.",
@@ -422,10 +402,7 @@ export function RadioGroupDemo() {
             <FieldDescription>Select how we should reach you.</FieldDescription>
             <RadioGroup defaultValue="rg-fs-email">
               {["Email", "Phone", "Mail"].map((method) => (
-                <div key={method} className="flex items-center gap-3">
-                  <RadioGroupItem value={`rg-fs-${method.toLowerCase()}`} id={`rg-fs-${method.toLowerCase()}`} />
-                  <Label htmlFor={`rg-fs-${method.toLowerCase()}`}>{method}</Label>
-                </div>
+                <RadioGroupOption key={method} value={`rg-fs-${method.toLowerCase()}`} id={`rg-fs-${method.toLowerCase()}`}>{method}</RadioGroupOption>
               ))}
             </RadioGroup>
           </FieldSet>
@@ -436,10 +413,7 @@ export function RadioGroupDemo() {
         Demo: () => (
           <RadioGroup defaultValue="rg-dis-comfortable" disabled>
             {["Default", "Comfortable", "Compact"].map((item) => (
-              <div key={item} className="flex items-center gap-3">
-                <RadioGroupItem value={`rg-dis-${item.toLowerCase()}`} id={`rg-dis-${item.toLowerCase()}`} />
-                <Label htmlFor={`rg-dis-${item.toLowerCase()}`}>{item}</Label>
-              </div>
+              <RadioGroupOption key={item} value={`rg-dis-${item.toLowerCase()}`} id={`rg-dis-${item.toLowerCase()}`}>{item}</RadioGroupOption>
             ))}
           </RadioGroup>
         ),
@@ -452,10 +426,7 @@ export function RadioGroupDemo() {
             <FieldLabel>Plan</FieldLabel>
             <RadioGroup>
               {["Free", "Pro", "Enterprise"].map((plan) => (
-                <div key={plan} className="flex items-center gap-3">
-                  <RadioGroupItem value={`rg-inv-${plan.toLowerCase()}`} id={`rg-inv-${plan.toLowerCase()}`} aria-invalid="true" />
-                  <Label htmlFor={`rg-inv-${plan.toLowerCase()}`}>{plan}</Label>
-                </div>
+                <RadioGroupOption key={plan} value={`rg-inv-${plan.toLowerCase()}`} id={`rg-inv-${plan.toLowerCase()}`} aria-invalid="true">{plan}</RadioGroupOption>
               ))}
             </RadioGroup>
             <FieldError>Please select a plan.</FieldError>
@@ -470,23 +441,31 @@ export function RadioGroupDemo() {
     description: "A control that toggles between on and off states.",
     category: "Selection",
     Demo: () => (
-      <div className="flex items-center gap-3">
-        <Switch id="demo-airplane" />
-        <Label htmlFor="demo-airplane">Airplane mode</Label>
-      </div>
+      <SwitchGroupItem id="demo-airplane">Airplane mode</SwitchGroupItem>
     ),
-    code: `import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
+    code: `import { SwitchGroupItem } from "@/components/ui/switch"
 
 export function SwitchDemo() {
   return (
-    <div className="flex items-center gap-3">
-      <Switch id="airplane" />
-      <Label htmlFor="airplane">Airplane mode</Label>
-    </div>
+    <SwitchGroupItem id="airplane">Airplane mode</SwitchGroupItem>
   )
 }`,
     examples: [
+      {
+        name: "Group",
+        description: "Independent settings in horizontal and vertical groups.",
+        Demo: () => (
+          <div className="flex flex-wrap items-start gap-6">
+            {(["horizontal", "vertical"] as const).map(orientation => (
+              <SwitchGroup key={orientation} aria-label={`${orientation} settings`} orientation={orientation}>
+                <SwitchGroupItem defaultChecked>Wi-Fi</SwitchGroupItem>
+                <SwitchGroupItem>Bluetooth</SwitchGroupItem>
+                <SwitchGroupItem>Location</SwitchGroupItem>
+              </SwitchGroup>
+            ))}
+          </div>
+        ),
+      },
       {
         name: "Description",
         description: "Switch with a supporting description.",
@@ -555,14 +534,8 @@ export function SwitchDemo() {
         name: "Disabled",
         Demo: () => (
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-              <Switch id="sw-dis-off" disabled />
-              <Label htmlFor="sw-dis-off" className="opacity-50">Off and disabled</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch id="sw-dis-on" disabled defaultChecked />
-              <Label htmlFor="sw-dis-on" className="opacity-50">On and disabled</Label>
-            </div>
+            <SwitchGroupItem id="sw-dis-off" disabled><span className="opacity-50">Off and disabled</span></SwitchGroupItem>
+            <SwitchGroupItem id="sw-dis-on" disabled defaultChecked><span className="opacity-50">On and disabled</span></SwitchGroupItem>
           </div>
         ),
       },
@@ -571,10 +544,7 @@ export function SwitchDemo() {
         description: "Switch with a validation error.",
         Demo: () => (
           <Field data-invalid="true">
-            <div className="flex items-center gap-3">
-              <Switch id="sw-invalid-consent" aria-invalid="true" />
-              <Label htmlFor="sw-invalid-consent">Accept cookies</Label>
-            </div>
+            <SwitchGroupItem id="sw-invalid-consent" aria-invalid="true">Accept cookies</SwitchGroupItem>
             <FieldError>You must accept cookies to continue.</FieldError>
           </Field>
         ),
@@ -584,14 +554,8 @@ export function SwitchDemo() {
         description: "The small and default sizes.",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-6">
-            <div className="flex items-center gap-3">
-              <Switch id="sw-sz-sm" size="sm" defaultChecked />
-              <Label htmlFor="sw-sz-sm">Small</Label>
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch id="sw-sz-def" size="default" defaultChecked />
-              <Label htmlFor="sw-sz-def">Default</Label>
-            </div>
+            <SwitchGroupItem id="sw-sz-sm" size="sm" defaultChecked>Small</SwitchGroupItem>
+            <SwitchGroupItem id="sw-sz-def" size="default" defaultChecked>Default</SwitchGroupItem>
           </div>
         ),
       },

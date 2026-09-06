@@ -137,6 +137,19 @@
      --aspect-ratio-portrait: 3 / 4;
 
     /* Card rhythm. Header, content, and footer share one 24px inset and gap. */
+    --toolbar-title-padding-start: calc(var(--spacing) * 2);
+    --checkbox-group-gap: calc(var(--spacing) * 3);
+    --checkbox-group-column-gap: 0px;
+    --checkbox-group-text-padding-right: calc(var(--spacing) * 3);
+    --checkbox-group-label-gap: calc(var(--spacing) * 2);
+    --switch-group-gap: calc(var(--spacing) * 3);
+    --switch-group-column-gap: 0px;
+    --switch-group-label-gap: calc(var(--spacing) * 2);
+    --switch-group-text-padding-right: calc(var(--spacing) * 3);
+    --radio-group-row-gap: calc(var(--spacing) * 2);
+    --radio-group-column-gap: 0px;
+    --radio-group-label-gap: calc(var(--spacing) * 2);
+    --radio-group-text-padding-right: calc(var(--spacing) * 3);
     --card-spacing-small: calc(var(--spacing) * 3);
     --card-spacing-default: calc(var(--spacing) * 6);
     --card-header-gap: calc(var(--spacing) * 2);
@@ -604,6 +617,7 @@
     --showcase-copy-width: calc(var(--spacing) * 192);
     --canvas-min-height: calc(var(--spacing) * 72);
     --annotation-clearance: calc(var(--spacing) * 2);
+    --annotation-measurement-tolerance: 0.05px;
     --annotation-label-distance-min: calc(var(--spacing) * 4);
     --annotation-label-distance-max: calc(var(--spacing) * 16);
     --annotation-boundary-inset: calc(var(--spacing) * 6);
@@ -616,16 +630,48 @@
     --annotation-anchor-radius: calc(var(--spacing) * 0.75);
     --annotation-corner-gap: var(--spacing);
     --annotation-corner-stroke: calc(var(--spacing) * 0.75);
-    --annotation-bounds-color: var(--badge-blue-foreground);
-    --annotation-padding-color: var(--badge-green-foreground);
+    --annotation-bounds-color: oklch(0.46 0.2 260);
+    --annotation-padding-color: oklch(0.41 0.14 150);
     --annotation-border-color: oklch(0.48 0.1 90);
     --annotation-margin-color: oklch(0.5 0.13 55);
-    --annotation-gap-color: var(--badge-purple-foreground);
+    --annotation-gap-color: oklch(0.46 0.18 300);
     --annotation-color: var(--annotation-bounds-color);
     --annotation-label-background: var(--background);
-    --annotation-fill-opacity: 12%;
+    --annotation-fill-opacity: 24%;
+    --annotation-fill-hover-opacity: 36%;
+    --annotation-fill-selected-opacity: 44%;
+    --annotation-fill-pressed-opacity: 56%;
     --annotation-pressed-mix: 85%;
-    --annotation-highlight-foreground: var(--primary-foreground);
+    --annotation-highlight-foreground: oklch(0.985 0 0);
+    --annotation-layer: 10;
+    --annotation-dim-opacity: 0.2;
+    --annotation-reveal-duration: var(--speed-gentle);
+    --annotation-transition-duration: var(--speed-swift);
+    --annotation-ease: var(--ease-settle);
+    --annotation-font-size: var(--text-xs);
+    --annotation-line-height: var(--text-xs--line-height);
+    --annotation-font-weight: var(--font-weight-medium);
+    --annotation-shadow: var(--shadow-xs);
+    --annotation-group-gap: calc(var(--spacing) * 1.5);
+    --annotation-label-gap: var(--spacing);
+    --annotation-label-padding-inline: calc(var(--spacing) * 1.5);
+    --annotation-label-padding-block: calc(var(--spacing) * 0.5);
+    --annotation-label-radius: var(--radius-md);
+    --annotation-label-border-width: 1px;
+    --annotation-label-hit-inset: var(--spacing);
+    --annotation-selected-gap: calc(var(--spacing) * 0.5);
+    --annotation-marker-size: calc(var(--spacing) * 6);
+    --annotation-marker-hit-inset: calc(var(--spacing) * 2);
+    --annotation-dot-size: calc(var(--spacing) * 3);
+    --annotation-dot-border-width: calc(var(--spacing) * 0.5);
+    --annotation-circle-radius: 50%;
+    --annotation-region-radius: var(--radius-md);
+    --annotation-region-focus-width: calc(var(--spacing) * 0.5);
+    --annotation-region-focus-offset: calc(var(--annotation-region-focus-width) * -1);
+    --annotation-legend-column-gap: calc(var(--spacing) * 4);
+    --annotation-legend-row-gap: calc(var(--spacing) * 2);
+    --annotation-legend-label-gap: calc(var(--spacing) * 2);
+    --annotation-legend-dot-size: calc(var(--spacing) * 2);
     --canvas-viewport-height: calc(var(--spacing) * 112);
     --canvas-padding: calc(var(--spacing) * 8);
     --canvas-annotation-padding-block: max(
@@ -664,7 +710,7 @@
     --cursor-follower-origin-x: 0px;
     --cursor-follower-origin-y: 0px;
     --canvas-measure-stroke: 1px;
-    --canvas-measure-grid-layer: 0;
+    --canvas-measure-grid-layer: -1;
     --canvas-measure-cursor-layer: calc(var(--cursor-follower-layer) + 1);
     --canvas-measure-font-size: calc(var(--text-xs) * 5 / 6);
     --canvas-measure-accent: var(--primary);
@@ -806,8 +852,12 @@
     --badge-purple-foreground: oklch(0.86 0.11 300);
     --badge-red: oklch(0.31 0.07 var(--destructive-hue));
     --badge-red-foreground: oklch(0.86 0.1 var(--destructive-hue));
+    --annotation-bounds-color: oklch(0.84 0.11 255);
+    --annotation-padding-color: oklch(0.85 0.12 150);
     --annotation-border-color: oklch(0.86 0.14 90);
     --annotation-margin-color: oklch(0.84 0.12 55);
+    --annotation-gap-color: oklch(0.86 0.11 300);
+    --annotation-highlight-foreground: oklch(0.205 0 0);
     --presence-available: oklch(0.72 0.17 149);
     --presence-away: oklch(0.81 0.15 75);
     --border: oklch(1 0 0 / 10%);
@@ -2509,6 +2559,9 @@
 
   [data-slot^="annotation"] {
     --annotation-fill: color-mix(in oklab, var(--annotation-color) var(--annotation-fill-opacity), transparent);
+    --annotation-fill-hover: color-mix(in oklab, var(--annotation-color) var(--annotation-fill-hover-opacity), transparent);
+    --annotation-fill-selected: color-mix(in oklab, var(--annotation-color) var(--annotation-fill-selected-opacity), transparent);
+    --annotation-fill-pressed: color-mix(in oklab, var(--annotation-color) var(--annotation-fill-pressed-opacity), transparent);
     --annotation-highlight-background: var(--annotation-color);
     --annotation-pressed-background: color-mix(in oklab, var(--annotation-color) var(--annotation-pressed-mix), var(--foreground));
   }
@@ -2542,7 +2595,7 @@
     width: max-content;
     padding: var(--annotation-clearance) var(--annotation-label-distance-max) var(--annotation-boundary-inset) var(--annotation-label-distance-min);
     border-radius: var(--annotation-connector-radius);
-    margin: 0 var(--annotation-corner-stroke) var(--annotation-outline-inset) var(--annotation-corner-gap);
+    margin: 0 var(--annotation-corner-stroke) 0 var(--annotation-corner-gap);
   }
 
   .annotation-measurements > * {
@@ -2580,6 +2633,7 @@
   .canvas-measure {
     position: absolute;
     inset: 0;
+    z-index: var(--canvas-measure-grid-layer);
     pointer-events: none;
     color: var(--canvas-measure-accent);
     background-color: var(--canvas-measure-ruler-background);
@@ -2587,7 +2641,8 @@
     outline-color: var(--canvas-measure-minor-color);
   }
 
-  .canvas-measure[data-active="false"] {
+  .canvas-measure[data-active="false"],
+  .canvas-measure__cursor[data-active="false"] {
     visibility: hidden;
   }
 
@@ -2605,12 +2660,12 @@
   }
 
   .canvas-measure__grid {
-    z-index: var(--canvas-measure-grid-layer);
     background: var(--canvas-background);
   }
 
   .canvas-measure__cursor {
     z-index: var(--canvas-measure-cursor-layer);
+    pointer-events: none;
   }
 
   .canvas-measure__metrics {
@@ -3141,16 +3196,6 @@
   .concentric-toolbar__toggle {
     flex: none;
     margin-inline-start: auto;
-  }
-
-  .concentric-toolbar__toggle-label {
-    display: inline-flex;
-    align-items: center;
-    gap: calc(var(--spacing) * 2);
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-medium);
-    white-space: nowrap;
-    cursor: pointer;
   }
 
   /* The stage is sized to the card so the annotation layer's inset-0 maps to

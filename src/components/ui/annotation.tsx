@@ -8,6 +8,8 @@ import { placeAnnotations, type AnnotationSide } from "@/lib/annotation-layout"
 type AnnotationKind = "bounds" | "padding" | "border" | "margin" | "gap"
 type AnnotationColorProps = { kind?: AnnotationKind }
 
+const annotationDimensionFormat = new Intl.NumberFormat("en", { maximumFractionDigits: 2 })
+
 /**
  * Annotation — a design-spec overlay for documenting a component's anatomy:
  * numbered callouts, dimension labels, and spacing bands drawn on top of a
@@ -16,7 +18,7 @@ type AnnotationColorProps = { kind?: AnnotationKind }
  */
 function AnnotationLayer({
   className,
-  active = true,
+  active = false,
   kind,
   ...props
 }: React.ComponentProps<"div"> & AnnotationColorProps & { active?: boolean }) {
@@ -27,7 +29,7 @@ function AnnotationLayer({
       data-active={active}
       aria-hidden={!active}
       className={cn(
-        "pointer-events-none absolute inset-0 z-10 transition-opacity duration-(--speed-gentle) ease-(--ease-settle) data-[active=false]:opacity-0",
+        "pointer-events-none absolute inset-0 z-(--annotation-layer) transition-opacity duration-(--annotation-reveal-duration) ease-(--annotation-ease) data-[active=false]:opacity-0",
         className
       )}
       {...props}
@@ -48,19 +50,19 @@ function Annotation({
     <Comp
       data-slot="annotation"
       data-annotation-kind={kind}
-      className={cn("absolute flex items-center gap-1.5", className)}
+      className={cn("absolute flex items-center gap-(--annotation-group-gap)", className)}
       {...props}
     />
   )
 }
 
 const annotationMarkerVariants = cva(
-  "pointer-events-auto flex shrink-0 select-none items-center justify-center border border-(--annotation-color) bg-(--annotation-label-background) text-(--annotation-color) shadow-xs",
+  "pointer-events-auto flex shrink-0 select-none items-center justify-center border-(length:--annotation-label-border-width) border-(--annotation-color) bg-(--annotation-label-background) text-(--annotation-color) shadow-(--annotation-shadow)",
   {
     variants: {
       variant: {
-        number: "size-6 rounded-full text-xs font-medium tabular-nums",
-        dot: "size-3 rounded-full border-2",
+        number: "size-(--annotation-marker-size) rounded-(--annotation-circle-radius) text-(length:--annotation-font-size) leading-(--annotation-line-height) font-(--annotation-font-weight) tabular-nums",
+        dot: "size-(--annotation-dot-size) rounded-(--annotation-circle-radius) border-(length:--annotation-dot-border-width)",
       },
     },
     defaultVariants: {
@@ -96,7 +98,7 @@ function AnnotationLabel({ className, asChild = false, kind, ...props }: React.C
       data-slot="annotation-label"
       data-annotation-kind={kind}
       className={cn(
-        "pointer-events-auto inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-(--annotation-color) bg-(--annotation-label-background) px-1.5 py-0.5 text-xs tabular-nums text-(--annotation-color) shadow-xs",
+        "pointer-events-auto inline-flex items-center gap-(--annotation-label-gap) whitespace-nowrap rounded-(--annotation-label-radius) border-(length:--annotation-label-border-width) border-(--annotation-color) bg-(--annotation-label-background) px-(--annotation-label-padding-inline) py-(--annotation-label-padding-block) text-(length:--annotation-font-size) leading-(--annotation-line-height) tabular-nums text-(--annotation-color) shadow-(--annotation-shadow)",
         className
       )}
       {...props}
@@ -109,8 +111,8 @@ const annotationLineVariants = cva(
   {
     variants: {
       orientation: {
-        horizontal: "h-0 flex-1 self-center border-t",
-        vertical: "w-0 flex-1 justify-self-center border-s",
+        horizontal: "h-0 flex-1 self-center border-t-(length:--annotation-label-border-width)",
+        vertical: "w-0 flex-1 justify-self-center border-s-(length:--annotation-label-border-width)",
       },
     },
     defaultVariants: {
@@ -188,7 +190,6 @@ function AnnotationConnector({
           y={outline.top}
           width={outline.right - outline.left}
           height={outline.bottom - outline.top}
-          rx={outline.radius}
           {...stroke}
         />
       ) : null}
@@ -214,13 +215,15 @@ function AnnotationConnector({
 
 // A tinted band that highlights a spacing region (padding, margin or gap). It
 // rounds with the surface it documents so nested bands stay concentric.
-function AnnotationBand({ className, kind, ...props }: React.ComponentProps<"div"> & AnnotationColorProps) {
+function AnnotationBand({ className, kind, asChild = false, ...props }: React.ComponentProps<"div"> & AnnotationColorProps & { asChild?: boolean }) {
+  const Comp = asChild ? Slot.Root : "div"
   return (
-    <div
+    <Comp
       data-slot="annotation-band"
       data-annotation-kind={kind}
       className={cn(
-        "pointer-events-none flex items-center justify-center rounded-md bg-(--annotation-fill) text-xs font-medium tabular-nums text-(--annotation-color)",
+        "pointer-events-none flex items-center justify-center rounded-(--annotation-region-radius) bg-(--annotation-fill) text-(length:--annotation-font-size) leading-(--annotation-line-height) font-(--annotation-font-weight) tabular-nums text-(--annotation-color)",
+        asChild && "pointer-events-auto cursor-pointer transition-colors duration-(--annotation-transition-duration) ease-(--annotation-ease) hover:bg-(--annotation-fill-hover) focus-visible:bg-(--annotation-fill-hover) aria-pressed:bg-(--annotation-fill-selected) active:bg-(--annotation-fill-pressed)!",
         className
       )}
       {...props}
@@ -275,7 +278,6 @@ type CalloutGeometry = {
   distance: number
   minDistance: number
   corner: number
-  outlinePad: number
   arcGap: number
   arcStroke: number
 }
@@ -376,16 +378,6 @@ function calloutCornerArc(t: CalloutBox, corner: CalloutCorner, geometry: Callou
   return { arc, anchor, r: R }
 }
 
-function calloutHighlightBounds(target: CalloutBox, padding: number) {
-  return {
-    left: target.left - padding,
-    top: target.top - padding,
-    right: target.right + padding,
-    bottom: target.bottom + padding,
-    radius: target.radius + padding,
-  }
-}
-
 function buildAnnotationCallouts(items: AnnotationCalloutItem[], geo: CalloutGeometry) {
   const anchors = items.flatMap(item => {
     const target = geo.targets[item.target]
@@ -393,7 +385,7 @@ function buildAnnotationCallouts(items: AnnotationCalloutItem[], geo: CalloutGeo
     if (!size || !target) return []
     const peers = items.filter(peer => peer.target === item.target && peer.side === item.side)
     const fraction = (peers.findIndex(peer => peer.id === item.id) + 0.5) / peers.length
-    const highlight = calloutHighlightBounds(target, geo.outlinePad)
+    const highlight = target
     const corner = CALLOUT_CORNERS.has(item.side) ? calloutCornerArc(target, item.side as CalloutCorner, geo) : null
     const anchor: [number, number] = corner?.anchor ?? (
       item.side === "left" ? [highlight.left, highlight.top + (highlight.bottom - highlight.top) * fraction] :
@@ -443,40 +435,61 @@ function buildAnnotationCallouts(items: AnnotationCalloutItem[], geo: CalloutGeo
 
 function AnnotationCallouts({
   items,
-  active = true,
+  active = false,
+  visibility = "all",
+  showDimensions = false,
+  selectedId,
+  onSelectionChange,
   onLayoutOverflow,
   className,
   ...props
 }: Omit<React.ComponentProps<"div">, "content"> & AnnotationColorProps & {
   items: AnnotationCalloutItem[]
   active?: boolean
+  visibility?: "all" | "selected"
+  showDimensions?: boolean
+  selectedId?: AnnotationCalloutItem["id"] | null
+  onSelectionChange?: (id: AnnotationCalloutItem["id"] | null) => void
   onLayoutOverflow?: (ids: AnnotationCalloutItem["id"][]) => void
 }) {
   const layerRef = React.useRef<HTMLDivElement>(null)
   const measurementRef = React.useRef<HTMLDivElement>(null)
   const [geo, setGeo] = React.useState<CalloutGeometry | null>(null)
   const [hovered, setHovered] = React.useState<AnnotationCalloutItem["id"] | null>(null)
-  const [selected, setSelected] = React.useState<AnnotationCalloutItem["id"] | null>(null)
+  const [internalSelected, setInternalSelected] = React.useState<AnnotationCalloutItem["id"] | null>(null)
+  const selected = active ? (selectedId === undefined ? internalSelected : selectedId) : null
+  const setSelected = (id: AnnotationCalloutItem["id"] | null) => {
+    setInternalSelected(id)
+    onSelectionChange?.(id)
+  }
   const [previousActive, setPreviousActive] = React.useState(active)
   if (previousActive !== active) {
     setPreviousActive(active)
-    setSelected(null)
+    setInternalSelected(null)
     setHovered(null)
   }
   const [lastHovered, setLastHovered] = React.useState<
     AnnotationCalloutItem["id"] | null
   >(items[0]?.id ?? null)
 
+  const notifySelectionChange = React.useEffectEvent((id: AnnotationCalloutItem["id"] | null) => {
+    setInternalSelected(id)
+    onSelectionChange?.(id)
+  })
+  React.useEffect(() => {
+    if (!active) notifySelectionChange(null)
+  }, [active])
+
   React.useEffect(() => {
     if (selected === null || !active) return
     const dismissOutside = (event: PointerEvent) => {
       const target = event.target
       if (target instanceof Element && layerRef.current?.contains(target.closest("[data-callout-id]"))) return
-      setSelected(null)
+      notifySelectionChange(null)
     }
     const dismissOnEscape = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return
-      setSelected(null)
+      notifySelectionChange(null)
       setHovered(null)
     }
     document.addEventListener("pointerdown", dismissOutside, true)
@@ -514,7 +527,6 @@ function AnnotationCallouts({
       const minDistance = parseFloat(tokenStyle.paddingLeft)
       const margin = parseFloat(tokenStyle.paddingBottom)
       const corner = parseFloat(tokenStyle.borderRadius)
-      const outlinePad = parseFloat(tokenStyle.marginBottom)
       const arcGap = parseFloat(tokenStyle.marginLeft)
       const arcStroke = parseFloat(tokenStyle.marginRight)
       const targets: Record<string, CalloutBox> = {}
@@ -600,7 +612,7 @@ function AnnotationCallouts({
         targets,
         bounds,
         obstacles,
-        labels, specimen, clearance, distance, minDistance, corner, outlinePad, arcGap, arcStroke,
+        labels, specimen, clearance, distance, minDistance, corner, arcGap, arcStroke,
       }
       setGeo(previous => JSON.stringify(previous) === JSON.stringify(next) ? previous : next)
     }
@@ -630,9 +642,10 @@ function AnnotationCallouts({
       container.removeEventListener("transitionend", schedule)
       window.removeEventListener("resize", schedule)
     }
-  }, [items])
+  }, [items, selected])
 
-  const layout = geo ? buildAnnotationCallouts(items, geo) : { callouts: [], unplaced: [] }
+  const visibleItems = visibility === "selected" ? items.filter(item => item.id === selected) : items
+  const layout = geo ? buildAnnotationCallouts(visibleItems, geo) : { callouts: [], unplaced: [] }
   const built = layout.callouts
   const overflowKey = JSON.stringify(layout.unplaced)
   React.useEffect(() => {
@@ -643,13 +656,32 @@ function AnnotationCallouts({
   const selectedItem = built.find(item => item.id === selected)
   const selectedOutline = geo && selectedItem ? geo.targets[selectedItem.target] : undefined
 
+  const dimensionsFor = (item: AnnotationCalloutItem) => {
+    const target = geo?.targets[item.target]
+    if (!showDimensions || item.id !== selected || !target) return null
+    const width = annotationDimensionFormat.format(target.right - target.left)
+    const height = annotationDimensionFormat.format(target.bottom - target.top)
+    return `${width} × ${height} px`
+  }
+  const labelContent = (item: AnnotationCalloutItem) => {
+    const dimensions = dimensionsFor(item)
+    return <>{item.content}{dimensions ? (
+      <span data-slot="annotation-dimensions">{dimensions}</span>
+    ) : null}</>
+  }
+
   return (
     <AnnotationLayer ref={layerRef} active={active} inert={!active} data-layout-status={layout.unplaced.length ? "insufficient-space" : "placed"} className={className} {...props}>
       <div ref={measurementRef} className="annotation-measurements" aria-hidden="true">
-        {items.map(item => item.label ? (
-          <AnnotationLabel key={item.id} data-measure-id={String(item.id)}>{item.content}</AnnotationLabel>
-        ) : (
-          <AnnotationMarker key={item.id} data-measure-id={String(item.id)}>{item.content}</AnnotationMarker>
+        {items.map(item => (
+          <AnnotationLabel
+            key={item.id}
+            data-measure-id={String(item.id)}
+            className={cn(
+              !item.label && item.id !== selected ? annotationMarkerVariants({ variant: "number" }) : undefined,
+              item.id === selected && "flex-col gap-(--annotation-selected-gap)"
+            )}
+          >{labelContent(item)}</AnnotationLabel>
         ))}
       </div>
       {active && layout.unplaced.length ? (
@@ -659,15 +691,15 @@ function AnnotationCallouts({
         <AnnotationConnector
           data-selected-bounds={String(selected)}
           kind={selectedItem?.kind}
-          outline={calloutHighlightBounds(selectedOutline, geo?.outlinePad ?? 0)}
+          outline={selectedOutline}
         />
       ) : null}
-      {outline && outlineItem?.target !== selectedItem?.target ? (
+      {visibility === "all" && outline && outlineItem?.target !== selectedItem?.target ? (
         <AnnotationConnector
           kind={outlineItem?.kind}
-          outline={calloutHighlightBounds(outline, geo?.outlinePad ?? 0)}
+          outline={outline}
           className={cn(
-            "transition-opacity duration-(--speed-swift) ease-(--ease-settle)",
+            "transition-opacity duration-(--annotation-transition-duration) ease-(--annotation-ease)",
             hovered !== null ? "opacity-100" : "opacity-0"
           )}
         />
@@ -677,8 +709,8 @@ function AnnotationCallouts({
         const isHovered = hovered === c.id
         const dimmed = (hovered !== null || selectedItem !== undefined) && !isHovered && !isSelected
         const fade = cn(
-          "transition-opacity duration-(--speed-swift) ease-(--ease-settle)",
-          dimmed && "opacity-20"
+          "transition-opacity duration-(--annotation-transition-duration) ease-(--annotation-ease)",
+          dimmed && "opacity-(--annotation-dim-opacity)"
         )
         const hover = {
           onPointerEnter: () => {
@@ -694,7 +726,9 @@ function AnnotationCallouts({
           onBlur: () => setHovered(null),
           onClick: () => setSelected(c.id),
           "aria-pressed": isSelected,
-          "aria-label": typeof c.content === "number" ? `Annotation ${c.content}` : undefined,
+          "aria-label": typeof c.content === "number"
+            ? `Annotation ${c.content}${dimensionsFor(c) ? `, ${dimensionsFor(c)}` : ""}`
+            : undefined,
           "data-highlighted": isSelected || isHovered,
         }
         const interactionStyle = "cursor-pointer data-[highlighted=true]:bg-(--annotation-highlight-background) data-[highlighted=true]:text-(--annotation-highlight-foreground) active:bg-(--annotation-pressed-background)! active:text-(--annotation-highlight-foreground)! focus-visible:outline-solid focus-visible:outline-(length:--annotation-line-width) focus-visible:outline-(--annotation-color) focus-visible:outline-offset-(--annotation-outline-inset)"
@@ -708,29 +742,20 @@ function AnnotationCallouts({
               className={cn("-translate-x-1/2 -translate-y-1/2", fade)}
               style={{ left: c.mx, top: c.my }}
             >
-              {c.label ? (
                 <AnnotationLabel
                   asChild
+                  data-slot={!c.label && !isSelected ? "annotation-marker" : "annotation-label"}
                   {...hover}
                   className={cn(
-                    "relative transition-colors duration-(--speed-swift) after:absolute after:-inset-1",
+                    !c.label && !isSelected ? annotationMarkerVariants({ variant: "number" }) : undefined,
+                    isSelected && "flex-col gap-(--annotation-selected-gap)",
+                    "relative transition-colors duration-(--annotation-transition-duration) ease-(--annotation-ease) after:absolute",
+                    !c.label && !isSelected ? "after:-inset-(--annotation-marker-hit-inset)" : "after:-inset-(--annotation-label-hit-inset)",
                     interactionStyle
                   )}
                 >
-                  <button type="button">{c.content}</button>
+                  <button type="button">{labelContent(c)}</button>
                 </AnnotationLabel>
-              ) : (
-                <AnnotationMarker
-                  asChild
-                  {...hover}
-                  className={cn(
-                    "relative transition-colors duration-(--speed-swift) after:absolute after:-inset-2",
-                    interactionStyle
-                  )}
-                >
-                  <button type="button">{c.content}</button>
-                </AnnotationMarker>
-              )}
             </Annotation>
           </React.Fragment>
         )

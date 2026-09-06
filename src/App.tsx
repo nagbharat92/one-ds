@@ -58,7 +58,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Separator } from "@/components/ui/separator"
 import { CardContent } from "@/components/ui/card"
 import { Canvas } from "@/components/ui/canvas"
-import { ItemActions } from "@/components/ui/item"
+import { CanvasGrid } from "@/components/ui/canvas-grid"
+import { CanvasPreviewControls } from "@/components/ui/canvas-preview"
 import {
   Sidebar,
   SidebarBrand,
@@ -168,16 +169,19 @@ function canScrollWithin(
 
 function DemoSandbox({
   children,
+  name,
   layout = "center",
-  background = "grid",
+  background,
   ownsCanvas = false,
 }: {
   children: ReactNode
+  name: string
   layout?: ComponentExample["layout"]
   background?: ComponentExample["background"]
   ownsCanvas?: boolean
 }) {
   const stageRef = useRef<HTMLDivElement>(null)
+  const [grid, setGrid] = useState(false)
   const Surface = ownsCanvas ? "div" : Canvas
 
   useEffect(() => {
@@ -199,6 +203,8 @@ function DemoSandbox({
   }, [])
 
   return (
+    <div className="flex w-full min-w-0 flex-col gap-6">
+    {!ownsCanvas && <CanvasPreviewControls name={name} grid={grid} onGridChange={setGrid} />}
     <Surface
       ref={stageRef}
       {...(ownsCanvas ? {} : { layout, background })}
@@ -216,8 +222,10 @@ function DemoSandbox({
         event.preventDefault()
       }}
     >
+      {!ownsCanvas && <CanvasGrid active={grid} />}
       {children}
     </Surface>
+    </div>
   )
 }
 
@@ -230,38 +238,26 @@ function ExampleSection({
 }) {
   const [resetKey, setResetKey] = useState(0)
   const [view, setView] = useState("preview")
-  const inlineHeader = example.header === "inline"
   const id = exampleId(componentSlug, example.name)
   const code =
     example.code ?? generatedExampleCode[`${componentSlug}:${example.name}`]
-  const reset = (
-    <Button
-      variant="outline"
-      size="default"
-      onClick={() => setResetKey((value) => value + 1)}
-    >
-      <RotateCcwIcon data-icon="inline-start" />
-      Reset
-    </Button>
-  )
   const preview = (
-    <DemoSandbox key={resetKey} layout={example.layout} background={example.background} ownsCanvas={example.ownsCanvas}>
+    <DemoSandbox key={resetKey} name={example.name} layout={example.layout} background={example.background} ownsCanvas={example.ownsCanvas}>
       <ErrorBoundary title={`${example.name} failed to render`}>
         <example.Demo />
       </ErrorBoundary>
     </DemoSandbox>
   )
   const header = (
-    <SectionHeader className={inlineHeader ? "flex-row items-start gap-4" : undefined}>
+    <SectionHeader className="flex-row items-start gap-4">
       <SectionHeading>
-        <SectionTitle className={inlineHeader ? "showcase-example__title flex min-h-9 items-center" : "showcase-example__title"}>
+        <SectionTitle className="showcase-example__title flex min-h-9 items-center">
           {example.name}
         </SectionTitle>
         {example.description ? (
           <SectionDescription>{example.description}</SectionDescription>
         ) : null}
       </SectionHeading>
-      {inlineHeader ? (
         <SectionActions>
           <ButtonGroup aria-label={`${example.name} preview controls`}>
             <ButtonGroup>
@@ -302,30 +298,20 @@ function ExampleSection({
             </ButtonGroup>
           </ButtonGroup>
         </SectionActions>
-      ) : null}
     </SectionHeader>
   )
 
   return (
     <Section className="showcase-example" id={id}>
-      {!inlineHeader ? header : null}
       <Tabs
         value={view}
         onValueChange={(value) => {
           setView(value)
           if (value === "code") setResetKey((current) => current + 1)
         }}
-        className={inlineHeader ? "showcase-example__tabs gap-6" : "showcase-example__tabs"}
+        className="showcase-example__tabs gap-6"
       >
-        {inlineHeader ? header : (
-          <ItemActions className="showcase-example__toolbar">
-          <TabsList aria-label={`${example.name} view`}>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="code">Code</TabsTrigger>
-          </TabsList>
-          {reset}
-          </ItemActions>
-        )}
+        {header}
         <CardContent className="showcase-example__panels">
           <TabsContent
             value="preview"

@@ -21,6 +21,7 @@ export type ComponentEntry = {
   category: string
   Demo: () => ReactNode
   code: string
+  codeSource?: "complete"
   examples?: ComponentExample[]
   installCommand?: string | null
   defaultExampleHeader?: { style: "inline"; description: string }

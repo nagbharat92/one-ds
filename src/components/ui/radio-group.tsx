@@ -8,12 +8,15 @@ import { controlIndicatorVariants } from "@/components/ui/control-indicator"
 
 function RadioGroup({
   className,
+  orientation,
   ...props
 }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
-      className={cn("grid w-full gap-2", className)}
+      orientation={orientation}
+      data-orientation={orientation}
+      className={cn("w-full gap-y-(--radio-group-row-gap)", orientation === "horizontal" ? "flex flex-wrap items-center gap-x-(--radio-group-column-gap)" : "grid gap-x-(--radio-group-row-gap)", className)}
       {...props}
     />
   )
@@ -43,4 +46,13 @@ function RadioGroupItem({
   )
 }
 
-export { RadioGroup, RadioGroupItem }
+function RadioGroupOption({ children, ...props }: React.ComponentProps<typeof RadioGroupItem>) {
+  return (
+    <label data-slot="radio-group-option" className="flex items-center gap-(--radio-group-label-gap) text-sm font-medium">
+      <RadioGroupItem {...props} />
+      <span data-slot="radio-group-text" className="block pr-(--radio-group-text-padding-right)">{children}</span>
+    </label>
+  )
+}
+
+export { RadioGroup, RadioGroupItem, RadioGroupOption }

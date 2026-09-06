@@ -4,11 +4,16 @@ import { cn } from "@/lib/utils"
 import { CursorFollower, type CursorFollowerVariant, type CursorPosition } from "@/components/ui/cursor-follower"
 
 function CanvasGrid({
-  active = true,
+  active = false,
   followerVariant = "surface",
+  followerContent,
   className,
   ...props
-}: React.ComponentProps<"div"> & { active?: boolean; followerVariant?: CursorFollowerVariant }) {
+}: React.ComponentProps<"div"> & {
+  active?: boolean
+  followerVariant?: CursorFollowerVariant
+  followerContent?: (position: CursorPosition) => React.ReactNode
+}) {
   const layerRef = React.useRef<HTMLDivElement>(null)
   const gridRef = React.useRef<HTMLCanvasElement>(null)
   const cursorRef = React.useRef<HTMLCanvasElement>(null)
@@ -64,7 +69,7 @@ function CanvasGrid({
         const next = { x: horizontal - ruler, y: vertical - ruler }
         return previous?.x === next.x && previous?.y === next.y ? previous : next
       })
-      const callout = document.elementFromPoint(pointer.clientX, pointer.clientY)?.closest("[data-callout-id]")
+      const callout = document.elementFromPoint(pointer.clientX, pointer.clientY)?.closest('[data-callout-id], button[data-slot="annotation-band"]')
       const overCallout = !!callout && host.contains(callout)
       layer.dataset.tracking = overCallout ? "false" : "true"
       cursorContext.strokeStyle = guideColor
@@ -216,11 +221,11 @@ function CanvasGrid({
     <>
     <div ref={layerRef} data-slot="canvas-grid" data-active={active} aria-hidden="true" className={cn("canvas-measure", className)} {...props}>
       <canvas ref={gridRef} className="canvas-measure__grid" />
-      <canvas ref={cursorRef} className="canvas-measure__cursor" />
       <span ref={metricsRef} className="canvas-measure__metrics" />
     </div>
+    <canvas ref={cursorRef} data-active={active} aria-hidden="true" className="canvas-measure__cursor" />
     <CursorFollower active={active} position={cursorPosition} variant={followerVariant} className="canvas-grid-follower">
-      {({ x, y }) => (
+      {({ x, y }) => followerContent ? followerContent({ x: x - originOffset.x, y: y - originOffset.y }) : (
         <span className="flex items-center gap-3 font-mono tabular-nums">
           <span>x {Math.round(x - originOffset.x)}</span>
           <span>y {Math.round(y - originOffset.y)}</span>

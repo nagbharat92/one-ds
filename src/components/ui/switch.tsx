@@ -30,4 +30,33 @@ function Switch({
   )
 }
 
-export { Switch }
+function SwitchGroup({
+  orientation = "horizontal",
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { orientation?: "horizontal" | "vertical" }) {
+  return (
+    <div
+      role="group"
+      data-slot="switch-group"
+      data-orientation={orientation}
+      className={cn(
+        "flex min-w-0 gap-x-(--switch-group-column-gap) gap-y-(--switch-group-gap)",
+        orientation === "horizontal" ? "flex-wrap items-center" : "flex-col items-start",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+function SwitchGroupItem({ children, ...props }: React.ComponentProps<typeof Switch>) {
+  return (
+    <label data-slot="switch-group-item" className="flex items-center gap-(--switch-group-label-gap) text-sm font-medium">
+      <Switch {...props} />
+      <span data-slot="switch-group-text" className="block pr-(--switch-group-text-padding-right)">{children}</span>
+    </label>
+  )
+}
+
+export { Switch, SwitchGroup, SwitchGroupItem }

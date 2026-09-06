@@ -4,10 +4,12 @@ import { ImageIcon } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { CheckboxGroup, CheckboxGroupItem } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { ToolbarGroup } from "@/components/ui/toolbar"
 import { Canvas, CanvasWorkbench, CanvasToolbar, CanvasContent, CanvasFooter } from "@/components/ui/canvas"
+import { CanvasGrid } from "@/components/ui/canvas-grid"
+import { useCanvasPreviewState } from "@/components/ui/canvas-preview"
 import {
   AnnotationBand,
   AnnotationCallouts,
@@ -24,7 +26,7 @@ const MIN_PAD = 8
 
 function Concentric() {
   const [radius, setRadius] = useState(20)
-  const [annotate, setAnnotate] = useState(true)
+  const { grid, annotations: annotate, setGrid, setAnnotations: setAnnotate } = useCanvasPreviewState({ defaultGrid: true, defaultAnnotations: true })
   const padding = Math.max(Math.round(radius * PAD_RATIO), MIN_PAD)
   const inner = radius - padding
 
@@ -54,6 +56,7 @@ function Concentric() {
       }
     >
       <Canvas layout="viewport" className="w-full">
+      <CanvasGrid active={grid} />
       <CanvasWorkbench>
       <CanvasToolbar
         className="concentric-toolbar"
@@ -73,16 +76,14 @@ function Concentric() {
             aria-valuetext={`${radius} pixels`}
           />
         </ToolbarGroup>
-        <ToolbarGroup className="concentric-toolbar__toggle">
-          <label className="concentric-toolbar__toggle-label">
-            <Checkbox
-              checked={annotate}
-              onCheckedChange={(value) => setAnnotate(value === true)}
-              aria-label="Show annotations"
-            />
+        <CheckboxGroup className="concentric-toolbar__toggle" aria-label="Concentric display options" orientation="horizontal">
+          <CheckboxGroupItem checked={grid} onCheckedChange={(value) => setGrid(value === true)} aria-label="Show grid">
+            Grid
+          </CheckboxGroupItem>
+          <CheckboxGroupItem checked={annotate} onCheckedChange={(value) => setAnnotate(value === true)} aria-label="Show annotations">
             Annotations
-          </label>
-        </ToolbarGroup>
+          </CheckboxGroupItem>
+        </CheckboxGroup>
       </CanvasToolbar>
 
       <CanvasContent className="concentric-stage">
@@ -244,10 +245,12 @@ export const concentricDemos: ComponentEntry[] = [
     code: `import * as React from "react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { CheckboxGroup, CheckboxGroupItem } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { ToolbarGroup } from "@/components/ui/toolbar"
 import { Canvas, CanvasWorkbench, CanvasToolbar, CanvasContent, CanvasFooter } from "@/components/ui/canvas"
+import { CanvasGrid } from "@/components/ui/canvas-grid"
+import { useCanvasPreviewState } from "@/components/ui/canvas-preview"
 import {
   AnnotationBand,
   AnnotationCallouts,
@@ -257,7 +260,7 @@ import {
 // padding (and every gap) = max(radius * 0.5, 8); inner = radius - padding
 export function Concentric() {
   const [radius, setRadius] = React.useState(20)
-  const [annotate, setAnnotate] = React.useState(true)
+  const { grid, annotations: annotate, setGrid, setAnnotations: setAnnotate } = useCanvasPreviewState({ defaultGrid: true, defaultAnnotations: true })
   const padding = Math.max(Math.round(radius * 0.5), 8)
   const inner = radius - padding
 
@@ -278,6 +281,7 @@ export function Concentric() {
   return (
     <div className="concentric-demo w-full min-w-0" style={{ "--concentric-r": radius + "px" }}>
       <Canvas layout="viewport" className="w-full">
+      <CanvasGrid active={grid} />
       <CanvasWorkbench>
       <CanvasToolbar className="concentric-toolbar" aria-label="Concentric controls">
         <ToolbarGroup className="concentric-toolbar__control">
@@ -293,12 +297,14 @@ export function Concentric() {
             aria-valuetext={radius + " pixels"}
           />
         </ToolbarGroup>
-        <ToolbarGroup className="concentric-toolbar__toggle">
-          <label className="concentric-toolbar__toggle-label">
-            <Checkbox checked={annotate} onCheckedChange={(value) => setAnnotate(value === true)} />
+        <CheckboxGroup className="concentric-toolbar__toggle" aria-label="Concentric display options" orientation="horizontal">
+          <CheckboxGroupItem checked={grid} onCheckedChange={(value) => setGrid(value === true)} aria-label="Show grid">
+            Grid
+          </CheckboxGroupItem>
+          <CheckboxGroupItem checked={annotate} onCheckedChange={(value) => setAnnotate(value === true)} aria-label="Show annotations">
             Annotations
-          </label>
-        </ToolbarGroup>
+          </CheckboxGroupItem>
+        </CheckboxGroup>
       </CanvasToolbar>
 
       <CanvasContent className="concentric-stage">

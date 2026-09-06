@@ -2,18 +2,32 @@ import { useState } from "react"
 import { MousePointer2Icon } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { generatedExampleCode } from "@/showcase/generated-example-code"
 import { Button } from "@/components/ui/button"
-import { Canvas, CanvasContent, CanvasToolbar } from "@/components/ui/canvas"
-import { CursorFollower, type CursorFollowerVariant } from "@/components/ui/cursor-follower"
+import { Canvas, CanvasContent } from "@/components/ui/canvas"
+import { CanvasGrid } from "@/components/ui/canvas-grid"
+import { CanvasPreviewControls, useCanvasPreviewState } from "@/components/ui/canvas-preview"
+import { AnnotationCallouts } from "@/components/ui/annotation"
+import { CursorFollower, type CursorFollowerVariant, type CursorPosition } from "@/components/ui/cursor-follower"
 import { ButtonGroupChoice, ButtonGroupChoiceItem } from "@/components/ui/button-group"
+
+function cursorFollowerContent({ x, y }: CursorPosition) {
+  return (
+    <span className="flex items-center gap-2">
+      <MousePointer2Icon className="size-4 shrink-0" />
+      <span className="font-mono tabular-nums">x {Math.round(x)} / y {Math.round(y)}</span>
+    </span>
+  )
+}
 
 function CursorFollowerDemo() {
   const [variant, setVariant] = useState<CursorFollowerVariant>("surface")
   const [saved, setSaved] = useState(false)
+  const { grid, annotations, setGrid, setAnnotations } = useCanvasPreviewState({ defaultGrid: true, defaultAnnotations: true })
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-6">
-      <CanvasToolbar aria-label="Cursor follower controls">
+      <CanvasPreviewControls name="Cursor follower" annotationsAvailable grid={grid} annotations={annotations} onGridChange={setGrid} onAnnotationsChange={setAnnotations}>
         <div className="flex flex-wrap items-center gap-3 text-sm font-medium">
           <span>Appearance</span>
           <ButtonGroupChoice
@@ -27,21 +41,16 @@ function CursorFollowerDemo() {
             <ButtonGroupChoiceItem value="accent">Accent</ButtonGroupChoiceItem>
           </ButtonGroupChoice>
         </div>
-      </CanvasToolbar>
-      <Canvas className="w-full">
+      </CanvasPreviewControls>
+      <Canvas annotationSpace className="w-full">
+        <CanvasGrid active={grid} followerVariant={variant} followerContent={cursorFollowerContent} />
         <CanvasContent className="flex justify-center">
-          <Button variant={saved ? "secondary" : "default"} onClick={() => setSaved((value) => !value)}>
+          <Button data-annotate="save" variant={saved ? "secondary" : "default"} onClick={() => setSaved((value) => !value)}>
             {saved ? "Saved" : "Save changes"}
           </Button>
+          <AnnotationCallouts active={annotations} items={[{ id: "save", target: "save", side: "bottom", content: "Button", label: true }]} />
         </CanvasContent>
-        <CursorFollower variant={variant}>
-          {({ x, y }) => (
-            <span className="flex items-center gap-2">
-              <MousePointer2Icon className="size-4 shrink-0" />
-              <span className="font-mono tabular-nums">x {Math.round(x)} / y {Math.round(y)}</span>
-            </span>
-          )}
-        </CursorFollower>
+        {!grid && <CursorFollower variant={variant}>{cursorFollowerContent}</CursorFollower>}
       </Canvas>
     </div>
   )
@@ -61,19 +70,6 @@ export const cursorFollowerDemos: ComponentEntry[] = [
       description: "Compact surface and compact accent ornaments follow the pointer without blocking the underlying controls.",
     },
     Demo: CursorFollowerDemo,
-    code: `import { Canvas } from "@/components/ui/canvas"
-import { CursorFollower } from "@/components/ui/cursor-follower"
-import { Button } from "@/components/ui/button"
-
-export function Preview() {
-  return (
-    <Canvas>
-      <Button>Save changes</Button>
-      <CursorFollower>
-        {({ x, y }) => <span>x {Math.round(x)} / y {Math.round(y)}</span>}
-      </CursorFollower>
-    </Canvas>
-  )
-}`,
+    code: generatedExampleCode["cursor-follower:Default"],
   },
 ]

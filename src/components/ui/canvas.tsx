@@ -9,7 +9,7 @@ type CanvasBackground = "grid" | "plain"
 function Canvas({
   className,
   layout = "center",
-  background = "grid",
+  background = "plain",
   annotationSpace = false,
   ...props
 }: React.ComponentProps<"div"> & {
