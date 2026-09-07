@@ -54,7 +54,7 @@ export const canvasDemos: ComponentEntry[] = [
     description:
       "A reusable preview surface with a separate product toolbar, centered content, and an optional footnote below the canvas. Annotations compose inside the content region.",
     category: "Preview Tools",
-    surface: "medium",
+    surface: "default",
     installCommand: null,
     ownsCanvas: true,
     defaultExampleHeader: {

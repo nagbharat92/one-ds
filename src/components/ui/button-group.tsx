@@ -83,7 +83,7 @@ function ButtonGroupChoiceItem({
   children,
   className,
   size = "default",
-  variant = "outline",
+  variant = "secondary",
   ...props
 }: Omit<React.ComponentProps<typeof ToggleGroupPrimitive.Item>, "asChild"> & {
   size?: React.ComponentProps<typeof Button>["size"]

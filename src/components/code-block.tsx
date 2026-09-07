@@ -40,7 +40,7 @@ export function CodeBlock({
         </span>
         <Button
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           aria-label={copied ? "Copied" : "Copy code"}
           onClick={copy}
         >

@@ -168,8 +168,8 @@ function JumpControls({ ids }: { ids: string[] }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       <Button
-        variant="outline"
-        size="xs"
+        variant="secondary"
+        size="default"
         onClick={() => scrollToStart({ behavior: "smooth" })}
       >
         Top
@@ -177,16 +177,16 @@ function JumpControls({ ids }: { ids: string[] }) {
       {ids.slice(0, 3).map((id) => (
         <Button
           key={id}
-          variant="outline"
-          size="xs"
+          variant="secondary"
+          size="default"
           onClick={() => scrollToMessage(id, { behavior: "smooth" })}
         >
           {id}
         </Button>
       ))}
       <Button
-        variant="outline"
-        size="xs"
+        variant="secondary"
+        size="default"
         onClick={() => scrollToEnd({ behavior: "smooth" })}
       >
         Bottom
@@ -236,7 +236,7 @@ function FollowingEdgeDemo() {
           <MessageScrollerButton direction="end" />
         </MessageScroller>
       </MessageScrollerProvider>
-      <Button variant="outline" size="sm" onClick={addMessage}>
+      <Button variant="secondary" size="default" onClick={addMessage}>
         <PlusIcon aria-hidden /> Add message
       </Button>
     </div>
@@ -267,8 +267,8 @@ function LoadEarlierDemo() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-2">
       <Button
-        variant="outline"
-        size="sm"
+        variant="secondary"
+        size="default"
         onClick={loadEarlier}
         disabled={remaining <= 0}
       >
@@ -638,16 +638,16 @@ function ResponseStreamingDemo() {
       </Message>
       <div className="flex gap-2">
         <Button
-          variant="outline"
-          size="sm"
+          variant="secondary"
+          size="default"
           onClick={start}
           disabled={streaming}
         >
           Stream response
         </Button>
         <Button
-          variant="outline"
-          size="sm"
+          variant="secondary"
+          size="default"
           onClick={stop}
           disabled={!streaming}
         >
@@ -784,8 +784,8 @@ function ResponseStreamingMarkdownDemo() {
       </Message>
       <div className="flex gap-2">
         <Button
-          variant="outline"
-          size="sm"
+          variant="secondary"
+          size="default"
           onClick={start}
           disabled={streaming}
         >
@@ -953,7 +953,7 @@ function ResponseActionsDemo() {
             <MessageActions>
               <Button
                 variant="ghost"
-                size="icon-xs"
+                size="icon"
                 aria-label={copied ? "Copied" : "Copy response"}
                 onClick={copy}
               >
@@ -961,7 +961,7 @@ function ResponseActionsDemo() {
               </Button>
               <Button
                 variant="ghost"
-                size="icon-xs"
+                size="icon"
                 aria-label="Helpful"
                 aria-pressed={rating === "up"}
                 onClick={() => setRating((v) => (v === "up" ? null : "up"))}
@@ -970,7 +970,7 @@ function ResponseActionsDemo() {
               </Button>
               <Button
                 variant="ghost"
-                size="icon-xs"
+                size="icon"
                 aria-label="Not helpful"
                 aria-pressed={rating === "down"}
                 onClick={() => setRating((v) => (v === "down" ? null : "down"))}
@@ -979,7 +979,7 @@ function ResponseActionsDemo() {
               </Button>
               <Button
                 variant="ghost"
-                size="icon-xs"
+                size="icon"
                 aria-label="Regenerate"
                 onClick={() =>
                   setIndex((v) => (v + 1) % responseAnswers.length)
@@ -1060,7 +1060,6 @@ function ResponseSourcesDemo() {
                       domain={source.href}
                       alt=""
                       data-icon="inline-start"
-                      className="dark:invert"
                     />
                     {source.label}
                   </a>
@@ -1091,8 +1090,8 @@ function ResponseErrorDemo() {
               </AlertDescription>
               <AlertAction>
                 <Button
-                  variant="outline"
-                  size="xs"
+                  variant="secondary"
+                  size="default"
                   onClick={() => setFailed(false)}
                 >
                   <RotateCwIcon aria-hidden />
@@ -1539,7 +1538,7 @@ export function MessageDemo() {
                     <MessageActions>
                       <Button
                         variant="ghost"
-                        size="icon-xs"
+                        size="icon"
                         aria-label={copied ? "Copied" : "Copy message"}
                         onClick={() => setCopied(true)}
                       >
@@ -1551,7 +1550,7 @@ export function MessageDemo() {
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon-xs"
+                        size="icon"
                         aria-label="Like"
                         aria-pressed={liked === true}
                         onClick={() => setLiked((v) => (v === true ? null : true))}
@@ -1560,7 +1559,7 @@ export function MessageDemo() {
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon-xs"
+                        size="icon"
                         aria-label="Dislike"
                         aria-pressed={liked === false}
                         onClick={() =>
@@ -1571,7 +1570,7 @@ export function MessageDemo() {
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon-xs"
+                        size="icon"
                         aria-label="Share"
                       >
                         <ShareIcon aria-hidden />
@@ -1979,8 +1978,8 @@ export function MessageScrollerDemo() {
                 </MessageScroller>
               </MessageScrollerProvider>
               <Button
-                variant="outline"
-                size="sm"
+                variant="secondary"
+                size="default"
                 onClick={() => {
                   const i = counterRef.current++
                   const align =

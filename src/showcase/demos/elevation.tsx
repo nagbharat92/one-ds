@@ -63,7 +63,7 @@ function NestedElevationDemo() {
             <ItemActions hosted>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-sm" aria-label="Item actions">
+                  <Button variant="ghost" size="icon" aria-label="Item actions">
                     <MoreHorizontalIcon />
                   </Button>
                 </DropdownMenuTrigger>
@@ -182,7 +182,7 @@ function RaisedWithFloatingChildDemo() {
         <CardContent>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline">Open floating details</Button>
+              <Button variant="secondary">Open floating details</Button>
             </PopoverTrigger>
             <PopoverContent
               align="start"
@@ -207,7 +207,7 @@ function FloatingElevationDemo() {
     <div className="flex flex-wrap items-center justify-center gap-3">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">Open popover</Button>
+          <Button variant="secondary">Open popover</Button>
         </PopoverTrigger>
         <PopoverContent className={elevationVariants({ level: "floating" })}>
           <PopoverHeader>
@@ -220,7 +220,7 @@ function FloatingElevationDemo() {
       </Popover>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Open menu</Button>
+          <Button variant="secondary">Open menu</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className={elevationVariants({ level: "floating" })}
@@ -251,7 +251,7 @@ function ModalElevationDemo() {
         <DialogFooter showCloseButton>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">More actions</Button>
+              <Button variant="secondary">More actions</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"

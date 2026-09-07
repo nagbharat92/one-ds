@@ -92,8 +92,8 @@ function PresetsDemo() {
         {PRESETS.map((p) => (
           <Button
             key={p.label}
-            variant={date && isSameDay(date, p.value()) ? "default" : "outline"}
-            size="sm"
+            variant={date && isSameDay(date, p.value()) ? "default" : "secondary"}
+            size="default"
             className="justify-start"
             onClick={() => setDate(p.value())}
           >

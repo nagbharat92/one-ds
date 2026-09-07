@@ -576,6 +576,38 @@ export function SliderDemo() {
 }`,
     examples: [
       {
+        name: "Magnetic Snapping",
+        description: "Drag near 25, 50, or 75 to snap. Values between stops remain available; arrow keys adjust precisely.",
+        Demo: () => {
+          const [value, setValue] = useState([40])
+          return (
+            <div className="flex w-full max-w-sm flex-col gap-3">
+              <div className="flex items-center justify-between text-sm">
+                <span>Level</span>
+                <output className="tabular-nums text-muted-foreground">{value[0]}</output>
+              </div>
+              <Slider aria-label="Magnetic level" value={value} onValueChange={setValue} snapPoints={[25, 50, 75]} snapMode="magnetic" />
+            </div>
+          )
+        },
+      },
+      {
+        name: "Discrete Snapping",
+        description: "Only 0, 20, 50, 85, and 100 are selectable. Arrow keys move between stops; Home and End select the endpoints.",
+        Demo: () => {
+          const [value, setValue] = useState([20])
+          return (
+            <div className="flex w-full max-w-sm flex-col gap-3">
+              <div className="flex items-center justify-between text-sm">
+                <span>Level</span>
+                <output className="tabular-nums text-muted-foreground">{value[0]}</output>
+              </div>
+              <Slider aria-label="Discrete level" value={value} onValueChange={setValue} snapPoints={[20, 50, 85]} snapMode="discrete" />
+            </div>
+          )
+        },
+      },
+      {
         name: "Range",
         description: "A dual-thumb range slider.",
         Demo: () => {
@@ -1278,7 +1310,7 @@ export function ComboboxDemo() {
           const countries = ["Australia", "Brazil", "Canada", "Germany", "India", "Japan", "Mexico", "Norway"]
           return (
             <Combobox items={countries}>
-              <ComboboxTrigger render={<Button variant="outline" className="w-56 justify-between font-normal" />}>
+              <ComboboxTrigger render={<Button variant="secondary" className="w-56 justify-between font-normal" />}>
                 <ComboboxValue placeholder="Select country" />
               </ComboboxTrigger>
               <ComboboxContent>

@@ -25,11 +25,9 @@ export type ComponentEntry = {
   examples?: ComponentExample[]
   installCommand?: string | null
   defaultExampleHeader?: { style: "inline"; description: string }
+  defaultExampleName?: string
   ownsCanvas?: boolean
-  // Sizing tier for the page column + default preview canvas. Defaults to
-  // "component" for library primitives and "application" for Blocks/Experiments;
-  // set "medium" for a wider-than-docs page with a roomy but non-fullscreen canvas.
-  surface?: "component" | "medium" | "application"
+  surface?: "default" | "application"
 }
 
 export const CATEGORY_ORDER = [

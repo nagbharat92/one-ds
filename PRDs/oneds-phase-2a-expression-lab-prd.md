@@ -2,6 +2,8 @@
 
 Status: working product brief, not an implementation specification.
 
+Review 2026-09-07: retained as a comparison and evaluation reference. The lab already exists; the baseline audit and fixed-bento constraints below describe an earlier experiment. Layout may change when required by the component-family design work described in the [current review](README.md).
+
 Parent intent: [Phase 2 expressive system charter](oneds-phase-2-expressive-system-prd.md).
 
 ## Goal

@@ -5,11 +5,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 const toolbarVariants = cva(
-  // Concentric rule: the outer radius = the inner control's radius (--tb-inner,
-  // default = the sm/icon-sm button radius) + the cross-axis padding (--tb-pad),
-  // so the corner curve stays even around the buttons. Override --tb-inner when
-  // the toolbar holds larger controls (e.g. default buttons -> var(--radius-lg)).
-  "flex bg-clip-padding gap-3 rounded-(--tb-radius) [--tb-inner:var(--radius-md)] [--tb-pad:calc(var(--spacing)*3)] [--tb-pad-ends:var(--tb-pad)] [--tb-radius:calc(var(--tb-inner)+var(--tb-pad))]",
+  "flex bg-clip-padding gap-3 rounded-(--tb-radius) [--tb-inner:var(--radius-lg)] [--tb-pad:calc(var(--spacing)*3)] [--tb-pad-ends:var(--tb-pad)] [--tb-radius:calc(var(--tb-inner)+var(--tb-pad))]",
   {
     variants: {
       variant: {

@@ -811,7 +811,7 @@ export function ResizableDemo() {
           </PageHeaderDescription>
         </PageHeaderContent>
         <PageHeaderActions>
-          <Button variant="outline">
+          <Button variant="secondary">
             <DownloadIcon data-icon="inline-start" />
             Export
           </Button>
@@ -848,7 +848,7 @@ export function PageHeaderDemo() {
         </PageHeaderDescription>
       </PageHeaderContent>
       <PageHeaderActions>
-        <Button variant="outline">
+        <Button variant="secondary">
           <DownloadIcon data-icon="inline-start" />
           Export
         </Button>
@@ -876,7 +876,7 @@ export function PageHeaderDemo() {
             </PageHeaderContent>
             <PageHeaderActions>
               <Button>Get started</Button>
-              <Button variant="outline">View components</Button>
+              <Button variant="secondary">View components</Button>
             </PageHeaderActions>
           </PageHeader>
         ),
@@ -899,7 +899,7 @@ export function PageHeaderDemo() {
             </SectionDescription>
           </SectionHeading>
           <SectionActions>
-            <Button variant="outline" size="sm">
+            <Button variant="secondary" size="default">
               <PlusIcon data-icon="inline-start" />
               Invite
             </Button>
@@ -939,7 +939,7 @@ export function SectionDemo() {
           </SectionDescription>
         </SectionHeading>
         <SectionActions>
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="default">
             <PlusIcon data-icon="inline-start" />
             Invite
           </Button>
@@ -1058,7 +1058,7 @@ export function ClusterDemo() {
     description:
       "A horizontal action bar for filters, search, and view toggles.",
     category: "Layout",
-    surface: "medium",
+    surface: "default",
     ownsCanvas: true,
     codeSource: "complete",
     defaultExampleHeader: {
@@ -1069,22 +1069,22 @@ export function ClusterDemo() {
       <ToolbarPreview name="Toolbar">
       <Toolbar data-measure="toolbar" className="w-full">
         <ToolbarGroup data-measure="primary">
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="default">
             <FilterIcon data-icon="inline-start" />
             Filter
           </Button>
-          <Button variant="ghost" size="sm">
+          <Button variant="secondary" size="default">
             <SearchIcon data-icon="inline-start" />
             Search
           </Button>
         </ToolbarGroup>
         <ToolbarSpacer />
         <ToolbarGroup>
-          <Button variant="ghost" size="icon-sm" aria-label="List view">
+          <Button variant="secondary" size="icon" aria-label="List view">
             <ListIcon />
           </Button>
           <ToolbarSeparator />
-          <Button variant="ghost" size="icon-sm" aria-label="Grid view">
+          <Button variant="secondary" size="icon" aria-label="Grid view">
             <LayoutGridIcon />
           </Button>
         </ToolbarGroup>
@@ -1106,11 +1106,11 @@ export function ClusterDemo() {
             {(["default", "muted", "ghost"] as const).map((variant) => (
               <Toolbar key={variant} data-measure={`toolbar-${variant}`} variant={variant} className="w-full">
                 <ToolbarGroup data-measure={`group-${variant}`}>
-                  <Button variant="outline" size="sm">
+                  <Button variant="secondary" size="default">
                     <FilterIcon data-icon="inline-start" />
                     Filter
                   </Button>
-                  <Button variant="ghost" size="sm">
+                  <Button variant="secondary" size="default">
                     <SearchIcon data-icon="inline-start" />
                     Search
                   </Button>
@@ -1136,25 +1136,25 @@ export function ClusterDemo() {
           ]}>
           <Toolbar data-measure="toolbar">
             <ToolbarGroup data-measure="primary">
-              <Button variant="ghost" size="icon-sm" aria-label="Bold">
+              <Button variant="ghost" size="icon" aria-label="Bold">
                 <BoldIcon />
               </Button>
-              <Button variant="ghost" size="icon-sm" aria-label="Italic">
+              <Button variant="ghost" size="icon" aria-label="Italic">
                 <ItalicIcon />
               </Button>
-              <Button variant="ghost" size="icon-sm" aria-label="Underline">
+              <Button variant="ghost" size="icon" aria-label="Underline">
                 <UnderlineIcon />
               </Button>
             </ToolbarGroup>
             <ToolbarSeparator />
             <ToolbarGroup data-measure="secondary">
-              <Button variant="ghost" size="icon-sm" aria-label="Align left">
+              <Button variant="ghost" size="icon" aria-label="Align left">
                 <AlignLeftIcon />
               </Button>
-              <Button variant="ghost" size="icon-sm" aria-label="Align center">
+              <Button variant="ghost" size="icon" aria-label="Align center">
                 <AlignCenterIcon />
               </Button>
-              <Button variant="ghost" size="icon-sm" aria-label="Align right">
+              <Button variant="ghost" size="icon" aria-label="Align right">
                 <AlignRightIcon />
               </Button>
             </ToolbarGroup>
@@ -1172,19 +1172,19 @@ export function ClusterDemo() {
           <ToolbarPreview name="Vertical" contentClassName="max-w-24">
           <Toolbar data-measure="toolbar" orientation="vertical" className="mx-auto">
             <ToolbarGroup data-measure="primary">
-              <Button variant="ghost" size="icon-sm" aria-label="Home">
+              <Button variant="ghost" size="icon" aria-label="Home">
                 <HomeIcon />
               </Button>
-              <Button variant="ghost" size="icon-sm" aria-label="Search">
+              <Button variant="ghost" size="icon" aria-label="Search">
                 <SearchIcon />
               </Button>
-              <Button variant="ghost" size="icon-sm" aria-label="Bookmarks">
+              <Button variant="ghost" size="icon" aria-label="Bookmarks">
                 <BookmarkIcon />
               </Button>
             </ToolbarGroup>
             <ToolbarSeparator />
             <ToolbarGroup>
-              <Button variant="ghost" size="icon-sm" aria-label="Settings">
+              <Button variant="ghost" size="icon" aria-label="Settings">
                 <SettingsIcon />
               </Button>
             </ToolbarGroup>
@@ -1211,11 +1211,11 @@ export function ClusterDemo() {
             </ToolbarTitle>
             <ToolbarSpacer />
             <ToolbarGroup data-measure="primary">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="default">
                 <FilterIcon data-icon="inline-start" />
                 Filter
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="default">
                 <PlusIcon data-icon="inline-start" />
                 New
               </Button>

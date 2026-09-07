@@ -22,6 +22,93 @@ npm run preview  # preview the production build
 
 ## Showcase site
 
+### Design rules for people and agents
+
+Open `#/rules` from the sidebar's Reference section for approved conventions,
+searchable candidate rules, implementation links, and live Button measurements.
+[src/design-system/rules.json](src/design-system/rules.json) is the canonical source;
+the page reads it directly and `npm run rules:generate` produces the
+[agent-readable reference](public/design-rules.md). [AGENTS.md](AGENTS.md) directs
+agents to read that reference before UI work. Keep candidates distinct from approvals.
+
+The first approved rule is **build everything from OneDS components**. Extend the
+owning component or add a reusable library component before using a missing pattern;
+do not recreate it in page markup. Semantic content and product data may remain local.
+The Rules page composes Section, Stack, Cluster, Accordion, Empty, Alert, and the
+existing controls. It contains no locally styled native elements or raw disclosures.
+
+[Text](src/components/ui/text.tsx) owns body, label, metadata, and code roles through
+`--text-body-*`, `--text-label-*`, `--text-metadata-*`, and `--text-code-*` tokens.
+Its initial body scale preserves the existing 14px reading size for a separate
+typography decision. `asChild` preserves semantic paragraphs, terms, definitions,
+links, or code while applying the shared role. See `#/text`.
+
+[TableOfContents](src/components/ui/table-of-contents.tsx) composes with
+TableOfContentsLayout and TableOfContentsContent. Pass unique target IDs and labels;
+the component scrolls and focuses the target without replacing a hash-routed page.
+The desktop rail uses CSS sticky positioning and a bounded overflow area, while
+the narrow layout wraps above the content. Geometry lives in `--toc-*` tokens.
+Keep the layout inside the intended page scroller and avoid an intervening clipping
+ancestor. See `#/table-of-contents`. Current-section scroll tracking is not included.
+
+Buttons now expose only Default (`default`) and Expressive (`expressive`):
+40 and 56 CSS pixels including borders. Icon counterparts (`icon`,
+`icon-expressive`) use matching square dimensions. Large, small, and extra-small
+Button sizes have been removed; existing consumers use Default. Default now uses
+the former Large proportions: 20px icons and 16px horizontal padding.
+Button, Favicon, and InputGroupButton share the scale. Existing specialized
+composition overrides are not a blanket certification of the entire library.
+
+Button no longer exposes `outline`. Isolated icon-only actions and groups use
+`ghost`; supporting actions beside search, selects/dropdowns, or mixed tools use
+`secondary` for comparable visual weight. Labelled supporting actions also use
+secondary. This is a local composition decision, not a page-wide theme or runtime
+DOM heuristic. Primary, destructive, link, and persistent selected-state intent
+remain unchanged; field-internal affordances may stay ghost. Non-Button outline
+variants and field borders remain supported. See Button's working **Icon Tools**
+and **Mixed Tools** examples, and rule `controls.supporting-actions`.
+
+### Optical spacing for icon labels
+
+[IconLabel](src/components/ui/icon-label.tsx) owns the optical correction for text
+paired with an icon, favicon, or loading spinner: `--icon-label-optical-padding`
+adds 4px on the label's outer edge opposite the graphic. A left icon adds right
+label padding; a right icon adds left label padding. Button's gap remains 8px
+(`--graphic-label-gap`, aliased by `--button-gap`) in both sizes and expressive contexts.
+"Icon + label" always means icons, favicons, and loaders alike. Parents composing
+IconLabel with any of these graphics inherit the shared gap rather than a local spacing choice.
+Logical sides mirror in right-to-left layouts.
+Labels flanked by graphics on both sides get no asymmetric correction.
+
+Favicon adapts GitHub's monochrome mark automatically for light/dark themes and
+primary Button surfaces, using shared filter tokens. Colored brand favicons retain
+their original colors. Consumers must not apply blanket `dark:invert` styling.
+
+Button wraps ordinary labels automatically, including plain text spans and `asChild`
+links, and enables the correction only beside an icon, favicon, spinner, or `data-icon`
+wrapper. Loading examples use the shared Spinner, which follows Button's icon-size
+tokens. Text-only and icon-only controls retain their original geometry.
+For a rich custom label, compose IconLabel explicitly; use it in new icon-label
+components too. Do not recreate this as page-level `pr-1` overrides or modify the
+base Button padding/gap. See `#/icon-label` and Button's **Optical Spacing** example.
+
+The general principle is **optical alignment/optical correction**. Material documents
+[optical corrections in iconography](https://m2.material.io/design/iconography/system-icons.html#system-icon-metrics)
+and [asymmetric padding in its older button specs](https://m2.material.io/components/buttons#specs).
+Those sources support the principle; the specific 4px mirrored outer correction is our own.
+
+Run `npm run test:design-rules` to validate the rule registry, generated Markdown,
+and Button token/API contract. The `design rules` Playwright tests verify the live
+page, size parity, and responsive examples.
+
+Verification is risk-based; the [Change and Verify policy](AGENTS.md#change-and-verify)
+defines the budget. Small visual changes get typecheck, touched-file lint, and one
+focused rendered check, not a full test run. Documentation-only changes need only
+diff review and whitespace validation. Broader checks are reserved for shared
+behavior/API migrations and release validation. Reuse passing results unless later
+edits affect them, and do not regenerate showcase code separately when running
+`test:showcase-code`, which already performs that step.
+
 `npm run dev` serves the component showcase, modeled on shadcn's docs site:
 
 - **Sidebar** grouped by category, listing all installed components.
@@ -30,6 +117,16 @@ npm run preview  # preview the production build
 - Every example includes Preview/Code controls, Reset, and an in-page index.
 - Preview and Code share one stable height; long snippets scroll inside the panel.
 - Demo links and forms simulate actions without leaving or reloading the showcase.
+
+Showcase sizing has two tiers. **Default** (`surface: "default"`) uses the shared
+`PageContent` app-width column, matching Concentric, and the roomy
+`--canvas-viewport-height` minimum. All former small component pages now use it,
+including named examples. Explicit `start` and `wide` canvas layouts retain their
+alignment but share this minimum. **Large** (`surface: "application"`) retains the
+full-width page and application-height preview used by AI Chat and other application
+specimens. Blocks and Experiments infer Large unless they explicitly choose Default.
+Component-owned canvases retain their own anatomy and content-driven dimensions.
+The reusable PageContent and Canvas APIs outside the showcase remain unchanged.
 
 The showcase is driven by category demo files under
 [src/showcase/demos](src/showcase/demos), aggregated in
@@ -372,6 +469,65 @@ Run `npm run test:annotations` for the placement regression tests (Node 22.6+
 with built-in experimental TypeScript stripping).
 
 ## Adding a component
+
+### Expression Lab expressive treatment
+
+Expression Lab applies the refined Concentric medium-scale vocabulary only in Expressive mode. Original retains its existing component styles. The `--expressive-*` role tokens are defined in `src/index.css`; `src/showcase/experiments/expressive.css` binds them to the app's components. Most role values alias the corresponding Concentric tokens so the two experiments share a source of truth.
+
+- Main titles use 20px/28px bold, body and action labels 16px/24px, metadata and helper text at least 14px/20px. Main text pairs use 8px gaps; profile text pairs use 4px.
+- Cards, content regions, and field groups use 24px spacing; related actions and avatar/text pairs use 12px. Existing Card anatomy and footer bands are retained. Columns and choice cards wrap to the available width.
+- Labelled actions are 56px high with 16px vertical and 24px horizontal padding. Outline strokes paint inside without changing layout. Icon controls and navigation rows use 48px targets with 24px glyphs. Collapsed navigation avatars remain small enough for their rail.
+- Inputs and select triggers use 48px height, 4px vertical/16px horizontal padding, and fixed 12px corners. Textareas use uniform 16px padding and the shared `ResizableTextarea` inset diagonal grip (drag or Arrow Up/Down, Home for minimum). Original mode uses the native Textarea.
+- Avatars use 40px expanded slots. Badges stay subordinate at 14px; checkbox and switch indicators scale independently from action buttons. Composer tools remain compact 48px controls, not 56px labelled actions.
+- Application dropdowns, the Category select, and the mobile navigation drawer explicitly carry `data-expression` through portals. Menu rows use 48px minimum height and 4px/16px padding, with 8px surface inset and concentric row/surface radii. Experiment controls outside the app are not themed.
+
+Browser regressions cover Expressive/Original switching with state preservation, compact and mobile layouts, dark mode, portaled controls, note editing/resizing/saving, session controls, and chat submission. This is still a scoped experiment, not a global restyle of OneDS.
+
+### Concentric experiment vocabulary
+
+The previews separate three independent rules:
+
+Padding has a 12px minimum. Sliders start and reset at radius 24 (12px padding), with magnetic padding stops at 20/24/28px.
+
+- **Continuous geometry:** every slider value changes spacing and corners, including between magnetic stops. Vertical Card and Edit Project share actual padding and major section gaps of 20/24/28px at the corresponding stops. The form's field-group gap follows the same value.
+- **Stepped scale:** typography, media, icons, and control sizes stay normal below 24px padding, medium from 24px to under 28px, and large from 28px.
+- **Fixed relationships:** title/description pairing retains its component-owned rhythm. Action gaps stay 8px except in the medium-scale button trial, where they are fixed at 12px.
+
+Shared geometry tokens in `src/index.css` define `--concentric-surface-inset` and `--concentric-section-gap` from the continuous padding value. Both Card-based specimens use these roles, without adding different component offsets to their spacing. Corners retain **component default + offset**, clamped at zero: Card radius starts at `--radius-xl` and control radius at `--radius-lg`. Portaled menus receive the same driver and scale so their geometry does not freeze between stops.
+
+Changing the driver does not mutate global components. Card and Field still own the composition, normal typography, surfaces, and tight relationship gaps; padding and section spacing are intentional experiment overrides. Browser regressions verify the shared spacing at stops and intermediate values, and compare the remaining normal styles against the Card page.
+
+### Concentric typography reference
+
+The approved medium-scale reference (24px padding) applies to equivalent roles across every Concentric specimen, including horizontal compositions, vertical cards, and forms. It is not a global component change or a requirement to use identical sizes at every scale.
+
+| Role | Font size | Line height | Weight | Emphasis |
+| --- | --- | --- | --- | --- |
+| Main title | 20px | 28px | 700 | Primary foreground |
+| Main description | 16px | 24px | 400 | Muted foreground |
+| Button label | 16px | 24px | 500 | Button variant foreground |
+
+The title is 1.25 times the reading size. Actions share the reading size and use weight and surface treatment for emphasis. At medium scale, pair two 14px text roles with a 4px gap; larger main title/description pairs use an 8px gap consistently across horizontal, vertical, and form specimens. These are gaps between line boxes, in addition to their line heights.
+
+Medium action-button trial: 16px labels with a 24px line box and 16px top/bottom padding produce a 56px button. Left/right padding follows the shared surface inset (24px at the medium stop), matching the Card-based dialog/form padding and changing continuously with it. The gap between buttons is fixed at 12px. The outline is painted inside without consuming layout space; focus rings remain available. This applies to specimen action rows only, not inputs, menus, icon triggers, or preview controls. Normal and large buttons remain unchanged pending comparison, so this trial is intentionally not a finalized monotonic size ramp.
+
+Medium-scale rule: specimen text must be at least 14px. Supporting roles use 14px/20px; weight and color establish hierarchy without smaller text. This applies to all medium-scale specimens and their menus, not the preview rulers or measurement labels.
+
+| Role | Font size | Line height | Weight | Emphasis |
+| --- | --- | --- | --- | --- |
+| Status badge | 14px | 20px | 500 | Badge variant foreground |
+| Profile name | 14px | 20px | 500 | Primary foreground |
+| Profile description or recency | 14px | 20px | 400 | Muted foreground |
+
+The medium hierarchy is 20 / 16 / 14px. A status badge remains quieter than a button label. Profile names use medium weight and primary foreground; descriptions use regular weight and muted foreground. Normal and large scale definitions are unchanged.
+
+At medium scale, the profile avatar is 40px square with a fixed 12px avatar-to-text gap. Its two 20px text lines plus the 4px pairing gap make a 44px text block. The row centers the avatar and text vertically; badge spacing is independent.
+
+Edit Project uses the same medium rules: 20/16px heading pair with an 8px gap, 24px surface/section spacing at the snap point, 14/20px helper and error text, and the medium action buttons above. The Notifications label/helper pair uses an 8px gap (16px label, 14px helper), with 12px between that text block and the switch.
+
+Medium fields: text inputs and select triggers have an explicit 48px height with 4px top/bottom and 16px left/right padding. The 24px text line remains vertically centered; height is independent of padding plus line height. Textareas use uniform 16px padding on all sides, with a three-line minimum rather than a fixed single-line height. Select and project-menu rows use a 48px minimum height and 4px/16px insets; select rows reserve additional space for the checkmark. Menu surfaces use 8px padding. Medium action buttons remain 56px high.
+
+Concentric text inputs, textareas, and select triggers use a fixed 12px field radius (`--concentric-field-radius`), independent of scale and the corner-radius slider. Textareas use equal padding on all four sides at each scale. The preview's resize handle is inset 4px from the bottom and end edges, derived from the corner radius; dragging or Arrow Up/Down resizes vertically and Home restores the minimum height. Example Reset clears manual sizing. Buttons and popup surfaces retain their separate shape rules.
 
 ### Button group choices
 

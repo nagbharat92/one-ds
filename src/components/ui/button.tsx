@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { withIconLabels } from "@/components/ui/icon-label"
 import {
   Tooltip,
   TooltipContent,
@@ -16,8 +17,6 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80 active:bg-primary/70",
-        outline:
-          "border-border bg-control hover:bg-(--state-layer-hover) hover:text-foreground active:bg-(--state-layer-pressed) active:text-foreground aria-expanded:bg-(--state-layer-focus) aria-expanded:text-foreground dark:border-input dark:bg-input/30",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] active:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_10%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
@@ -28,16 +27,12 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
-        "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
+          "h-(--button-height-default) gap-(--button-gap) px-(--button-padding-default) [&_svg:not([class*='size-'])]:size-(--button-icon-default)",
+        expressive:
+          "h-(--button-height-expressive) gap-(--button-gap) rounded-full px-(--button-padding-expressive) text-(length:--expressive-body-size) leading-(--expressive-body-leading) [&_svg:not([class*='size-'])]:size-(--button-icon-expressive)",
+        icon: "size-(--button-height-default) p-0 [&_svg:not([class*='size-'])]:size-(--button-icon-default)",
+        "icon-expressive":
+          "size-(--button-height-expressive) rounded-full p-0 [&_svg:not([class*='size-'])]:size-(--button-icon-expressive)",
       },
     },
     defaultVariants: {
@@ -47,7 +42,7 @@ const buttonVariants = cva(
   }
 )
 
-const ICON_ONLY_SIZES = new Set(["icon", "icon-xs", "icon-sm", "icon-lg"])
+const ICON_ONLY_SIZES = new Set(["icon", "icon-expressive"])
 const ButtonAutoTooltipContext = React.createContext(true)
 
 function ButtonTooltipSuppression({ children }: React.PropsWithChildren) {
@@ -60,6 +55,7 @@ function ButtonTooltipSuppression({ children }: React.PropsWithChildren) {
 
 function Button({
   className,
+  children,
   variant = "default",
   size = "default",
   asChild = false,
@@ -83,17 +79,23 @@ function Button({
         ? props["aria-label"]
         : undefined)
   const hasTooltip = Boolean(label) && !props.disabled
+  const content = asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+    ? React.cloneElement(children, undefined, withIconLabels(children.props.children))
+    : withIconLabels(children)
 
   const button = (
     <Comp
       data-slot="button"
+      data-icon-label-host
       data-variant={variant}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
       // Our tooltip replaces the native one, never stacks with it.
       title={hasTooltip ? undefined : title}
       {...props}
-    />
+    >
+      {content}
+    </Comp>
   )
 
   if (!hasTooltip) {

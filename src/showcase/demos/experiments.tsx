@@ -47,6 +47,7 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select"
 import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -99,7 +100,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
+import { ResizableTextarea } from "@/components/ui/resizable-textarea"
 import { Toolbar } from "@/components/ui/toolbar"
 import {
   AIComposer,
@@ -243,11 +244,13 @@ const initialLabMessages: LabMessage[] = [
 ]
 
 function ExpressionLabComposerAddMenu({
+  mode,
   webSearch,
   deepResearch,
   onWebSearchChange,
   onDeepResearchChange,
 }: {
+  mode: FormExperimentMode
   webSearch: boolean
   deepResearch: boolean
   onWebSearchChange: (checked: boolean) => void
@@ -281,7 +284,7 @@ function ExpressionLabComposerAddMenu({
             <PlusIcon />
           </AIComposerAction>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="top" align="start">
+        <DropdownMenuContent side="top" align="start" data-expression={mode}>
           <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
@@ -403,6 +406,7 @@ function ExpressionLabCanvas({
   )
   const [note, setNote] = useState(initialState.note)
   const [noteSaved, setNoteSaved] = useState(initialState.noteSaved)
+  const [category, setCategory] = useState("shape")
   const [lens, setLens] = useState(initialState.lens)
   const [activeRegion, setActiveRegion] =
     useState<LabNavigationId>("overview")
@@ -477,6 +481,7 @@ function ExpressionLabCanvas({
       ref={labRef}
       className="expression-lab showcase-contained-viewport"
       data-experiment={mode}
+      data-expression={mode}
       aria-label="Expression lab workbench"
     >
       <SidebarProvider
@@ -485,7 +490,7 @@ function ExpressionLabCanvas({
         shortcut={false}
         className="h-full min-h-0 overflow-hidden"
       >
-        <Sidebar placement="inset" collapsible="bar">
+        <Sidebar placement="inset" collapsible="bar" data-expression={mode}>
           <SidebarHeader>
             <SidebarBrand>
               <SidebarBrandMark>
@@ -547,7 +552,7 @@ function ExpressionLabCanvas({
                       <MoreHorizontalIcon />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" data-expression={mode}>
                     <DropdownMenuLabel>Quick actions</DropdownMenuLabel>
                     <DropdownMenuGroup>
                       <DropdownMenuItem
@@ -692,7 +697,7 @@ function ExpressionLabCanvas({
                 >
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     className="rounded-full"
                     aria-label="Shorten session"
@@ -703,7 +708,7 @@ function ExpressionLabCanvas({
                   </Button>
                   <Button
                     type="button"
-                    size="icon-lg"
+                    size="icon"
                     className="rounded-full"
                     aria-label={sessionActive ? "Pause session" : "Start session"}
                     onClick={() => {
@@ -715,7 +720,7 @@ function ExpressionLabCanvas({
                   </Button>
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     className="rounded-full"
                     aria-label="Lengthen session"
@@ -807,7 +812,9 @@ function ExpressionLabCanvas({
                       <FieldLabel htmlFor="expression-lab-note">
                         Working note
                       </FieldLabel>
-                      <Textarea
+                      <ResizableTextarea
+                        enabled={mode === "expressive"}
+                        resizeLabel="Resize working note"
                         id="expression-lab-note"
                         value={note}
                         onChange={(event) => {
@@ -821,9 +828,19 @@ function ExpressionLabCanvas({
                       <FieldLabel htmlFor="expression-lab-category">
                         Category
                       </FieldLabel>
-                      <NativeSelect
+                      {mode === "expressive" ? (
+                        <Select value={category} onValueChange={value => { setCategory(value); onInteraction() }}>
+                          <SelectTrigger id="expression-lab-category"><SelectValue /></SelectTrigger>
+                          <SelectContent data-expression={mode}>
+                            <SelectItem value="shape">Shape</SelectItem>
+                            <SelectItem value="type">Type</SelectItem>
+                            <SelectItem value="motion">Motion</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : <NativeSelect
                         id="expression-lab-category"
-                        defaultValue="shape"
+                        value={category}
+                        onChange={event => setCategory(event.target.value)}
                       >
                         <NativeSelectOption value="shape">
                           Shape
@@ -834,7 +851,7 @@ function ExpressionLabCanvas({
                         <NativeSelectOption value="motion">
                           Motion
                         </NativeSelectOption>
-                      </NativeSelect>
+                      </NativeSelect>}
                     </Field>
                     <Field orientation="horizontal">
                       <FieldLabel htmlFor="expression-lab-autosave">
@@ -992,6 +1009,7 @@ function ExpressionLabCanvas({
                   <AIComposerFooter>
                     <AIComposerTools>
                       <ExpressionLabComposerAddMenu
+                        mode={mode}
                         webSearch={webSearch}
                         deepResearch={deepResearch}
                         onWebSearchChange={setWebSearch}

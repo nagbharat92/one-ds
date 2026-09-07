@@ -151,7 +151,7 @@ function CopyButton({ value, label }: { value: string; label: string }) {
   return (
     <Button
       variant="ghost"
-      size="icon-sm"
+      size="icon"
       aria-label={copied ? "Copied" : label}
       onClick={() => {
         navigator.clipboard?.writeText(value).catch(() => {})
@@ -167,7 +167,7 @@ function PersonaMoreMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="More actions">
+        <Button variant="ghost" size="icon" aria-label="More actions">
           <MoreHorizontalIcon />
         </Button>
       </DropdownMenuTrigger>
@@ -229,7 +229,7 @@ function PersonaProfilePage() {
                   <MessageSquareIcon data-icon="inline-start" />
                   Message
                 </Button>
-                <Button variant="outline">
+                <Button variant="secondary">
                   <VideoIcon data-icon="inline-start" />
                   Meet
                 </Button>
@@ -413,7 +413,7 @@ function PersonaProfilePage() {
                     <ItemDescription>{persona.manager.title}</ItemDescription>
                   </ItemContent>
                   <ItemActions>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="default">
                       View
                     </Button>
                   </ItemActions>
@@ -499,15 +499,15 @@ function PersonaHeaderDemo() {
         </div>
       </div>
       <Cluster gap="sm">
-        <Button size="sm">
+        <Button size="default">
           <MessageSquareIcon data-icon="inline-start" />
           Message
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="secondary" size="default">
           <MailIcon data-icon="inline-start" />
           Email
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="secondary" size="default">
           <CalendarIcon data-icon="inline-start" />
           Schedule
         </Button>
@@ -554,7 +554,7 @@ function PersonaContactCardDemo() {
           <MessageSquareIcon data-icon="inline-start" />
           Message
         </Button>
-        <Button variant="outline" className="flex-1">
+        <Button variant="secondary" className="flex-1">
           <VideoIcon data-icon="inline-start" />
           Meet
         </Button>
@@ -594,7 +594,7 @@ function PersonaSizesDemo() {
           </ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="default">
             Follow
           </Button>
         </ItemActions>
@@ -743,7 +743,7 @@ function PersonaTeamDemo() {
         </ItemGroup>
       </CardContent>
       <CardFooter>
-        <Button variant="outline" className="w-full">
+        <Button variant="secondary" className="w-full">
           <UsersIcon data-icon="inline-start" />
           Open team directory
         </Button>

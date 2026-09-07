@@ -24,31 +24,25 @@ import {
   registry,
 } from "@/showcase/registry"
 import { generatedExampleCode } from "@/showcase/generated-example-code"
+import { DesignRulesPage } from "@/showcase/design-rules-page"
 import type { ComponentEntry, ComponentExample } from "@/showcase/types"
 
-// Three sizing tiers, each built from EXISTING PageContent variants + preview
-// canvas layouts (nothing new is invented):
-//   component   -> docs page (max-w-3xl) + compact centered canvas
-//   medium      -> app page (max-w-6xl)  + roomy centered viewport canvas
-//   application -> full-width page        + full-height application canvas
 type SurfaceTier = NonNullable<ComponentEntry["surface"]>
 
 function surfaceTier(entry: ComponentEntry): SurfaceTier {
   if (entry.surface) return entry.surface
   return entry.category === "Blocks" || entry.category === "Experiments"
     ? "application"
-    : "component"
+    : "default"
 }
 
 const PAGE_VARIANT_BY_SURFACE = {
-  component: "docs",
-  medium: "app",
+  default: "app",
   application: "marketing",
 } as const
 
 const DEFAULT_LAYOUT_BY_SURFACE = {
-  component: "center",
-  medium: "viewport",
+  default: "viewport",
   application: "application",
 } as const
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -59,7 +53,7 @@ import { Separator } from "@/components/ui/separator"
 import { CardContent } from "@/components/ui/card"
 import { Canvas } from "@/components/ui/canvas"
 import { CanvasGrid } from "@/components/ui/canvas-grid"
-import { CanvasPreviewControls } from "@/components/ui/canvas-preview"
+import { CanvasPreviewControls, CanvasPreviewFrame } from "@/components/ui/canvas-preview"
 import {
   Sidebar,
   SidebarBrand,
@@ -170,7 +164,7 @@ function canScrollWithin(
 function DemoSandbox({
   children,
   name,
-  layout = "center",
+  layout = "viewport",
   background,
   ownsCanvas = false,
 }: {
@@ -203,8 +197,7 @@ function DemoSandbox({
   }, [])
 
   return (
-    <div className="flex w-full min-w-0 flex-col gap-6">
-    {!ownsCanvas && <CanvasPreviewControls name={name} grid={grid} onGridChange={setGrid} />}
+    <CanvasPreviewFrame controls={!ownsCanvas && <CanvasPreviewControls name={name} grid={grid} onGridChange={setGrid} />}>
     <Surface
       ref={stageRef}
       {...(ownsCanvas ? {} : { layout, background })}
@@ -225,7 +218,7 @@ function DemoSandbox({
       {!ownsCanvas && <CanvasGrid active={grid} />}
       {children}
     </Surface>
-    </div>
+    </CanvasPreviewFrame>
   )
 }
 
@@ -289,7 +282,7 @@ function ExampleSection({
             <ButtonGroup>
             <Button
               variant="secondary"
-              size="icon-lg"
+              size="icon"
               aria-label="Reset example"
               onClick={() => setResetKey((value) => value + 1)}
             >
@@ -382,7 +375,7 @@ function ComponentNavigation({
     matches(item.name),
   )
 
-  const renderItem = (component: (typeof registry)[number]) => (
+  const renderItem = (component: Pick<ComponentEntry, "slug" | "name">) => (
     <SidebarMenuItem key={component.slug}>
       <SidebarMenuButton
         type="button"
@@ -419,7 +412,7 @@ function ComponentNavigation({
               target="_blank"
               rel="noreferrer"
             >
-              <Favicon domain="github.com" alt="" className="dark:invert" />
+              <Favicon domain="github.com" alt="" />
             </a>
           </Button>
           <ModeToggle />
@@ -437,7 +430,7 @@ function ComponentNavigation({
           />
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             size="icon"
             className="shrink-0 rounded-full"
             aria-label={
@@ -458,6 +451,14 @@ function ComponentNavigation({
           role="navigation"
           aria-label="OneDS library"
         >
+          {matches("Design Rules") && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Reference</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>{renderItem({ slug: "rules", name: "Design Rules" })}</SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
           {sort === "alphabetical" ? (
             <>
               {alphabeticalBlockItems.length > 0 ? (
@@ -523,9 +524,11 @@ function ComponentPage({ slug }: { slug: string }) {
       ? `npx shadcn@latest add ${entry.slug}`
       : entry.installCommand
   const defaultExample = {
-    name: "Default",
+    name: entry.defaultExampleName ?? "Default",
     Demo: entry.Demo,
-    code: entry.code,
+    code: entry.codeSource === "complete"
+      ? generatedExampleCode[`${entry.slug}:${entry.defaultExampleName ?? "Default"}`]
+      : entry.code,
     layout: DEFAULT_LAYOUT_BY_SURFACE[tier],
     ownsCanvas: entry.ownsCanvas,
   }
@@ -572,6 +575,7 @@ function ComponentPage({ slug }: { slug: string }) {
 function App() {
   const [slug, navigate] = useHashRoute()
   const scrollRef = useRef<HTMLDivElement>(null)
+  const isRulesPage = slug === "rules"
   const activeEntry = registry.find((entry) => entry.slug === slug) ?? registry[0]
   const contentKind =
     activeEntry.category === "Blocks"
@@ -579,7 +583,7 @@ function App() {
       : activeEntry.category === "Experiments"
         ? "experiment"
         : "component"
-  const pageVariant = PAGE_VARIANT_BY_SURFACE[surfaceTier(activeEntry)]
+  const pageVariant = isRulesPage ? "app" : PAGE_VARIANT_BY_SURFACE[surfaceTier(activeEntry)]
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: "auto" })
@@ -606,9 +610,10 @@ function App() {
               variant={pageVariant}
               key={slug}
               className="showcase-page-content"
-              data-content-kind={contentKind}
+              data-content-kind={isRulesPage ? "reference" : contentKind}
+              data-showcase-surface={isRulesPage ? "default" : surfaceTier(activeEntry)}
             >
-              <ComponentPage slug={slug} />
+              {isRulesPage ? <DesignRulesPage /> : <ComponentPage slug={slug} />}
             </PageContent>
           </PageScroll>
         </Page>

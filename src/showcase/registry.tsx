@@ -21,10 +21,12 @@ import { dragHandleDemos } from "@/showcase/demos/drag-handle"
 import { elevationDemos } from "@/showcase/demos/elevation"
 import { fabDemos } from "@/showcase/demos/fab"
 import { swapDemos } from "@/showcase/demos/swap"
+import { referenceDemos } from "@/showcase/demos/reference"
 
 export type { ComponentEntry, ComponentExample } from "@/showcase/types"
 
 export const registry: ComponentEntry[] = [
+  ...referenceDemos,
   ...blockDemos,
   ...experimentDemos,
   ...concentricDemos,

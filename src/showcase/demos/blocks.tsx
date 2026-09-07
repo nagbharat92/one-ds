@@ -1062,7 +1062,7 @@ function AIChatBlockContent({
           <Button
             key={label}
             type="button"
-            variant="outline"
+            variant="secondary"
             className="rounded-full"
             onClick={() => {
               setPrompt(starter)
@@ -1337,7 +1337,7 @@ function AIChatBlockContent({
                                 <Button
                                   type="button"
                                   variant="ghost"
-                                  size="icon-xs"
+                                  size="icon"
                                   aria-label={copiedId === turn.id ? "Copied" : "Copy response"}
                                   onClick={() => {
                                     navigator.clipboard.writeText(turn.text).catch(() => {})
@@ -1349,7 +1349,7 @@ function AIChatBlockContent({
                                 <Button
                                   type="button"
                                   variant="ghost"
-                                  size="icon-xs"
+                                  size="icon"
                                   aria-label="Helpful"
                                   aria-pressed={feedback[turn.id] === "up"}
                                   onClick={() => setFeedbackFor(turn.id, "up")}
@@ -1359,7 +1359,7 @@ function AIChatBlockContent({
                                 <Button
                                   type="button"
                                   variant="ghost"
-                                  size="icon-xs"
+                                  size="icon"
                                   aria-label="Not helpful"
                                   aria-pressed={feedback[turn.id] === "down"}
                                   onClick={() => setFeedbackFor(turn.id, "down")}
@@ -1369,7 +1369,7 @@ function AIChatBlockContent({
                                 <Button
                                   type="button"
                                   variant="ghost"
-                                  size="icon-xs"
+                                  size="icon"
                                   aria-label="Regenerate"
                                   disabled={isBusy}
                                   onClick={() => regenerate(turn.id)}
@@ -1705,7 +1705,7 @@ function ConversationHistory({
                             <DropdownMenuTrigger asChild tooltip="More actions">
                               <Button
                                 variant="ghost"
-                                size="icon-sm"
+                                size="icon"
                                 className="ai-chat-history__item-action"
                                 aria-label={`Actions for ${conversation.title}`}
                               >

@@ -2,6 +2,8 @@
 
 Status: working product brief, not an implementation specification.
 
+Review 2026-09-07: retained for anatomy, shape principles, research links, and visual evaluation. The region plan and "Implemented workbench" section are historical: paths, wrappers, treatment names, and reported verification results are not a current implementation inventory or visual approval. See the [current review](README.md) before using this as a build brief.
+
 Parent intent: [Phase 2 expressive system charter](oneds-phase-2-expressive-system-prd.md).
 
 Depends on: [Expression lab](oneds-phase-2a-expression-lab-prd.md).

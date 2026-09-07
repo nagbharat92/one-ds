@@ -18,7 +18,7 @@ function SwapDemo() {
           </Button>
         </SwapItem>
         <SwapItem active={saved}>
-          <Button type="button" variant="outline" onClick={() => setSaved(false)}>
+          <Button type="button" variant="secondary" onClick={() => setSaved(false)}>
             <CheckIcon data-icon="inline-start" />
             Saved
           </Button>
@@ -60,7 +60,7 @@ function SwapTitleDemo() {
       </div>
       <Button
         type="button"
-        variant="outline"
+        variant="secondary"
         onClick={() => setInConversation((current) => !current)}
       >
         Toggle state
@@ -95,7 +95,7 @@ export function SaveSwap({ saved }: { saved: boolean }) {
         <Button>Save changes</Button>
       </SwapItem>
       <SwapItem active={saved}>
-        <Button variant="outline">Saved</Button>
+        <Button variant="secondary">Saved</Button>
       </SwapItem>
     </Swap>
   )

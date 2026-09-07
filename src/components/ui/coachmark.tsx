@@ -410,7 +410,7 @@ function CoachmarkDescription({
 function CoachmarkClose({
   className,
   variant = "ghost",
-  size = "icon-sm",
+  size = "icon",
   "aria-label": ariaLabel = "Dismiss",
   onClick,
   ...props

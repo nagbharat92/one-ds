@@ -403,7 +403,7 @@ function SidebarStateControls() {
     <div className="flex flex-col gap-3 p-4">
       <div className="flex flex-wrap gap-2">
         {states.map(([label, apply]) => (
-          <Button key={label} size="sm" variant="outline" onClick={apply}>
+          <Button key={label} size="default" variant="secondary" onClick={apply}>
             {label}
           </Button>
         ))}
@@ -528,8 +528,8 @@ function SidebarEdgeDemo() {
             {(["line", "faded", "none"] as const).map((option) => (
               <Button
                 key={option}
-                size="sm"
-                variant={edge === option ? "default" : "outline"}
+                size="default"
+                variant={edge === option ? "default" : "secondary"}
                 onClick={() => setEdge(option)}
               >
                 {option}
@@ -608,7 +608,7 @@ function SiteHeaderDemo() {
             <Button variant="ghost" size="icon" aria-label="Notifications">
               <BellIcon />
             </Button>
-            <Button size="sm">Sign in</Button>
+            <Button size="default">Sign in</Button>
           </SiteHeaderActions>
         </SiteHeaderContainer>
       </SiteHeader>
@@ -650,7 +650,7 @@ function SiteHeaderFloatingDemo() {
             <Button variant="ghost" size="icon" aria-label="Notifications">
               <BellIcon />
             </Button>
-            <Button size="sm">Sign in</Button>
+            <Button size="default">Sign in</Button>
           </SiteHeaderActions>
         </SiteHeaderContainer>
       </SiteHeader>
@@ -1636,7 +1636,7 @@ export function SiteHeaderDemo() {
           <Button variant="ghost" size="icon" aria-label="Notifications">
             <BellIcon />
           </Button>
-          <Button size="sm">Sign in</Button>
+          <Button size="default">Sign in</Button>
         </SiteHeaderActions>
       </SiteHeaderContainer>
     </SiteHeader>

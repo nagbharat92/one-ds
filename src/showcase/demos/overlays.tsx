@@ -191,7 +191,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="outline">Delete account</Button>
+          <Button variant="secondary">Delete account</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -210,7 +210,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<AlertDialog>
   <AlertDialogTrigger asChild>
-    <Button variant="outline">Delete account</Button>
+    <Button variant="secondary">Delete account</Button>
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
@@ -230,7 +230,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline">Small dialog</Button>
+              <Button variant="secondary">Small dialog</Button>
             </AlertDialogTrigger>
             <AlertDialogContent size="sm">
               <AlertDialogHeader>
@@ -253,7 +253,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline">With media</Button>
+              <Button variant="secondary">With media</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -279,7 +279,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline">Small + media</Button>
+              <Button variant="secondary">Small + media</Button>
             </AlertDialogTrigger>
             <AlertDialogContent size="sm">
               <AlertDialogHeader>
@@ -350,7 +350,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline">Edit profile</Button>
+          <Button variant="secondary">Edit profile</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
@@ -365,7 +365,7 @@ export const overlaysDemos: ComponentEntry[] = [
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="secondary">Cancel</Button>
             </DialogClose>
             <Button type="submit">Save changes</Button>
           </DialogFooter>
@@ -374,7 +374,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<Dialog>
   <DialogTrigger asChild>
-    <Button variant="outline">Edit profile</Button>
+    <Button variant="secondary">Edit profile</Button>
   </DialogTrigger>
   <DialogContent>
     <DialogHeader>
@@ -393,7 +393,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">Custom close</Button>
+              <Button variant="secondary">Custom close</Button>
             </DialogTrigger>
             <DialogContent showCloseButton>
               <DialogHeader>
@@ -415,7 +415,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">No close button</Button>
+              <Button variant="secondary">No close button</Button>
             </DialogTrigger>
             <DialogContent showCloseButton={false}>
               <DialogHeader>
@@ -429,7 +429,7 @@ export const overlaysDemos: ComponentEntry[] = [
               </p>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Decline</Button>
+                  <Button variant="secondary">Decline</Button>
                 </DialogClose>
                 <DialogClose asChild>
                   <Button>Accept</Button>
@@ -447,7 +447,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">Sticky footer</Button>
+              <Button variant="secondary">Sticky footer</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -466,7 +466,7 @@ export const overlaysDemos: ComponentEntry[] = [
               </DialogBody>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Close</Button>
+                  <Button variant="secondary">Close</Button>
                 </DialogClose>
                 <Button>Got it</Button>
               </DialogFooter>
@@ -482,7 +482,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline">Scrollable content</Button>
+              <Button variant="secondary">Scrollable content</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -518,7 +518,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <Drawer>
         <DrawerTrigger asChild>
-          <Button variant="outline">Open drawer</Button>
+          <Button variant="secondary">Open drawer</Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -528,7 +528,7 @@ export const overlaysDemos: ComponentEntry[] = [
           <DrawerFooter>
             <Button>Submit</Button>
             <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="secondary">Cancel</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
@@ -536,7 +536,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<Drawer>
   <DrawerTrigger asChild>
-    <Button variant="outline">Open drawer</Button>
+    <Button variant="secondary">Open drawer</Button>
   </DrawerTrigger>
   <DrawerContent>
     <DrawerHeader>
@@ -546,7 +546,7 @@ export const overlaysDemos: ComponentEntry[] = [
     <DrawerFooter>
       <Button>Submit</Button>
       <DrawerClose asChild>
-        <Button variant="outline">Cancel</Button>
+        <Button variant="secondary">Cancel</Button>
       </DrawerClose>
     </DrawerFooter>
   </DrawerContent>
@@ -559,7 +559,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="outline">Scrollable drawer</Button>
+              <Button variant="secondary">Scrollable drawer</Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -577,7 +577,7 @@ export const overlaysDemos: ComponentEntry[] = [
               </Scroller>
               <DrawerFooter>
                 <DrawerClose asChild>
-                  <Button variant="outline">Close</Button>
+                  <Button variant="secondary">Close</Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -593,7 +593,7 @@ export const overlaysDemos: ComponentEntry[] = [
             {(["top", "right", "bottom", "left"] as const).map((dir) => (
               <Drawer key={dir} direction={dir}>
                 <DrawerTrigger asChild>
-                  <Button variant="outline" className="capitalize">
+                  <Button variant="secondary" className="capitalize">
                     {dir}
                   </Button>
                 </DrawerTrigger>
@@ -607,7 +607,7 @@ export const overlaysDemos: ComponentEntry[] = [
                     </DrawerHeader>
                     <DrawerFooter>
                       <DrawerClose asChild>
-                        <Button variant="outline">Close</Button>
+                        <Button variant="secondary">Close</Button>
                       </DrawerClose>
                     </DrawerFooter>
                   </div>
@@ -625,7 +625,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="outline">No close button</Button>
+              <Button variant="secondary">No close button</Button>
             </DrawerTrigger>
             <DrawerContent showCloseButton={false}>
               <DrawerHeader>
@@ -651,7 +651,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="outline">Manage account</Button>
+              <Button variant="secondary">Manage account</Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
@@ -676,13 +676,13 @@ export const overlaysDemos: ComponentEntry[] = [
                     <DrawerFooter>
                       <Button variant="destructive">Yes, delete it</Button>
                       <DrawerClose asChild>
-                        <Button variant="outline">Back</Button>
+                        <Button variant="secondary">Back</Button>
                       </DrawerClose>
                     </DrawerFooter>
                   </DrawerContent>
                 </DrawerNested>
                 <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="secondary">Cancel</Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -704,7 +704,7 @@ export const overlaysDemos: ComponentEntry[] = [
             return (
               <Drawer open={open} onOpenChange={setOpen} direction="bottom">
                 <DrawerTrigger asChild>
-                  <Button variant="outline">
+                  <Button variant="secondary">
                     Edit profile (responsive)
                   </Button>
                 </DrawerTrigger>
@@ -724,7 +724,7 @@ export const overlaysDemos: ComponentEntry[] = [
                     <DrawerFooter>
                       <Button onClick={() => setOpen(false)}>Save</Button>
                       <DrawerClose asChild>
-                        <Button variant="outline">Cancel</Button>
+                        <Button variant="secondary">Cancel</Button>
                       </DrawerClose>
                     </DrawerFooter>
                   </div>
@@ -736,7 +736,7 @@ export const overlaysDemos: ComponentEntry[] = [
           return (
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline">
+                <Button variant="secondary">
                   Edit profile (responsive)
                 </Button>
               </DialogTrigger>
@@ -754,7 +754,7 @@ export const overlaysDemos: ComponentEntry[] = [
                 </div>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="secondary">Cancel</Button>
                   </DialogClose>
                   <Button onClick={() => setOpen(false)}>Save</Button>
                 </DialogFooter>
@@ -777,7 +777,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline">Open popover</Button>
+          <Button variant="secondary">Open popover</Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
           <div className="grid gap-3">
@@ -801,7 +801,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<Popover>
   <PopoverTrigger asChild>
-    <Button variant="outline">Open popover</Button>
+    <Button variant="secondary">Open popover</Button>
   </PopoverTrigger>
   <PopoverContent className="w-80">Place content here.</PopoverContent>
 </Popover>`,
@@ -815,7 +815,7 @@ export const overlaysDemos: ComponentEntry[] = [
             {(["top", "right", "bottom", "left"] as const).map((s) => (
               <Popover key={s}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="capitalize">
+                  <Button variant="secondary" className="capitalize">
                     {s}
                   </Button>
                 </PopoverTrigger>
@@ -851,7 +851,7 @@ export const overlaysDemos: ComponentEntry[] = [
             {(["start", "center", "end"] as const).map((a) => (
               <Popover key={a}>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="capitalize">
+                  <Button variant="secondary" className="capitalize">
                     {a}
                   </Button>
                 </PopoverTrigger>
@@ -881,7 +881,7 @@ export const overlaysDemos: ComponentEntry[] = [
             <div className="flex flex-col items-center gap-2">
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline">Set dimensions</Button>
+                  <Button variant="secondary">Set dimensions</Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80">
                   <form
@@ -918,7 +918,7 @@ export const overlaysDemos: ComponentEntry[] = [
                         className="col-span-2 h-8"
                       />
                     </div>
-                    <Button type="submit" size="sm">
+                    <Button type="submit" size="default">
                       Save
                     </Button>
                   </form>
@@ -1095,7 +1095,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button variant="outline">Hover me</Button>
+          <Button variant="secondary">Hover me</Button>
         </TooltipTrigger>
         <TooltipContent>
           <p>Add to library</p>
@@ -1104,7 +1104,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<Tooltip>
   <TooltipTrigger asChild>
-    <Button variant="outline">Hover me</Button>
+    <Button variant="secondary">Hover me</Button>
   </TooltipTrigger>
   <TooltipContent>Add to library</TooltipContent>
 </Tooltip>`,
@@ -1117,7 +1117,7 @@ export const overlaysDemos: ComponentEntry[] = [
             {(["top", "right", "bottom", "left"] as const).map((s) => (
               <Tooltip key={s}>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" className="capitalize">
+                  <Button variant="secondary" className="capitalize">
                     {s}
                   </Button>
                 </TooltipTrigger>
@@ -1135,7 +1135,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Bold">
+              <Button variant="ghost" size="icon" aria-label="Bold">
                 <BoldIcon />
               </Button>
             </TooltipTrigger>
@@ -1154,7 +1154,7 @@ export const overlaysDemos: ComponentEntry[] = [
             <TooltipTrigger asChild>
               <span tabIndex={0} className="inline-flex">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   disabled
                   className="pointer-events-none"
                 >
@@ -1183,7 +1183,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <Coachmark defaultOpen openDelay={400}>
         <CoachmarkTrigger asChild>
-          <Button variant="outline">Share</Button>
+          <Button variant="secondary">Share</Button>
         </CoachmarkTrigger>
         <CoachmarkContent>
           <CoachmarkHeader>
@@ -1202,7 +1202,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<Coachmark defaultOpen openDelay={400}>
   <CoachmarkTrigger asChild>
-    <Button variant="outline">Share</Button>
+    <Button variant="secondary">Share</Button>
   </CoachmarkTrigger>
   <CoachmarkContent>
     <CoachmarkHeader>
@@ -1225,17 +1225,17 @@ export const overlaysDemos: ComponentEntry[] = [
           "A pulsing dot that both anchors the tip and invites the click.",
         Demo: () => (
           <div className="flex items-center gap-2 rounded-lg border p-2">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="default">
               <PencilIcon data-icon="inline-start" />
               Compose
             </Button>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="default">
               <ImageIcon data-icon="inline-start" />
               Media
             </Button>
             <Coachmark>
               <div className="relative">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="default">
                   <SparklesIcon data-icon="inline-start" />
                   Rewrite
                 </Button>
@@ -1266,7 +1266,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <Coachmark>
             <CoachmarkTrigger asChild>
-              <Button variant="outline">See what's new</Button>
+              <Button variant="secondary">See what's new</Button>
             </CoachmarkTrigger>
             <CoachmarkContent size="lg">
               <CoachmarkMedia>
@@ -1300,7 +1300,7 @@ export const overlaysDemos: ComponentEntry[] = [
             {(["inverted", "default"] as const).map((tone) => (
               <Coachmark key={tone}>
                 <CoachmarkTrigger asChild>
-                  <Button variant="outline" className="capitalize">
+                  <Button variant="secondary" className="capitalize">
                     {tone}
                   </Button>
                 </CoachmarkTrigger>
@@ -1369,7 +1369,7 @@ export const overlaysDemos: ComponentEntry[] = [
                   {steps.map((item, index) => (
                     <CoachmarkStep key={item.label} index={index}>
                       <CoachmarkAnchor asChild>
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="default">
                           <item.icon data-icon="inline-start" />
                           {item.label}
                         </Button>
@@ -1394,8 +1394,8 @@ export const overlaysDemos: ComponentEntry[] = [
                   ))}
                 </div>
                 <Button
-                  variant="outline"
-                  size="sm"
+                  variant="secondary"
+                  size="default"
                   onClick={() => {
                     setStep(0)
                     setOpen(true)
@@ -1422,7 +1422,7 @@ export const overlaysDemos: ComponentEntry[] = [
     Demo: () => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Open menu</Button>
+          <Button variant="secondary">Open menu</Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="start">
           <DropdownMenuLabel>My account</DropdownMenuLabel>
@@ -1437,7 +1437,7 @@ export const overlaysDemos: ComponentEntry[] = [
     ),
     code: `<DropdownMenu>
   <DropdownMenuTrigger asChild>
-    <Button variant="outline">Open menu</Button>
+    <Button variant="secondary">Open menu</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent className="w-56" align="start">
     <DropdownMenuLabel>My account</DropdownMenuLabel>
@@ -1454,7 +1454,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Submenu</Button>
+              <Button variant="secondary">Submenu</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuItem>New file</DropdownMenuItem>
@@ -1487,7 +1487,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Shortcuts</Button>
+              <Button variant="secondary">Shortcuts</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuItem>
@@ -1510,7 +1510,7 @@ export const overlaysDemos: ComponentEntry[] = [
         Demo: () => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Icons</Button>
+              <Button variant="secondary">Icons</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="start">
               <DropdownMenuGroup>
@@ -1544,7 +1544,7 @@ export const overlaysDemos: ComponentEntry[] = [
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Checkboxes</Button>
+                <Button variant="secondary">Checkboxes</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuLabel>Appearance</DropdownMenuLabel>
@@ -1579,7 +1579,7 @@ export const overlaysDemos: ComponentEntry[] = [
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Checkbox icons</Button>
+                <Button variant="secondary">Checkbox icons</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuLabel>Formatting</DropdownMenuLabel>
@@ -1615,7 +1615,7 @@ export const overlaysDemos: ComponentEntry[] = [
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Radio group</Button>
+                <Button variant="secondary">Radio group</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuLabel>Panel position</DropdownMenuLabel>
@@ -1647,7 +1647,7 @@ export const overlaysDemos: ComponentEntry[] = [
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Radio icons</Button>
+                <Button variant="secondary">Radio icons</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuLabel>Alignment</DropdownMenuLabel>
@@ -1680,7 +1680,7 @@ export const overlaysDemos: ComponentEntry[] = [
             <div className="flex flex-col items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline">Destructive</Button>
+                  <Button variant="secondary">Destructive</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="start">
                   <DropdownMenuItem>
@@ -1762,7 +1762,7 @@ export const overlaysDemos: ComponentEntry[] = [
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Complex menu</Button>
+                <Button variant="secondary">Complex menu</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="start">
                 <DropdownMenuLabel>My account</DropdownMenuLabel>
@@ -2313,7 +2313,7 @@ export const overlaysDemos: ComponentEntry[] = [
           const [open, setOpen] = useState(false)
           return (
             <>
-              <Button variant="outline" onClick={() => setOpen(true)}>
+              <Button variant="secondary" onClick={() => setOpen(true)}>
                 Open command palette
               </Button>
               <CommandDialog open={open} onOpenChange={setOpen}>
@@ -2370,7 +2370,7 @@ export const overlaysDemos: ComponentEntry[] = [
           const [open, setOpen] = useState(false)
           return (
             <>
-              <Button variant="outline" onClick={() => setOpen(true)}>
+              <Button variant="secondary" onClick={() => setOpen(true)}>
                 Grouped command dialog
               </Button>
               <CommandDialog open={open} onOpenChange={setOpen}>

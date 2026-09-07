@@ -90,7 +90,7 @@ export function AlertDemo() {
               <div className="flex w-full max-w-md items-center gap-3">
                 <CheckCircleIcon className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Alert dismissed</span>
-                <Button size="xs" variant="outline" onClick={() => setDismissed(false)}>
+                <Button size="default" variant="secondary" onClick={() => setDismissed(false)}>
                   Show again
                 </Button>
               </div>
@@ -104,7 +104,7 @@ export function AlertDemo() {
                 A new version is ready to install. Restart to apply changes.
               </AlertDescription>
               <AlertAction>
-                <Button size="xs" variant="outline" onClick={() => setDismissed(true)}>
+                <Button size="default" variant="secondary" onClick={() => setDismissed(true)}>
                   Dismiss
                 </Button>
               </AlertAction>
@@ -172,22 +172,22 @@ export function ProgressDemo() {
               <Progress value={value} />
               <div className="flex items-center gap-2">
                 <Button
-                  size="xs"
-                  variant="outline"
+                  size="default"
+                  variant="secondary"
                   onClick={() => setValue((v) => Math.max(0, v - 10))}
                   disabled={value <= 0}
                 >
                   −10
                 </Button>
                 <Button
-                  size="xs"
-                  variant="outline"
+                  size="default"
+                  variant="secondary"
                   onClick={() => setValue((v) => Math.min(100, v + 10))}
                   disabled={value >= 100}
                 >
                   +10
                 </Button>
-                <Button size="xs" variant="outline" onClick={() => setValue(0)}>
+                <Button size="default" variant="secondary" onClick={() => setValue(0)}>
                   Reset
                 </Button>
               </div>
@@ -258,8 +258,8 @@ export function SkeletonDemo() {
                 )}
               </Card>
               <Button
-                size="sm"
-                variant="outline"
+                size="default"
+                variant="secondary"
                 onClick={() => setLoaded((v) => !v)}
               >
                 {loaded ? "Reset" : "Load"}
@@ -290,8 +290,8 @@ export function SkeletonDemo() {
                 </div>
               )}
               <Button
-                size="sm"
-                variant="outline"
+                size="default"
+                variant="secondary"
                 onClick={() => setLoaded((v) => !v)}
               >
                 {loaded ? "Reset" : "Load"}
@@ -334,8 +334,8 @@ export function SkeletonDemo() {
                 </div>
               )}
               <Button
-                size="sm"
-                variant="outline"
+                size="default"
+                variant="secondary"
                 onClick={() => setLoaded((v) => !v)}
               >
                 {loaded ? "Reset" : "Load"}
@@ -382,8 +382,8 @@ export function SkeletonDemo() {
                 </TableBody>
               </Table>
               <Button
-                size="sm"
-                variant="outline"
+                size="default"
+                variant="secondary"
                 onClick={() => setLoaded((v) => !v)}
               >
                 {loaded ? "Reset" : "Load"}
@@ -490,7 +490,7 @@ export function SpinnerDemo() {
     category: "Feedback",
     Demo: () => (
       <Button
-        variant="outline"
+        variant="secondary"
         onClick={() =>
           toast("Event has been created", {
             description: "Sunday, December 03, 2023 at 9:00 AM",
@@ -508,7 +508,7 @@ import { Button } from "@/components/ui/button"
 export function SonnerDemo() {
   return (
     <Button
-      variant="outline"
+      variant="secondary"
       onClick={() =>
         toast("Event has been created", {
           description: "Sunday, December 03, 2023 at 9:00 AM",
@@ -526,43 +526,43 @@ export function SonnerDemo() {
         Demo: () => (
           <div className="flex flex-wrap items-center gap-2">
             <Button
-              size="sm"
-              variant="outline"
+              size="default"
+              variant="secondary"
               onClick={() => toast("Default notification")}
             >
               Default
             </Button>
             <Button
-              size="sm"
-              variant="outline"
+              size="default"
+              variant="secondary"
               onClick={() => toast.success("Action completed")}
             >
               Success
             </Button>
             <Button
-              size="sm"
-              variant="outline"
+              size="default"
+              variant="secondary"
               onClick={() => toast.error("Something went wrong")}
             >
               Error
             </Button>
             <Button
-              size="sm"
-              variant="outline"
+              size="default"
+              variant="secondary"
               onClick={() => toast.warning("Check your input")}
             >
               Warning
             </Button>
             <Button
-              size="sm"
-              variant="outline"
+              size="default"
+              variant="secondary"
               onClick={() => toast.info("New version available")}
             >
               Info
             </Button>
             <Button
-              size="sm"
-              variant="outline"
+              size="default"
+              variant="secondary"
               onClick={() =>
                 toast.promise(
                   new Promise<{ name: string }>((resolve) =>
@@ -597,8 +597,8 @@ export function SonnerDemo() {
               {positions.map((pos) => (
                 <Button
                   key={pos}
-                  size="sm"
-                  variant="outline"
+                  size="default"
+                  variant="secondary"
                   onClick={() =>
                     toast(`Toast at ${pos}`, { position: pos })
                   }

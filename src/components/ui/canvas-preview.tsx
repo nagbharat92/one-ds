@@ -9,6 +9,27 @@ import { ToolbarSpacer, ToolbarTitle } from "@/components/ui/toolbar"
 type CanvasPreviewState = { grid: boolean; annotations: boolean }
 type CanvasPreviewDefaults = { defaultGrid?: boolean; defaultAnnotations?: boolean }
 
+function CanvasPreviewFrame({
+  controls,
+  footnote,
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & {
+  controls?: React.ReactNode
+  footnote?: React.ReactNode
+}) {
+  return (
+    <div className={cn("flex w-full min-w-0 flex-col gap-6", className)} {...props}>
+      {controls}
+      <div className="w-full min-w-0">
+        {children}
+        {footnote !== undefined && <CanvasFooter>{footnote}</CanvasFooter>}
+      </div>
+    </div>
+  )
+}
+
 function useCanvasPreviewState({ defaultGrid = false, defaultAnnotations = false }: CanvasPreviewDefaults = {}) {
   const [grid, setGrid] = React.useState(defaultGrid)
   const [annotations, setAnnotations] = React.useState(defaultAnnotations)
@@ -69,20 +90,19 @@ function CanvasPreview({
   const { grid, annotations, setGrid, setAnnotations } = useCanvasPreviewState({ defaultGrid, defaultAnnotations })
   const state = { grid, annotations: annotationsAvailable && annotations }
   return (
-    <div className={cn("flex w-full min-w-0 flex-col gap-6", className)} {...props}>
-      <CanvasPreviewControls name={name} {...state} annotationsAvailable={annotationsAvailable} onGridChange={setGrid} onAnnotationsChange={setAnnotations} />
-      <div className="w-full min-w-0">
+    <CanvasPreviewFrame
+      className={className}
+      controls={<CanvasPreviewControls name={name} {...state} annotationsAvailable={annotationsAvailable} onGridChange={setGrid} onAnnotationsChange={setAnnotations} />}
+      footnote={typeof footnote === "function" ? footnote(state) : footnote}
+      {...props}
+    >
         <Canvas annotationSpace={annotationsAvailable} className="w-full">
           <CanvasGrid active={grid} />
           <CanvasContent className={contentClassName}>{children(state)}</CanvasContent>
         </Canvas>
-        {footnote !== undefined && (
-          <CanvasFooter>{typeof footnote === "function" ? footnote(state) : footnote}</CanvasFooter>
-        )}
-      </div>
-    </div>
+    </CanvasPreviewFrame>
   )
 }
 
-export { CanvasPreview, CanvasPreviewControls, useCanvasPreviewState }
+export { CanvasPreview, CanvasPreviewFrame, CanvasPreviewControls, useCanvasPreviewState }
 export type { CanvasPreviewState, CanvasPreviewDefaults }

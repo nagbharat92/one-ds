@@ -2,6 +2,8 @@
 
 Status: design only, no code. Scope: the React/shadcn showcase in this repo.
 
+Review 2026-09-07: retained as historical architecture rationale, not a current API specification. A sidebar implementation now exists; the research snapshots, proposed parts, and build order below mix implemented and unimplemented ideas. The five-state model supersedes the later stale "six collapse states" wording, and peek pinning is not an approved requirement. See the [current review](README.md).
+
 ---
 
 ## 1. What a sidebar actually is

@@ -1,4 +1,5 @@
 import * as React from "react"
+import "./expressive.css"
 import {
   MoreHorizontalIcon,
   RotateCcwIcon,
@@ -112,7 +113,7 @@ function ExperimentToolbar({
             <Button
               type="button"
               variant="ghost"
-              size="icon-sm"
+              size="icon"
               aria-label="More experiment tools"
             >
               <MoreHorizontalIcon />
@@ -233,7 +234,7 @@ export function ExpressiveWorkbench({
       {toolsHidden ? (
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="icon"
           className="form-experiment__reveal"
           aria-label="Show experiment tools"

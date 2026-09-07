@@ -2,6 +2,8 @@
 
 Status: working product brief, not an implementation specification.
 
+Review 2026-09-07: retained for intent and guardrails. Read the [current review](README.md) before implementation. Palette, rollout sequence, and expression-level assignments below are provisional; current user decisions take precedence. This charter is not approval of the existing Expressive prototype.
+
 ## Purpose
 
 Phase 1 established a dependable shadcn foundation and a showcase for inspecting components. OneDS is now beginning to compose those components into application-scale blocks.

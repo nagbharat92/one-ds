@@ -23,7 +23,7 @@ function DrawerGrabberDemo() {
       {(["top", "right", "bottom", "left"] as const).map((direction) => (
         <Drawer key={direction} direction={direction}>
           <DrawerTrigger asChild>
-            <Button variant="outline" className="capitalize">
+            <Button variant="secondary" className="capitalize">
               {direction} drawer
             </Button>
           </DrawerTrigger>
@@ -38,7 +38,7 @@ function DrawerGrabberDemo() {
             </DrawerHeader>
             <DrawerFooter>
               <DrawerClose asChild>
-                <Button variant="outline">Close</Button>
+                <Button variant="secondary">Close</Button>
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>

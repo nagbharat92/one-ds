@@ -13,12 +13,11 @@ import {
   ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
-  HeartIcon,
   ItalicIcon,
-  Loader2Icon,
   MailIcon,
   PlusIcon,
   SearchIcon,
+  Trash2Icon,
   UnderlineIcon,
 } from "lucide-react"
 
@@ -97,6 +96,45 @@ import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { Toggle } from "@/components/ui/toggle"
+import { Stack } from "@/components/ui/stack"
+import { Cluster } from "@/components/ui/cluster"
+import { Text } from "@/components/ui/text"
+
+function ButtonToolsDemo({ mixed = false }: { mixed?: boolean }) {
+  const [notes, setNotes] = useState(["Design review", "Release notes"])
+  const [query, setQuery] = useState("")
+  const [order, setOrder] = useState("newest")
+  const [nextNote, setNextNote] = useState(1)
+  const filtered = notes.filter(note => note.toLowerCase().includes(query.trim().toLowerCase()))
+  const visible = order === "name" ? [...filtered].sort((left, right) => left.localeCompare(right)) : [...filtered].reverse()
+  const variant = mixed ? "secondary" : "ghost"
+
+  return (
+    <Stack className="w-full max-w-xl">
+      <Cluster>
+        {mixed && <>
+          <Stack className="min-w-0 flex-1 basis-48"><SearchInput aria-label="Search notes" placeholder="Search notes" value={query} onValueChange={setQuery} /></Stack>
+          <Select value={order} onValueChange={setOrder}>
+            <SelectTrigger aria-label="Sort notes"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">Newest first</SelectItem>
+              <SelectItem value="name">Name</SelectItem>
+            </SelectContent>
+          </Select>
+        </>}
+        <ButtonGroup aria-label="Note actions">
+          <Button variant={variant} size="icon" aria-label="Add note" onClick={() => {
+            setNotes(current => [...current, `Note ${nextNote}`])
+            setNextNote(current => current + 1)
+          }}><PlusIcon /></Button>
+          <Button variant={variant} size="icon" aria-label="Remove latest note" disabled={notes.length === 0} onClick={() => setNotes(current => current.slice(0, -1))}><Trash2Icon /></Button>
+        </ButtonGroup>
+      </Cluster>
+      <Text variant="metadata" tone="muted" role="status">{visible.length} {visible.length === 1 ? "note" : "notes"}</Text>
+      <Stack gap="sm" asChild><ul aria-label="Notes">{visible.map(note => <li key={note}><Text>{note}</Text></li>)}</ul></Stack>
+    </Stack>
+  )
+}
 
 function FormDemo() {
   const schema = z.object({
@@ -346,22 +384,24 @@ function NestedToolbarDemo() {
   )
 }
 
-function ButtonLoadingDemo() {
+function ButtonLoadingDemo({ size = "default" }: { size?: "default" | "expressive" }) {
   const [loading, setLoading] = useState(false)
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Button disabled>
-        <Loader2Icon className="animate-spin" />
+      <Button size={size} disabled aria-busy>
+        <Spinner aria-hidden="true" />
         Please wait
       </Button>
       <Button
+        size={size}
         disabled={loading}
+        aria-busy={loading}
         onClick={() => {
           setLoading(true)
           setTimeout(() => setLoading(false), 2000)
         }}
       >
-        {loading && <Loader2Icon className="animate-spin" />}
+        {loading && <Spinner aria-hidden="true" />}
         {loading ? "Saving..." : "Click to save"}
       </Button>
     </div>
@@ -488,29 +528,36 @@ export const formsDemos: ComponentEntry[] = [
   {
     slug: "button",
     name: "Button",
-    description: "Displays a button or a component that looks like a button.",
+    codeSource: "complete",
+    description: "Displays a button or a component that looks like a button. Expressive sizes pair pill shapes with more generous spacing and larger icons without changing the variant.",
     category: "Forms",
     Demo: () => (
-      <div className="flex flex-wrap items-center gap-3">
-        <Button>Default</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="destructive">Destructive</Button>
-        <Button variant="outline">Outline</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="link">Link</Button>
+      <div className="flex flex-col gap-6">
+        {(["default", "expressive"] as const).map((size) => (
+          <div key={size} className="flex flex-wrap items-center gap-3">
+            <Button size={size}>Default</Button>
+            <Button size={size} variant="secondary">Secondary</Button>
+            <Button size={size} variant="destructive">Destructive</Button>
+            <Button size={size} variant="ghost">Ghost</Button>
+            <Button size={size} variant="link">Link</Button>
+          </div>
+        ))}
       </div>
     ),
     code: `import { Button } from "@/components/ui/button"
 
 export function ButtonDemo() {
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Button>Default</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="destructive">Destructive</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="link">Link</Button>
+    <div className="flex flex-col gap-6">
+      {(["default", "expressive"] as const).map((size) => (
+        <div key={size} className="flex flex-wrap items-center gap-3">
+          <Button size={size}>Default</Button>
+          <Button size={size} variant="secondary">Secondary</Button>
+          <Button size={size} variant="destructive">Destructive</Button>
+          <Button size={size} variant="ghost">Ghost</Button>
+          <Button size={size} variant="link">Link</Button>
+        </div>
+      ))}
     </div>
   )
 }`,
@@ -519,10 +566,8 @@ export function ButtonDemo() {
         name: "Sizes",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
-            <Button size="xs">Extra small</Button>
-            <Button size="sm">Small</Button>
             <Button size="default">Default</Button>
-            <Button size="lg">Large</Button>
+            <Button size="expressive">Expressive</Button>
           </div>
         ),
       },
@@ -530,21 +575,45 @@ export function ButtonDemo() {
         name: "Icon Only",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
-            <Button size="icon-xs" variant="outline" aria-label="Add"><PlusIcon /></Button>
-            <Button size="icon-sm" variant="outline" aria-label="Search"><SearchIcon /></Button>
-            <Button size="icon" variant="outline" aria-label="Copy"><CopyIcon /></Button>
-            <Button size="icon-lg" variant="outline" aria-label="Favorite"><HeartIcon /></Button>
+            <Button size="icon" variant="ghost" aria-label="Add"><PlusIcon /></Button>
+            <Button size="icon-expressive" variant="ghost" aria-label="Add item"><PlusIcon /></Button>
           </div>
         ),
       },
       {
         name: "With Icon",
         Demo: () => (
-          <div className="flex flex-wrap items-center gap-3">
-            <Button><MailIcon data-icon="inline-start" />Login with email</Button>
-            <Button variant="outline"><DownloadIcon data-icon="inline-start" />Download</Button>
-            <Button variant="secondary">Next<ArrowRightIcon data-icon="inline-end" /></Button>
+          <div className="flex flex-col gap-6">
+            {(["default", "expressive"] as const).map((size) => (
+              <div key={size} className="flex flex-wrap items-center gap-3">
+                <Button size={size}><MailIcon data-icon="inline-start" />Login with email</Button>
+                <Button size={size} variant="secondary"><DownloadIcon data-icon="inline-start" />Download</Button>
+                <Button size={size} variant="secondary">Next<ArrowRightIcon data-icon="inline-end" /></Button>
+              </div>
+            ))}
           </div>
+        ),
+      },
+      {
+        name: "Optical Spacing",
+        description: "Icon, favicon, and spinner labels receive 4px padding on the outer side opposite the graphic. The icon-label gap remains 8px; text-only and icon-only buttons are unchanged.",
+        Demo: () => (
+          <Stack>
+            {(["default", "expressive"] as const).map(size => (
+              <Cluster key={size}>
+                <Button size={size} variant="secondary" data-optical-case="leading"><MailIcon />Email</Button>
+                <Button size={size} variant="secondary" data-optical-case="trailing">Next<ArrowRightIcon /></Button>
+                <Button size={size} variant="secondary" data-optical-case="favicon-leading"><Favicon domain="github.com" alt="" />GitHub</Button>
+                <Button size={size} variant="secondary" data-optical-case="favicon-trailing">GitHub<Favicon domain="github.com" alt="" /></Button>
+                <Button size={size} variant="secondary" disabled aria-busy data-optical-case="spinner-leading"><Spinner aria-hidden="true" />Saving</Button>
+                <Button size={size} variant="secondary" disabled aria-busy data-optical-case="spinner-trailing">Saving<Spinner aria-hidden="true" /></Button>
+                <Button size={size} variant="secondary" data-optical-case="wrapped"><DownloadIcon /><span>Download</span></Button>
+                <Button size={size} variant="secondary" data-optical-case="text">Continue</Button>
+                <Button size={size === "expressive" ? "icon-expressive" : "icon"} variant="ghost" aria-label="Add item" data-optical-case="icon"><PlusIcon /></Button>
+                <Button size={size} variant="link" asChild data-optical-case="link"><a href="#/rules">Design Rules<ArrowUpRightIcon /></a></Button>
+              </Cluster>
+            ))}
+          </Stack>
         ),
       },
       {
@@ -552,13 +621,17 @@ export function ButtonDemo() {
         description:
           "Site favicons (always fetched from DuckDuckGo) work as the icon in any button type.",
         Demo: () => (
-          <div className="flex flex-wrap items-center gap-3">
-            <Button variant="outline"><Favicon domain="github.com" data-icon="inline-start" />GitHub</Button>
-            <Button variant="secondary"><Favicon domain="figma.com" data-icon="inline-start" />Figma</Button>
-            <Button><Favicon domain="spotify.com" data-icon="inline-start" />Spotify</Button>
-            <Button variant="ghost" size="icon" aria-label="X"><Favicon domain="x.com" /></Button>
-            <Button variant="ghost" size="icon" aria-label="YouTube"><Favicon domain="youtube.com" /></Button>
-            <Button variant="outline" size="icon" aria-label="Google"><Favicon domain="google.com" /></Button>
+          <div className="flex flex-col gap-6">
+            {(["default", "expressive"] as const).map((size) => (
+              <div key={size} className="flex flex-wrap items-center gap-3">
+                <Button size={size} variant="secondary"><Favicon domain="github.com" data-icon="inline-start" />GitHub</Button>
+                <Button size={size} variant="secondary"><Favicon domain="figma.com" data-icon="inline-start" />Figma</Button>
+                <Button size={size}><Favicon domain="spotify.com" data-icon="inline-start" />Spotify</Button>
+                <Button variant="ghost" size={size === "expressive" ? "icon-expressive" : "icon"} aria-label="X"><Favicon domain="x.com" /></Button>
+                <Button variant="ghost" size={size === "expressive" ? "icon-expressive" : "icon"} aria-label="YouTube"><Favicon domain="youtube.com" /></Button>
+                <Button variant="ghost" size={size === "expressive" ? "icon-expressive" : "icon"} aria-label="Google"><Favicon domain="google.com" /></Button>
+              </div>
+            ))}
           </div>
         ),
       },
@@ -569,16 +642,12 @@ export function ButtonDemo() {
         Demo: () => (
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-3">
-              <Button size="xs" variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Extra small</Button>
-              <Button size="sm" variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Small</Button>
-              <Button variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Default</Button>
-              <Button size="lg" variant="outline"><Favicon domain="x.com" data-icon="inline-start" />Large</Button>
+              <Button variant="secondary"><Favicon domain="x.com" data-icon="inline-start" />Default</Button>
+              <Button size="expressive" variant="secondary"><Favicon domain="x.com" data-icon="inline-start" />Expressive</Button>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Button size="icon-xs" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
-              <Button size="icon-sm" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
-              <Button size="icon" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
-              <Button size="icon-lg" variant="outline" aria-label="X"><Favicon domain="x.com" /></Button>
+              <Button size="icon" variant="ghost" aria-label="X"><Favicon domain="x.com" /></Button>
+              <Button size="icon-expressive" variant="ghost" aria-label="X"><Favicon domain="x.com" /></Button>
             </div>
           </div>
         ),
@@ -586,39 +655,60 @@ export function ButtonDemo() {
       {
         name: "Rounded",
         Demo: () => (
-          <div className="flex flex-wrap items-center gap-3">
-            <Button className="rounded-full">Default</Button>
-            <Button variant="outline" className="rounded-full">Outline</Button>
-            <Button variant="secondary" className="rounded-full">Secondary</Button>
-            <Button size="icon" className="rounded-full" aria-label="Add"><PlusIcon /></Button>
+          <div className="flex flex-col gap-6">
+            {(["default", "expressive"] as const).map((size) => (
+              <div key={size} className="flex flex-wrap items-center gap-3">
+                <Button size={size} className="rounded-full">Default</Button>
+                <Button size={size} variant="secondary" className="rounded-full">Secondary</Button>
+                <Button variant="ghost" size={size === "expressive" ? "icon-expressive" : "icon"} className="rounded-full" aria-label="Add"><PlusIcon /></Button>
+              </div>
+            ))}
           </div>
         ),
       },
       {
         name: "Loading",
-        description: "Click the second button to see the loading state.",
-        Demo: () => <ButtonLoadingDemo />,
+        description: "Default and expressive sizes support the same loading behavior. Click a save action to try it.",
+        Demo: () => (
+          <div className="flex flex-col gap-6">
+            <ButtonLoadingDemo />
+            <ButtonLoadingDemo size="expressive" />
+          </div>
+        ),
+      },
+      {
+        name: "Icon Tools",
+        description: "Use ghost for an icon-only action cluster with no neighboring fields or mixed controls.",
+        Demo: () => <ButtonToolsDemo />,
+      },
+      {
+        name: "Mixed Tools",
+        description: "Use secondary for supporting tools beside search, select, or other outlined controls in the same local row.",
+        Demo: () => <ButtonToolsDemo mixed />,
       },
       {
         name: "As Child",
         description:
           "Renders button styling on a link. Links always show an arrow icon to signal navigation.",
         Demo: () => (
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {([
-              "default",
-              "secondary",
-              "destructive",
-              "outline",
-              "ghost",
-              "link",
-            ] as const).map((variant) => (
-              <Button key={variant} variant={variant} asChild>
-                <a href="#" onClick={(e) => e.preventDefault()}>
-                  Login
-                  <ArrowUpRightIcon />
-                </a>
-              </Button>
+          <div className="flex flex-col gap-6">
+            {(["default", "expressive"] as const).map((size) => (
+              <div key={size} className="flex flex-wrap items-center justify-center gap-2">
+                {([
+                  "default",
+                  "secondary",
+                  "destructive",
+                  "ghost",
+                  "link",
+                ] as const).map((variant) => (
+                  <Button key={variant} size={size} variant={variant} asChild>
+                    <a href="#" onClick={(event) => event.preventDefault()}>
+                      Login
+                      <ArrowUpRightIcon />
+                    </a>
+                  </Button>
+                ))}
+              </div>
             ))}
           </div>
         ),
@@ -632,8 +722,8 @@ export function ButtonDemo() {
     category: "Forms",
     Demo: () => (
       <ButtonGroup>
-        <Button variant="outline">Copy</Button>
-        <Button variant="outline">Paste</Button>
+        <Button variant="secondary">Copy</Button>
+        <Button variant="secondary">Paste</Button>
         <ButtonGroupSeparator />
         <ButtonGroupText>Actions</ButtonGroupText>
       </ButtonGroup>
@@ -648,8 +738,8 @@ import {
 export function ButtonGroupDemo() {
   return (
     <ButtonGroup>
-      <Button variant="outline">Copy</Button>
-      <Button variant="outline">Paste</Button>
+      <Button variant="secondary">Copy</Button>
+      <Button variant="secondary">Paste</Button>
       <ButtonGroupSeparator />
       <ButtonGroupText>Actions</ButtonGroupText>
     </ButtonGroup>
@@ -674,14 +764,14 @@ export function ButtonGroupDemo() {
         Demo: () => (
           <div className="flex flex-wrap items-start gap-6">
             <ButtonGroup orientation="horizontal">
-              <Button variant="outline">Left</Button>
-              <Button variant="outline">Center</Button>
-              <Button variant="outline">Right</Button>
+              <Button variant="secondary">Left</Button>
+              <Button variant="secondary">Center</Button>
+              <Button variant="secondary">Right</Button>
             </ButtonGroup>
             <ButtonGroup orientation="vertical">
-              <Button variant="outline">Top</Button>
-              <Button variant="outline">Middle</Button>
-              <Button variant="outline">Bottom</Button>
+              <Button variant="secondary">Top</Button>
+              <Button variant="secondary">Middle</Button>
+              <Button variant="secondary">Bottom</Button>
             </ButtonGroup>
           </div>
         ),
@@ -691,16 +781,12 @@ export function ButtonGroupDemo() {
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
             <ButtonGroup>
-              <Button variant="outline" size="xs">Extra small</Button>
-              <Button variant="outline" size="xs">Group</Button>
+              <Button variant="secondary">Default</Button>
+              <Button variant="secondary">Group</Button>
             </ButtonGroup>
             <ButtonGroup>
-              <Button variant="outline" size="sm">Small</Button>
-              <Button variant="outline" size="sm">Group</Button>
-            </ButtonGroup>
-            <ButtonGroup>
-              <Button variant="outline">Default</Button>
-              <Button variant="outline">Group</Button>
+              <Button variant="secondary" size="expressive">Expressive</Button>
+              <Button variant="secondary" size="expressive">Group</Button>
             </ButtonGroup>
           </div>
         ),
@@ -738,7 +824,7 @@ export function ButtonGroupDemo() {
         Demo: () => (
           <ButtonGroup className="w-full max-w-sm">
             <Input placeholder="Search..." />
-            <Button variant="outline">Search</Button>
+            <Button variant="secondary">Search</Button>
           </ButtonGroup>
         ),
         layout: "wide",
@@ -761,10 +847,10 @@ export function ButtonGroupDemo() {
         name: "Dropdown Menu",
         Demo: () => (
           <ButtonGroup>
-            <Button variant="outline">Actions</Button>
+            <Button variant="secondary">Actions</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" aria-label="More actions">
+                <Button variant="secondary" size="icon" aria-label="More actions">
                   <ChevronDownIcon />
                 </Button>
               </DropdownMenuTrigger>
@@ -782,7 +868,7 @@ export function ButtonGroupDemo() {
         name: "Select",
         Demo: () => (
           <ButtonGroup>
-            <Button variant="outline">Sort by</Button>
+            <Button variant="secondary">Sort by</Button>
             <Select defaultValue="name">
               <SelectTrigger>
                 <SelectValue />
@@ -800,10 +886,10 @@ export function ButtonGroupDemo() {
         name: "Popover",
         Demo: () => (
           <ButtonGroup>
-            <Button variant="outline">Dimensions</Button>
+            <Button variant="secondary">Dimensions</Button>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" aria-label="Set dimensions">
+                <Button variant="secondary" size="icon" aria-label="Set dimensions">
                   <ChevronDownIcon />
                 </Button>
               </PopoverTrigger>
@@ -976,7 +1062,7 @@ export function InputDemo() {
         Demo: () => (
           <ButtonGroup className="w-full max-w-sm">
             <Input placeholder="Enter URL..." />
-            <Button variant="outline"><CopyIcon data-icon="inline-start" />Copy</Button>
+            <Button variant="secondary"><CopyIcon data-icon="inline-start" />Copy</Button>
           </ButtonGroup>
         ),
         layout: "wide",
@@ -1159,7 +1245,7 @@ export function InputGroupDemo() {
                 </InputGroupText>
                 <InputGroupButton
                   className="ml-auto"
-                  size="sm"
+                  size="default"
                   variant="secondary"
                   disabled={message.trim().length === 0}
                 >

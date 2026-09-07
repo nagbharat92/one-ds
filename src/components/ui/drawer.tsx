@@ -121,7 +121,7 @@ function DrawerContent({
             <Button
               variant="ghost"
               className="absolute top-4 right-4"
-              size="icon-sm"
+              size="icon"
             >
               <XIcon />
               <span className="sr-only">Close</span>
@@ -138,7 +138,7 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="drawer-header"
       className={cn(
-        "flex flex-col gap-2 p-4 group-data-[close-button=true]/drawer-content:pe-13",
+        "flex flex-col gap-2 p-4 group-data-[close-button=true]/drawer-content:pe-(--drawer-close-clearance)",
         className
       )}
       {...props}
@@ -161,11 +161,10 @@ function DrawerTitle({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Title>) {
   return (
-    // leading-7 matches the close button's size-7 so both share a centreline.
     <DrawerPrimitive.Title
       data-slot="drawer-title"
       className={cn(
-        "font-heading text-xl leading-7 font-semibold tracking-tight text-balance text-foreground",
+        "font-heading text-xl leading-(--button-height-default) font-semibold text-balance text-foreground",
         className
       )}
       {...props}

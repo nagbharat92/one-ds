@@ -78,7 +78,7 @@ function AnnotationDimensionsSpecimen({ active }: { active: boolean }) {
         </CardHeader>
         <CardFooter data-measure="footer" className="relative justify-end">
           <div className="relative">
-            <Button variant="outline" onClick={() => setSaved(false)}>Cancel</Button>
+            <Button variant="secondary" onClick={() => setSaved(false)}>Cancel</Button>
           </div>
           <Button onClick={() => setSaved(true)}>Save</Button>
         </CardFooter>
@@ -111,7 +111,7 @@ function AnnotationCornersDemo() {
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex-wrap">
-            <Button data-annotate="corner-button" variant="outline" onClick={() => setSaved(false)}>
+            <Button data-annotate="corner-button" variant="secondary" onClick={() => setSaved(false)}>
               Cancel
             </Button>
             <Button data-annotate="corner-pill" className="rounded-full px-4" onClick={() => setSaved(true)}>
@@ -119,7 +119,7 @@ function AnnotationCornersDemo() {
             </Button>
             <Button
               data-annotate="corner-circle"
-              variant="outline"
+              variant="ghost"
               size="icon"
               className="ml-auto rounded-full"
               aria-label="Bookmark project"
@@ -151,7 +151,7 @@ export const annotationDemos: ComponentEntry[] = [
     description:
       "Measured anatomy callouts that keep labels clear of the specimen and each other, using alternate sides when the preferred placement cannot fit.",
     category: "Preview Tools",
-    surface: "medium",
+    surface: "default",
     installCommand: null,
     ownsCanvas: true,
     defaultExampleHeader: {

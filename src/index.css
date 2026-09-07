@@ -627,6 +627,88 @@
     --annotation-line-width: calc(var(--spacing) * 0.375);
     --annotation-line-dash: calc(var(--spacing) * 0.25);
     --annotation-line-gap: calc(var(--spacing) * 1.25);
+    --slider-snap-threshold: 0.03;
+    --slider-thumb-size: calc(var(--spacing) * 3);
+    --slider-stop-width: calc(var(--spacing) * 0.5);
+    --slider-stop-height: calc(var(--spacing) * 2);
+    --concentric-title-size: var(--text-base);
+    --concentric-title-leading: var(--text-base--line-height);
+    --concentric-title-weight: var(--font-weight-semibold);
+    --concentric-copy-size: var(--text-sm);
+    --concentric-copy-leading: var(--text-sm--line-height);
+    --concentric-copy-gap: var(--spacing);
+    --concentric-text-pair-gap-small: var(--spacing);
+    --concentric-text-pair-gap-large: calc(var(--spacing) * 2);
+    --concentric-reference-radius: calc(var(--spacing) * 5);
+    --field-group-gap: calc(var(--spacing) * 5);
+    --concentric-reference-inset: calc(var(--spacing) * 2.5);
+    --concentric-reference-inner: calc(var(--spacing) * 2.5);
+    --concentric-media-icon-size: calc(var(--spacing) * 6);
+    --concentric-expressive-title-size: var(--text-xl);
+    --concentric-expressive-title-leading: var(--text-xl--line-height);
+    --concentric-expressive-title-weight: var(--font-weight-bold);
+    --concentric-expressive-copy-size: var(--text-base);
+    --concentric-expressive-copy-leading: var(--text-base--line-height);
+    --concentric-expressive-label-size: var(--text-base);
+    --concentric-expressive-label-leading: calc(var(--spacing) * 6);
+    --concentric-expressive-control-padding-block: calc(var(--spacing) * 1.75);
+    --concentric-expressive-control-padding-inline: calc(var(--spacing) * 4);
+    --concentric-expressive-control-min-height: calc(var(--spacing) * 10);
+    --concentric-expressive-control-border: 1px;
+    --concentric-expressive-media-size: calc(var(--spacing) * 20);
+    --concentric-expressive-media-icon-size: calc(var(--spacing) * 7);
+    --concentric-large-title-size: var(--text-2xl);
+    --concentric-large-title-leading: var(--text-2xl--line-height);
+    --concentric-large-copy-size: var(--text-lg);
+    --concentric-large-copy-leading: var(--text-lg--line-height);
+    --concentric-large-label-size: var(--text-lg);
+    --concentric-large-label-leading: calc(var(--spacing) * 7);
+    --concentric-large-control-padding-block: calc(var(--spacing) * 2.25);
+    --concentric-large-control-padding-inline: calc(var(--spacing) * 5);
+    --concentric-large-control-min-height: calc(var(--spacing) * 12);
+    --concentric-large-media-size: calc(var(--spacing) * 24);
+    --concentric-large-media-icon-size: calc(var(--spacing) * 8);
+    --concentric-project-width: calc(var(--spacing) * 120);
+    --concentric-project-control-height: calc(var(--spacing) * 8);
+    --concentric-project-control-icon: calc(var(--spacing) * 4);
+    --concentric-project-label-size: var(--text-sm);
+    --concentric-project-label-leading: calc(var(--spacing) * 5);
+    --concentric-project-avatar-size: calc(var(--spacing) * 8);
+    --concentric-project-metadata-size: var(--text-xs);
+    --concentric-project-metadata-leading: var(--text-xs--line-height);
+    --concentric-medium-min-text-size: var(--text-sm);
+    --concentric-medium-min-text-leading: var(--text-sm--line-height);
+    --concentric-medium-badge-height: calc(var(--spacing) * 6);
+    --concentric-medium-button-padding-block: calc(var(--spacing) * 4);
+    --concentric-medium-action-gap: calc(var(--spacing) * 3);
+    --concentric-medium-button-height: calc(var(--concentric-expressive-label-leading) + var(--concentric-medium-button-padding-block) * 2);
+    --concentric-project-metadata-gap: calc(var(--spacing) * 2);
+    --concentric-project-owner-gap: var(--concentric-project-metadata-gap);
+    --concentric-project-badge-radius: var(--radius-sm);
+    --concentric-project-menu-padding: var(--spacing);
+    --concentric-project-menu-width: calc(var(--spacing) * 60);
+    --concentric-project-menu-row-padding: calc(var(--spacing) * 2);
+    --concentric-project-menu-row-gap: calc(var(--spacing) * 2);
+    --concentric-form-width: calc(var(--spacing) * 120);
+    --concentric-form-input-padding: calc(var(--spacing) * 3);
+    --concentric-field-radius: calc(var(--spacing) * 3);
+    --textarea-resize-handle-size: calc(var(--spacing) * 4);
+    --textarea-resize-radius: var(--concentric-field-radius);
+    --textarea-resize-grip-size: calc(var(--spacing) * 3);
+    --textarea-resize-grip-stroke: 1px;
+    --textarea-resize-grip-long: calc(var(--spacing) * 2.5);
+    --textarea-resize-grip-short: calc(var(--spacing) * 1.5);
+    --textarea-resize-grip-inset: calc(var(--spacing) * 0.5);
+    --textarea-resize-grip-offset: calc(var(--spacing) * 1.5);
+    --textarea-resize-handle-inset: calc(var(--textarea-resize-radius) / 3);
+    --textarea-resize-step: 16;
+    --concentric-medium-field-height: calc(var(--spacing) * 12);
+    --concentric-medium-field-padding-block: var(--spacing);
+    --concentric-medium-field-padding-inline: calc(var(--spacing) * 4);
+    --concentric-medium-field-indicator-size: calc(var(--spacing) * 4);
+    --concentric-medium-field-indicator-gap: calc(var(--spacing) * 3);
+    --concentric-form-textarea-lines: 3;
+    --concentric-form-switch-inset: calc(var(--spacing) * 0.5);
     --annotation-anchor-radius: calc(var(--spacing) * 0.75);
     --annotation-corner-gap: var(--spacing);
     --annotation-corner-stroke: calc(var(--spacing) * 0.75);
@@ -753,9 +835,74 @@
     --showcase-example-gap: calc(var(--spacing) * 5);
     --showcase-sidebar-width: calc(var(--spacing) * 64);
 
+    --button-height-default: calc(var(--spacing) * 10);
+    --button-height-expressive: calc(var(--spacing) * 14);
+    --button-icon-default: calc(var(--spacing) * 5);
+    --button-icon-expressive: calc(var(--spacing) * 6);
+    --button-padding-default: calc(var(--spacing) * 4);
+    --button-padding-expressive: calc(var(--spacing) * 6);
+    --graphic-label-gap: calc(var(--spacing) * 2);
+    --button-gap: var(--graphic-label-gap);
+    --favicon-monochrome-filter: brightness(0);
+    --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
+    --icon-label-optical-padding: var(--spacing);
+    --input-group-border-width: 1px;
+    --input-group-action-inset: calc(var(--spacing) - var(--input-group-border-width));
+    --dialog-close-clearance: calc(var(--button-height-default) + var(--button-gap));
+    --drawer-close-clearance: calc(var(--button-height-default) + var(--button-gap) + var(--spacing) * 4);
+    --text-body-size: var(--text-sm);
+    --text-body-leading: 1.625;
+    --text-label-size: var(--text-sm);
+    --text-label-leading: 1.5;
+    --text-metadata-size: var(--text-sm);
+    --text-metadata-leading: 1.5;
+    --text-code-size: var(--text-xs);
+    --text-code-leading: 1.5;
+    --toc-width: calc(var(--spacing) * 48);
+    --toc-layout-gap: calc(var(--spacing) * 8);
+    --toc-item-gap: calc(var(--spacing) * 2);
+    --toc-inline-gap: calc(var(--spacing) * 4);
+    --toc-sticky-inset: calc(var(--spacing) * 8);
+    --toc-max-height: calc(100svh - var(--toc-sticky-inset) * 2);
+    --toc-font-size: var(--text-sm);
+    --toc-line-height: 1.625;
+    --toc-focus-width: calc(var(--spacing) / 2);
+
+
     /* Expression lab. This is a neutral control condition: a stable app-sized
        composition whose relationships can be changed one experiment at a time. */
     --expression-lab-border-width: 1px;
+    --expressive-title-size: var(--concentric-expressive-title-size);
+    --expressive-title-leading: var(--concentric-expressive-title-leading);
+    --expressive-body-size: var(--concentric-expressive-copy-size);
+    --expressive-body-leading: var(--concentric-expressive-label-leading);
+    --expressive-caption-size: var(--concentric-medium-min-text-size);
+    --expressive-caption-leading: var(--concentric-medium-min-text-leading);
+    --expressive-space-section: calc(var(--spacing) * 6);
+    --expressive-space-related: var(--concentric-medium-action-gap);
+    --expressive-space-pair: var(--concentric-text-pair-gap-large);
+    --expressive-space-pair-small: var(--concentric-text-pair-gap-small);
+    --expressive-action-height: var(--concentric-medium-button-height);
+    --expressive-action-padding-block: var(--concentric-medium-button-padding-block);
+    --expressive-field-height: var(--concentric-medium-field-height);
+    --expressive-field-padding-inline: var(--concentric-medium-field-padding-inline);
+    --expressive-field-padding-block: var(--concentric-medium-field-padding-block);
+    --expressive-field-radius: var(--concentric-field-radius);
+    --expressive-control-radius: var(--expressive-space-section);
+    --expressive-surface-radius: calc(var(--radius-xl) + var(--expressive-space-section) * 2 - var(--concentric-reference-radius));
+    --expressive-avatar-size: calc(var(--spacing) * 10);
+    --expressive-icon-size: calc(var(--spacing) * 6);
+    --expressive-header-height: calc(var(--expressive-field-height) + var(--expressive-space-pair) * 2);
+    --expressive-native-select-inset: calc(var(--expressive-field-padding-inline) * 2 + var(--expressive-space-related));
+    --expressive-textarea-min-height: calc(var(--expressive-body-leading) * 3 + var(--expressive-field-padding-inline) * 2);
+    --expressive-menu-width: calc(var(--spacing) * 72);
+    --expressive-menu-padding: calc(var(--spacing) * 2);
+    --expressive-menu-row-radius: calc(var(--radius-md) + var(--expressive-space-section) - var(--concentric-reference-inner));
+    --expressive-column-min: calc(var(--spacing) * 80);
+    --expressive-choice-min: calc(var(--spacing) * 56);
+    --expressive-check-size: calc(var(--spacing) * 5);
+    --expressive-check-icon-size: calc(var(--spacing) * 4);
+    --expressive-collapsed-avatar-size: calc(var(--spacing) * 6);
     --expression-lab-radius: var(--radius-3xl);
     --expression-lab-header-padding: calc(var(--spacing) * 4);
     --expression-lab-content-padding: calc(var(--spacing) * 6);
@@ -816,6 +963,8 @@
 }
 
 .dark {
+  --favicon-monochrome-filter: brightness(0) invert(1);
+  --favicon-monochrome-on-primary-filter: brightness(0);
   --surface-ground: oklch(
     0.145 var(--surface-warm-chroma) var(--surface-warm-hue)
   );
@@ -2203,6 +2352,38 @@
   }
 }
 
+@layer components {
+  .icon-label {
+    padding-inline: 0;
+  }
+
+  :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label {
+    padding-inline-end: var(--icon-label-optical-padding);
+  }
+
+  .icon-label:has(~ :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])) {
+    padding-inline-start: var(--icon-label-optical-padding);
+    padding-inline-end: 0;
+  }
+
+  :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label:has(~ :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])),
+  [data-icon-label-host][data-size^="icon"] > .icon-label {
+    padding-inline: 0;
+  }
+}
+
+:has(> .icon-label):has(> :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])) {
+  column-gap: var(--graphic-label-gap);
+}
+
+.favicon-monochrome {
+  filter: var(--favicon-monochrome-filter);
+}
+
+[data-icon-label-host][data-variant="default"] .favicon-monochrome {
+  filter: var(--favicon-monochrome-on-primary-filter);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -2764,6 +2945,10 @@
     --canvas-application-height: var(--showcase-block-preview-height);
   }
 
+  .showcase-stage[data-slot="canvas"] {
+    --canvas-min-height: var(--canvas-viewport-height);
+  }
+
   .canvas-workbench {
     flex: 1 0 auto;
     inline-size: 100%;
@@ -2933,85 +3118,6 @@
     border-radius: var(--form-experiment-circle-radius);
   }
 
-  /* Expressive theme — one coherent token overlay for the whole lab.
-     Baseline stays stock OneDS; flipping the mode only re-values these scales. */
-  .expression-lab[data-experiment="expressive"] {
-    --expressive-pill: 9999px;
-    --expressive-radius-control: var(--radius-2xl);
-    --expressive-radius-surface: var(--radius-3xl);
-    --expressive-radius-nav: var(--radius-xl);
-    --expressive-control-min: calc(var(--spacing) * 11);
-    --expressive-weight-title: 700;
-    --card-spacing: calc(var(--spacing) * 7);
-  }
-
-  .expression-lab[data-experiment="expressive"] [data-slot="button"] {
-    border-radius: var(--expressive-pill);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    [data-slot="button"]:not([data-size^="icon"]) {
-    min-block-size: var(--expressive-control-min);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    [data-slot="button"]:is([data-size="icon"], [data-size="icon-lg"]) {
-    inline-size: var(--expressive-control-min);
-    block-size: var(--expressive-control-min);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    :is([data-slot="toggle-group-item"], [data-slot="tabs-trigger"]) {
-    border-radius: var(--expressive-pill);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    :is([data-slot="card"], [data-slot="choice-card"]) {
-    border-radius: var(--expressive-radius-surface);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    :is([data-slot="input"], [data-slot="textarea"], [data-slot="native-select"]) {
-    border-radius: var(--expressive-radius-control);
-    min-block-size: var(--expressive-control-min);
-  }
-
-  .expression-lab[data-experiment="expressive"] [data-slot="progress"] {
-    block-size: calc(var(--spacing) * 3);
-    border-radius: var(--expressive-pill);
-  }
-
-  .expression-lab[data-experiment="expressive"] [data-slot="alert"] {
-    border-radius: var(--expressive-radius-surface);
-  }
-
-  .expression-lab[data-experiment="expressive"] [data-slot="sidebar-brand-mark"] {
-    border-radius: var(--expressive-radius-nav);
-  }
-
-  .expression-lab[data-experiment="expressive"] [data-slot="sidebar-menu-button"] {
-    border-radius: var(--expressive-radius-nav);
-    min-block-size: calc(var(--spacing) * 10);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    [data-slot="sidebar-menu-button"][data-active="true"] {
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .expression-lab[data-experiment="expressive"]
-    :is([data-slot="card-title"], .expression-lab__heading, .expression-lab__plan-title) {
-    font-weight: var(--expressive-weight-title);
-  }
-
-  .expression-lab[data-experiment="expressive"] .expression-lab__heading {
-    font-size: var(--text-3xl);
-    line-height: var(--text-3xl--line-height);
-    letter-spacing: var(--tracking-tight);
-  }
-
-
 
   .form-experiment__viewport[data-evaluation="squint"] .expression-lab {
     filter: blur(var(--form-experiment-squint-blur));
@@ -3049,25 +3155,429 @@
    gap via calc(); late layer so overrides win over component utilities. */
 @layer concentric {
   .concentric-demo {
+    --slider-snap-threshold: 0.045;
     --concentric-pad-ratio: 0.5;
-    --concentric-r: 20px;
-    /* Padding — and every gap — tracks the radius but never drops below 8px. */
+    --concentric-r: var(--concentric-reference-radius);
+    /* Padding and content gaps track the radius but never drop below 12px. */
     --concentric-pad: max(
       calc(var(--concentric-r) * var(--concentric-pad-ratio)),
-      calc(var(--spacing) * 2)
+      calc(var(--spacing) * 3)
     );
     --concentric-inner: calc(var(--concentric-r) - var(--concentric-pad));
+    --concentric-radius-offset: calc(var(--concentric-r) - var(--concentric-reference-radius));
+    --concentric-inset-offset: calc(var(--concentric-pad) - var(--concentric-reference-inset));
+    --concentric-inner-offset: calc(var(--concentric-inner) - var(--concentric-reference-inner));
+    --concentric-surface-inset: var(--concentric-pad);
+    --concentric-section-gap: var(--concentric-surface-inset);
+    --concentric-surface-radius: max(0px, calc(var(--radius-xl) + var(--concentric-radius-offset)));
+    --concentric-control-radius: max(0px, calc(var(--radius-lg) + var(--concentric-inner-offset)));
+    --concentric-menu-row-radius: max(0px, calc(var(--radius-md) + var(--concentric-inner-offset)));
+    --concentric-media-radius: var(--concentric-inner);
+    --concentric-button-radius: var(--concentric-inner);
+    --concentric-compact-columns: var(--concentric-media-min) var(--concentric-pad) minmax(0, 1fr);
     /* Media keeps a square minimum but stretches taller with the lockup, so it
        is never narrower than its min — its live aspect ratio is annotated. */
     --concentric-media-min: calc(var(--spacing) * 16);
      --concentric-control-basis: calc(var(--spacing) * 80);
      --concentric-slider-min-width: calc(var(--spacing) * 32);
-    max-inline-size: calc(var(--spacing) * 200);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="large"] {
+    --concentric-project-control-height: var(--concentric-large-control-min-height);
+    --concentric-project-control-icon: calc(var(--spacing) * 6);
+    --concentric-project-label-size: var(--concentric-large-label-size);
+    --concentric-project-label-leading: var(--concentric-large-label-leading);
+    --concentric-project-avatar-size: calc(var(--spacing) * 10);
+    --concentric-project-metadata-size: var(--text-sm);
+    --concentric-project-metadata-leading: var(--text-sm--line-height);
+    --concentric-project-menu-padding: calc(var(--spacing) * 2);
+    --concentric-project-menu-width: calc(var(--spacing) * 72);
+    --concentric-expressive-title-size: var(--concentric-large-title-size);
+    --concentric-expressive-title-leading: var(--concentric-large-title-leading);
+    --concentric-expressive-copy-size: var(--concentric-large-copy-size);
+    --concentric-expressive-copy-leading: var(--concentric-large-copy-leading);
+    --concentric-expressive-label-size: var(--concentric-large-label-size);
+    --concentric-expressive-label-leading: var(--concentric-large-label-leading);
+    --concentric-expressive-control-padding-block: var(--concentric-large-control-padding-block);
+    --concentric-expressive-control-padding-inline: var(--concentric-large-control-padding-inline);
+    --concentric-expressive-control-min-height: var(--concentric-large-control-min-height);
+    --concentric-expressive-media-size: var(--concentric-large-media-size);
+    --concentric-expressive-media-icon-size: var(--concentric-large-media-icon-size);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] {
+    --concentric-copy-gap: var(--concentric-text-pair-gap-large);
+    --card-header-gap: var(--concentric-text-pair-gap-large);
+    --concentric-project-metadata-size: var(--concentric-medium-min-text-size);
+    --concentric-project-metadata-leading: var(--concentric-medium-min-text-leading);
+    --concentric-project-control-height: var(--concentric-expressive-control-min-height);
+    --concentric-project-control-icon: calc(var(--spacing) * 5);
+    --concentric-project-label-size: var(--concentric-expressive-label-size);
+    --concentric-project-label-leading: var(--concentric-expressive-label-leading);
+    --concentric-project-avatar-size: calc(var(--spacing) * 10);
+    --concentric-project-owner-gap: calc(var(--spacing) * 3);
+    --concentric-project-menu-padding: calc(var(--spacing) * 2);
+    --concentric-project-menu-width: calc(var(--spacing) * 66);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-project-card__owner-text {
+    display: grid;
+    gap: var(--concentric-text-pair-gap-small);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-project-card [data-slot="badge"] {
+    min-block-size: var(--concentric-medium-badge-height);
+  }
+
+  .concentric-demo[data-variant="type-controls"]:not([data-scale="normal"]) {
+    --concentric-title-size: var(--concentric-expressive-title-size);
+    --concentric-title-leading: var(--concentric-expressive-title-leading);
+    --concentric-title-weight: var(--concentric-expressive-title-weight);
+    --concentric-copy-size: var(--concentric-expressive-copy-size);
+    --concentric-copy-leading: var(--concentric-expressive-copy-leading);
+    --concentric-media-min: var(--concentric-expressive-media-size);
+    --concentric-media-icon-size: var(--concentric-expressive-media-icon-size);
+  }
+
+  .concentric-demo[data-variant="type-controls"]:not([data-scale="normal"]) .concentric-card__actions [data-slot="button"] {
+    font-size: var(--concentric-expressive-label-size);
+    line-height: var(--concentric-expressive-label-leading);
+    height: auto;
+    min-block-size: var(--concentric-expressive-control-min-height);
+    padding-block: var(--concentric-expressive-control-padding-block);
+    padding-inline: var(--concentric-expressive-control-padding-inline);
+    border-width: var(--concentric-expressive-control-border);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-card__actions {
+    gap: var(--concentric-medium-action-gap);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-card__actions [data-slot="button"] {
+    position: relative;
+    min-block-size: var(--concentric-medium-button-height);
+    padding-block: var(--concentric-medium-button-padding-block);
+    padding-inline: var(--concentric-surface-inset);
+    border-width: 0;
   }
 
   .concentric-toolbar {
     justify-content: space-between;
     gap: calc(var(--spacing) * 4);
+  }
+
+  .concentric-stage[data-composition="form"] {
+    max-inline-size: var(--concentric-form-width);
+  }
+
+  .concentric-project-form,
+  .concentric-project-card {
+    --card-spacing: var(--concentric-surface-inset);
+    gap: var(--concentric-section-gap);
+    border-radius: var(--concentric-surface-radius);
+  }
+
+  :is(.concentric-project-form, .concentric-project-card) :is([data-slot="button"], [data-slot="dropdown-menu-trigger"]) {
+    border-radius: var(--concentric-control-radius);
+  }
+
+  .concentric-project-form :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]) {
+    border-radius: var(--concentric-field-radius);
+  }
+
+  .resizable-textarea {
+    position: relative;
+    min-inline-size: 0;
+  }
+
+  .resizable-textarea [data-slot="textarea"] {
+    resize: none;
+  }
+
+  .concentric-project-form .resizable-textarea [data-slot="textarea"] {
+    resize: none;
+    padding: var(--concentric-form-input-padding);
+  }
+
+  .concentric-demo[data-scale] .concentric-project-form .resizable-textarea[data-resized] [data-slot="textarea"],
+  [data-expression="expressive"] .resizable-textarea[data-resized] [data-slot="textarea"] {
+    block-size: var(--textarea-resize-height);
+    field-sizing: fixed;
+  }
+
+  .resizable-textarea__grip {
+    position: relative;
+    display: block;
+    inline-size: var(--textarea-resize-grip-size);
+    block-size: var(--textarea-resize-grip-size);
+  }
+
+  .resizable-textarea__grip::before,
+  .resizable-textarea__grip::after {
+    content: "";
+    position: absolute;
+    right: var(--textarea-resize-grip-inset);
+    top: var(--textarea-resize-grip-inset);
+    inline-size: var(--textarea-resize-grip-long);
+    block-size: var(--textarea-resize-grip-stroke);
+    background: currentColor;
+    transform: rotate(-45deg);
+    transform-origin: right center;
+  }
+
+  .resizable-textarea__grip::after {
+    top: var(--textarea-resize-grip-offset);
+    inline-size: var(--textarea-resize-grip-short);
+  }
+
+  .resizable-textarea .resizable-textarea__resize[data-slot="button"] {
+    position: absolute;
+    inset-inline-end: var(--textarea-resize-handle-inset);
+    inset-block-end: var(--textarea-resize-handle-inset);
+    inline-size: var(--textarea-resize-handle-size);
+    block-size: var(--textarea-resize-handle-size);
+    min-block-size: var(--textarea-resize-handle-size);
+    padding: 0;
+    border-radius: calc(var(--textarea-resize-radius) - var(--textarea-resize-handle-inset));
+    cursor: ns-resize;
+    touch-action: none;
+    color: var(--muted-foreground);
+    translate: none;
+  }
+
+  .concentric-project-form [data-slot="field-group"] {
+    gap: var(--concentric-section-gap);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="card-title"] {
+    font-size: var(--concentric-title-size);
+    line-height: var(--concentric-title-leading);
+    font-weight: var(--concentric-title-weight);
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="card-description"] {
+    font-size: var(--concentric-copy-size);
+    line-height: var(--concentric-copy-leading);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="field-label"] {
+    font-size: var(--concentric-project-label-size);
+    line-height: var(--concentric-project-label-leading);
+  }
+
+  .concentric-demo[data-scale="medium"] .concentric-project-form [data-slot="field-content"] {
+    gap: var(--concentric-text-pair-gap-large);
+  }
+
+  .concentric-demo[data-scale="medium"] .concentric-project-form [data-slot="field"][data-orientation="horizontal"] {
+    gap: var(--concentric-medium-action-gap);
+  }
+
+  .concentric-demo[data-scale="medium"] .concentric-project-form :is([data-slot="field-description"], [data-slot="field-error"]) {
+    font-size: var(--concentric-medium-min-text-size);
+    line-height: var(--concentric-medium-min-text-leading);
+    margin: 0;
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]) {
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--concentric-project-control-height);
+    font-size: var(--concentric-project-label-size);
+    line-height: var(--concentric-project-label-leading);
+    padding-inline: var(--concentric-form-input-padding);
+    padding-block: 0;
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="textarea"] {
+    block-size: auto;
+    min-block-size: calc(var(--concentric-project-label-leading) * var(--concentric-form-textarea-lines) + var(--concentric-form-input-padding) * 2);
+    padding-block: var(--concentric-form-input-padding);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-project-form :is([data-slot="input"], [data-slot="select-trigger"], [data-slot="textarea"]) {
+    padding-block: var(--concentric-medium-field-padding-block);
+    padding-inline: var(--concentric-medium-field-padding-inline);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-project-form :is([data-slot="input"], [data-slot="select-trigger"]) {
+    block-size: var(--concentric-medium-field-height);
+  }
+
+  .concentric-demo[data-variant="type-controls"][data-scale="medium"] .concentric-project-form [data-slot="textarea"] {
+    padding-block: var(--concentric-medium-field-padding-inline);
+    min-block-size: calc(var(--concentric-project-label-leading) * var(--concentric-form-textarea-lines) + var(--concentric-medium-field-padding-inline) * 2 + var(--concentric-expressive-control-border) * 2);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="switch"] {
+    --concentric-switch-thumb: calc(var(--concentric-project-control-icon) - var(--concentric-form-switch-inset) * 2);
+    inline-size: calc(var(--concentric-project-control-icon) * 2);
+    block-size: var(--concentric-project-control-icon);
+    flex: none;
+    border-width: 0;
+    padding: var(--concentric-form-switch-inset);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="switch-thumb"] {
+    inline-size: var(--concentric-switch-thumb);
+    block-size: var(--concentric-switch-thumb);
+    translate: 0;
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-form [data-slot="switch-thumb"][data-state="checked"] {
+    translate: var(--concentric-project-control-icon) 0;
+  }
+
+  .concentric-form-select {
+    inline-size: var(--radix-select-trigger-width);
+    max-inline-size: var(--radix-select-content-available-width);
+    border-radius: max(0px, calc(var(--radius-lg) + var(--concentric-inner-offset)));
+  }
+
+  .concentric-form-select:not([data-scale="normal"]) [data-radix-select-viewport] {
+    padding: var(--concentric-project-menu-padding);
+    min-inline-size: 0;
+  }
+
+  .concentric-form-select [data-slot="select-item"] {
+    border-radius: var(--concentric-menu-row-radius);
+  }
+
+  .concentric-form-select:not([data-scale="normal"]) {
+    border-radius: calc(var(--concentric-menu-row-radius) + var(--concentric-project-menu-padding));
+  }
+
+  .concentric-form-select:not([data-scale="normal"]) [data-slot="select-item"] {
+    min-block-size: var(--concentric-project-control-height);
+    font-size: var(--concentric-project-label-size);
+    line-height: var(--concentric-project-label-leading);
+  }
+
+  .concentric-stage[data-composition="vertical"] {
+    max-inline-size: var(--concentric-project-width);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card [data-slot="card-action"] {
+    align-self: center;
+    margin-block: calc((var(--concentric-title-size) * var(--concentric-title-leading) - var(--concentric-project-control-height)) / 2);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card [data-slot="card-title"] {
+    font-size: var(--concentric-title-size);
+    line-height: var(--concentric-title-leading);
+    font-weight: var(--concentric-title-weight);
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+    text-align: start;
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card [data-slot="card-description"] {
+    font-size: var(--concentric-copy-size);
+    line-height: var(--concentric-copy-leading);
+  }
+
+  .concentric-project-card__metadata {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--concentric-project-metadata-gap);
+  }
+
+  .concentric-project-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--concentric-project-metadata-gap);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card [data-slot="badge"] {
+    border-radius: var(--concentric-project-badge-radius);
+    font-size: var(--concentric-project-metadata-size);
+    line-height: var(--concentric-project-metadata-leading);
+  }
+
+  .concentric-project-card__owner {
+    display: flex;
+    align-items: center;
+    gap: var(--concentric-project-owner-gap);
+    font-size: var(--concentric-project-metadata-size);
+    line-height: var(--concentric-project-metadata-leading);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card__owner [data-slot="avatar"] {
+    inline-size: var(--concentric-project-avatar-size);
+    block-size: var(--concentric-project-avatar-size);
+  }
+
+  .concentric-project-card__status {
+    font-size: var(--concentric-project-metadata-size);
+    line-height: var(--concentric-project-metadata-leading);
+    color: var(--muted-foreground);
+  }
+
+  .concentric-project-card__details {
+    display: grid;
+    gap: var(--concentric-copy-gap);
+    margin-block-start: var(--card-spacing);
+    font-size: var(--concentric-copy-size);
+    line-height: var(--concentric-copy-leading);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card [data-slot="dropdown-menu-trigger"] {
+    inline-size: var(--concentric-project-control-height);
+    block-size: var(--concentric-project-control-height);
+  }
+
+  .concentric-demo[data-scale]:not([data-scale="normal"]) .concentric-project-card [data-slot="dropdown-menu-trigger"] svg,
+  .concentric-project-menu:not([data-scale="normal"]) [data-slot="dropdown-menu-item"] svg {
+    inline-size: var(--concentric-project-control-icon);
+    block-size: var(--concentric-project-control-icon);
+  }
+
+  .concentric-project-menu {
+    border-radius: max(0px, calc(var(--radius-lg) + var(--concentric-inner-offset)));
+  }
+
+  .concentric-project-menu [data-slot="dropdown-menu-item"] {
+    border-radius: var(--concentric-menu-row-radius);
+  }
+
+  .concentric-project-menu:not([data-scale="normal"]) {
+    inline-size: var(--concentric-project-menu-width);
+    max-inline-size: var(--radix-dropdown-menu-content-available-width);
+    border-radius: calc(var(--concentric-menu-row-radius) + var(--concentric-project-menu-padding));
+  }
+
+  .concentric-project-menu:not([data-scale="normal"]) > [data-slot="scroller"] {
+    padding: var(--concentric-project-menu-padding);
+  }
+
+  .concentric-project-menu:not([data-scale="normal"]) [data-slot="dropdown-menu-item"] {
+    min-block-size: var(--concentric-project-control-height);
+    padding-block: 0;
+    padding-inline: var(--concentric-project-menu-row-padding);
+    gap: var(--concentric-project-menu-row-gap);
+    border-radius: var(--concentric-menu-row-radius);
+    font-size: var(--concentric-project-label-size);
+    line-height: var(--concentric-project-label-leading);
+  }
+
+  :is(.concentric-form-select, .concentric-project-menu)[data-scale="medium"] :is([data-slot="select-item"], [data-slot="dropdown-menu-item"]) {
+    min-block-size: var(--concentric-medium-field-height);
+    padding-block: var(--concentric-medium-field-padding-block);
+    padding-inline: var(--concentric-medium-field-padding-inline);
+  }
+
+  .concentric-form-select[data-scale="medium"] [data-slot="select-item"] {
+    padding-inline-end: calc(var(--concentric-medium-field-padding-inline) + var(--concentric-medium-field-indicator-size) + var(--concentric-medium-field-indicator-gap));
+  }
+
+  .concentric-form-select[data-scale="medium"] [data-slot="select-item"] > span:first-child {
+    inset-inline-end: var(--concentric-medium-field-padding-inline);
   }
 
   .concentric-toolbar__control {
@@ -3078,20 +3588,12 @@
     gap: calc(var(--spacing) * 3);
   }
 
-  .concentric-toolbar__label {
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-medium);
-    white-space: nowrap;
-  }
-
   .concentric-toolbar__slider {
     flex: 1 1 var(--concentric-slider-min-width);
     min-inline-size: min(100%, var(--concentric-slider-min-width));
-    max-inline-size: calc(var(--spacing) * 112);
   }
 
   .concentric-card {
-    display: flex;
     align-items: center;
     gap: 0;
     padding: var(--concentric-pad);
@@ -3106,27 +3608,30 @@
 
   .concentric-card__media {
     flex: none;
-    align-self: stretch;
+    align-self: center;
+    inline-size: var(--concentric-media-min);
+    block-size: var(--concentric-media-min);
     min-inline-size: var(--concentric-media-min);
     min-block-size: var(--concentric-media-min);
     display: grid;
     place-items: center;
     background: var(--muted);
     color: var(--muted-foreground);
-    border-radius: var(--concentric-inner);
+    border-radius: var(--concentric-media-radius);
     transition: border-radius var(--speed-swift) var(--ease-settle);
   }
 
   .concentric-card__media svg {
-    inline-size: calc(var(--spacing) * 6);
-    block-size: calc(var(--spacing) * 6);
+    inline-size: var(--concentric-media-icon-size);
+    block-size: var(--concentric-media-icon-size);
   }
 
   .concentric-card__body {
     flex: 1;
     min-inline-size: 0;
     display: grid;
-    gap: calc(var(--spacing) * 1);
+    gap: var(--concentric-copy-gap);
+    overflow-wrap: anywhere;
   }
 
   .concentric-gap-band {
@@ -3145,14 +3650,14 @@
   }
 
   .concentric-card__title {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--text-base--line-height);
+    font-size: var(--concentric-title-size);
+    font-weight: var(--concentric-title-weight);
+    line-height: var(--concentric-title-leading);
   }
 
   .concentric-card__description {
-    font-size: var(--text-sm);
-    line-height: var(--text-sm--line-height);
+    font-size: var(--concentric-copy-size);
+    line-height: var(--concentric-copy-leading);
     color: var(--muted-foreground);
   }
 
@@ -3160,11 +3665,11 @@
     flex: none;
     display: flex;
     align-items: center;
-    gap: 0;
+    gap: var(--card-footer-gap);
   }
 
   .concentric-card__actions [data-slot="button"] {
-    border-radius: var(--concentric-inner);
+    border-radius: var(--concentric-button-radius);
     transition: border-radius var(--speed-swift) var(--ease-settle);
   }
 

@@ -266,7 +266,7 @@ function CardLoginDemo() {
         <Button type="submit" className="w-full">
           Login
         </Button>
-        <Button variant="outline" className="w-full">
+        <Button variant="secondary" className="w-full">
           Login with Google
         </Button>
       </CardFooter>
@@ -332,7 +332,7 @@ function CardRichContentDemo() {
         </div>
       </CardContent>
       <CardFooter className="justify-end">
-        <Button variant="outline">View report</Button>
+        <Button variant="secondary">View report</Button>
         <Button>
           Continue review
           <ArrowRightIcon data-icon="inline-end" />
@@ -397,7 +397,7 @@ function CardEdgeToEdgeDemo() {
         </div>
       </CardContent>
       <CardFooter className="justify-end">
-        <Button variant="outline">Decline</Button>
+        <Button variant="secondary">Decline</Button>
         <Button>Accept</Button>
       </CardFooter>
     </Card>
@@ -728,7 +728,7 @@ export function CardDemo() {
       </CardContent>
       <CardFooter className="flex-col">
         <Button type="submit" className="w-full">Login</Button>
-        <Button variant="outline" className="w-full">Login with Google</Button>
+        <Button variant="secondary" className="w-full">Login with Google</Button>
       </CardFooter>
     </Card>
   )
@@ -918,7 +918,7 @@ export function TableDemo() {
                     <TableCell className="text-right">
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="default"
                         onClick={() =>
                           setRows((prev) =>
                             prev.map((r) =>
@@ -961,7 +961,7 @@ export function TableDemo() {
           <ItemDescription>Last seen 5 months ago</ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="default">
             Follow
           </Button>
         </ItemActions>
@@ -989,7 +989,7 @@ export function ItemDemo() {
         <ItemDescription>Last seen 5 months ago</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Button variant="outline" size="sm">Follow</Button>
+        <Button variant="secondary" size="default">Follow</Button>
       </ItemActions>
     </Item>
   )
@@ -1106,7 +1106,7 @@ export function ItemDemo() {
               <ItemActions hosted>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" aria-label="Navigation review actions">
+                    <Button variant="ghost" size="icon" aria-label="Navigation review actions">
                       <MoreHorizontalIcon />
                     </Button>
                   </DropdownMenuTrigger>
@@ -1126,7 +1126,7 @@ export function ItemDemo() {
               <ItemActions hosted>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" aria-label="Weekly update actions">
+                    <Button variant="ghost" size="icon" aria-label="Weekly update actions">
                       <MoreHorizontalIcon />
                     </Button>
                   </DropdownMenuTrigger>
@@ -1153,7 +1153,7 @@ export function ItemDemo() {
               </ItemTitle>
             </ItemContent>
             <ItemActions hosted>
-              <Button variant="ghost" size="icon-sm" aria-label="Item actions">
+              <Button variant="ghost" size="icon" aria-label="Item actions">
                 <MoreHorizontalIcon />
               </Button>
             </ItemActions>
@@ -1287,7 +1287,7 @@ export function ItemDemo() {
             </ItemContent>
             <ItemFooter>
               <span className="text-xs text-muted-foreground">3 comments</span>
-              <Button variant="outline" size="sm">Review</Button>
+              <Button variant="secondary" size="default">Review</Button>
             </ItemFooter>
           </Item>
         ),
@@ -1329,7 +1329,7 @@ export function ItemDemo() {
             <ItemActions>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-sm" aria-label="Actions">
+                  <Button variant="ghost" size="icon" aria-label="Actions">
                     <ChevronDownIcon />
                   </Button>
                 </DropdownMenuTrigger>
@@ -1611,7 +1611,7 @@ export function KbdDemo() {
         name: "Button",
         description: "Keyboard shortcut displayed inside a button.",
         Demo: () => (
-          <Button variant="outline" className="gap-2">
+          <Button variant="secondary" className="gap-2">
             Search
             <KbdGroup>
               <Kbd>⌘</Kbd>
@@ -1627,7 +1627,7 @@ export function KbdDemo() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" aria-label="Bold">
+                <Button variant="ghost" size="icon" aria-label="Bold">
                   <SearchIcon />
                 </Button>
               </TooltipTrigger>
@@ -1675,7 +1675,7 @@ export function KbdDemo() {
             Create your first project to get started.
           </EmptyDescription>
         </EmptyHeader>
-        <Button size="sm">
+        <Button size="default">
           <StarIcon />
           Create project
         </Button>
@@ -1731,7 +1731,7 @@ export function EmptyDemo() {
               <EmptyTitle>No images</EmptyTitle>
               <EmptyDescription>Upload an image to get started.</EmptyDescription>
             </EmptyHeader>
-            <Button size="sm" variant="outline">
+            <Button size="default" variant="secondary">
               Upload
             </Button>
           </Empty>
@@ -1753,7 +1753,7 @@ export function EmptyDemo() {
               <EmptyTitle>No profile</EmptyTitle>
               <EmptyDescription>Set up your profile to continue.</EmptyDescription>
             </EmptyHeader>
-            <Button size="sm">Create profile</Button>
+            <Button size="default">Create profile</Button>
           </Empty>
         ),
       },
@@ -1781,7 +1781,7 @@ export function EmptyDemo() {
               <EmptyTitle>No team members</EmptyTitle>
               <EmptyDescription>Invite collaborators to this workspace.</EmptyDescription>
             </EmptyHeader>
-            <Button size="sm" variant="outline">
+            <Button size="default" variant="secondary">
               Invite
             </Button>
           </Empty>

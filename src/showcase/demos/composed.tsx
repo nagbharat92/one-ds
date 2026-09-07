@@ -404,10 +404,10 @@ function PaginationDemo() {
           Page {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
         </p>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+          <Button variant="secondary" size="default" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
             Previous
           </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+          <Button variant="secondary" size="default" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
             Next
           </Button>
         </div>
@@ -557,7 +557,7 @@ function VisibilityDemo() {
     <div className="space-y-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="secondary" size="default">
             <ColumnsIcon className="mr-2 size-4" /> Columns
           </Button>
         </DropdownMenuTrigger>
@@ -780,16 +780,16 @@ function TablePaginationDemo() {
           Page {currentPage + 1} of {pageCount}
         </p>
         <div className="flex items-center gap-1">
-          <Button variant="outline" size="icon" onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()} aria-label="First page">
+          <Button variant="ghost" size="icon" onClick={() => table.firstPage()} disabled={!table.getCanPreviousPage()} aria-label="First page">
             <ChevronsLeftIcon className="size-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} aria-label="Previous page">
+          <Button variant="ghost" size="icon" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} aria-label="Previous page">
             <ChevronLeftIcon className="size-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} aria-label="Next page">
+          <Button variant="ghost" size="icon" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} aria-label="Next page">
             <ChevronRightIcon className="size-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={() => table.lastPage()} disabled={!table.getCanNextPage()} aria-label="Last page">
+          <Button variant="ghost" size="icon" onClick={() => table.lastPage()} disabled={!table.getCanNextPage()} aria-label="Last page">
             <ChevronsRightIcon className="size-4" />
           </Button>
         </div>
@@ -816,8 +816,8 @@ function ColumnToggleDemo() {
         {toggleable.map((col) => (
           <Button
             key={col.id}
-            variant={col.getIsVisible() ? "default" : "outline"}
-            size="sm"
+            variant={col.getIsVisible() ? "default" : "secondary"}
+            size="default"
             onClick={() => col.toggleVisibility()}
           >
             {col.id}
@@ -863,7 +863,7 @@ function BasicDatePicker() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
+        <Button variant="secondary" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
           <CalendarIcon className="mr-2 size-4" />
           {date ? format(date, "PPP") : "Pick a date"}
         </Button>
@@ -892,7 +892,7 @@ function RangePickerDemo() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={cn("w-72 justify-start text-left font-normal", !range.from && "text-muted-foreground")}>
+        <Button variant="secondary" className={cn("w-72 justify-start text-left font-normal", !range.from && "text-muted-foreground")}>
           <CalendarIcon className="mr-2 size-4" />
           {label}
         </Button>
@@ -929,7 +929,7 @@ function PresetsDemo() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
+        <Button variant="secondary" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
           <CalendarIcon className="mr-2 size-4" />
           {date ? format(date, "PPP") : "Pick a date"}
         </Button>
@@ -940,7 +940,7 @@ function PresetsDemo() {
             <Button
               key={preset.label}
               variant="ghost"
-              size="sm"
+              size="default"
               className="justify-start"
               onClick={() => { setDate(preset.value); setOpen(false) }}
             >
@@ -961,7 +961,7 @@ function DateOfBirthDemo() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
+        <Button variant="secondary" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
           <CalendarIcon className="mr-2 size-4" />
           {date ? format(date, "PPP") : "Date of birth"}
         </Button>
@@ -1010,7 +1010,7 @@ function DateInputDemo() {
       />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="Open calendar">
+          <Button variant="secondary" size="icon" aria-label="Open calendar">
             <CalendarIcon className="size-4" />
           </Button>
         </PopoverTrigger>
@@ -1047,7 +1047,7 @@ function TimePickerDemo() {
       <div className="flex items-center gap-2">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className={cn("w-48 justify-start text-left font-normal", !date && "text-muted-foreground")}>
+            <Button variant="secondary" className={cn("w-48 justify-start text-left font-normal", !date && "text-muted-foreground")}>
               <CalendarIcon className="mr-2 size-4" />
               {date ? format(date, "PPP") : "Pick a date"}
             </Button>
@@ -1132,9 +1132,9 @@ function NaturalLanguagePickerDemo() {
           onChange={(event) => setText(event.target.value)}
           onKeyDown={(event) => { if (event.key === "Enter") handleParse() }}
         />
-        <Button onClick={handleParse} size="sm">Parse</Button>
+        <Button onClick={handleParse} size="default">Parse</Button>
         {date && (
-          <Button variant="ghost" size="sm" onClick={() => { setDate(undefined); setText(""); setFeedback("") }}>
+          <Button variant="ghost" size="default" onClick={() => { setDate(undefined); setText(""); setFeedback("") }}>
             Clear
           </Button>
         )}
@@ -1149,7 +1149,7 @@ function NaturalLanguagePickerDemo() {
           {displayDate && (
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="w-60 justify-start text-left font-normal">
+                <Button variant="secondary" className="w-60 justify-start text-left font-normal">
                   <CalendarIcon className="mr-2 size-4" />
                   {format(displayDate, "PPP")}
                 </Button>
@@ -1178,7 +1178,7 @@ function BasicQuestionnaire() {
         <div className="rounded-lg border bg-muted/50 p-4 text-sm">
           <p className="font-medium">Submission received</p>
           <pre className="mt-2 whitespace-pre-wrap text-xs text-muted-foreground">{result}</pre>
-          <Button variant="outline" size="sm" className="mt-3" onClick={() => setResult(null)}>Reset</Button>
+          <Button variant="secondary" size="default" className="mt-3" onClick={() => setResult(null)}>Reset</Button>
         </div>
       ) : (
         <Questionnaire
@@ -1226,7 +1226,7 @@ function BasicQuestionnaire() {
 function MultipleSelectionDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
     <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1249,7 +1249,7 @@ function MultipleSelectionDemo() {
 function FreeformAnswerDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
     <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1270,7 +1270,7 @@ function ExplicitSkipDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setStatuses({}) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => { setResult(null); setStatuses({}) }}>Reset</Button></div>
   ) : (
     <div className="mx-auto w-full max-w-md space-y-4">
       <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify({ ...Object.fromEntries(new FormData(ev.currentTarget).entries()), skipped: statuses }, null, 2)) }}>
@@ -1309,7 +1309,7 @@ function ExplicitSkipDemo() {
 function ShortcutsDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
     <Questionnaire shortcuts="letters" className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1334,7 +1334,7 @@ function CustomValidationDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setInvalid(false) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => { setResult(null); setInvalid(false) }}>Reset</Button></div>
   ) : (
     <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); if (invalid) return; setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1362,7 +1362,7 @@ function ControlledDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setCurrentItem("team-size") }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => { setResult(null); setCurrentItem("team-size") }}>Reset</Button></div>
   ) : (
     <div className="mx-auto w-full max-w-md space-y-4">
       <p className="text-sm text-muted-foreground">Current item: <span className="font-medium text-foreground">{currentItem}</span></p>
@@ -1398,7 +1398,7 @@ function ResumeDemo() {
   const [key, setKey] = useState(0)
 
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setKey((prev) => prev + 1) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => { setResult(null); setKey((prev) => prev + 1) }}>Reset</Button></div>
   ) : (
     <Questionnaire key={key} defaultItem="framework" className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1431,7 +1431,7 @@ function ConditionalItemsDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setShowRegion(false) }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => { setResult(null); setShowRegion(false) }}>Reset</Button></div>
   ) : (
     <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1466,12 +1466,12 @@ function NavigationStateDemo() {
   const [result, setResult] = useState<string | null>(null)
 
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => { setResult(null); setCurrentItem("q1") }}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => { setResult(null); setCurrentItem("q1") }}>Reset</Button></div>
   ) : (
     <div className="mx-auto w-full max-w-md space-y-4">
       <div className="flex gap-2">
-        <Button variant="outline" size="sm" disabled={currentItem === "q1"} onClick={() => setCurrentItem("q1")}>Go to Q1</Button>
-        <Button variant="outline" size="sm" disabled={currentItem === "q2"} onClick={() => setCurrentItem("q2")}>Go to Q2</Button>
+        <Button variant="secondary" size="default" disabled={currentItem === "q1"} onClick={() => setCurrentItem("q1")}>Go to Q1</Button>
+        <Button variant="secondary" size="default" disabled={currentItem === "q2"} onClick={() => setCurrentItem("q2")}>Go to Q2</Button>
       </div>
       <Questionnaire item={currentItem} onItemChange={setCurrentItem} onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
         <QuestionnaireProgress />
@@ -1499,7 +1499,7 @@ function NavigationStateDemo() {
 function CustomProgressDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
     <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress render={(props, state) => (
@@ -1541,7 +1541,7 @@ function CustomProgressDemo() {
 function AnimatedItemsDemo() {
   const [result, setResult] = useState<string | null>(null)
   return result ? (
-    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+    <div className="mx-auto w-full max-w-md text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
   ) : (
     <Questionnaire className="mx-auto max-w-md" onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
       <QuestionnaireProgress />
@@ -1575,7 +1575,7 @@ function CardQuestionnaireDemo() {
       </CardHeader>
       <CardContent>
         {result ? (
-          <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="outline" size="sm" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
+          <div className="text-sm"><pre className="whitespace-pre-wrap text-xs">{result}</pre><Button variant="secondary" size="default" className="mt-2" onClick={() => setResult(null)}>Reset</Button></div>
         ) : (
           <Questionnaire onSubmit={(ev) => { ev.preventDefault(); setResult(JSON.stringify(Object.fromEntries(new FormData(ev.currentTarget).entries()), null, 2)) }}>
             <QuestionnaireProgress />
@@ -1795,7 +1795,7 @@ const table = useTable({ features, data, columns, rowModelFns: {} })`,
     Demo: BasicDatePicker,
     code: `<Popover>
   <PopoverTrigger asChild>
-    <Button variant="outline">
+    <Button variant="secondary">
       <CalendarIcon className="mr-2 size-4" />
       {date ? format(date, "PPP") : "Pick a date"}
     </Button>

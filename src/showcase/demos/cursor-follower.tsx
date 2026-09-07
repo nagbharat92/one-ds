@@ -61,7 +61,7 @@ export const cursorFollowerDemos: ComponentEntry[] = [
     slug: "cursor-follower",
     name: "Cursor Follower",
     category: "Preview Tools",
-    surface: "medium",
+    surface: "default",
     ownsCanvas: true,
     installCommand: null,
     description: "A compact pointer-following ornament with a pill shape, theme-aware shadow, and edge-aware placement. Surface is the default; Accent is an explicit color option.",

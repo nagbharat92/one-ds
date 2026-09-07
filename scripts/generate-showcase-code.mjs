@@ -4,7 +4,7 @@ import ts from "typescript"
 import { completeDemoSource } from "./showcase-code-source.mjs"
 
 const root = process.cwd()
-const demosDirectory = path.join(root, "src", "showcase", "demos")
+const sourceDirectories = ["demos", "experiments"].map(directory => path.join(root, "src", "showcase", directory))
 const outputPath = path.join(root, "src", "showcase", "generated-example-code.ts")
 
 function propertyName(property) {
@@ -85,13 +85,12 @@ function demoSource(expression, declarations, sourceFile) {
   return demo.getText(sourceFile)
 }
 
-const files = fs
-  .readdirSync(demosDirectory)
-  .filter((file) => file.endsWith(".tsx"))
+const files = sourceDirectories
+  .flatMap(directory => fs.readdirSync(directory).filter(file => file.endsWith(".tsx")).map(file => path.join(directory, file)))
   .sort()
 
 const generated = new Map()
-const program = ts.createProgram(files.map(file => path.join(demosDirectory, file)), {
+const program = ts.createProgram(files, {
   jsx: ts.JsxEmit.ReactJSX,
   target: ts.ScriptTarget.Latest,
   noResolve: true,
@@ -100,7 +99,7 @@ const program = ts.createProgram(files.map(file => path.join(demosDirectory, fil
 const checker = program.getTypeChecker()
 
 for (const file of files) {
-  const filePath = path.join(demosDirectory, file)
+  const filePath = file
   const sourceFile = program.getSourceFile(filePath)
   const declarations = new Map()
 
@@ -123,7 +122,7 @@ for (const file of files) {
       if (slug && complete) {
         const demoProperty = findProperty(node, "Demo")
         if (!demoProperty || !ts.isPropertyAssignment(demoProperty)) throw new Error(`${file}: ${slug} needs an explicit Demo`)
-        const key = `${slug}:Default`
+        const key = `${slug}:${stringValue(findProperty(node, "defaultExampleName")) ?? "Default"}`
         if (generated.has(key)) throw new Error(`Duplicate showcase example key: ${key}`)
         generated.set(key, completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, root))
       }

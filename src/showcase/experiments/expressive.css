@@ -1,0 +1,187 @@
+@layer experiment {
+  [data-expression="expressive"] {
+    --expression-lab-gap: var(--expressive-space-section);
+    --expression-lab-section-gap: var(--expressive-space-section);
+    --expression-lab-item-gap: var(--expressive-space-related);
+    --expression-lab-copy-gap: var(--expressive-space-pair);
+    --expression-lab-chat-padding: var(--expressive-space-section);
+    --expression-lab-content-padding: var(--expressive-space-section);
+    --expression-lab-header-padding: var(--expressive-space-section);
+    --expression-lab-column-min: var(--expressive-column-min);
+    --sidebar-header-height: var(--expressive-header-height);
+    --site-header-height: var(--expressive-header-height);
+    --field-group-gap: var(--expressive-space-section);
+    --card-spacing-default: var(--expressive-space-section);
+    --card-spacing-small: var(--expressive-space-section);
+    --card-header-gap: var(--expressive-space-pair);
+    --card-footer-gap: var(--expressive-space-related);
+    --choice-card-padding: var(--expressive-space-section);
+    --ai-composer-control-size: var(--expressive-field-height);
+    --ai-composer-tool-icon-size: var(--expressive-icon-size);
+    --ai-composer-tool-gap: var(--expressive-space-related);
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+  }
+
+  [data-expression="expressive"] :is([data-slot="card"], [data-slot="alert"], .expression-lab__chat) { border-radius: var(--expressive-surface-radius); }
+  [data-expression="expressive"] [data-slot="choice-card"] { border-radius: var(--expressive-field-radius); }
+
+  [data-expression="expressive"] :is([data-slot="card-title"], .expression-lab__heading, .expression-lab__plan-title, .expression-lab__chat-title, .expression-lab__lenses-title) {
+    font-size: var(--expressive-title-size);
+    line-height: var(--expressive-title-leading);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0;
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+  [data-expression="expressive"] :is([data-slot="card-description"], [data-slot="alert-description"], [data-slot="bubble-content"], .expression-lab__plan-description, .expression-lab__lenses-description) {
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+  }
+  [data-expression="expressive"] :is([data-slot="field-label"], [data-slot="alert-title"], [data-slot="sidebar-menu-button"], [data-slot="tabs-trigger"], [data-slot="toggle-group-item"]) {
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+    font-weight: var(--font-weight-medium);
+  }
+  [data-expression="expressive"] :is([data-slot="badge"], [data-slot="field-description"], [data-slot="field-error"], [data-slot="card-eyebrow"], [data-slot="message-header"], [data-slot="sidebar-group-label"], .expression-lab__next-step, .expression-lab__session-label, .expression-lab__slider-labels, .expression-lab__progress-copy, .expression-lab__chat-description) {
+    font-size: var(--expressive-caption-size);
+    line-height: var(--expressive-caption-leading);
+  }
+  [data-expression="expressive"] [data-slot="badge"] { min-block-size: var(--concentric-medium-badge-height); border-radius: var(--radius-sm); }
+  [data-expression="expressive"] :is([data-slot="field-content"], .expression-lab__plan-copy, .expression-lab__chat-heading) { gap: var(--expressive-space-pair); }
+  [data-expression="expressive"] [data-slot="field-description"] { margin: 0; }
+  [data-expression="expressive"] [data-slot="field"][data-orientation="horizontal"] { gap: var(--expressive-space-related); }
+  [data-expression="expressive"] .expression-lab__plan [data-slot="field-group"] { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--expressive-choice-min)), 1fr)); }
+  [data-expression="expressive"] [data-slot="field-content"] { min-inline-size: 0; }
+  [data-expression="expressive"] [data-slot="field-label"] { overflow-wrap: anywhere; }
+
+  [data-expression="expressive"] :is([data-slot="button"], [data-slot="dropdown-menu-trigger"]) {
+    position: relative;
+    border-width: 0;
+    border-radius: var(--expressive-control-radius);
+    block-size: var(--expressive-action-height);
+    min-block-size: var(--expressive-action-height);
+    padding-block: var(--expressive-action-padding-block);
+    padding-inline: var(--expressive-space-section);
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+    font-weight: var(--font-weight-medium);
+  }
+  [data-expression="expressive"] :is([data-slot="button"], [data-slot="dropdown-menu-trigger"])[data-size^="icon"] {
+    inline-size: var(--button-height-expressive);
+    block-size: var(--button-height-expressive);
+    min-block-size: var(--button-height-expressive);
+    padding: 0;
+    flex: none;
+  }
+  [data-expression="expressive"] :is([data-slot="button"], [data-slot="dropdown-menu-trigger"]) svg { inline-size: var(--expressive-icon-size); block-size: var(--expressive-icon-size); }
+  [data-expression="expressive"] [data-slot="button"] { gap: var(--graphic-label-gap); }
+
+  [data-expression="expressive"] :is([data-slot="input"], [data-slot="native-select"], [data-slot="select-trigger"], [data-slot="textarea"]) {
+    border-radius: var(--expressive-field-radius);
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+    padding-inline: var(--expressive-field-padding-inline);
+    padding-block: var(--expressive-field-padding-block);
+    block-size: var(--expressive-field-height);
+    min-inline-size: 0;
+  }
+  [data-expression="expressive"] [data-slot="native-select"] { padding-inline-end: var(--expressive-native-select-inset); }
+  [data-expression="expressive"] [data-slot="textarea"] { padding: var(--expressive-field-padding-inline); block-size: auto; min-block-size: var(--expressive-textarea-min-height); }
+  [data-expression="expressive"] [data-slot="checkbox"] { inline-size: var(--expressive-check-size); block-size: var(--expressive-check-size); }
+  [data-expression="expressive"] [data-slot="checkbox"] svg { inline-size: var(--expressive-check-icon-size); block-size: var(--expressive-check-icon-size); }
+  [data-expression="expressive"] [data-slot="switch"] {
+    inline-size: calc(var(--expressive-icon-size) * 2);
+    block-size: var(--expressive-icon-size);
+    padding: var(--concentric-form-switch-inset);
+    border-width: 0;
+    flex: none;
+  }
+  [data-expression="expressive"] [data-slot="switch-thumb"] {
+    inline-size: calc(var(--expressive-icon-size) - var(--concentric-form-switch-inset) * 2);
+    block-size: calc(var(--expressive-icon-size) - var(--concentric-form-switch-inset) * 2);
+    translate: 0;
+  }
+  [data-expression="expressive"] [data-slot="switch-thumb"][data-state="checked"] { translate: var(--expressive-icon-size) 0; }
+  [data-expression="expressive"] :is([data-slot="card-footer"], .expression-lab__capture-actions) { gap: var(--expressive-space-related); flex-wrap: wrap; }
+  [data-expression="expressive"] [data-slot="toolbar"] {
+    --tb-pad: var(--expressive-space-related);
+    --tb-pad-ends: var(--expressive-space-related);
+    --tb-inner: var(--expressive-control-radius);
+    gap: var(--expressive-space-related);
+    max-inline-size: 100%;
+  }
+  [data-expression="expressive"] [data-slot="tabs-list"] { block-size: calc(var(--expressive-field-height) + var(--tabs-padding) * 2); }
+  [data-expression="expressive"] [data-slot="tabs-trigger"] { padding-inline: var(--expressive-space-related); }
+  [data-expression="expressive"] [data-slot="toggle-group"] { gap: var(--expressive-space-related); flex-wrap: wrap; }
+  [data-expression="expressive"] [data-slot="toggle-group-item"] { min-block-size: var(--expressive-field-height); padding-inline: var(--expressive-space-related); border-radius: var(--expressive-field-radius); }
+  [data-expression="expressive"] [data-slot="sidebar-menu-button"] { min-block-size: var(--expressive-field-height); border-radius: var(--expressive-field-radius); }
+  [data-expression="expressive"] [data-slot="sidebar-account"] { gap: var(--expressive-space-related); block-size: auto; min-block-size: var(--expressive-action-height); }
+  [data-expression="expressive"] [data-slot="sidebar-account-details"] { gap: var(--expressive-space-pair-small); }
+  [data-expression="expressive"] [data-slot="sidebar-account-details"] > * { font-size: var(--expressive-caption-size); line-height: var(--expressive-caption-leading); }
+  [data-expression="expressive"] [data-slot="sidebar-brand-label"] { font-size: var(--expressive-body-size); }
+  [data-expression="expressive"] [data-slot="avatar"] { inline-size: var(--expressive-avatar-size); block-size: var(--expressive-avatar-size); }
+  [data-expression="expressive"] .expression-lab__session { gap: var(--expressive-space-related); }
+  [data-expression="expressive"] .expression-lab__hero-footer { flex-direction: column; align-items: stretch; }
+  [data-expression="expressive"] .expression-lab__hero-footer [data-slot="button"] { white-space: normal; block-size: auto; }
+  [data-expression="expressive"] .expression-lab__header { block-size: auto; min-block-size: var(--expressive-header-height); }
+  [data-expression="expressive"] .expression-lab__header [data-slot="site-header-shell"] { flex-wrap: wrap; block-size: auto; min-block-size: var(--expressive-header-height); }
+  [data-expression="expressive"] .expression-lab__page-title { font-size: var(--expressive-caption-size); }
+  [data-expression="expressive"] .expression-lab__plan-header { flex-wrap: wrap; }
+  [data-expression="expressive"] .expression-lab__chat-header { flex-wrap: wrap; }
+  [data-expression="expressive"] .expression-lab__chat-heading { min-inline-size: 0; gap: var(--expressive-space-related); }
+  [data-expression="expressive"] .expression-lab__chat-heading > div { gap: var(--expressive-space-pair-small); }
+  [data-expression="expressive"] .expression-lab__chat-heading :is(strong, span) { font-size: var(--expressive-caption-size); line-height: var(--expressive-caption-leading); white-space: normal; }
+  [data-expression="expressive"] [data-slot="message"] { gap: var(--expressive-space-related); }
+  [data-expression="expressive"] [data-slot="message-avatar"] { min-inline-size: var(--expressive-avatar-size); }
+  [data-expression="expressive"] [data-slot="message-content"] { min-inline-size: 0; }
+  [data-expression="expressive"] [data-slot="ai-composer"] { border-radius: var(--expressive-field-radius); padding: var(--expressive-space-related); }
+  [data-expression="expressive"] [data-slot="ai-composer-input"] { font-size: var(--expressive-body-size); line-height: var(--expressive-body-leading); }
+  [data-expression="expressive"] [data-slot="ai-composer-footer"] { flex-wrap: wrap; gap: var(--expressive-space-related); }
+  [data-expression="expressive"] :is([data-slot="ai-composer-action"], [data-slot="ai-composer-submit"], [data-slot="sidebar-trigger"]) {
+    inline-size: var(--expressive-field-height);
+    block-size: var(--expressive-field-height);
+    min-block-size: var(--expressive-field-height);
+    padding: 0;
+    border-radius: var(--expressive-control-radius);
+    flex: none;
+  }
+  [data-expression="expressive"] :is([data-slot="ai-composer-action"], [data-slot="ai-composer-submit"], [data-slot="sidebar-trigger"]) svg { inline-size: var(--expressive-icon-size); block-size: var(--expressive-icon-size); }
+  [data-expression="expressive"] [data-slot="ai-composer-tool"] { font-size: var(--expressive-caption-size); line-height: var(--expressive-caption-leading); }
+  [data-expression="expressive"] [data-slot="ai-composer-input"] { padding: var(--expressive-space-pair); }
+
+  [data-expression="expressive"] [data-slot="sidebar"][data-collapsible="icon"] [data-slot="avatar"] { inline-size: var(--expressive-collapsed-avatar-size); block-size: var(--expressive-collapsed-avatar-size); }
+
+  [data-expression="expressive"][data-slot="dropdown-menu-content"] {
+    min-inline-size: var(--expressive-menu-width);
+    max-inline-size: var(--radix-dropdown-menu-content-available-width);
+    border-radius: calc(var(--expressive-menu-row-radius) + var(--expressive-menu-padding));
+  }
+  [data-expression="expressive"][data-slot="dropdown-menu-content"] > [data-slot="scroller"] { padding: var(--expressive-menu-padding); }
+  [data-expression="expressive"] :is([data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"]) {
+    min-block-size: var(--expressive-field-height);
+    padding-block: var(--expressive-field-padding-block);
+    padding-inline: var(--expressive-field-padding-inline);
+    border-radius: var(--expressive-menu-row-radius);
+    gap: var(--expressive-space-related);
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+  }
+  [data-expression="expressive"] [data-slot="dropdown-menu-checkbox-item"] { padding-inline-end: var(--expressive-native-select-inset); }
+  [data-expression="expressive"] [data-slot="dropdown-menu-label"] { font-size: var(--expressive-caption-size); line-height: var(--expressive-caption-leading); }
+  [data-expression="expressive"] :is([data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"]) svg { inline-size: var(--expressive-icon-size); block-size: var(--expressive-icon-size); }
+  [data-expression="expressive"][data-slot="select-content"] {
+    inline-size: var(--radix-select-trigger-width);
+    border-radius: calc(var(--expressive-menu-row-radius) + var(--expressive-menu-padding));
+  }
+  [data-expression="expressive"] [data-radix-select-viewport] { padding: var(--expressive-menu-padding); }
+  [data-expression="expressive"] [data-slot="select-item"] {
+    min-block-size: var(--expressive-field-height);
+    padding-block: var(--expressive-field-padding-block);
+    padding-inline: var(--expressive-field-padding-inline) var(--expressive-native-select-inset);
+    font-size: var(--expressive-body-size);
+    line-height: var(--expressive-body-leading);
+    border-radius: var(--expressive-menu-row-radius);
+  }
+  [data-expression="expressive"] [data-slot="select-item"] > span:first-child { inset-inline-end: var(--expressive-field-padding-inline); }
+}

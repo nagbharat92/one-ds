@@ -72,7 +72,7 @@ function DialogContent({
             <Button
               variant="ghost"
               className="absolute top-6 right-6"
-              size="icon-sm"
+              size="icon"
             >
               <XIcon
               />
@@ -90,7 +90,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-header"
       className={cn(
-        "flex flex-col gap-2 group-data-[close-button=true]/dialog-content:pe-9",
+        "flex flex-col gap-2 group-data-[close-button=true]/dialog-content:pe-(--dialog-close-clearance)",
         className
       )}
       {...props}
@@ -135,7 +135,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Close</Button>
+          <Button variant="secondary">Close</Button>
         </DialogPrimitive.Close>
       )}
     </div>
@@ -147,11 +147,10 @@ function DialogTitle({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
-    // leading-7 matches the close button's size-7 so both share a centreline.
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "font-heading text-xl leading-7 font-semibold tracking-tight text-balance",
+        "font-heading text-xl leading-(--button-height-default) font-semibold text-balance",
         className
       )}
       {...props}
