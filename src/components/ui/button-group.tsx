@@ -84,14 +84,16 @@ function ButtonGroupChoiceItem({
   className,
   size = "default",
   variant = "secondary",
+  tooltip = false,
   ...props
 }: Omit<React.ComponentProps<typeof ToggleGroupPrimitive.Item>, "asChild"> & {
   size?: React.ComponentProps<typeof Button>["size"]
   variant?: React.ComponentProps<typeof Button>["variant"]
+  tooltip?: React.ComponentProps<typeof Button>["tooltip"]
 }) {
   return (
     <ToggleGroupPrimitive.Item {...props} asChild>
-      <Button variant={variant} size={size} tooltip={false} className={cn("button-group-choice", className)}>
+      <Button variant={variant} size={size} tooltip={tooltip} className={cn("button-group-choice", className)}>
         <CheckIcon
           aria-hidden="true"
           className="button-group-choice__check"

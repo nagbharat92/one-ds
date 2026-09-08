@@ -90,6 +90,7 @@ import {
 } from "@/components/ui/section"
 import { CodeBlock } from "@/components/code-block"
 import { ModeToggle } from "@/components/mode-toggle"
+import { MaterialTheme } from "@/components/ui/material-theme"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Favicon } from "@/components/ui/favicon"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -598,9 +599,11 @@ function App() {
         } as CSSProperties
       }
     >
-      <Sidebar collapsible="hidden" edge="faded">
-        <ComponentNavigation activeSlug={slug} onNavigate={navigate} />
-      </Sidebar>
+      <MaterialTheme asChild data-theme-scope="showcase-navigation">
+        <Sidebar collapsible="hidden" edge="faded">
+          <ComponentNavigation activeSlug={slug} onNavigate={navigate} />
+        </Sidebar>
+      </MaterialTheme>
 
       <SidebarInset className="min-h-0 overflow-hidden">
         <SidebarTrigger placement="floating" />

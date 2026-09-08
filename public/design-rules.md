@@ -26,6 +26,42 @@ Tokens: `--text-body-size`, `--text-body-leading`, `--toc-width`, `--toc-sticky-
 
 Implementation: [src/showcase/design-rules-page.tsx](../src/showcase/design-rules-page.tsx), [src/components/ui/text.tsx](../src/components/ui/text.tsx), [src/components/ui/table-of-contents.tsx](../src/components/ui/table-of-contents.tsx), [src/components/ui/accordion.tsx](../src/components/ui/accordion.tsx), [AGENTS.md](../AGENTS.md)
 
+### Preview controls belong in a toolbar
+
+ID: showcase.preview-toolbar | Composition | Required | approved
+
+House canvas-level tuning and display controls in CanvasToolbar, composed from the shared Toolbar and its named parts. Place it in CanvasPreviewFrame controls above the canvas. Horizontal toolbars use inline ToolbarTitle and control pairs inside ToolbarGroup, centered on the same row; keep each pair together when groups wrap. Use ToolbarSpacer for trailing actions. Do not stack form labels above controls, override alignment to items-end, or substitute a loose Cluster, locally styled row, or individual floating controls for the toolbar surface.
+
+Why: A shared toolbar provides consistent containment, spacing, responsive wrapping, and an accessible name for preview tools.
+
+Exceptions: Product controls inside the specimen remain in their product composition. The showcase shell's Preview/Code and reset actions remain owned by the shell. Existing component-owned canvas anatomy may retain its embedded CanvasToolbar.
+
+Decision evidence: Approved by the user in the September 7, 2026 Pointer experiment correction: tools above the canvas must be housed in the shared toolbar.
+
+Enforcement: Partially automated. Pointer regression tests verify that its tuning controls share one named toolbar above the canvas, use inline label/control groups with aligned centers, and fit desktop/mobile widths. Other preview compositions require review; no broad migration is claimed.
+
+Tokens: `--radius-lg`, `--spacing`
+
+Implementation: [src/components/ui/canvas.tsx](../src/components/ui/canvas.tsx), [src/components/ui/canvas-preview.tsx](../src/components/ui/canvas-preview.tsx), [src/components/ui/toolbar.tsx](../src/components/ui/toolbar.tsx), [src/showcase/experiments/pointer.tsx](../src/showcase/experiments/pointer.tsx)
+
+### Cards use the shared card material
+
+ID: composition.card-material | Composition | Required | approved
+
+A framed card specimen must compose Card and its named parts. Let Card own its fill, boundary, radius, clipping, and internal spacing through the shared tokens. A theme surface plus local padding is not a substitute for a Card. Apply light/dark or color themes without replacing the card's material anatomy.
+
+Why: Using a color role alone omits the shared card's containment and geometry, making experiments diverge from the library they demonstrate.
+
+Exceptions: True unframed page bands may use ColorThemeSurface. Canvas and Toolbar retain their own surface components and must not be wrapped in decorative Cards. Cards need not contain every optional named part; CardContent alone is valid for a content-only specimen.
+
+Decision evidence: Approved by the user in the September 7, 2026 Pointer experiment correction: the preview cards were plain theme surfaces instead of the existing card material.
+
+Enforcement: Partially automated. Pointer regression tests check Card/CardContent anatomy and compare computed fill, corner radius, boundary, and spacing to shared tokens. Other compositions remain subject to manual review.
+
+Tokens: `--card`, `--card-foreground`, `--card-spacing`, `--radius-xl`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [src/index.css](../src/index.css), [src/showcase/experiments/pointer.tsx](../src/showcase/experiments/pointer.tsx)
+
 ### Design values come from named tokens
 
 ID: foundations.tokens | Foundations | Required | approved
@@ -34,7 +70,7 @@ Use named design tokens for colors, spacing, dimensions, radii, typography, and 
 
 Why: A theme or proportion change should propagate from one place to every consumer.
 
-Exceptions: Runtime measurements may bridge values into CSS custom properties where declarative layout cannot express the behavior. They are not an escape hatch for authored design literals.
+Exceptions: Runtime measurements may bridge values into CSS custom properties where declarative layout cannot express the behavior. ColorTheme may bridge validated seed colors into generated role variables and expose them in role inspectors. Material's pinned API owns its scheme algorithms; OneDS seeds, component mappings, and legacy tone/chroma policy remain in src/index.css. Neither exception permits authored design literals in page markup.
 
 Decision evidence: Standing user preference: tokenize by default, never hardcode.
 
@@ -43,6 +79,42 @@ Enforcement: Manual review. Review new markup and token ownership. The focused B
 Tokens: `--spacing`, `--button-height-default`
 
 Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx](../src/components/ui/button.tsx)
+
+### Use Material surface and paired color roles
+
+ID: color.surface-accent | Color | Required | approved
+
+Neutral Material surface roles apply globally across the site and components. Keep palette values in --theme-website-<role>-light/dark tokens; :root/.dark provide canonical --md-sys-color-* roles and existing OneDS aliases. MaterialTheme must not shadow global neutral values with inline copies. Pages and canvases use Surface, cards Surface container lowest, footers and general controls Surface container low, navigation and muted regions Surface container, popovers/menus Surface container high, enabled fields and interaction backplates Surface container highest. Pair with On surface/On surface variant and use Outline for fields, not as their fill. Disabled fields use Surface container with existing disabled opacity. Default supporting actions remain neutral; website action/selection accents stay scoped through MaterialTheme, including the pastel search-button pair. State tokens retain Material's 0.08/0.10/0.10/0.16 values. Changes belong in shared components or the central adapter, never local surface literals. Do not add older primary-tint elevation overlays; preserve shadow geometry.
+
+Why: Use Material's coordinated palettes and paired role API directly instead of inventing color relationships or conflating secondary emphasis with an independent second hue.
+
+Exceptions: The website preset has25 mapped roles;15 neutral roles are global. Website background becomes Surface, surface-0..4 become lowest..highest, and surface-variant supplies Outline variant as explicit adapter choices. Missing strong tertiary/fixed/error roles are not invented. Explicit legacy custom/generated themes remain separate opt-ins. Primary accents outside website scopes, status/presence/category/chart palettes, brand assets, and shadow geometry retain their policies. Transparent surfaces and state layers remain composited. Dialog/drawer scrims keep their existing black10% appearance through --overlay-scrim. Role-pair contrast does not certify every component state or boundary.
+
+Decision evidence: September 7, 2026: user explicitly approved migrating all surface colors across the site and components, with one token change propagating everywhere. This supersedes the prior neutral-surface staging boundary, not the separate action-accent/shadow decisions. Resources: https://material-web.dev/theming/color/ and https://m3.material.io/foundations/interaction/states/state-layers. Website values verified at https://m3.material.io/styles/color/resources and https://m3.material.io/static/angular/styles.4c2805e602edc472.css. Source and mapping details remain in src/design-system/material-foundation.md.
+
+Enforcement: Partially automated. Node guards reject literal neutral background utilities and legacy dark input-border fills in UI components; palette/state contract tests remain. Desktop/mobile tests in both modes mutate one shared source token and verify propagation to page/canvas, cards, Input, Textarea, Select, InputGroup, Tabs, diagrams, and body-portaled dialogs. Navigation and application workflow regressions cover existing interactions. Broader component states and boundaries remain subject to composition review; no new shadow-system certification is claimed.
+
+Tokens: `--surface-canvas`, `--surface-lowest`, `--surface-low`, `--surface-container`, `--surface-default`, `--surface-high`, `--surface-highest`, `--surface-navigation`, `--surface-ink`, `--surface-muted-ink`, `--surface-outline`, `--surface-input-outline`, `--action-primary`, `--action-on-primary`, `--action-secondary`, `--action-on-secondary`, `--card-footer-fill`, `--field-fill`, `--sidebar-selected-fill`, `--sidebar-selected-ink`
+
+Implementation: [src/index.css](../src/index.css), [src/lib/color-theme.ts](../src/lib/color-theme.ts), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [src/components/ui/material-theme.tsx](../src/components/ui/material-theme.tsx), [src/components/ui/material-surface.tsx](../src/components/ui/material-surface.tsx), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md), [src/App.tsx](../src/App.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/input.tsx](../src/components/ui/input.tsx), [src/components/ui/sidebar.tsx](../src/components/ui/sidebar.tsx), [src/showcase/demos/colors.tsx](../src/showcase/demos/colors.tsx), [scripts/test-color-theme.mjs](../scripts/test-color-theme.mjs), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
+
+### Button colors use dedicated paired tokens
+
+ID: controls.button-colors | Color | Required | approved
+
+Display Primary/Secondary and retain public default/secondary APIs. Primary uses baseline P40/P80; Secondary uses website Secondary container. Destructive uses Material Error40/Error80 with the existing translucent10/20/30% light and20/30/40% dark tint ramp as its sole treatment; remove the old palette option. Keep destructive text/focus unchanged. Button selected is controlled by the caller and emits aria-pressed. Use Material's square-start toggle configuration: unselected12px/16px corners for40px/56px tiers become20px/28px round when selected. Primary toggles Surface container/On surface variant to Primary/On primary; Secondary toggles Secondary container/On secondary container to Secondary/On secondary. Selected icons must switch from outlined to filled via ButtonSelectionIcon with a fill-compatible icon, inheriting the same foreground and size without geometry changes. Do not fill arbitrary open-path icons. Use existing spatial/effects tokens, respect reduced motion, and preserve dimensions and ordinary Button shapes/press behavior. Pink remains reserved for later FAB work.
+
+Why: A single button-token adjustment must reach all Button consumers and states without recoloring unrelated selection indicators or badges.
+
+Exceptions: Explicit custom/generated themes retain their Filled mappings. Destructive text and its translucent treatment are unchanged from the original design; no new contrast certification is claimed. Other text, focus, Ghost, link and Tonal treatments stay unchanged. Disabled buttons keep50% opacity and native semantics. The baseline Filled palette is distinct from the website palette used by other consumers.
+
+Decision evidence: September 8, 2026: user selected Material destructive, requested removing the other palette, and requested a more-rounded selected Button matching Material. https://m3.material.io/components/buttons/specs states round-to-square by default and square-to-round for square-start buttons, with12px small and16px medium square corners. Its toggle color mappings drive Primary/Secondary selected states. Existing OneDS40/56px tiers remain; selected full rounding is height/2. Material Error source: https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-ref-palette.scss.
+
+Enforcement: Partially automated. Desktop/mobile tests cover Material destructive tint states, Primary/Secondary paints, selected color/shape pairs, pointer/Space/Enter toggling, disabled state, unchanged width/height, ordinary shape preservation, spatial corner interpolation and reduced motion. Existing press/motion regressions pass. No full certification of all destructive text contrast or connected-group interactions is claimed.
+
+Tokens: `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`, `--button-secondary-fill`, `--button-secondary-ink`, `--button-link-ink`, `--button-primary-hover`, `--button-primary-pressed`, `--button-secondary-hover`, `--button-secondary-pressed`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts), [tests/design-rules.spec.ts](../tests/design-rules.spec.ts), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md)
 
 ### Spacing and control geometry follow the 4px grid
 
@@ -172,19 +244,19 @@ Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [sr
 
 ID: motion.speed-tokens | Motion | Required | approved
 
-Use shared speed and easing tokens for transitions and animations. Name component aliases by their role and preserve a reduced-motion path.
+Use named speed and curve tokens, with component aliases for their role. Separate spatial motion from effects: movement may use spring overshoot; color and opacity must not overshoot. Default Button feedback is a 2px downward push and 3% compression using --button-press-distance and --button-press-scale, followed by a spring-like return. Corners remain unchanged. The pilot uses Material Expressive's published fast web conversions: spatial 350ms cubic-bezier(0.42, 1.67, 0.21, 0.90), effects 150ms cubic-bezier(0.31, 0.94, 0.34, 1). Button owns explicit transition properties, not transition-all. Native actions are never delayed. Reduced motion removes the push while preserving state feedback.
 
 Why: Related interactions should feel coordinated, and their timing should be tunable centrally.
 
-Exceptions: Intent delays, request timeouts, and simulated loading delays are behavior timers, not motion speeds. Repeating animation cadence may use a dedicated pulse token.
+Exceptions: This is a Button-only CSS spring approximation, not a velocity-preserving physics engine or a global migration. Joined ButtonGroups and link Buttons use effects only; FABs and sidebar triggers retain their own motion. Layout dimensions stay fixed, but the visual button and its hit-tested bounds move slightly during the push. The earlier corner morph remains behind explicit data-press-effect=morph for future compositions, using the retained 8px/12px pressed-radius tokens instead of a push. It is not the default. CSS retargets interruptions without preserving spring velocity. Intent delays and loading timers are separate from motion speeds.
 
-Decision evidence: User-established speed-token convention; current scale lives in the shared stylesheet.
+Decision evidence: User requested Material-based tokenized Button motion on September 7, 2026. Research: https://m3.material.io/styles/motion/overview/how-it-works and https://m3.material.io/styles/motion/overview/specs. Material now identifies the requested easing/duration system as legacy; its transition-pattern pages still use it. Full comparison and implementation limits are recorded in PRDs/oneds-phase-2d-motion-character-prd.md.
 
-Enforcement: Manual review. Check token use and reduced-motion behavior for each affected interaction.
+Enforcement: Partially automated. Focused tests sample push overshoot, verify unchanged corners and layout dimensions, and exercise rapid presses, keyboard/touch activation, joined groups, reduced motion, and the explicitly opted-in corner morph. Other families require their own motion checks when migrated.
 
-Tokens: `--speed-swift`, `--speed-gentle`, `--ease-glide`, `--ease-settle`
+Tokens: `--motion-spatial-fast-speed`, `--motion-spatial-fast-curve`, `--motion-effects-fast-speed`, `--motion-effects-fast-curve`, `--button-spatial-speed`, `--button-spatial-curve`, `--button-effects-speed`, `--button-effects-curve`, `--button-press-distance`, `--button-press-scale`, `--button-pressed-radius-default`, `--button-pressed-radius-expressive`
 
-Implementation: [src/index.css](../src/index.css), [src/components/ui/swap.tsx](../src/components/ui/swap.tsx)
+Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [PRDs/oneds-phase-2d-motion-character-prd.md](../PRDs/oneds-phase-2d-motion-character-prd.md), [tests/button-motion.spec.ts](../tests/button-motion.spec.ts)
 
 ### Showcase previews have Default and Large tiers
 

@@ -141,7 +141,7 @@ function Slider({
             thumbValueTexts?.[index] ??
             (_values.length === 1 ? ariaValueText : undefined)
           }
-          className="relative block size-(--slider-thumb-size) shrink-0 rounded-full border border-ring bg-white bg-clip-padding ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+          className="relative block size-(--slider-thumb-size) shrink-0 rounded-full border border-ring bg-(--surface-lowest) bg-clip-padding ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
     </SliderPrimitive.Root>

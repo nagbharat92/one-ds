@@ -10,6 +10,7 @@ import {
   ArrowRightIcon,
   ArrowUpRightIcon,
   BoldIcon,
+  BookmarkIcon,
   ChevronDownIcon,
   CopyIcon,
   DownloadIcon,
@@ -24,7 +25,7 @@ import {
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Button, ButtonSelectionIcon } from "@/components/ui/button"
 import {
   ButtonGroup,
   ButtonGroupChoice,
@@ -99,6 +100,56 @@ import { Toggle } from "@/components/ui/toggle"
 import { Stack } from "@/components/ui/stack"
 import { Cluster } from "@/components/ui/cluster"
 import { Text } from "@/components/ui/text"
+
+function SelectedButtonDemo({ size = "default", variant = "default", disabled = false }: {
+  size?: "default" | "expressive" | "icon" | "icon-expressive"
+  variant?: "default" | "secondary"
+  disabled?: boolean
+}) {
+  const [selected, setSelected] = useState(true)
+  const iconOnly = size === "icon" || size === "icon-expressive"
+  return (
+    <Button size={size} variant={variant} selected={selected} disabled={disabled}
+      aria-label={iconOnly ? "Bookmark item" : undefined}
+      onClick={() => setSelected(current => !current)}>
+      <ButtonSelectionIcon><BookmarkIcon /></ButtonSelectionIcon>
+      {iconOnly ? null : "Selected"}
+    </Button>
+  )
+}
+
+function ButtonSelectionDemo() {
+  return (
+    <Stack gap="lg">
+      {(["default", "expressive"] as const).map(size => (
+        <Cluster key={size}>
+          <SelectedButtonDemo size={size} />
+          <SelectedButtonDemo size={size} variant="secondary" />
+          <SelectedButtonDemo size={size === "default" ? "icon" : "icon-expressive"} />
+          <SelectedButtonDemo size={size} disabled />
+        </Cluster>
+      ))}
+    </Stack>
+  )
+}
+
+function ButtonMotionDemo() {
+  const [saved, setSaved] = useState(0)
+  return (
+    <Stack>
+      {(["default", "expressive"] as const).map(size => (
+        <Cluster key={size}>
+          <Button size={size} onClick={() => setSaved(count => count + 1)}><PlusIcon />Save change</Button>
+          <Button size={size} variant="secondary" onClick={() => setSaved(count => count + 1)}>Save a copy</Button>
+          <Button size={size === "expressive" ? "icon-expressive" : "icon"} variant="ghost" aria-label={`Add ${size} change`} onClick={() => setSaved(count => count + 1)}><PlusIcon /></Button>
+          <Button size={size} disabled><Spinner aria-hidden="true" />Saving</Button>
+          <Button size={size} variant="link" asChild><a href="#/rules">Design rules<ArrowUpRightIcon /></a></Button>
+        </Cluster>
+      ))}
+      <Text variant="metadata" tone="muted" role="status">{saved} changes saved</Text>
+    </Stack>
+  )
+}
 
 function ButtonToolsDemo({ mixed = false }: { mixed?: boolean }) {
   const [notes, setNotes] = useState(["Design review", "Release notes"])
@@ -529,15 +580,16 @@ export const formsDemos: ComponentEntry[] = [
     slug: "button",
     name: "Button",
     codeSource: "complete",
-    description: "Displays a button or a component that looks like a button. Expressive sizes pair pill shapes with more generous spacing and larger icons without changing the variant.",
+    description: "Primary, Secondary, and Material-tinted Destructive actions in both sizes. Selected buttons toggle between square and round shapes, using Material's selection color mappings.",
     category: "Forms",
     Demo: () => (
       <div className="flex flex-col gap-6">
         {(["default", "expressive"] as const).map((size) => (
           <div key={size} className="flex flex-wrap items-center gap-3">
-            <Button size={size}>Default</Button>
+            <Button size={size}>Primary</Button>
             <Button size={size} variant="secondary">Secondary</Button>
             <Button size={size} variant="destructive">Destructive</Button>
+            <SelectedButtonDemo size={size} />
             <Button size={size} variant="ghost">Ghost</Button>
             <Button size={size} variant="link">Link</Button>
           </div>
@@ -551,9 +603,10 @@ export function ButtonDemo() {
     <div className="flex flex-col gap-6">
       {(["default", "expressive"] as const).map((size) => (
         <div key={size} className="flex flex-wrap items-center gap-3">
-          <Button size={size}>Default</Button>
+          <Button size={size}>Primary</Button>
           <Button size={size} variant="secondary">Secondary</Button>
           <Button size={size} variant="destructive">Destructive</Button>
+          <SelectedButtonDemo size={size} />
           <Button size={size} variant="ghost">Ghost</Button>
           <Button size={size} variant="link">Link</Button>
         </div>
@@ -562,6 +615,11 @@ export function ButtonDemo() {
   )
 }`,
     examples: [
+      {
+        name: "Selected",
+        description: "Square unselected buttons become round when selected. Primary uses Surface container then Primary; Secondary uses Secondary container then Secondary. Selection is controlled with aria-pressed, and ordinary button shapes remain unchanged.",
+        Demo: ButtonSelectionDemo,
+      },
       {
         name: "Sizes",
         Demo: () => (
@@ -572,12 +630,24 @@ export function ButtonDemo() {
         ),
       },
       {
+        name: "Motion",
+        description: "A small downward push and compression spring back on release, with unchanged corners and no layout shift. Fast effects handle colors separately. Reduced motion removes the push; the corner morph is reserved for a future opt-in treatment.",
+        Demo: () => <ButtonMotionDemo />,
+      },
+      {
         name: "Icon Only",
         Demo: () => (
-          <div className="flex flex-wrap items-center gap-3">
-            <Button size="icon" variant="ghost" aria-label="Add"><PlusIcon /></Button>
-            <Button size="icon-expressive" variant="ghost" aria-label="Add item"><PlusIcon /></Button>
-          </div>
+          <Stack gap="lg">
+            {(["icon", "icon-expressive"] as const).map(size => (
+              <Cluster key={size}>
+                {(["default", "secondary", "ghost", "destructive", "link"] as const).map(variant => (
+                  <Button key={variant} size={size} variant={variant} aria-label={`Add ${variant}`}>
+                    <PlusIcon />
+                  </Button>
+                ))}
+              </Cluster>
+            ))}
+          </Stack>
         ),
       },
       {

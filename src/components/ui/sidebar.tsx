@@ -8,6 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { useScrollerRef } from "@/hooks/use-scroller"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { ColorThemePortal } from "@/components/ui/color-theme"
 import { DragHandle } from "@/components/ui/drag-handle"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -607,6 +608,7 @@ function Sidebar({
         autoFocus
         direction={side === "start" ? "left" : "right"}
       >
+        <ColorThemePortal>
         <DrawerContent
           {...props}
           id={`${id}-panel`}
@@ -640,6 +642,7 @@ function Sidebar({
           </DrawerHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </DrawerContent>
+        </ColorThemePortal>
       </Drawer>
     )
   }

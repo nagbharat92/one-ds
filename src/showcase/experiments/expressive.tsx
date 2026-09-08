@@ -31,10 +31,10 @@ import {
   ToolbarSpacer,
 } from "@/components/ui/toolbar"
 
-export type FormExperimentMode = "baseline" | "expressive"
+import type { FormExperimentMode, LabScenario } from "@/components/expression-lab-preview"
+export type { FormExperimentMode, LabScenario } from "@/components/expression-lab-preview"
 export type FormEvaluation = "none" | "squint" | "silhouette"
 export type FormPreviewSize = "wide" | "compact"
-export type LabScenario = "rest" | "active" | "complete" | "custom"
 
 type ExperimentToolbarProps = {
   mode: FormExperimentMode

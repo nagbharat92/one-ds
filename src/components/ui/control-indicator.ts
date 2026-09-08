@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority"
 // Questionnaire renders a passive copy beside its own input, so the look lives
 // here rather than in each of the three.
 export const controlIndicatorVariants = cva(
-  "relative flex size-4 shrink-0 items-center justify-center border border-muted-foreground dark:bg-input/30",
+  "relative flex size-4 shrink-0 items-center justify-center border border-muted-foreground bg-control",
   {
     variants: {
       shape: {

@@ -218,10 +218,14 @@ test("design rules Button canvases use only two paired sizes", async ({ page }) 
   for (const [size, icon, height, glyph] of sizes) {
     const labelButton = canvas.locator(`[data-slot="button"][data-size="${size}"]`)
     await expect(labelButton).toHaveCSS("height", `${height}px`)
-    const iconButton = page.locator(`#button-icon-only [data-slot="canvas"] [data-size="${icon}"]`)
-    await expect(iconButton).toHaveCSS("height", `${height}px`)
-    await expect(iconButton).toHaveCSS("width", `${height}px`)
-    await expect(iconButton.locator("svg")).toHaveCSS("width", `${glyph}px`)
+    const iconButtons = page.locator(`#button-icon-only [data-slot="canvas"] [data-size="${icon}"]`)
+    await expect(iconButtons).toHaveCount(5)
+    for (const variant of ["default", "secondary", "ghost", "destructive", "link"]) {
+      const iconButton = iconButtons.filter({ has: page.locator("svg") }).and(page.locator(`[data-variant="${variant}"]`))
+      await expect(iconButton).toHaveCSS("height", `${height}px`)
+      await expect(iconButton).toHaveCSS("width", `${height}px`)
+      await expect(iconButton.locator("svg")).toHaveCSS("width", `${glyph}px`)
+    }
     const favicon = page.locator(`#button-favicon-sizes [data-size="${size}"] img`)
     await expect(favicon).toHaveCSS("width", `${glyph}px`)
     const all = page.locator(`#button-default [data-slot="canvas"] [data-size="${size}"]`)

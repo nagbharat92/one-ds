@@ -4,7 +4,7 @@ import path from "node:path"
 import test from "node:test"
 import ts from "typescript"
 
-test("Preview Tools, Toolbar, and Button snippets compile as separate modules against the design system", () => {
+test("Preview Tools, Toolbar, Button, and Colors snippets compile as separate modules against the design system", () => {
   const root = process.cwd()
   const generatedPath = path.join(root, "src/showcase/generated-example-code.ts")
   const source = ts.createSourceFile(generatedPath, fs.readFileSync(generatedPath, "utf8"), ts.ScriptTarget.Latest, true)
@@ -13,7 +13,7 @@ test("Preview Tools, Toolbar, and Button snippets compile as separate modules ag
   const keys = ["concentric:Space and Shape", "concentric:Type and Controls", "concentric:Vertical Card", "concentric:Edit Project", "annotation:Default", "annotation:Dimensions", "annotation:Corners", "canvas:Default", "cursor-follower:Default",
     "toolbar:Default", "toolbar:Variants", "toolbar:Text formatting", "toolbar:Vertical", "toolbar:With title",
     "button:Default", "button:Sizes", "button:Icon Only", "button:With Icon", "button:Favicon", "button:Favicon Sizes", "button:Rounded", "button:Loading", "button:As Child",
-    "text:Default", "table-of-contents:Default", "button:Icon Tools", "button:Mixed Tools", "button:Optical Spacing", "icon-label:Default"]
+    "text:Default", "table-of-contents:Default", "button:Icon Tools", "button:Mixed Tools", "button:Optical Spacing", "icon-label:Default", "button:Motion", "button:Selected", "colors:Material website", "surfaces:Workspace", "surfaces:Content and controls", "surfaces:Floating surface", "pointer:Default"]
   const virtualFiles = new Map(keys.map(key => {
     const snippet = snippets.get(key)
     assert.ok(snippet, `Missing generated example: ${key}`)

@@ -36,6 +36,13 @@ Candidate rules are proposals: do not promote them without user approval.
   Do not add local padding or apply the correction to text-only/icon-only controls.
 - Favicon owns brand-specific theme adaptation. GitHub is monochrome and adapts to
   light/dark and primary-button surfaces automatically; do not invert all brand favicons locally.
+- Button motion uses separate `--button-spatial-*` and `--button-effects-*` speed/curve
+  tokens mapped to Material Expressive fast web conversions. Never spring color/opacity,
+  delay actions for animation, or restore `transition-all`. This is a Button-only CSS
+  spring approximation; do not retheme other component motion without approval.
+- Button press feedback is a tokenized push/compression, not corner morphing.
+  Keep the radius-morph implementation reserved behind `data-press-effect="morph"`;
+  default buttons retain their corners. Reduced motion removes spatial feedback.
 - Preserve native/primitive accessibility and existing interactions. Inspect actual border-box
   geometry; do not infer compliance from a token name or a screenshot alone.
 - Existing exceptions are not precedents for new work. Migrate legacy geometry deliberately;
@@ -43,10 +50,13 @@ Candidate rules are proposals: do not promote them without user approval.
 
 ## Change and Verify
 
-- Record newly approved design decisions in `src/design-system/rules.json`, including scope,
-  exceptions, evidence, implementation paths, and honest enforcement status.
-- Choose verification by the changed behavior and blast radius, not a fixed checklist.
-  The checks below replace the former requirement to run every suite for every change.
+- Record new, durable design rules in `src/design-system/rules.json`, including scope,
+  exceptions, evidence, implementation paths, and honest enforcement status. Implementing an
+  existing rule or tuning a value does not require a new rule or edits to README, PRDs, and
+  memory. Update only documentation made inaccurate by the change; avoid duplicating history.
+- Before editing, choose the applicable row below, the cheapest check that could expose the
+  defect, and the required gates. Treat this as the default verification ceiling, not a starting
+  checklist. For mixed changes, combine only applicable gates and deduplicate shared checks.
 
 | Change | Verification budget |
 | --- | --- |
@@ -56,9 +66,17 @@ Candidate rules are proposals: do not promote them without user approval.
 | Canonical design rules | Generate Markdown once and run `npm run test:design-rules`. Do not run UI tests unless rendered behavior also changes. |
 | Broad migration or release validation | Typecheck, full lint, rule and snippet checks, and affected browser regressions. Build for release validation or bundling/asset/configuration changes; keep output quiet. |
 
+- Stop when the scoped check and required gates pass. Add another check only for a named,
+  uncovered risk or a concrete failure, not for reassurance. A shared component filename alone
+  does not make a small change a broad migration. Do not run full suites by default.
+- For a small visual change, use one representative viewport. Add another viewport or input
+  modality only when responsive layout or input behavior is affected. Check both appearance
+  modes when their colors change, within the same focused check where practical.
 - After the first substantive edit, run the cheapest focused check that can expose a defect.
   Reuse that successful result at close-out; do not run it again inside a larger suite merely
-  for reassurance. Rerun only checks affected by subsequent edits or a concrete failure.
+  for reassurance. Rerun only checks invalidated by subsequent edits or a concrete failure:
+  test-only edits do not invalidate an application typecheck; docs-only edits do not invalidate
+  UI checks. Do not repeat typecheck/lint at close-out if their checked source is unchanged.
 - Regenerate only changed artifacts. For rule changes use `npm run rules:generate`;
   never edit generated Markdown. For demo changes use `npm run showcase:code` OR
   `npm run test:showcase-code` (which already generates code), not both.
@@ -70,6 +88,9 @@ Candidate rules are proposals: do not promote them without user approval.
 - Prefer one rendered measurement/interaction check for small changes. Add at most one
   screenshot when appearance cannot be judged from that check; do not take one automatically.
 - Keep progress updates brief and outcome-focused; avoid narrating each successful command.
+- Reuse context already read in the current task unless the file changed or a specific detail
+  is missing. Do not create a memory entry for every small tweak or repeat the same result in
+  progress updates, documentation, and memory.
 - Use the already-shared browser and running dev server when available. Do not switch focus
   or open a second page unnecessarily. Keep production build output quiet.
 - Preserve unrelated worktree changes; never commit or deploy unless requested.

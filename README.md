@@ -1,8 +1,8 @@
 # OneDS
 
 A clean React + Vite + Tailwind + [shadcn/ui](https://ui.shadcn.com) foundation with a
-component showcase site. This is the Phase 1 baseline: standard shadcn defaults,
-no custom theming yet.
+component showcase site. The default palette is preserved alongside an opt-in,
+single-color theme experiment.
 
 ## Stack
 
@@ -67,6 +67,348 @@ DOM heuristic. Primary, destructive, link, and persistent selected-state intent
 remain unchanged; field-internal affordances may stay ghost. Non-Button outline
 variants and field borders remain supported. See Button's working **Icon Tools**
 and **Mixed Tools** examples, and rule `controls.supporting-actions`.
+
+### Material color roles
+
+**Button colors** now use purple Primary actions, lilac Secondary actions,
+and purple links throughout the site. Tune the `--button-primary-*`,
+`--button-secondary-*`, and `--button-link-ink` tokens in
+[src/index.css](src/index.css). Filled hover/pressed states use their paired
+foregrounds at 8%/10%; Filled uses Primary/On primary throughout. The existing
+`default` and `secondary` APIs correspond to Primary and Secondary (Material calls
+these filled and tonal). Pink is reserved
+for selective FAB work later, not the default Button treatment.
+Generic selection colors, ghost/destructive treatments, and Button geometry
+and motion are unchanged. See [Button color tuning](src/design-system/material-foundation.md#button-color-tuning).
+
+Latest background-only pass: Filled uses published Material baseline P40/P80
+(`#6750a4` / `#d0bcff`). Destructive's solid Error fill was reverted: its
+original red tint is 10%/20%/30% for rest/hover/press in light mode and
+20%/30%/40% in dark mode, controlled by `--button-destructive-*-opacity`.
+Text colors are deliberately unchanged, including destructive text; its contrast
+is pending the foreground pass. Tonal, links, surfaces, and focus colors stay as-is.
+
+**Destructive** now uses the selected Material Error40/Error80 tint everywhere,
+with the same light10/20/30% and dark20/30/40% ramp. The original palette and
+`destructivePalette` comparison option are removed; text/focus colors stay unchanged.
+
+**Selected** is a controlled Button state: pass `selected={selected}` and update
+it in `onClick`. Use `ButtonSelectionIcon` with a fill-compatible icon to switch
+from outlined to filled when selected without changing its size or position.
+Button emits `aria-pressed` and swaps square unselected corners to
+round selected corners, following Material's square-start configuration. The
+Selected showcase demonstrates Primary, Secondary, icon-only, and disabled
+buttons at both sizes. Primary toggles Surface container to Primary; Secondary
+toggles Secondary container to Secondary, with their respective foregrounds.
+Ordinary Buttons retain their existing shapes. Selection changes use spatial
+motion tokens and respect reduced motion; labels and dimensions remain stable.
+
+**Layout > Surfaces** (`#/surfaces`) shows shape-only UI diagrams: Workspace,
+Content and controls, and Floating surface. The reusable `SurfaceDiagram`
+composes MaterialSurface and real Card parts to show colors in context, without
+product text or live controls. All shapes follow the current light/dark theme.
+MaterialSurface still owns only color; Card keeps its distinct content anatomy.
+
+The reusable [Material foundation](src/design-system/material-foundation.md)
+records official sources, supported roles, compatibility mappings, and migration
+status. Neutral surfaces now apply across the site and components without a
+wrapper. Edit the shared `--theme-website-<role>-light/dark` tokens in
+[src/index.css](src/index.css) to update pages, cards, fields, menus, and portals
+together. `MaterialSurface` consumes those global roles directly. MaterialTheme
+remains an opt-in for the website's action accents; shadow geometry is unchanged.
+
+Open **Experiments > Colors** (`#/colors`) for the **Material website** example.
+This demo now focuses exclusively on the website palette. Generated Material,
+Current, hue swatches, contrast options, neutral-action opt-out, and the unrelated
+legacy color galleries are no longer shown. Use the site's appearance control
+for light/dark. Other theme APIs remain available internally; migration proceeds
+through shared global surface roles, with action accents still explicitly scoped.
+
+Use Material vocabulary: **Surface**, **Surface container lowest/low/high/highest**,
+**On surface**, **On surface variant**, **Primary**, **Secondary**, **Tertiary**,
+their **container** roles, and their paired **on-colors**. Surface container is
+also a distinct middle level. The inspector shows these pairs with readable
+labels and the canonical `--md-sys-color-*` token names.
+
+Selected tabs and navigation use **Secondary container / On secondary container**;
+the tab track uses **Surface container low**. Filled buttons use **Primary /
+On primary** vocabulary: the background-only baseline correction uses
+`#6750a4` light / `#d0bcff` dark while retaining existing text colors
+`#ffffff` light / `#1a0056` dark until the foreground pass.
+Tonal buttons keep **Secondary container / On secondary container**.
+This supersedes using the website's pink search control for every main action;
+the pink Tertiary container palette remains available for later FAB decisions.
+`--button-primary-fill` and `--button-primary-ink` own the Filled mapping. Existing OneDS motion
+and state-layer behavior remain unchanged. Cards remain **Surface container lowest**, including white cards
+in light mode. The diagram's old elevation overlays (5/8/11/12/14% primary) are
+not applied on top of these explicit surface roles. Shadows remain separate.
+
+Website navigation hover uses an 8% **On surface** state layer over the existing
+surface, not a swap to the raised content background. It darkens light-mode
+navigation and lightens dark-mode navigation. The inset Sidebar honors
+`--sidebar-hover-fill` when supplied; other themes retain their existing fallback.
+Persistent selection keeps its separate Secondary container pair. Interaction
+state layers are distinct from the older tonal-elevation overlays above.
+
+The preview imports `ExpressionLabPreview` from the existing
+[Expression Lab composition](src/components/expression-lab-preview.tsx), replacing the
+single release-note card. It includes the inset Sidebar, focus session, checklist,
+observations, lens controls, and assistant chat in a bounded application canvas.
+Its baseline form treatment keeps color comparisons independent of expressive
+geometry. Notes, selection, and chat state survive light/dark changes; Quick actions >
+Reset lab resets application state. Dropdown menus
+inherit the selected theme through ColorThemePortal.
+
+#### Retained theme APIs
+
+These APIs are retained for other consumers, not exposed by the Colors demo.
+[ColorTheme](src/components/ui/color-theme.tsx) accepts `hue="warm|rose|green|blue|lilac"`.
+Pass `scale="material"` for the comparison scale; omitted scale inherits the
+enclosing scope or defaults to `current`. Scale, hue, and accent-button state
+travel through ColorThemePortal without remounting product content.
+`ColorThemeSwatches` composes `ButtonGroupChoice` and `ButtonGroupChoiceItem`,
+reusing their persistent checkmark, non-clearing single selection, and keyboard
+navigation. Choice items accept `tooltip` and delegate it to Button internally;
+do not wrap them in an external TooltipTrigger that can overwrite selection state.
+Hue selection takes precedence over the older `theme` seed API, which remains
+available for experimental consumers but is not used by Colors. Omit both to
+inherit the enclosing theme (the existing default when
+there is no custom ancestor). Wrap an application or a region; `asChild` avoids
+adding a wrapper. Color selection does not imply changing shape, size, or motion.
+
+#### Material website preset
+
+The reference is the Material documentation site's **custom palette**, not a
+stock SchemeExpressive result. Verified from its live `mio-root` and
+`mio-root.dark-mode` CSS on September 7, 2026:
+
+| Role | Light | Dark |
+| --- | --- | --- |
+| Background | `#fefbff` | `#141314` |
+| Navigation surface (surface-2) | `#f2ecee` | `#211f21` |
+| Primary | `#6442d6` | `#9f86ff` |
+| Secondary container | `#dcdaf5` | `#45455a` |
+| Tertiary container | `#f1d3f9` | `#553f5d` |
+
+This is an analogous relationship, not complementary or triadic: measured HCT
+hues are approximately primary 295, secondary 284, and tertiary container 319.
+Chroma establishes emphasis (about 70, 17, and 24 respectively), while neutral
+surface-2 has chroma about 2. Selected tabs use secondary container; the tab bar
+and table headers use surface-1. The pale button illustration is a raster image
+and stays pale in dark mode; it is not a live dark-theme component.
+
+`ColorTheme scale="website"` reads 25 mapped roles from `--theme-website-*`
+tokens in the [token source](src/index.css). Website background maps to surface;
+its surface-0 through surface-4 map to the existing lowest-through-highest
+container ladder. Its surface-variant supplies OneDS's outline-variant fallback.
+These are explicit OneDS adapter choices, not claims about the website's modern
+surface-container naming. Unspecified roles, including strong tertiary and
+fixed families, are not invented or borrowed from a generator. The inspector
+shows only available roles and marks missing family pairs as Not specified.
+Semantic statuses, brand colors, shadows, and scrims retain existing mappings.
+
+Source: [reference page](https://m3.material.io/components/button-groups/overview)
+and its [published stylesheet](https://m3.material.io/static/angular/styles.4c2805e602edc472.css).
+The preset's **neutral surface roles are global**. Colors and site navigation
+also opt into its accent roles through MaterialTheme. Existing primary-action
+colors elsewhere, status palettes, and shadow geometry are not changed by the
+surface rollout.
+
+#### Generated Material scale
+
+`createMaterialColorTheme` in the [resolver](src/lib/color-theme.ts) uses the
+pinned `@material/material-color-utilities@0.3.0` **SchemeTonalSpot**,
+**SchemeVibrant**, or **SchemeExpressive**, and MaterialDynamicColors role
+resolution. It exports all 49 system roles under Material Web's canonical
+`--md-sys-color-*` names, excluding palette key colors. There are no custom hue
+rotations or tertiary overrides. The scheme and contrast Selects call the
+published constructors with Standard (`0`), Medium (`0.5`), or High (`1`).
+These are the pinned package algorithms, not the latest 2025 Expressive algorithm.
+Reference seeds live in `--theme-material-seed-*` in `src/index.css`;
+they preserve the existing five hue families, converted through sRGB/HCT rather
+than treating OKLCH hue angles as HCT angles. Library role algorithms own their
+reference tones; OneDS owns the component mapping below.
+
+The reference tones below describe standard contrast; increased contrast is
+resolved by Material's API, not by applying these tones as constants.
+
+| OneDS use | Material role | Light / dark reference tone |
+| --- | --- | --- |
+| Canvas and content panel | Surface | 98 / 6 |
+| Cards | Surface container lowest | 100 / 4 |
+| Card footer | Surface container low | 96 / 10 |
+| Enabled text fields | Surface container highest | 90 / 22 |
+| Other control surfaces | Surface container low | 96 / 10 |
+| Inset navigation backdrop and muted areas | Surface container | 94 / 12 |
+| Popovers | Surface container high | 92 / 17 |
+| Neutral interaction backplates | Surface container highest | 90 / 22 |
+| Primary button fill / ink | Primary / on primary | 40 / 100 light; 80 / 20 dark |
+| Primary text, icons, and focus | Primary | 40 / 80 |
+| Supporting button fill / ink | Secondary container / on secondary container | Resolved role pair |
+| Feature highlight fill / ink | Tertiary container / on tertiary container | Resolved role pair |
+
+`ColorThemeSurface` exposes `canvas`, `lowest`, `low`, `container`, `high`, and
+`highest`, plus the existing `default` (card-default) and `navigation` aliases.
+Material maps each ladder name directly to its matching role; `high` no longer
+means the middle `container`. Current may intentionally share colors between
+levels. These roles express visual hierarchy, not automatic shadow elevation.
+
+**Lowest** is the user's selected dark-card treatment (tone 4). The comparison
+control is removed from Colors; light cards remain white. The existing optional
+`darkCardSurface` API remains available, but Colors explicitly uses `lowest`.
+
+CardFooter owns `--card-footer-fill`, resolving to `--theme-card-footer-fill`
+when supplied, otherwise its original 50% muted blend. Input owns `--field-fill`,
+resolving to `--theme-field-fill`, otherwise its original control fill in light
+mode and input/30 blend in dark mode. Material supplies opaque surface roles for
+these enabled fills; field outlines and disabled-state styling remain separate.
+These fallbacks preserve existing consumers outside the experiment.
+
+SidebarMenuButton keeps neutral hover feedback separate from persistent
+selection. Material's `--sidebar-selected-fill` / `--sidebar-selected-ink` pair
+uses secondary container / on secondary container even inside an inset Sidebar;
+selected hover/press layers use that same paired ink. The panel itself remains
+transparent over its shared backdrop. Without these selection tokens, the
+existing sidebar-accent treatment remains the fallback.
+
+For the retained generated scale (not the website demo), `--button-primary-fill`
+and `--button-primary-ink` map to ordinary primary
+and on primary. The earlier fixed-fill mapping was rejected: rose primary fixed
+and secondary container both resolved to #ffd9dc, collapsing the hierarchy.
+Fixed roles remain available in the resolver for future explicit uses, not as
+the primary-button default. `--primary` remains readable as text on the canvas.
+Default Button aliases preserve existing styling elsewhere. Button state layers
+use the paired ink at existing hover/press opacities. GitHub monochrome favicons
+use light ink on light-mode primary buttons and dark ink on dark-mode primary
+buttons. No geometry or motion changes.
+
+#### Official schemes and role families
+
+Material generates primary, secondary, tertiary, neutral, neutral-variant, and
+error palettes together. Each accent family has its own strong and container
+roles with paired foregrounds. OneDS's secondary Button consumes **secondary
+container**, not Material's distinct **secondary** role. Neither is an alias
+for tertiary. The previous Off/Auto/Custom second-color experiment is removed.
+
+`ColorTheme materialScheme="tonal-spot|vibrant|expressive" contrast={0|0.5|1}`
+inherits through context and ColorThemePortal. Current disables these controls.
+Tonal spot is restrained; Vibrant emphasizes chroma; the pinned Expressive
+scheme rotates primary away from the source and coordinates the other families.
+Changing a scheme can change the whole palette, including neutral surfaces.
+
+`MaterialColorRoles` shows paired primary/secondary/tertiary/error samples and
+all 49 generated roles with their actual values, including fixed, inverse,
+surface, outline, shadow, and scrim roles. The family inspector remains below
+the application preview; the old Team preview badge specimen is removed.
+No custom harmonization is applied.
+
+Sources: [creating a scheme](https://github.com/material-foundation/material-color-utilities/blob/main/dev_guide/creating_color_scheme.md),
+[contrast guidance](https://github.com/material-foundation/material-color-utilities/blob/main/dev_guide/refining_contrast.md),
+[Material Web color tokens](https://material-web.dev/theming/color/), and
+[role semantics](https://m3.material.io/styles/color/roles).
+
+Material roles are mapped, not copied wholesale: the inset Sidebar retains its
+transparent panel/raised content anatomy, Card retains its footer band, and
+status, presence, categorical badges, charts, scrims, and shadows remain on their
+existing independent palettes. Their Material roles are exported for inspection,
+but those consumers are not migrated. Contrast selection is experiment-local;
+there is no global preference or component-library replacement.
+Tonal secondary and tertiary fills have readable labels but can have low boundary
+contrast against light surfaces; this experiment is not a claim that every control boundary meets
+3:1. Do not propagate the mapping without reviewing the actual compositions.
+
+#### Earlier seed API
+
+The deferred seed resolver uses Material Color Utilities 0.3.0 for HCT
+and gamut-aware tonal palettes, with an explicitly OneDS-specific policy. It does
+not use Material's full dynamic-scheme preset. The package is pinned because 0.4.0
+has an extensionless import in its public barrel that fails under native Node ESM.
+All tone/chroma policy and the initial comparison seeds live in `src/index.css`;
+user-provided seeds are runtime inputs, never authored page color literals.
+The client-side theme scope follows `next-themes`. The following HCT policy
+belongs only to the older seed API, not the Current or Material comparison:
+Surface HCT chroma is capped at 4; supporting-action chroma at 12, below the
+primary-action cap of 48. Light surface tones are 99/98/97/94, keeping large
+areas nearly neutral. Supporting fills use tones 82 (light) and 38 (dark), with
+paired foregrounds at 20 and 98. The 1.4:1 supporting-fill/card separation check
+is a visual regression threshold, not a WCAG control-boundary certification.
+
+| Role | Existing component mapping |
+| --- | --- |
+| `--surface-canvas` | Background / ground |
+| `--surface-low` | Popovers and custom-theme control surfaces |
+| `--surface-default` | Cards |
+| `--surface-high` | Muted containers and custom-theme navigation |
+| `--surface-ink`, `--surface-muted-ink` | Main and supporting text |
+| `--surface-outline`, `--surface-input-outline` | Decorative and meaningful boundaries |
+| `--action-primary`, `--action-on-primary` | Primary actions and their foreground |
+| `--action-secondary`, `--action-on-secondary` | Tonal supporting actions and their foreground |
+
+`ColorThemeSurface` exposes canvas/low/default/high/navigation treatments for new
+compositions. Existing Card and Sidebar consumers keep their component APIs.
+The old `--accent` token is still a neutral interaction backplate, not the accent
+seed. Navigation selection uses the tonal action pair in a custom theme.
+Button hover/press colors blend with the matching foreground in custom themes;
+the default preset retains its previous state colors.
+
+In Current, primary accents use `--theme-primary-*` and `--theme-on-primary*` tokens, mapped
+to the existing primary/action roles. Hover and pressed colors mix with the
+paired foreground at existing state opacities. The same hue reaches scoped
+portals; there is no second hue or global application recolor. Focus rings and
+secondary actions remain on their existing roles for separate review.
+
+The secondary boundary experiment was rejected and removed. Hue changes must
+never turn a filled secondary Button into an outline treatment. Hue scopes
+in Current retain the existing secondary fill and state-layer formulas. Cards and popovers
+retain their existing material colors: white in light mode, their existing dark
+surface in dark mode. The grey canvas/backplates alone shift hue, at the original
+OKLCH chroma of 0.003; do not increase chroma to make the swatches more dramatic.
+
+The Colors specimen uses the inset Sidebar and SidebarInset: navigation sits
+on the shared layer-zero backdrop and the content is raised with an 8px inset.
+The content heading and desktop toggle are omitted; a mobile-only trigger
+preserves access to the native Drawer. Sidebar owns the
+ColorThemePortal bridge for its mobile content, so scoped color follows it.
+
+Wrap scoped portaled content in `ColorThemePortal`, inside its ColorTheme context:
+
+```tsx
+<ColorTheme hue="green" scale="material">
+  <Popover>
+    <PopoverTrigger asChild><Button variant="secondary">Details</Button></PopoverTrigger>
+    <ColorThemePortal>
+      <PopoverContent>Project details</PopoverContent>
+    </ColorThemePortal>
+  </Popover>
+</ColorTheme>
+```
+
+The bridge applies variables to the actual portaled content without changing its
+slot, focus handling, or placement. Nested custom scopes may use different seeds.
+Automatic migration of all portals, persistence/export, image extraction, and
+increased-contrast generation are not included in this first slice. Status,
+presence, categorical badge colors, and chart series retain their own palettes.
+
+`npm run test:color-theme` checks 100 seed combinations in both modes for ordered
+surfaces, text contrast, input-boundary contrast, and independent families.
+`tests/color-theme.spec.ts` checks all five hue swatches on desktop/mobile in
+both modes, including unchanged cards, same-hue primary pairs with 4.5:1 text
+contrast at rest/hover/press, the neutral Warm baseline, transparent
+secondary borders, draft state, inset Sidebar, and portal inheritance.
+These checks cover the pilot, not every possible component/background combination.
+
+### Button motion
+
+Button's **Motion** example previews a poppy push: 2px downward and 3% compression,
+using the official fast spatial web conversion (350ms spring-shaped curve), while
+colors and opacity use fast effects (150ms, no overshoot). All values are tokens
+in `src/index.css`, consumed through Button-specific aliases. Corners and layout
+dimensions remain unchanged; only the painted button moves and compresses slightly.
+Reduced motion disables the push. The earlier corner morph and radius tokens are
+retained behind `data-press-effect="morph"` for future compositions, not enabled by default.
+This is a CSS approximation, not a velocity-preserving physics engine. See the
+[motion research and decisions](PRDs/oneds-phase-2d-motion-character-prd.md#material-research-and-button-pilot-september-7-2026).
+Other component motion remains unchanged pending deliberate adoption.
 
 ### Optical spacing for icon labels
 

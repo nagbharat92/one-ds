@@ -14,11 +14,13 @@ import { colorDemos } from "@/showcase/demos/colors"
 import { blockDemos } from "@/showcase/demos/blocks"
 import { experimentDemos } from "@/showcase/demos/experiments"
 import { concentricDemos } from "@/showcase/experiments/concentric"
+import { pointerDemos } from "@/showcase/experiments/pointer"
 import { annotationDemos } from "@/showcase/demos/annotation"
 import { canvasDemos, canvasGridDemos } from "@/showcase/demos/canvas"
 import { cursorFollowerDemos } from "@/showcase/demos/cursor-follower"
 import { dragHandleDemos } from "@/showcase/demos/drag-handle"
 import { elevationDemos } from "@/showcase/demos/elevation"
+import { surfaceDemos } from "@/showcase/demos/surfaces"
 import { fabDemos } from "@/showcase/demos/fab"
 import { swapDemos } from "@/showcase/demos/swap"
 import { referenceDemos } from "@/showcase/demos/reference"
@@ -30,12 +32,14 @@ export const registry: ComponentEntry[] = [
   ...blockDemos,
   ...experimentDemos,
   ...concentricDemos,
+  ...pointerDemos,
   ...annotationDemos,
   ...canvasDemos,
   ...canvasGridDemos,
   ...cursorFollowerDemos,
   ...dragHandleDemos,
   ...elevationDemos,
+  ...surfaceDemos,
   ...fabDemos,
   ...swapDemos,
   ...formsDemos,
