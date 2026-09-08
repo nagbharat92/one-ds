@@ -51,6 +51,18 @@ test("Material website preset preserves verified reference colors and paired con
   assert.throws(() => readMaterialWebsiteTheme(() => "", "light"), /Invalid Material website token/)
 })
 
+test("Material website preset normalizes minified hex tokens", () => {
+  for (const mode of ["light", "dark"]) {
+    for (const [token, expected] of [[" #fff ", "#ffffff"], ["#ABC", "#aabbcc"], ["#123456", "#123456"]]) {
+      const roles = readMaterialWebsiteTheme(() => token, mode)
+      assert.ok(Object.values(roles).every(value => value === expected))
+    }
+    for (const token of ["", "#12", "#ggg", "#ffff", "#ffffff00"]) {
+      assert.throws(() => readMaterialWebsiteTheme(() => token, mode), /Invalid Material website token/)
+    }
+  }
+})
+
 test("all official roles match Material APIs across schemes, contrast levels, seeds, and modes", () => {
   for (const seed of seeds) {
     for (const mode of ["light", "dark"]) {

@@ -22,8 +22,8 @@ export function readMaterialWebsiteTheme(readToken: (name: string) => string, mo
   return Object.fromEntries(materialWebsiteRoleNames.map(role => {
     const token = `--theme-website-${role}-${mode}`
     const value = readToken(token).trim()
-    if (!/^#[\da-f]{6}$/i.test(value)) throw new Error(`Invalid Material website token: ${token}`)
-    return [`--md-sys-color-${role}`, value]
+    if (!/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(value)) throw new Error(`Invalid Material website token: ${token}`)
+    return [`--md-sys-color-${role}`, hexFromArgb(argbFromHex(value))]
   }))
 }
 
