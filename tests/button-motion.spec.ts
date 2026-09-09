@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test"
 test("Button selection animates corners with spatial tokens and respects reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" })
   await page.goto("/#/button")
-  const button = page.locator('#button-selected button[data-size="default"][data-variant="default"]:not(:disabled)')
+  const button = page.locator('#button-selected button[data-size="default"][data-variant="tertiary"]:not(:disabled)')
   await button.click()
   await expect(button).toHaveAttribute("aria-pressed", "false")
   await expect(button).toHaveCSS("border-radius", "12px")

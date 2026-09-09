@@ -255,7 +255,7 @@ test("Surfaces diagrams show color relationships with bounded noninteractive sha
 })
 
 for (const mode of ["light", "dark"] as const) {
-  test(`Shared Buttons use Primary Secondary and Material destructive tokens in ${mode} mode`, async ({ page }, testInfo) => {
+  test(`Shared Buttons use Primary Secondary Tertiary and Material destructive tokens in ${mode} mode`, async ({ page }, testInfo) => {
     await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
     await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
     await page.goto("/#/button")
@@ -263,11 +263,12 @@ for (const mode of ["light", "dark"] as const) {
     const canvas = page.locator('#button-default [data-slot="canvas"]')
     await expect(canvas.getByRole("button", { name: "Primary", exact: true })).toHaveCount(2)
     await expect(canvas.getByRole("button", { name: "Secondary", exact: true })).toHaveCount(2)
+    await expect(canvas.getByRole("button", { name: "Tertiary", exact: true })).toHaveCount(2)
     await expect(canvas.getByRole("button", { name: "Material destructive", exact: true })).toHaveCount(0)
     await expect(canvas.getByRole("button", { name: "Destructive", exact: true })).toHaveCount(2)
     const generic = await page.locator("html").evaluate(element => ["--primary", "--secondary"].map(token => getComputedStyle(element).getPropertyValue(token)))
     for (const size of ["default", "expressive"]) {
-      for (const [variant, family] of [["default", "primary"], ["secondary", "secondary"]]) {
+      for (const [variant, family] of [["primary", "primary"], ["secondary", "secondary"], ["tertiary", "tertiary"]]) {
         const button = canvas.locator(`[data-variant="${variant}"][data-size="${size}"]:not([data-selected])`)
         await page.getByRole("heading", { name: "Button", exact: true }).hover()
         await expectRole(button, "background-color", `--button-${family}-fill`)
@@ -299,7 +300,7 @@ for (const mode of ["light", "dark"] as const) {
         }
       }
     }
-    const primary = canvas.locator('[data-variant="default"][data-size="default"]:not([data-selected])')
+    const primary = canvas.locator('[data-variant="primary"][data-size="default"]:not([data-selected])')
     await page.getByRole("heading", { name: "Button", exact: true }).hover()
     await expect(primary).toHaveCSS("background-color", mode === "light" ? "rgb(103, 80, 164)" : "rgb(208, 188, 255)")
     await expect(primary).toHaveCSS("color", mode === "light" ? "rgb(255, 255, 255)" : "rgb(26, 0, 86)")
@@ -333,7 +334,8 @@ for (const mode of ["light", "dark"] as const) {
     const disabled = page.locator('#button-motion button[disabled]').first()
     await expect(disabled).toBeDisabled()
     await expect(disabled).toHaveCSS("opacity", "0.5")
-    await expectRole(disabled, "background-color", "--button-primary-fill")
+    await expect(disabled).toHaveAttribute("data-variant", "tertiary")
+    await expectRole(disabled, "background-color", "--button-tertiary-fill")
     const secondary = canvas.locator('[data-variant="secondary"][data-size="default"]')
     const source = `--theme-website-secondary-container-${mode}`
     await page.locator("html").evaluate((element, source) => element.style.setProperty(source, "#b5c9d3"), source)
@@ -341,7 +343,7 @@ for (const mode of ["light", "dark"] as const) {
     if (!testInfo.project.use.isMobile) {
       await secondary.hover()
       await expectRole(secondary, "background-color", "--button-secondary-hover")
-      await expect(page.locator('[data-theme-scope="showcase-navigation"]').getByRole("button", { name: "Group by section", exact: true })).toHaveCSS("background-color", "rgb(181, 201, 211)")
+      await expectRole(page.locator('[data-theme-scope="showcase-navigation"]').getByRole("button", { name: "Group by section", exact: true }), "background-color", "--button-tertiary-fill")
     }
     expect(await page.locator("html").evaluate(element => ["--primary", "--secondary"].map(token => getComputedStyle(element).getPropertyValue(token)))).toEqual(generic)
     await page.locator("html").evaluate((element, source) => element.style.removeProperty(source), source)
@@ -357,7 +359,8 @@ for (const mode of ["light", "dark"] as const) {
     await expect(canvas.locator('button[data-selected]')).toHaveCount(8)
     for (const button of await canvas.locator('button[data-selected]:not(:disabled)').all()) {
       const size = await button.getAttribute("data-size")
-      const secondary = await button.getAttribute("data-variant") === "secondary"
+      const variant = await button.getAttribute("data-variant")
+      const secondary = variant === "secondary"
       const expressive = size === "expressive" || size === "icon-expressive"
       const dimensions = await button.evaluate(element => [element.offsetWidth, element.offsetHeight])
       const icon = button.locator('[data-slot="button-selection-icon"]')
@@ -372,15 +375,15 @@ for (const mode of ["light", "dark"] as const) {
       await expect(icon).toHaveCSS("fill", await button.evaluate(element => getComputedStyle(element).color))
       await expect(button).toHaveAttribute("aria-pressed", "true")
       await expect(button).toHaveCSS("border-radius", expressive ? "28px" : "20px")
-      await expectRole(button, "background-color", secondary ? "--button-selected-secondary-fill" : "--button-primary-fill")
-      await expectRole(button, "color", secondary ? "--button-selected-secondary-ink" : "--button-primary-ink")
+      await expectRole(button, "background-color", secondary ? "--button-selected-secondary-fill" : "--button-secondary-fill")
+      await expectRole(button, "color", secondary ? "--button-selected-secondary-ink" : "--button-secondary-ink")
       await button.click()
       await page.getByRole("heading", { name: "Button", exact: true }).hover()
       await expect(button).toHaveAttribute("aria-pressed", "false")
       await expect(icon).toHaveCSS("fill", "none")
       expect(await iconGeometry()).toEqual(originalIconGeometry)
       await expect(button).toHaveCSS("border-radius", expressive ? "16px" : "12px")
-      await expectRole(button, "background-color", secondary ? "--button-secondary-fill" : "--md-sys-color-surface-container")
+      await expectRole(button, "background-color", secondary ? "--button-secondary-fill" : "--md-sys-color-surface-container-highest")
       expect(await button.evaluate(element => [element.offsetWidth, element.offsetHeight])).toEqual(dimensions)
       await button.focus()
       await button.press("Space")
@@ -402,7 +405,7 @@ for (const mode of ["light", "dark"] as const) {
       await expect(disabled).toHaveAttribute("aria-pressed", "true")
     }
     expect(await canvas.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
-    const ordinary = page.locator('#button-default button[data-size="default"][data-variant="default"]:not([data-selected])')
+    const ordinary = page.locator('#button-default button[data-size="default"][data-variant="tertiary"]:not([data-selected])')
     await expect(ordinary).not.toHaveAttribute("aria-pressed")
     await expect(ordinary).toHaveCSS("border-radius", "10px")
   })

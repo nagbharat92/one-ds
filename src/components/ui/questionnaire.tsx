@@ -221,7 +221,7 @@ function QuestionnairePrevious({
   children,
   className,
   size = "default",
-  variant = "secondary",
+  variant = "tertiary",
   ...props
 }: React.ComponentProps<typeof QuestionnairePrimitive.Previous> &
   Pick<React.ComponentProps<typeof Button>, "size" | "variant">) {
@@ -246,7 +246,7 @@ function QuestionnaireSkip({
   children,
   className,
   size = "default",
-  variant = "secondary",
+  variant = "tertiary",
   ...props
 }: React.ComponentProps<typeof QuestionnairePrimitive.Skip> &
   Pick<React.ComponentProps<typeof Button>, "size" | "variant">) {
@@ -271,7 +271,7 @@ function QuestionnaireNext({
   children,
   className,
   size = "default",
-  variant = "default",
+  variant = "primary",
   ...props
 }: React.ComponentProps<typeof QuestionnairePrimitive.Next> &
   Pick<React.ComponentProps<typeof Button>, "size" | "variant">) {
@@ -296,7 +296,7 @@ function QuestionnaireSubmit({
   children,
   className,
   size = "default",
-  variant = "default",
+  variant = "primary",
   ...props
 }: React.ComponentProps<typeof QuestionnairePrimitive.Submit> &
   Pick<React.ComponentProps<typeof Button>, "size" | "variant">) {

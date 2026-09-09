@@ -15,6 +15,7 @@ import { blockDemos } from "@/showcase/demos/blocks"
 import { experimentDemos } from "@/showcase/demos/experiments"
 import { concentricDemos } from "@/showcase/experiments/concentric"
 import { pointerDemos } from "@/showcase/experiments/pointer"
+import { shapeDemos } from "@/showcase/experiments/shapes"
 import { annotationDemos } from "@/showcase/demos/annotation"
 import { canvasDemos, canvasGridDemos } from "@/showcase/demos/canvas"
 import { cursorFollowerDemos } from "@/showcase/demos/cursor-follower"
@@ -33,6 +34,7 @@ export const registry: ComponentEntry[] = [
   ...experimentDemos,
   ...concentricDemos,
   ...pointerDemos,
+  ...shapeDemos,
   ...annotationDemos,
   ...canvasDemos,
   ...canvasGridDemos,

@@ -8,14 +8,12 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 const buttonGroupVariants = cva(
-  "group/button-group flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-lg [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
+  "button-group group/button-group flex w-fit max-w-full items-stretch overflow-x-auto *:focus-visible:relative *:focus-visible:z-10 [&>button:focus-visible]:ring-inset [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:min-w-0 [&>input]:flex-1",
   {
     variants: {
       orientation: {
-        horizontal:
-          "[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-r-lg!",
-        vertical:
-          "flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-b-lg!",
+        horizontal: "flex-row",
+        vertical: "flex-col",
       },
     },
     defaultVariants: {
@@ -26,19 +24,25 @@ const buttonGroupVariants = cva(
 
 function ButtonGroup({
   className,
-  orientation,
+  orientation = "horizontal",
+  shape,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants>) {
+}: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants> & {
+  shape?: "round" | "square"
+}) {
   return (
     <div
       role="group"
       data-slot="button-group"
       data-orientation={orientation}
+      data-shape={shape}
       className={cn(buttonGroupVariants({ orientation }), className)}
       {...props}
     />
   )
 }
+
+const ButtonGroupChoiceContext = React.createContext<string | undefined>(undefined)
 
 type ButtonGroupChoiceProps = Omit<
   React.ComponentProps<typeof ToggleGroupPrimitive.Root>,
@@ -61,44 +65,50 @@ function ButtonGroupChoice({
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? value)
 
   return (
-    <ToggleGroupPrimitive.Root
-      {...props}
-      type="single"
-      value={value ?? internalValue}
-      onValueChange={(nextValue) => {
-        if (!nextValue) return
-        if (value === undefined) setInternalValue(nextValue)
-        onValueChange?.(nextValue)
-      }}
-      orientation={orientation}
-      data-slot="button-group"
-      data-selection="single"
-      data-orientation={orientation}
-      className={cn(buttonGroupVariants({ orientation }), className)}
-    />
+    <ButtonGroupChoiceContext.Provider value={value ?? internalValue}>
+      <ToggleGroupPrimitive.Root
+        {...props}
+        type="single"
+        value={value ?? internalValue}
+        onValueChange={(nextValue) => {
+          if (!nextValue) return
+          if (value === undefined) setInternalValue(nextValue)
+          onValueChange?.(nextValue)
+        }}
+        orientation={orientation}
+        data-slot="button-group"
+        data-selection="single"
+        data-orientation={orientation}
+        className={cn(buttonGroupVariants({ orientation }), className)}
+      />
+    </ButtonGroupChoiceContext.Provider>
   )
 }
 
 function ButtonGroupChoiceItem({
   children,
   className,
+  value,
   size = "default",
-  variant = "secondary",
+  variant = "tertiary",
   tooltip = false,
   ...props
 }: Omit<React.ComponentProps<typeof ToggleGroupPrimitive.Item>, "asChild"> & {
   size?: React.ComponentProps<typeof Button>["size"]
-  variant?: React.ComponentProps<typeof Button>["variant"]
+  variant?: "default" | "secondary" | "tertiary"
   tooltip?: React.ComponentProps<typeof Button>["tooltip"]
 }) {
+  const selectedValue = React.useContext(ButtonGroupChoiceContext)
+  const iconOnly = size === "icon" || size === "icon-expressive"
   return (
-    <ToggleGroupPrimitive.Item {...props} asChild>
-      <Button variant={variant} size={size} tooltip={tooltip} className={cn("button-group-choice", className)}>
-        <CheckIcon
-          aria-hidden="true"
-          className="button-group-choice__check"
-        />
-        <span className="button-group-choice__label">{children}</span>
+    <ToggleGroupPrimitive.Item {...props} value={value} asChild>
+      <Button variant={variant} size={size} selected={value === selectedValue} tooltip={tooltip} className={cn(!iconOnly && "button-group-choice", className)}>
+        {iconOnly ? children : (
+          <>
+            <CheckIcon aria-hidden="true" className="button-group-choice__check" />
+            <span className="button-group-choice__label">{children}</span>
+          </>
+        )}
       </Button>
     </ToggleGroupPrimitive.Item>
   )
@@ -115,8 +125,9 @@ function ButtonGroupText({
 
   return (
     <Comp
+      data-slot="button-group-text"
       className={cn(
-        "flex items-center gap-2 rounded-lg border bg-muted bg-clip-padding px-2.5 text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        "flex items-center gap-2 rounded-lg bg-muted bg-clip-padding px-4 text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -134,7 +145,7 @@ function ButtonGroupSeparator({
       data-slot="button-group-separator"
       orientation={orientation}
       className={cn(
-        "relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto",
+        "button-group-separator self-stretch",
         className
       )}
       {...props}

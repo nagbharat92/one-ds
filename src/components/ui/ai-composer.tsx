@@ -281,7 +281,7 @@ function AIComposerSubmit({
       data-mode={isVoice ? "voice" : "send"}
       type={type ?? (isVoice || status === "streaming" ? "button" : "submit")}
       size="icon"
-      variant={status === "error" ? "destructive" : "default"}
+      variant={status === "error" ? "destructive" : "primary"}
       aria-label={props["aria-label"] ?? label}
       disabled={disabled || status === "submitted"}
       className={cn(

@@ -26,21 +26,39 @@ Tokens: `--text-body-size`, `--text-body-leading`, `--toc-width`, `--toc-sticky-
 
 Implementation: [src/showcase/design-rules-page.tsx](../src/showcase/design-rules-page.tsx), [src/components/ui/text.tsx](../src/components/ui/text.tsx), [src/components/ui/table-of-contents.tsx](../src/components/ui/table-of-contents.tsx), [src/components/ui/accordion.tsx](../src/components/ui/accordion.tsx), [AGENTS.md](../AGENTS.md)
 
+### Do not use decorative shadows
+
+ID: appearance.no-shadows | Foundations | Required | approved
+
+Do not use decorative shadows on OneDS interfaces, including FABs, cards, menus, and floating controls. Separate surfaces through color, spacing, shape, and intentional boundaries. Shared elevation and standard shadow tokens resolve to none. Do not introduce local box-shadow, drop-shadow, or shadow utility overrides to restore elevation.
+
+Why: Shape and surface contrast provide hierarchy without a shadow-based visual language.
+
+Exceptions: Preserve accessible keyboard focus rings and deliberate boundary rings even when their implementation uses box-shadow. They are interaction or boundary indicators, not decorative elevation.
+
+Decision evidence: September 8, 2026: user explicitly rejected shadows anywhere after the FAB update. This supersedes earlier instructions to retain decorative elevation and shadow geometry.
+
+Enforcement: Partially automated. Shared elevation and standard shadow scales are disabled; FAB shadow utilities are removed. A rendered check verifies FAB rest, hover, and pressed states. Local custom shadow implementations require review; focus rings are deliberately retained.
+
+Tokens: `--elevation-flat`, `--elevation-raised`, `--elevation-floating`, `--shadow-xs`, `--shadow-sm`, `--shadow-md`, `--shadow-lg`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/fab.tsx](../src/components/ui/fab.tsx)
+
 ### Preview controls belong in a toolbar
 
 ID: showcase.preview-toolbar | Composition | Required | approved
 
-House canvas-level tuning and display controls in CanvasToolbar, composed from the shared Toolbar and its named parts. Place it in CanvasPreviewFrame controls above the canvas. Horizontal toolbars use inline ToolbarTitle and control pairs inside ToolbarGroup, centered on the same row; keep each pair together when groups wrap. Use ToolbarSpacer for trailing actions. Do not stack form labels above controls, override alignment to items-end, or substitute a loose Cluster, locally styled row, or individual floating controls for the toolbar surface.
+House canvas-level tuning and display controls in CanvasToolbar, composed from the shared Toolbar and its named parts. Place it in CanvasPreviewFrame controls above the canvas. Horizontal toolbars use inline ToolbarTitle and control pairs inside ToolbarGroup, centered on the same row; keep each pair together when groups wrap. Use ToolbarSpacer for trailing actions. Text at the outer edges receives mirrored8px optical padding: inline-start for leading ToolbarTitle text and inline-end for trailing ToolbarTitle text, including text at the edge of the first or last ToolbarGroup. Only edge text gets this correction; interior text, buttons, icons, inputs, and other controls retain their own spacing. Use --toolbar-edge-text-padding through the shared title part, not local padding. Do not stack form labels above controls, override alignment to items-end, or substitute a loose Cluster, locally styled row, or individual floating controls for the toolbar surface.
 
 Why: A shared toolbar provides consistent containment, spacing, responsive wrapping, and an accessible name for preview tools.
 
 Exceptions: Product controls inside the specimen remain in their product composition. The showcase shell's Preview/Code and reset actions remain owned by the shell. Existing component-owned canvas anatomy may retain its embedded CanvasToolbar.
 
-Decision evidence: Approved by the user in the September 7, 2026 Pointer experiment correction: tools above the canvas must be housed in the shared toolbar.
+Decision evidence: Approved by the user in the September 7, 2026 Pointer experiment correction: tools above the canvas must be housed in the shared toolbar. September 8: user required trailing text to mirror the leading title's optical padding, explicitly limited to text at toolbar edges.
 
-Enforcement: Partially automated. Pointer regression tests verify that its tuning controls share one named toolbar above the canvas, use inline label/control groups with aligned centers, and fit desktop/mobile widths. Other preview compositions require review; no broad migration is claimed.
+Enforcement: Partially automated. Pointer regression tests verify shared toolbar placement and responsive control groups. A focused rendered check verifies mirrored8px padding for leading/trailing text, including grouped edges, and zero correction for interior text. CSS targets only horizontal edge ToolbarTitle parts; other preview compositions and wrapped-line placement require review.
 
-Tokens: `--radius-lg`, `--spacing`
+Tokens: `--radius-lg`, `--spacing`, `--toolbar-edge-text-padding`, `--toolbar-title-padding-start`, `--toolbar-title-padding-end`
 
 Implementation: [src/components/ui/canvas.tsx](../src/components/ui/canvas.tsx), [src/components/ui/canvas-preview.tsx](../src/components/ui/canvas-preview.tsx), [src/components/ui/toolbar.tsx](../src/components/ui/toolbar.tsx), [src/showcase/experiments/pointer.tsx](../src/showcase/experiments/pointer.tsx)
 
@@ -102,19 +120,19 @@ Implementation: [src/index.css](../src/index.css), [src/lib/color-theme.ts](../s
 
 ID: controls.button-colors | Color | Required | approved
 
-Display Primary/Secondary and retain public default/secondary APIs. Primary uses baseline P40/P80; Secondary uses website Secondary container. Destructive uses Material Error40/Error80 with the existing translucent10/20/30% light and20/30/40% dark tint ramp as its sole treatment; remove the old palette option. Keep destructive text/focus unchanged. Button selected is controlled by the caller and emits aria-pressed. Use Material's square-start toggle configuration: unselected12px/16px corners for40px/56px tiers become20px/28px round when selected. Primary toggles Surface container/On surface variant to Primary/On primary; Secondary toggles Secondary container/On secondary container to Secondary/On secondary. Selected icons must switch from outlined to filled via ButtonSelectionIcon with a fill-compatible icon, inheriting the same foreground and size without geometry changes. Do not fill arbitrary open-path icons. Use existing spatial/effects tokens, respect reduced motion, and preserve dimensions and ordinary Button shapes/press behavior. Pink remains reserved for later FAB work.
+Expose Primary (primary), Secondary (secondary), and Tertiary/Neutral (tertiary). General buttons default to Tertiary; default aliases tertiary. Reserve Primary's baseline P40/P80 accent purple exclusively for prominent calls to action, never selection; Primary ignores the selected prop and ButtonGroupChoiceItem excludes Primary. Secondary uses light-purple Secondary container/On secondary container at rest and dark gray-purple Secondary/On secondary when selected. Tertiary uses warm neutral Surface container highest/On surface variant at rest and the light-purple Secondary container/On secondary container pair when selected. These two selection levels use the shared Button tokens in standalone and grouped controls; do not switch variants to Primary to indicate selection. Selection remains caller-controlled with native accessibility semantics. Standalone square12px/16px corners at40px/56px become20px/28px round when selected; connected groups keep soft inner corners and round selected items without shifting neighbors. ButtonSelectionIcon switches fill-compatible icons from outlined to filled without changing geometry. Preserve sizes, press behavior, motion tokens, reduced motion, destructive tints/text/focus, and Ghost/link treatments. Neutral Tertiary is an emphasis level, not Material's pink tertiary accent.
 
 Why: A single button-token adjustment must reach all Button consumers and states without recoloring unrelated selection indicators or badges.
 
 Exceptions: Explicit custom/generated themes retain their Filled mappings. Destructive text and its translucent treatment are unchanged from the original design; no new contrast certification is claimed. Other text, focus, Ghost, link and Tonal treatments stay unchanged. Disabled buttons keep50% opacity and native semantics. The baseline Filled palette is distinct from the website palette used by other consumers.
 
-Decision evidence: September 8, 2026: user selected Material destructive, requested removing the other palette, and requested a more-rounded selected Button matching Material. https://m3.material.io/components/buttons/specs states round-to-square by default and square-to-round for square-start buttons, with12px small and16px medium square corners. Its toggle color mappings drive Primary/Secondary selected states. Existing OneDS40/56px tiers remain; selected full rounding is height/2. Material Error source: https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-ref-palette.scss.
+Decision evidence: September 8, 2026: user approved Primary solely for prominent CTAs, Secondary selecting to dark gray-purple, and neutral Tertiary selecting to light purple. This supersedes Primary toggle behavior and Tertiary-to-Primary selection. Existing three-tier colors, neutral defaults, Material destructive, and square-to-round shape decisions remain. https://m3.material.io/components/buttons/specs documents the shape reference; the two-level selection hierarchy is a OneDS decision.
 
-Enforcement: Partially automated. Desktop/mobile tests cover Material destructive tint states, Primary/Secondary paints, selected color/shape pairs, pointer/Space/Enter toggling, disabled state, unchanged width/height, ordinary shape preservation, spatial corner interpolation and reduced motion. Existing press/motion regressions pass. No full certification of all destructive text contrast or connected-group interactions is claimed.
+Enforcement: Partially automated. Source checks enforce the three named variants and neutral default alias. Desktop light/dark tests cover all three fills, state contrast, disabled defaults, token propagation, selected shape/color/icon behavior, keyboard interaction, favicon adaptation, and reduced motion. Explicit primary consumers and shared supporting defaults are migrated; broader product emphasis remains a composition review decision. No full certification of destructive text contrast or connected-group interactions is claimed.
 
-Tokens: `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`, `--button-secondary-fill`, `--button-secondary-ink`, `--button-link-ink`, `--button-primary-hover`, `--button-primary-pressed`, `--button-secondary-hover`, `--button-secondary-pressed`
+Tokens: `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`, `--button-secondary-fill`, `--button-secondary-ink`, `--button-tertiary-fill`, `--button-tertiary-ink`, `--button-tertiary-hover`, `--button-tertiary-pressed`, `--button-link-ink`, `--button-primary-hover`, `--button-primary-pressed`, `--button-secondary-hover`, `--button-secondary-pressed`
 
-Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts), [tests/design-rules.spec.ts](../tests/design-rules.spec.ts), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md)
+Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/button-group.tsx](../src/components/ui/button-group.tsx), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts), [tests/design-rules.spec.ts](../tests/design-rules.spec.ts), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md)
 
 ### Spacing and control geometry follow the 4px grid
 
@@ -152,23 +170,59 @@ Tokens: `--button-height-default`, `--button-height-expressive`, `--button-icon-
 
 Implementation: [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/favicon.tsx](../src/components/ui/favicon.tsx), [src/components/ui/input-group.tsx](../src/components/ui/input-group.tsx)
 
-### Choose ghost or secondary from the local tool context
+### Default to neutral supporting actions
 
 ID: controls.supporting-actions | Controls | Required | approved
 
-Button has no outline variant. Use ghost for an isolated icon-only action or icon-only ButtonGroup when its local action row has no neighboring outlined controls or mixed tools. Use secondary for supporting buttons, including icon buttons, beside search fields, select/dropdown controls, or other mixed tools so their persistent containers have comparable visual weight. Labelled supporting actions such as Cancel also use secondary. Choose the variant explicitly in the owning composition; do not make Button inspect its surrounding DOM.
+Button has no outline variant. Use neutral Tertiary for general actions and labelled supporting actions such as Cancel, including buttons beside search, select/dropdown, and mixed tools. Omitted variants use Tertiary. Button groups, including split actions, normally use Tertiary or Secondary. A split layout does not imply primary emphasis: use Primary only when the action is explicitly a prominent CTA. Use ghost for isolated icon-only actions/groups or field-internal affordances. Never infer emphasis by inspecting the DOM.
 
-Why: Ghost keeps isolated icon tools quiet. Secondary gives actions beside visually substantial controls an equally discoverable container. Context provides a clear replacement rule instead of another overlapping button style.
+Why: Neutral defaults keep routine actions from competing with intentional dark-purple Primary and light-purple Secondary emphasis. Ghost keeps isolated icon tools quiet.
 
 Exceptions: Primary and destructive intent, links, and persistent selected states retain their semantic treatment. Embedded field affordances such as clear or reveal may remain ghost because the field already supplies a shared container. An outer card border alone is not a neighboring outlined control. An isolated icon-only menu trigger may be ghost; opening its menu does not change the trigger's resting variant. Input, select, Badge, Toggle, and other non-Button outline variants are unaffected.
 
-Decision evidence: User approved removing outline Buttons and defined the icon-only versus mixed-control distinction on September 7, 2026.
+Decision evidence: September 8, 2026: user requested Tertiary/Neutral as the general default and Primary/Secondary only when needed, then explicitly clarified that most button groups are Secondary or Tertiary and split actions are not Primary unless they are prominent CTAs. This supersedes the September 7 requirement to use Secondary for routine supporting actions; the isolated-icon Ghost policy remains.
 
-Enforcement: Partially automated. TypeScript rejects outline on Button-derived APIs. Source checks reject stale outline Button snippets. Desktop/mobile tests exercise icon-only ghost tools and mixed secondary tools, including search, sorting, add/remove, and disabled states. Choosing the appropriate local composition remains a design review requirement.
+Enforcement: Partially automated. TypeScript rejects outline on Button-derived APIs. Source checks reject stale outline snippets and enforce the neutral default. Focused browser tests exercise isolated Ghost icons and mixed Tertiary tools, including search, sorting, add/remove, and disabled states. Choosing tonal emphasis for a product action remains a design review requirement.
 
-Tokens: `--secondary`, `--secondary-foreground`, `--state-layer-hover`, `--state-layer-pressed`
+Tokens: `--button-tertiary-fill`, `--button-tertiary-ink`, `--state-layer-hover`, `--state-layer-pressed`
 
 Implementation: [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/button-group.tsx](../src/components/ui/button-group.tsx), [src/components/ui/pagination.tsx](../src/components/ui/pagination.tsx), [src/showcase/demos/forms.tsx](../src/showcase/demos/forms.tsx), [src/showcase/demos/layout.tsx](../src/showcase/demos/layout.tsx), [src/App.tsx](../src/App.tsx)
+
+### Match neighboring control shapes
+
+ID: geometry.contextual-button-shapes | Geometry and Spacing | Required | approved
+
+Choose a consistent resting shape for related controls. When a group or nested group uses soft-square controls, accompanying actions also use soft-square buttons, such as Reset beside square Preview/Code tabs. Beside a pill-shaped search field, use a round icon action. Set ButtonGroup shape=square or shape=round explicitly in the owning composition; unspecified nested groups inherit the outer shape. Square means the tokenized soft corner, not sharp zero-radius corners. Do not detect neighboring appearance at runtime.
+
+Why: Related actions should share a coherent shape language instead of mixing square tabs with unrelated circular actions.
+
+Exceptions: Selected buttons retain their deliberate rounded state as selection feedback. An explicitly configured child group may override its inherited resting shape. This rule does not resize tabs, fields, or buttons or change their color emphasis.
+
+Decision evidence: September 8, 2026: user requested a square reload action beside square tabs, while retaining the circular action beside the pill-shaped library search.
+
+Enforcement: Partially automated. ButtonGroup exposes an explicit shape API with inherited token styling. A focused rendered check verified nested reset corners at8px, unchanged40px dimensions, explicit round override at20px, round search action, and preserved selected pill geometry. Other compositions require review.
+
+Tokens: `--button-group-outer-radius`, `--button-group-inner-radius`, `--button-round-radius`
+
+Implementation: [src/components/ui/button-group.tsx](../src/components/ui/button-group.tsx), [src/index.css](../src/index.css), [src/App.tsx](../src/App.tsx)
+
+### Separate nested button groups visibly
+
+ID: geometry.nested-button-groups | Geometry and Spacing | Required | approved
+
+Nested ButtonGroups use a larger gap between child groups than between buttons within each group. Use --button-group-nested-gap (12px) between nested groups and --button-group-gap (4px) within each group, in either orientation. Keep the distinction in the shared ButtonGroup styling, not local demo margins. Preserve each child group's connected corner anatomy and selected-state behavior.
+
+Why: Separate sets of related actions must read as distinct groups rather than one continuous row of controls.
+
+Exceptions: Standalone groups retain the inner gap. Wrapping and scrolling containers may manage available space but must not collapse the visible group boundary.
+
+Decision evidence: September 8, 2026: user identified that the nested formatting and alignment example looked like one group of six buttons and requested more space between nested groups. The 12px gap preserves the OneDS 4px grid and is three times the internal gap.
+
+Enforcement: Partially automated. Shared CSS applies the nested gap to direct child ButtonGroups. A focused desktop rendered measurement verified 12px between nested groups and 4px between their buttons. No dedicated persistent regression or broader layout certification is claimed.
+
+Tokens: `--button-group-gap`, `--button-group-nested-gap`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/button-group.tsx](../src/components/ui/button-group.tsx), [src/showcase/demos/forms.tsx](../src/showcase/demos/forms.tsx)
 
 ### Icon labels include a tokenized optical correction
 
@@ -187,6 +241,24 @@ Enforcement: Partially automated. Desktop/mobile browser checks verify mirrored 
 Tokens: `--icon-label-optical-padding`, `--graphic-label-gap`, `--button-gap`
 
 Implementation: [src/components/ui/icon-label.tsx](../src/components/ui/icon-label.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/favicon.tsx](../src/components/ui/favicon.tsx), [src/index.css](../src/index.css), [src/showcase/demos/forms.tsx](../src/showcase/demos/forms.tsx)
+
+### Choose rounding by surface purpose
+
+ID: geometry.purpose-based-radii | Geometry and Spacing | Required | approved
+
+Choose corner emphasis by purpose, not size alone: compact controls and dense tiles use8-12px, standard cards16px, large visual or expressive tiles24px, and large feature surfaces32px only when deliberately warranted. Use fixed named radius tokens, not percentage or pill rounding on growing cards. Selectable shape-gallery tiles follow the selected-button paradigm: --shape-choice-radius is16px unselected; --shape-choice-selected-radius is32px when selected. Preview32px rounding on mouse-down, commit selection on click, and restore16px when deselected or a press is cancelled. Selection changes both color and shape. Separate the shape area and bottom label with a transparent4px gap rather than a divider, using the ButtonGroup gap and8px inner-corner tokens. Both regions share selection and interaction fills while remaining one accessible control. Nested rounded surfaces retain outer radius minus inset for concentric inner corners.
+
+Why: Visual specimens need more expressive rounding than dense work surfaces, without turning every large container into a pill.
+
+Exceptions: Apply selectable-tile behavior to the shape gallery for now; a reusable Card selection contract is deferred. Existing Button, FAB, connected-group, and other Card geometry remain unchanged. The radius hierarchy is not authorization for a global card resize.
+
+Decision evidence: September 8, 2026: user requested less-rounded unselected tiles following the selected-button paradigm, then explicitly increased selected rounding to32px. Gallery implementation uses16px unselected and32px selected; general Card adoption is deferred.
+
+Enforcement: Partially automated. Applied to shape-gallery tiles only. A focused rendered check verified16px unselected corners and32px mouse-down and selected corners. Existing cancellation and deselection behavior is preserved. Other surface families remain subject to deliberate migration and review.
+
+Tokens: `--radius-visual-tile`, `--shape-choice-radius`, `--shape-choice-selected-radius`, `--shape-choice-padding`, `--shape-choice-section-gap`, `--shape-choice-inner-radius`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/shape.tsx](../src/components/ui/shape.tsx)
 
 ### Nested rounded surfaces share a corner center
 

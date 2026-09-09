@@ -26,7 +26,7 @@ function Stage({ children }: { children: React.ReactNode }) {
 
 function FabDefaultDemo() {
   return (
-    <Fab aria-label="New task">
+    <Fab variant="primary" aria-label="New task">
       <PlusIcon />
     </Fab>
   )
@@ -54,7 +54,7 @@ function FabSizesDemo() {
 function FabVariantsDemo() {
   return (
     <div className="flex items-end gap-6">
-      {(["primary", "secondary", "surface"] as const).map((variant) => (
+      {(["primary", "secondary", "tertiary"] as const).map((variant) => (
         <div key={variant} className="flex flex-col items-center gap-2">
           <Fab variant={variant} aria-label={`Compose, ${variant}`}>
             <PencilIcon />
@@ -69,14 +69,14 @@ function FabVariantsDemo() {
 function FabExtendedDemo() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4">
-      <Fab extended>
+      <Fab extended variant="primary">
         <PlusIcon />
         New task
       </Fab>
       <Fab extended variant="secondary">
         Save draft
       </Fab>
-      <Fab extended size="lg">
+      <Fab extended size="lg" variant="tertiary">
         <PencilIcon />
         Compose
       </Fab>
@@ -139,7 +139,8 @@ function FabMenuDemo() {
 export const fabDemos: ComponentEntry[] = [
   {
     slug: "fab",
-    name: "Fab",
+    name: "FABs",
+    codeSource: "complete",
     description:
       "A floating action button for the one primary, constructive action on an app surface. Never use it for navigation, overflow or destructive actions — those belong in a toolbar or menu.",
     category: "Forms",
@@ -151,7 +152,7 @@ import { Fab } from "@/components/ui/fab"
 
 export function FabDefaultDemo() {
   return (
-    <Fab aria-label="New task">
+    <Fab variant="primary" aria-label="New task">
       <PlusIcon />
     </Fab>
   )
@@ -166,7 +167,7 @@ export function FabDefaultDemo() {
       {
         name: "Variants",
         description:
-          "Primary carries the most emphasis and is the default. Secondary steps back where the surrounding content should lead, and surface is the quietest — use it when the FAB sits over busy content and colour would compete.",
+          "Primary uses the pink palette for a prominent CTA. Secondary uses light purple; Tertiary is the warm-neutral default. FABs have softer corners and no shadows.",
         Demo: FabVariantsDemo,
       },
       {

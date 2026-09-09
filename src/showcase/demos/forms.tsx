@@ -5,11 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import {
   AlignCenterIcon,
+  AlignJustifyIcon,
   AlignLeftIcon,
   AlignRightIcon,
   ArrowRightIcon,
   ArrowUpRightIcon,
   BoldIcon,
+  BluetoothIcon,
   BookmarkIcon,
   ChevronDownIcon,
   CopyIcon,
@@ -20,6 +22,8 @@ import {
   SearchIcon,
   Trash2Icon,
   UnderlineIcon,
+  WifiIcon,
+  MoonIcon,
 } from "lucide-react"
 
 import type { ComponentEntry } from "@/showcase/types"
@@ -30,8 +34,6 @@ import {
   ButtonGroup,
   ButtonGroupChoice,
   ButtonGroupChoiceItem,
-  ButtonGroupSeparator,
-  ButtonGroupText,
 } from "@/components/ui/button-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Favicon } from "@/components/ui/favicon"
@@ -96,14 +98,64 @@ import { Slider } from "@/components/ui/slider"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { Toggle } from "@/components/ui/toggle"
 import { Stack } from "@/components/ui/stack"
 import { Cluster } from "@/components/ui/cluster"
 import { Text } from "@/components/ui/text"
 
-function SelectedButtonDemo({ size = "default", variant = "default", disabled = false }: {
+function ConnectedButtonGroupsDemo() {
+  return (
+    <Stack gap="lg">
+      {(["default", "expressive"] as const).map(size => (
+        <Stack key={size}>
+          <ButtonGroupChoice defaultValue="center" aria-label={`Alignment ${size}`}>
+            {([
+              ["left", "Align left", AlignLeftIcon],
+              ["center", "Align center", AlignCenterIcon],
+              ["right", "Align right", AlignRightIcon],
+              ["justify", "Justify", AlignJustifyIcon],
+            ] as const).map(([value, label, Icon]) => (
+              <ButtonGroupChoiceItem key={value} value={value} variant="secondary"
+                size={size === "expressive" ? "icon-expressive" : "icon"} aria-label={label} tooltip={label}>
+                <Icon />
+              </ButtonGroupChoiceItem>
+            ))}
+          </ButtonGroupChoice>
+          <ButtonGroupChoice defaultValue="8" aria-label={`Serving size ${size}`}>
+            {["8", "12", "16", "20"].map(value => (
+              <ButtonGroupChoiceItem key={value} value={value} size={size} variant="secondary">
+                {value} oz
+              </ButtonGroupChoiceItem>
+            ))}
+          </ButtonGroupChoice>
+        </Stack>
+      ))}
+    </Stack>
+  )
+}
+
+function IndependentButtonGroupDemo() {
+  const [enabled, setEnabled] = useState(["wifi"])
+  return (
+    <ButtonGroup aria-label="Quick settings">
+      {([
+        ["bluetooth", "Bluetooth", BluetoothIcon],
+        ["focus", "Focus", MoonIcon],
+        ["wifi", "Wi-Fi", WifiIcon],
+      ] as const).map(([value, label, Icon]) => (
+        <Button key={value} variant="secondary" size="icon-expressive"
+          aria-label={label} selected={enabled.includes(value)}
+          onClick={() => setEnabled(current => current.includes(value)
+            ? current.filter(item => item !== value) : [...current, value])}>
+          <Icon />
+        </Button>
+      ))}
+    </ButtonGroup>
+  )
+}
+
+function SelectedButtonDemo({ size = "default", variant = "tertiary", disabled = false }: {
   size?: "default" | "expressive" | "icon" | "icon-expressive"
-  variant?: "default" | "secondary"
+  variant?: "secondary" | "tertiary"
   disabled?: boolean
 }) {
   const [selected, setSelected] = useState(true)
@@ -158,7 +210,7 @@ function ButtonToolsDemo({ mixed = false }: { mixed?: boolean }) {
   const [nextNote, setNextNote] = useState(1)
   const filtered = notes.filter(note => note.toLowerCase().includes(query.trim().toLowerCase()))
   const visible = order === "name" ? [...filtered].sort((left, right) => left.localeCompare(right)) : [...filtered].reverse()
-  const variant = mixed ? "secondary" : "ghost"
+  const variant = mixed ? "tertiary" : "ghost"
 
   return (
     <Stack className="w-full max-w-xl">
@@ -392,45 +444,35 @@ function FormSubmittingDemo() {
 
 function NestedToolbarDemo() {
   const [align, setAlign] = useState("left")
+  const [formatting, setFormatting] = useState<string[]>([])
   return (
-    <ButtonGroup>
-      <ButtonGroup>
-        <Toggle variant="outline" aria-label="Bold">
-          <BoldIcon />
-        </Toggle>
-        <Toggle variant="outline" aria-label="Italic">
-          <ItalicIcon />
-        </Toggle>
-        <Toggle variant="outline" aria-label="Underline">
-          <UnderlineIcon />
-        </Toggle>
+    <ButtonGroup aria-label="Text formatting">
+      <ButtonGroup aria-label="Font style">
+        {([
+          ["bold", "Bold", BoldIcon],
+          ["italic", "Italic", ItalicIcon],
+          ["underline", "Underline", UnderlineIcon],
+        ] as const).map(([value, label, Icon]) => (
+          <Button key={value} variant="tertiary" size="icon" aria-label={label}
+            selected={formatting.includes(value)}
+            onClick={() => setFormatting(current => current.includes(value)
+              ? current.filter(item => item !== value) : [...current, value])}>
+            <Icon />
+          </Button>
+        ))}
       </ButtonGroup>
-      <ButtonGroup>
-        <Toggle
-          variant="outline"
-          aria-label="Align left"
-          pressed={align === "left"}
-          onPressedChange={(pressed) => pressed && setAlign("left")}
-        >
-          <AlignLeftIcon />
-        </Toggle>
-        <Toggle
-          variant="outline"
-          aria-label="Align center"
-          pressed={align === "center"}
-          onPressedChange={(pressed) => pressed && setAlign("center")}
-        >
-          <AlignCenterIcon />
-        </Toggle>
-        <Toggle
-          variant="outline"
-          aria-label="Align right"
-          pressed={align === "right"}
-          onPressedChange={(pressed) => pressed && setAlign("right")}
-        >
-          <AlignRightIcon />
-        </Toggle>
-      </ButtonGroup>
+      <ButtonGroupChoice value={align} onValueChange={setAlign} aria-label="Text alignment">
+        {([
+          ["left", "Align left", AlignLeftIcon],
+          ["center", "Align center", AlignCenterIcon],
+          ["right", "Align right", AlignRightIcon],
+        ] as const).map(([value, label, Icon]) => (
+          <ButtonGroupChoiceItem key={value} value={value} variant="tertiary" size="icon"
+            aria-label={label} tooltip={label}>
+            <Icon />
+          </ButtonGroupChoiceItem>
+        ))}
+      </ButtonGroupChoice>
     </ButtonGroup>
   )
 }
@@ -580,14 +622,15 @@ export const formsDemos: ComponentEntry[] = [
     slug: "button",
     name: "Button",
     codeSource: "complete",
-    description: "Primary, Secondary, and Material-tinted Destructive actions in both sizes. Selected buttons toggle between square and round shapes, using Material's selection color mappings.",
+    description: "Tertiary is the neutral default for general actions. Choose Primary or Secondary explicitly for tonal emphasis. Selected buttons retain their square-to-round selection behavior.",
     category: "Forms",
     Demo: () => (
       <div className="flex flex-col gap-6">
         {(["default", "expressive"] as const).map((size) => (
           <div key={size} className="flex flex-wrap items-center gap-3">
-            <Button size={size}>Primary</Button>
+            <Button size={size} variant="primary">Primary</Button>
             <Button size={size} variant="secondary">Secondary</Button>
+            <Button size={size}>Tertiary</Button>
             <Button size={size} variant="destructive">Destructive</Button>
             <SelectedButtonDemo size={size} />
             <Button size={size} variant="ghost">Ghost</Button>
@@ -603,8 +646,9 @@ export function ButtonDemo() {
     <div className="flex flex-col gap-6">
       {(["default", "expressive"] as const).map((size) => (
         <div key={size} className="flex flex-wrap items-center gap-3">
-          <Button size={size}>Primary</Button>
+          <Button size={size} variant="primary">Primary</Button>
           <Button size={size} variant="secondary">Secondary</Button>
+          <Button size={size}>Tertiary</Button>
           <Button size={size} variant="destructive">Destructive</Button>
           <SelectedButtonDemo size={size} />
           <Button size={size} variant="ghost">Ghost</Button>
@@ -617,7 +661,7 @@ export function ButtonDemo() {
     examples: [
       {
         name: "Selected",
-        description: "Square unselected buttons become round when selected. Primary uses Surface container then Primary; Secondary uses Secondary container then Secondary. Selection is controlled with aria-pressed, and ordinary button shapes remain unchanged.",
+        description: "Selected Tertiary uses light purple; selected Secondary uses dark gray-purple. Both become round and switch icon state. Primary is reserved for prominent calls to action, not selection.",
         Demo: ButtonSelectionDemo,
       },
       {
@@ -640,7 +684,7 @@ export function ButtonDemo() {
           <Stack gap="lg">
             {(["icon", "icon-expressive"] as const).map(size => (
               <Cluster key={size}>
-                {(["default", "secondary", "ghost", "destructive", "link"] as const).map(variant => (
+                {(["primary", "secondary", "tertiary", "ghost", "destructive", "link"] as const).map(variant => (
                   <Button key={variant} size={size} variant={variant} aria-label={`Add ${variant}`}>
                     <PlusIcon />
                   </Button>
@@ -753,7 +797,7 @@ export function ButtonDemo() {
       },
       {
         name: "Mixed Tools",
-        description: "Use secondary for supporting tools beside search, select, or other outlined controls in the same local row.",
+        description: "Use Tertiary for general supporting tools beside search, select, or other controls in the same local row.",
         Demo: () => <ButtonToolsDemo mixed />,
       },
       {
@@ -765,8 +809,9 @@ export function ButtonDemo() {
             {(["default", "expressive"] as const).map((size) => (
               <div key={size} className="flex flex-wrap items-center justify-center gap-2">
                 {([
-                  "default",
+                  "primary",
                   "secondary",
+                  "tertiary",
                   "destructive",
                   "ghost",
                   "link",
@@ -788,31 +833,19 @@ export function ButtonDemo() {
   {
     slug: "button-group",
     name: "Button Group",
-    description: "Group a series of related buttons or controls together.",
+    codeSource: "complete",
+    description: "Connected buttons with soft inner corners, rounded ends, and separated fills. Selection changes shape and color without resizing neighboring actions.",
     category: "Forms",
-    Demo: () => (
-      <ButtonGroup>
-        <Button variant="secondary">Copy</Button>
-        <Button variant="secondary">Paste</Button>
-        <ButtonGroupSeparator />
-        <ButtonGroupText>Actions</ButtonGroupText>
-      </ButtonGroup>
-    ),
-    code: `import { Button } from "@/components/ui/button"
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-  ButtonGroupText,
-} from "@/components/ui/button-group"
+    Demo: ConnectedButtonGroupsDemo,
+    code: `import { ButtonGroupChoice, ButtonGroupChoiceItem } from "@/components/ui/button-group"
 
 export function ButtonGroupDemo() {
   return (
-    <ButtonGroup>
-      <Button variant="secondary">Copy</Button>
-      <Button variant="secondary">Paste</Button>
-      <ButtonGroupSeparator />
-      <ButtonGroupText>Actions</ButtonGroupText>
-    </ButtonGroup>
+    <ButtonGroupChoice defaultValue="8" aria-label="Serving size">
+      {["8", "12", "16", "20"].map(value => (
+        <ButtonGroupChoiceItem key={value} value={value} variant="secondary">{value} oz</ButtonGroupChoiceItem>
+      ))}
+    </ButtonGroupChoice>
   )
 }`,
     examples: [
@@ -828,6 +861,10 @@ export function ButtonGroupDemo() {
             <ButtonGroupChoiceItem value="20" disabled>20 oz</ButtonGroupChoiceItem>
           </ButtonGroupChoice>
         ),
+      },
+      {
+        name: "Independent toggles",
+        Demo: IndependentButtonGroupDemo,
       },
       {
         name: "Orientation",
@@ -869,13 +906,13 @@ export function ButtonGroupDemo() {
       },
       {
         name: "Split",
-        description: "Primary action with a dropdown for alternatives.",
+        description: "A neutral action with a dropdown for alternatives. Use Primary only when the split action is a prominent call to action.",
         Demo: () => (
           <ButtonGroup>
-            <Button>Save</Button>
+            <Button variant="tertiary">Save</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="icon" aria-label="More save options">
+                <Button variant="tertiary" size="icon" aria-label="More save options">
                   <ChevronDownIcon />
                 </Button>
               </DropdownMenuTrigger>
@@ -890,7 +927,7 @@ export function ButtonGroupDemo() {
       },
       {
         name: "Input",
-        description: "Text input joined with buttons.",
+        description: "Text input with separated actions.",
         Demo: () => (
           <ButtonGroup className="w-full max-w-sm">
             <Input placeholder="Search..." />

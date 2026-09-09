@@ -816,7 +816,8 @@ function ColumnToggleDemo() {
         {toggleable.map((col) => (
           <Button
             key={col.id}
-            variant={col.getIsVisible() ? "default" : "secondary"}
+            variant="tertiary"
+            selected={col.getIsVisible()}
             size="default"
             onClick={() => col.toggleVisibility()}
           >

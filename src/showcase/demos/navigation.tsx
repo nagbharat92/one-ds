@@ -529,7 +529,8 @@ function SidebarEdgeDemo() {
               <Button
                 key={option}
                 size="default"
-                variant={edge === option ? "default" : "secondary"}
+                variant="tertiary"
+                selected={edge === option}
                 onClick={() => setEdge(option)}
               >
                 {option}

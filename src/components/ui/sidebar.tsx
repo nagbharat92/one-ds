@@ -795,9 +795,7 @@ function SidebarTrigger({
         data-visible={visible}
         inert={!visible}
         aria-hidden={!visible}
-        // Surface, not primary: this opens navigation, it is not the page's
-        // primary action, and it must not outrank real content.
-        variant="surface"
+        variant="tertiary"
         placement="none"
         aria-label={label}
         aria-expanded={expanded}

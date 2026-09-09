@@ -149,7 +149,7 @@ function AlertDialogDescription({
 
 function AlertDialogAction({
   className,
-  variant = "default",
+  variant = "primary",
   size = "default",
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action> &
@@ -167,7 +167,7 @@ function AlertDialogAction({
 
 function AlertDialogCancel({
   className,
-  variant = "secondary",
+  variant = "tertiary",
   size = "default",
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel> &

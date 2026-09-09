@@ -61,23 +61,31 @@ composition overrides are not a blanket certification of the entire library.
 
 Button no longer exposes `outline`. Isolated icon-only actions and groups use
 `ghost`; supporting actions beside search, selects/dropdowns, or mixed tools use
-`secondary` for comparable visual weight. Labelled supporting actions also use
-secondary. This is a local composition decision, not a page-wide theme or runtime
+`tertiary` for neutral visual weight. Labelled supporting actions also use
+Tertiary. This is a local composition decision, not a page-wide theme or runtime
 DOM heuristic. Primary, destructive, link, and persistent selected-state intent
 remain unchanged; field-internal affordances may stay ghost. Non-Button outline
 variants and field borders remain supported. See Button's working **Icon Tools**
 and **Mixed Tools** examples, and rule `controls.supporting-actions`.
 
+FABs expose `primary`, `secondary`, and `tertiary`, with Tertiary as the default.
+Primary uses the pink Tertiary container/On tertiary container theme pair;
+Secondary and Tertiary share Button's palettes. The old `surface` variant aliases Tertiary.
+Primary is for a prominent CTA; FABs do not expose selection. Their 56px and 72px
+sizes use softer 20px and 28px corners, with no shadows and opaque
+interaction fills. Tune the pink theme pair, shared button color tokens, and `--fab-radius-*` tokens.
+
 ### Material color roles
 
-**Button colors** now use purple Primary actions, lilac Secondary actions,
-and purple links throughout the site. Tune the `--button-primary-*`,
-`--button-secondary-*`, and `--button-link-ink` tokens in
+**Button colors** have three types: accent-purple `primary`, light-purple
+`secondary`, and warm-neutral `tertiary`. General buttons default to Tertiary;
+`default` is a compatibility alias for Tertiary. Choose Primary or Secondary
+explicitly when emphasis is needed. Tune the `--button-primary-*`,
+`--button-secondary-*`, `--button-tertiary-*`, and `--button-link-ink` tokens in
 [src/index.css](src/index.css). Filled hover/pressed states use their paired
-foregrounds at 8%/10%; Filled uses Primary/On primary throughout. The existing
-`default` and `secondary` APIs correspond to Primary and Secondary (Material calls
-these filled and tonal). Pink is reserved
-for selective FAB work later, not the default Button treatment.
+foregrounds at 8%/10%. Tertiary uses Surface container highest/On surface variant;
+its name describes emphasis, not Material's tertiary accent palette. Pink is reserved
+for Primary FABs, not the default Button treatment.
 Generic selection colors, ghost/destructive treatments, and Button geometry
 and motion are unchanged. See [Button color tuning](src/design-system/material-foundation.md#button-color-tuning).
 
@@ -97,9 +105,11 @@ it in `onClick`. Use `ButtonSelectionIcon` with a fill-compatible icon to switch
 from outlined to filled when selected without changing its size or position.
 Button emits `aria-pressed` and swaps square unselected corners to
 round selected corners, following Material's square-start configuration. The
-Selected showcase demonstrates Primary, Secondary, icon-only, and disabled
-buttons at both sizes. Primary toggles Surface container to Primary; Secondary
-toggles Secondary container to Secondary, with their respective foregrounds.
+Selected showcase demonstrates Tertiary, Secondary, icon-only, and disabled
+buttons at both sizes. Tertiary selects from neutral to light purple; Secondary
+selects from light purple to dark gray-purple, with their paired foregrounds.
+Primary is reserved for prominent calls to action and ignores `selected`;
+choice-group items accept only Secondary, Tertiary, or its `default` alias.
 Ordinary Buttons retain their existing shapes. Selection changes use spatial
 motion tokens and respect reduced motion; labels and dimensions remain stable.
 
@@ -137,7 +147,7 @@ On primary** vocabulary: the background-only baseline correction uses
 `#ffffff` light / `#1a0056` dark until the foreground pass.
 Tonal buttons keep **Secondary container / On secondary container**.
 This supersedes using the website's pink search control for every main action;
-the pink Tertiary container palette remains available for later FAB decisions.
+the pink Tertiary container palette is used for Primary FABs instead.
 `--button-primary-fill` and `--button-primary-ink` own the Filled mapping. Existing OneDS motion
 and state-layer behavior remain unchanged. Cards remain **Surface container lowest**, including white cards
 in light mode. The diagram's old elevation overlays (5/8/11/12/14% primary) are

@@ -1,5 +1,81 @@
 import { expect, test } from "@playwright/test"
 
+test("connected ButtonGroups keep soft gaps and selected shapes without shifting neighbors", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+  for (const mode of ["light", "dark"] as const) {
+    await page.goto("about:blank")
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    await page.goto("/#/button-group")
+    await expect(page.locator("html")).toHaveClass(new RegExp(mode))
+    for (const size of ["default", "expressive"]) {
+      await page.mouse.move(0, 0)
+      const group = page.getByRole("radiogroup", { name: `Serving size ${size}`, exact: true })
+      const buttons = group.getByRole("radio")
+      const radius = size === "default" ? "20px" : "28px"
+      const geometry = () => buttons.evaluateAll(elements => elements.map(element => {
+        const button = element as HTMLElement
+        return [button.offsetLeft, button.offsetWidth, button.offsetHeight]
+      }))
+      await expect(buttons.first()).toHaveCSS("border-radius", radius)
+      await expect(buttons.nth(1)).toHaveCSS("border-radius", "8px")
+      await expect(buttons.last()).toHaveCSS("border-top-right-radius", radius)
+      await expect(buttons.last()).toHaveCSS("border-top-left-radius", "8px")
+      const before = await geometry()
+      expect(before[1][0] - before[0][0] - before[0][1]).toBe(4)
+      const selectedFill = await buttons.first().evaluate(element => getComputedStyle(element).backgroundColor)
+      const restFill = await buttons.nth(1).evaluate(element => getComputedStyle(element).backgroundColor)
+      expect(selectedFill).not.toBe(restFill)
+      await buttons.first().focus()
+      await buttons.first().press("ArrowRight")
+      await expect(buttons.nth(1)).toBeFocused()
+      await buttons.nth(1).press("Space")
+      await expect(buttons.nth(1)).toHaveAttribute("aria-checked", "true")
+      await expect(buttons.nth(1)).toHaveCSS("border-radius", radius)
+      await expect(buttons.nth(1)).toHaveCSS("background-color", selectedFill)
+      await expect(buttons.first()).toHaveCSS("border-top-right-radius", "8px")
+      expect(await geometry()).toEqual(before)
+      await buttons.nth(1).click()
+      await expect(buttons.nth(1)).toHaveAttribute("aria-checked", "true")
+      await expect(buttons.nth(1).locator(".button-group-choice__check")).toHaveCSS("opacity", "1")
+      expect(await group.evaluate(element => element.clientWidth <= element.parentElement!.clientWidth)).toBe(true)
+      await buttons.nth(1).blur()
+      for (const button of await buttons.all()) {
+        await expect(button).toHaveCSS("border-top-color", "rgba(0, 0, 0, 0)")
+        await expect(button).toHaveCSS("height", size === "default" ? "40px" : "56px")
+      }
+      const alignment = page.getByRole("radiogroup", { name: `Alignment ${size}`, exact: true })
+      const right = alignment.getByRole("radio", { name: "Align right", exact: true })
+      await right.click()
+      await expect(right).toHaveAttribute("aria-checked", "true")
+      await expect(right).toHaveCSS("border-radius", radius)
+      await expect(right.locator("svg")).toHaveCount(1)
+      await expect(right).toHaveCSS("width", size === "default" ? "40px" : "56px")
+    }
+  }
+  const disabledGroup = page.getByRole("radiogroup", { name: "Serving size", exact: true })
+  const disabled = disabledGroup.getByRole("radio", { name: "20 oz", exact: true })
+  await expect(disabled).toBeDisabled()
+  await disabled.evaluate(element => (element as HTMLButtonElement).click())
+  await expect(disabledGroup.getByRole("radio", { name: "8 oz", exact: true })).toHaveAttribute("aria-checked", "true")
+  const toggles = page.getByRole("group", { name: "Quick settings", exact: true })
+  await toggles.getByRole("button", { name: "Bluetooth", exact: true }).click()
+  await expect(toggles.getByRole("button", { name: "Bluetooth", exact: true })).toHaveAttribute("aria-pressed", "true")
+  await expect(toggles.getByRole("button", { name: "Wi-Fi", exact: true })).toHaveAttribute("aria-pressed", "true")
+  const vertical = page.locator('#button-group-orientation [data-orientation="vertical"] button')
+  await expect(vertical.first()).toHaveCSS("border-top-left-radius", "20px")
+  await expect(vertical.first()).toHaveCSS("border-bottom-left-radius", "8px")
+  await expect(vertical.last()).toHaveCSS("border-bottom-left-radius", "20px")
+  const split = page.locator("#button-group-split")
+  await split.getByRole("button", { name: "More save options", exact: true }).click()
+  await expect(page.getByRole("menuitem", { name: "Save as draft", exact: true })).toBeVisible()
+  await page.keyboard.press("Escape")
+  const select = page.locator("#button-group-select")
+  await expect(select.getByRole("button", { name: "Sort by", exact: true })).toHaveCSS("border-top-left-radius", "20px")
+  await select.getByRole("combobox").click()
+  await page.getByRole("option", { name: "Date", exact: true }).click()
+  await expect(select.getByRole("combobox")).toHaveText("Date")
+})
+
 test("graphic labels share one gap and GitHub favicons adapt without recoloring other brands", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/#/icon-label")
@@ -17,7 +93,7 @@ test("graphic labels share one gap and GitHub favicons adapt without recoloring 
     await page.evaluate(dark => document.documentElement.classList.toggle("dark", dark), dark)
     await expect(github).toHaveCSS("filter", dark ? "brightness(0) invert(1)" : "brightness(0)")
     await expect(colored).toHaveCSS("filter", "none")
-    await button.evaluate(element => element.setAttribute("data-variant", "default"))
+    await button.evaluate(element => element.setAttribute("data-variant", "primary"))
     await expect(github).toHaveCSS("filter", dark ? "brightness(0)" : "brightness(0) invert(1)")
     await button.evaluate(element => element.setAttribute("data-variant", "secondary"))
   }
@@ -90,10 +166,10 @@ test("loading Button labels gain and release optical correction with the shared 
   }
 })
 
-test("supporting actions use ghost for isolated icons and secondary for mixed tools", async ({ page }) => {
+test("supporting actions use ghost for isolated icons and tertiary for mixed tools", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/#/button")
-  for (const [id, variant] of [["button-icon-tools", "ghost"], ["button-mixed-tools", "secondary"]] as const) {
+  for (const [id, variant] of [["button-icon-tools", "ghost"], ["button-mixed-tools", "tertiary"]] as const) {
     const section = page.locator(`#${id}`)
     const actions = section.getByRole("group", { name: "Note actions", exact: true })
     const buttons = actions.getByRole("button")
@@ -107,7 +183,7 @@ test("supporting actions use ghost for isolated icons and secondary for mixed to
     const remove = actions.getByRole("button", { name: "Remove latest note", exact: true })
     await add.press("Enter")
     await expect(section.getByRole("list", { name: "Notes", exact: true })).toContainText("Note 1")
-    if (variant === "secondary") {
+    if (variant === "tertiary") {
       const search = section.getByRole("searchbox", { name: "Search notes" })
       await expect(search).toHaveCSS("border-top-style", "solid")
       expect(await search.evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThanOrEqual(160)
@@ -131,9 +207,9 @@ test("supporting actions use ghost for isolated icons and secondary for mixed to
     await page.evaluate(dark => document.documentElement.classList.toggle("dark", dark), dark)
     await page.mouse.move(0, 0)
     const ghost = page.locator('#button-icon-tools [data-variant="ghost"]').first()
-    const secondary = page.locator('#button-mixed-tools [data-variant="secondary"]').first()
+    const tertiary = page.locator('#button-mixed-tools [data-variant="tertiary"]').first()
     await expect(ghost).toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
-    await expect(secondary).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
+    await expect(tertiary).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
   }
   await expect(page.locator('[data-content-kind="component"] [data-slot="button"][data-variant="outline"]')).toHaveCount(0)
 })
@@ -220,7 +296,7 @@ test("design rules Button canvases use only two paired sizes", async ({ page }) 
     await expect(labelButton).toHaveCSS("height", `${height}px`)
     const iconButtons = page.locator(`#button-icon-only [data-slot="canvas"] [data-size="${icon}"]`)
     await expect(iconButtons).toHaveCount(5)
-    for (const variant of ["default", "secondary", "ghost", "destructive", "link"]) {
+    for (const variant of ["primary", "secondary", "tertiary", "ghost", "destructive", "link"]) {
       const iconButton = iconButtons.filter({ has: page.locator("svg") }).and(page.locator(`[data-variant="${variant}"]`))
       await expect(iconButton).toHaveCSS("height", `${height}px`)
       await expect(iconButton).toHaveCSS("width", `${height}px`)

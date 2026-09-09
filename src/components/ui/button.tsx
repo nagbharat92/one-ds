@@ -16,7 +16,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-(--button-primary-fill) text-(--button-primary-ink) hover:bg-(--button-primary-hover) hover:text-(--button-primary-state-ink) active:bg-(--button-primary-pressed) active:text-(--button-primary-state-ink)",
+        default: "bg-(--button-tertiary-fill) text-(--button-tertiary-ink) hover:bg-(--button-tertiary-hover) active:bg-(--button-tertiary-pressed)",
+        tertiary: "bg-(--button-tertiary-fill) text-(--button-tertiary-ink) hover:bg-(--button-tertiary-hover) active:bg-(--button-tertiary-pressed)",
+        primary: "bg-(--button-primary-fill) text-(--button-primary-ink) hover:bg-(--button-primary-hover) hover:text-(--button-primary-state-ink) active:bg-(--button-primary-pressed) active:text-(--button-primary-state-ink)",
         secondary:
           "bg-(--button-secondary-fill) text-(--button-secondary-ink) hover:bg-(--button-secondary-hover) active:bg-(--button-secondary-pressed) aria-expanded:bg-(--button-secondary-fill) aria-expanded:text-(--button-secondary-ink)",
         ghost:
@@ -36,7 +38,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "tertiary",
       size: "default",
     },
   }
@@ -56,7 +58,7 @@ function ButtonTooltipSuppression({ children }: React.PropsWithChildren) {
 function Button({
   className,
   children,
-  variant = "default",
+  variant = "tertiary",
   size = "default",
   selected,
   asChild = false,
@@ -72,6 +74,7 @@ function Button({
     tooltipSide?: React.ComponentProps<typeof TooltipContent>["side"]
   }) {
   const Comp = asChild ? Slot.Root : "button"
+  const selection = variant === "primary" ? undefined : selected
     const automaticTooltip = React.useContext(ButtonAutoTooltipContext)
 
   // An icon-only button carries its name in aria-label; show it as a tooltip.
@@ -90,8 +93,8 @@ function Button({
       data-slot="button"
       data-icon-label-host
       data-variant={variant}
-      data-selected={selected}
-      aria-pressed={selected}
+      data-selected={selection}
+      aria-pressed={selection}
       data-size={size}
       className={cn(buttonVariants({ variant, size, className }))}
       // Our tooltip replaces the native one, never stacks with it.

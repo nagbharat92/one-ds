@@ -87,11 +87,12 @@ function ToolbarGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/** Edge text receives mirrored optical padding; interior text and controls do not. */
 function ToolbarTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="toolbar-title"
-      className={cn("min-w-0 pl-(--toolbar-title-padding-start) text-sm font-medium", className)}
+      className={cn("min-w-0 text-sm font-medium", className)}
       {...props}
     />
   )

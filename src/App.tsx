@@ -253,7 +253,7 @@ function ExampleSection({
         ) : null}
       </SectionHeading>
         <SectionActions>
-          <ButtonGroup aria-label={`${example.name} preview controls`}>
+          <ButtonGroup shape="square" aria-label={`${example.name} preview controls`}>
             <ButtonGroup>
             <TabsList iconOnly aria-label={`${example.name} view`}>
               <TooltipProvider>
@@ -282,7 +282,7 @@ function ExampleSection({
             </ButtonGroup>
             <ButtonGroup>
             <Button
-              variant="secondary"
+              variant="tertiary"
               size="icon"
               aria-label="Reset example"
               onClick={() => setResetKey((value) => value + 1)}
@@ -431,7 +431,7 @@ function ComponentNavigation({
           />
           <Button
             type="button"
-            variant="secondary"
+            variant="tertiary"
             size="icon"
             className="shrink-0 rounded-full"
             aria-label={

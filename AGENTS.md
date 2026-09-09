@@ -21,10 +21,15 @@ Candidate rules are proposals: do not promote them without user approval.
   Icon counterparts are `icon` and `icon-expressive`, with matching square geometry.
   Do not use retired `lg`, `sm`, `xs`, or their icon counterparts on Button.
 - Button has no `outline` variant. Use `ghost` for isolated icon-only actions/groups;
-  use `secondary` for supporting actions beside search, dropdown/select, or other mixed
-  controls in the same local row, and for labelled supporting actions. Preserve primary,
-  destructive, link, and selected-state intent. Field-internal affordances may stay ghost.
+  use `tertiary` (the neutral default) for general and supporting actions, including beside
+  search, dropdown/select, or mixed controls. Choose `primary` for strong purple emphasis
+  and `secondary` for light-purple emphasis only when needed. `default` aliases `tertiary`.
+  Preserve destructive, link, and selected-state intent. Field-internal affordances may stay ghost.
   Choose explicitly in the composition; do not infer the variant by inspecting the DOM.
+- Reserve Primary for prominent calls to action, never selection. Secondary selects from
+  light purple to dark gray-purple; Tertiary selects from neutral to the Secondary light-purple
+  fill. Use the shared `selected` state and paired text, shape, and icon feedback, including
+  inside ButtonGroupChoice. Do not simulate selection by switching the variant to Primary.
 - Follow the 4px spacing/control grid, natural-case typography, concentric corners,
   fixed radii for growing inputs, and motion-token conventions in the full rules.
 - "Icon + label" always includes icons, favicons, and loading spinners. All three use

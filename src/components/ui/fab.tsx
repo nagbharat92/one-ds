@@ -6,22 +6,22 @@ import { Button } from "@/components/ui/button"
 
 const fabVariants = cva(
   [
-    "shrink-0 border-transparent shadow-(--fab-elevation-rest) transition-[box-shadow,background-color,translate] duration-(--fab-speed) ease-(--fab-ease) hover:shadow-(--fab-elevation-hover)",
+    "fab shrink-0 border-transparent transition-[background-color,translate] duration-(--fab-speed) ease-(--fab-ease)",
     // A FAB floats over content, so it must stay OPAQUE in every state. The
     // state layer is therefore mixed INTO the fill rather than laid over it,
     // and it mixes toward the icon colour, which is what M3 specifies.
     "bg-(--fab-fill) text-(--fab-ink) hover:text-(--fab-ink) active:text-(--fab-ink)",
-    "hover:bg-[color-mix(in_oklch,var(--fab-fill),var(--fab-ink)_var(--state-layer-hover-opacity))]",
-    "active:bg-[color-mix(in_oklch,var(--fab-fill),var(--fab-ink)_var(--state-layer-pressed-opacity))]",
-    "aria-expanded:bg-[color-mix(in_oklch,var(--fab-fill),var(--fab-ink)_var(--state-layer-focus-opacity))] aria-expanded:text-(--fab-ink) motion-reduce:transition-none motion-reduce:active:translate-none",
+    "hover:bg-(--fab-hover)",
+    "active:bg-(--fab-pressed)",
+    "aria-expanded:bg-(--fab-focus) aria-expanded:text-(--fab-ink) motion-reduce:transition-none motion-reduce:active:translate-none",
   ],
   {
     variants: {
       variant: {
-        primary: "[--fab-fill:var(--primary)] [--fab-ink:var(--primary-foreground)]",
-        secondary:
-          "[--fab-fill:var(--secondary)] [--fab-ink:var(--secondary-foreground)]",
-        surface: "[--fab-fill:var(--card)] [--fab-ink:var(--card-foreground)]",
+        primary: "",
+        secondary: "",
+        tertiary: "",
+        surface: "",
       },
       size: {
         md: "rounded-(--fab-radius-md) [&_svg:not([class*='size-'])]:size-(--fab-icon-size-md)",
@@ -56,7 +56,7 @@ const fabVariants = cva(
       },
     ],
     defaultVariants: {
-      variant: "primary",
+      variant: "tertiary",
       size: "md",
       extended: false,
       placement: "none",
@@ -66,16 +66,17 @@ const fabVariants = cva(
 
 function Fab({
   className,
-  variant,
+  variant = "tertiary",
   size,
   extended,
   placement,
   ...props
-}: Omit<React.ComponentProps<typeof Button>, "variant" | "size"> &
+}: Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "selected"> &
   VariantProps<typeof fabVariants>) {
   return (
     <Button
       data-slot="fab"
+      data-variant={variant === "surface" ? "tertiary" : variant}
       data-extended={extended ? "true" : undefined}
       // Composes Button for the focus ring, asChild and the aria-label tooltip
       // M3 asks for; ghost/icon are neutral bases that fabVariants overrides.

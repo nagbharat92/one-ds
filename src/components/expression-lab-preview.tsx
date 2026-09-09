@@ -642,6 +642,7 @@ export function ExpressionLabCanvas({
                 </span>
                 <Button
                   type="button"
+                  variant="primary"
                   onClick={() => {
                     if (nextStep) setStepCompleted(nextStep.id, true)
                   }}
@@ -709,6 +710,7 @@ export function ExpressionLabCanvas({
                   </Button>
                   <Button
                     type="button"
+                    variant="primary"
                     size="icon"
                     className="rounded-full"
                     aria-label={sessionActive ? "Pause session" : "Start session"}

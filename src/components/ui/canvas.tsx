@@ -10,11 +10,13 @@ function Canvas({
   className,
   layout = "center",
   background = "plain",
+  padding = "default",
   annotationSpace = false,
   ...props
 }: React.ComponentProps<"div"> & {
   layout?: CanvasLayout
   background?: CanvasBackground
+  padding?: "default" | "none"
   annotationSpace?: boolean
 }) {
   return (
@@ -22,6 +24,7 @@ function Canvas({
       data-slot="canvas"
       data-layout={layout}
       data-background={background}
+      data-padding={padding}
       data-annotation-space={annotationSpace || undefined}
       className={cn(
         "canvas flex flex-col text-sm text-card-foreground has-data-[slot=accordion]:justify-start has-data-[slot=toolbar]:justify-start",

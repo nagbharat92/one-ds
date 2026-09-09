@@ -30,7 +30,14 @@ test("Button has no outline variant or stale outline markup in published example
     ts.forEachChild(node, visit)
   }
   visit(source)
-  assert.deepEqual(variants.properties.map(property => property.name.text), ["default", "secondary", "ghost", "destructive", "link"])
+  assert.deepEqual(variants.properties.map(property => property.name.text), ["default", "tertiary", "primary", "secondary", "ghost", "destructive", "link"])
+  const variantValues = Object.fromEntries(variants.properties.map(property => [property.name.text, property.initializer.text]))
+  assert.equal(variantValues.default, variantValues.tertiary)
+  assert.match(source.text, /const selection = variant === "primary" \? undefined : selected/)
+  const choice = fs.readFileSync("src/components/ui/button-group.tsx", "utf8")
+  assert.match(choice, /variant\?: "default" \| "secondary" \| "tertiary"/)
+  assert.match(source.text, /defaultVariants:\s*\{\s*variant: "tertiary"/)
+  assert.match(source.text, /variant = "tertiary"/)
   for (const filename of ts.sys.readDirectory("src", [".tsx"])) {
     assert.doesNotMatch(fs.readFileSync(filename, "utf8"), /<Button\b[^>]*\bvariant="outline"/s, filename)
   }
