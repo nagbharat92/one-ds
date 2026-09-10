@@ -10,7 +10,7 @@ import {
   LightbulbIcon,
   OctagonAlertIcon,
   TriangleAlertIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 import "katex/dist/katex.min.css"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"

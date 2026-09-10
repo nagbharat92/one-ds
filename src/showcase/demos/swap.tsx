@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BellIcon, CheckIcon, PencilIcon, ShareIcon } from "lucide-react"
+import { BellIcon, CheckIcon, PencilIcon, ShareIcon } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { Button } from "@/components/ui/button"

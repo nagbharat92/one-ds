@@ -66,3 +66,13 @@ export const shapePaths = {
 
 export type ShapeName = keyof typeof shapePaths
 export const shapeNames = Object.keys(shapePaths) as ShapeName[]
+
+export function shapeSpinKeyframes(tokens: CSSStyleDeclaration, initialRotation = 0, turns = 1): Keyframe[] {
+  const finalRotation = Math.ceil(initialRotation / 360) * 360 + turns * 360
+  const anticipation = Number(tokens.getPropertyValue("--shape-spin-anticipation"))
+  return [
+    { rotate: `${initialRotation}deg`, offset: 0, easing: tokens.getPropertyValue("--shape-spin-anticipation-ease").trim() },
+    { rotate: `${initialRotation - anticipation}deg`, offset: Number(tokens.getPropertyValue("--shape-spin-anticipation-end")), easing: tokens.getPropertyValue("--shape-spin-travel-ease").trim() },
+    { rotate: `${finalRotation}deg`, offset: 1 },
+  ]
+}

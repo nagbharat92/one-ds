@@ -1,7 +1,7 @@
 import { Stack } from "@/components/ui/stack"
 import { Cluster } from "@/components/ui/cluster"
 import { IconLabel } from "@/components/ui/icon-label"
-import { MailIcon, ArrowRightIcon } from "lucide-react"
+import { MailIcon, ArrowRightIcon } from "@/components/ui/icons"
 import { Favicon } from "@/components/ui/favicon"
 import { Spinner } from "@/components/ui/spinner"
 import { Section, SectionHeader, SectionTitle } from "@/components/ui/section"

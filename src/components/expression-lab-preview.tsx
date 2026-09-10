@@ -21,7 +21,7 @@ import {
   SaveIcon,
   SearchIcon,
   SparklesIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import { persona } from "@/lib/persona"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"

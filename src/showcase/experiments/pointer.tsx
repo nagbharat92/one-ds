@@ -1,5 +1,5 @@
 import { useId, useState } from "react"
-import { ArrowUpRightIcon, CopyIcon, HeartIcon, MoreHorizontalIcon, PlusIcon, RotateCcwIcon, TrashIcon } from "lucide-react"
+import { ArrowUpRightIcon, CopyIcon, HeartIcon, MoreHorizontalIcon, PlusIcon, RotateCcwIcon, TrashIcon } from "@/components/ui/icons"
 
 import { Pointer, PointerTarget, type PointerGrowth, type PointerSize, type PointerMotionSettings } from "@/components/ui/pointer"
 import { PointerMotionControl } from "@/components/ui/pointer-motion-settings"

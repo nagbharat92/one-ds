@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "radix-ui"
 import { cva, type VariantProps } from "class-variance-authority"
-import { MoreHorizontalIcon } from "lucide-react"
+import { MoreHorizontalIcon } from "@/components/ui/icons"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"

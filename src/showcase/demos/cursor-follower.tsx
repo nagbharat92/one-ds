@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { MousePointer2Icon } from "lucide-react"
+import { MousePointer2Icon } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { generatedExampleCode } from "@/showcase/generated-example-code"

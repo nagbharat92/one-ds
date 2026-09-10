@@ -3,7 +3,7 @@ import { ContextMenu as ContextMenuPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { Scroller } from "@/components/ui/scroller"
-import { ChevronRightIcon, CheckIcon } from "lucide-react"
+import { ChevronRightIcon, CheckIcon } from "@/components/ui/icons"
 
 function ContextMenu({
   ...props

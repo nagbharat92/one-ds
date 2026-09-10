@@ -20,7 +20,7 @@ import {
   MoonIcon,
   SunIcon,
   GlobeIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 import {
   Select,
   SelectContent,
@@ -677,7 +677,7 @@ export function SliderDemo() {
         <BoldIcon />
       </Toggle>
     ),
-    code: `import { BoldIcon } from "lucide-react"
+    code: `import { BoldIcon } from "@/components/ui/icons"
 import { Toggle } from "@/components/ui/toggle"
 
 export function ToggleDemo() {
@@ -749,7 +749,7 @@ export function ToggleDemo() {
         </ToggleGroupItem>
       </ToggleGroup>
     ),
-    code: `import { BoldIcon, ItalicIcon, UnderlineIcon } from "lucide-react"
+    code: `import { BoldIcon, ItalicIcon, UnderlineIcon } from "@/components/ui/icons"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 export function ToggleGroupDemo() {

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CheckIcon, CopyIcon } from "lucide-react"
+import { CheckIcon, CopyIcon } from "@/components/ui/icons"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"

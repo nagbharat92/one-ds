@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ArrowDownToLineIcon, ArrowUpFromLineIcon, SplineIcon } from "lucide-react"
+import { ArrowDownToLineIcon, ArrowUpFromLineIcon, SplineIcon } from "@/components/ui/icons"
 
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"

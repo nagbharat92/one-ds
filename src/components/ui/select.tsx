@@ -6,7 +6,7 @@ import { Select as SelectPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { useOpenOnMouseUp } from "@/hooks/use-open-on-mouse-up"
 import { useScrollerRef } from "@/hooks/use-scroller"
-import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
+import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "@/components/ui/icons"
 
 function Select({
   ...props

@@ -7,6 +7,7 @@ import { Slot } from "radix-ui"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { useScrollerRef } from "@/hooks/use-scroller"
 import { cn } from "@/lib/utils"
+import { shapeSpinKeyframes } from "@/lib/shapes"
 import { Button } from "@/components/ui/button"
 import { ColorThemePortal } from "@/components/ui/color-theme"
 import { DragHandle } from "@/components/ui/drag-handle"
@@ -27,7 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PanelLeftIcon } from "lucide-react"
+import { PanelLeftIcon } from "@/components/ui/icons"
 
 const SIDEBAR_STORAGE_PREFIX = "oneds-sidebar"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
@@ -765,6 +766,62 @@ function Sidebar({
   )
 }
 
+const sidebarFabShapes = ["cookie4", "cookie6", "cookie7"] as const
+
+function SidebarFloatingTrigger({ visible, ref, ...props }: Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "selected"> & {
+  visible: boolean
+}) {
+  const elementRef = React.useRef<HTMLButtonElement>(null)
+  React.useImperativeHandle(ref, () => elementRef.current!, [])
+  const [reveal, setReveal] = React.useState(() => ({
+    visible,
+    shape: sidebarFabShapes[Math.floor(Math.random() * sidebarFabShapes.length)],
+  }))
+  if (reveal.visible !== visible) {
+    const choices = sidebarFabShapes.filter(shape => shape !== reveal.shape)
+    setReveal({ visible, shape: visible ? choices[Math.floor(Math.random() * choices.length)] : reveal.shape })
+  }
+
+  React.useLayoutEffect(() => {
+    const element = elementRef.current
+    const shape = element?.querySelector<SVGSVGElement>('[data-slot="shape"]')
+    if (!visible || !element || !shape) return
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    element.style.removeProperty("scale")
+    shape.style.removeProperty("rotate")
+    if (motion.matches) return
+    const tokens = getComputedStyle(element)
+    const entryScale = Number(tokens.getPropertyValue("--sidebar-floating-trigger-entry-scale"))
+    const spinVelocity = Number(tokens.getPropertyValue("--sidebar-floating-trigger-spin-velocity"))
+    const growthVelocity = Number(tokens.getPropertyValue("--sidebar-floating-trigger-growth-velocity"))
+    if (spinVelocity <= 0 || growthVelocity <= 0) return
+    const turns = Number(tokens.getPropertyValue("--sidebar-floating-trigger-spin-turns"))
+    const spinDistance = 360 * turns + 2 * Number(tokens.getPropertyValue("--shape-spin-anticipation"))
+    const spin = shape.animate(shapeSpinKeyframes(tokens, 0, turns), { duration: spinDistance / spinVelocity * 1000, fill: "both" })
+    const growth = element.animate([{ scale: entryScale }, { scale: 1 }], {
+      duration: element.offsetWidth * (1 - entryScale) / growthVelocity * 1000,
+      easing: tokens.getPropertyValue("--shape-spin-travel-ease").trim(), fill: "both",
+    })
+    const stop = () => {
+      spin.cancel()
+      growth.cancel()
+      element.style.removeProperty("scale")
+      shape.style.removeProperty("rotate")
+    }
+    const onMotionChange = () => { if (motion.matches) stop() }
+    motion.addEventListener("change", onMotionChange)
+    return () => {
+      for (const animation of [spin, growth]) {
+        if (animation.playState !== "idle") animation.commitStyles()
+        animation.cancel()
+      }
+      motion.removeEventListener("change", onMotionChange)
+    }
+  }, [visible])
+
+  return <Fab {...props} ref={elementRef} variant="expressive" shape={reveal.shape} />
+}
+
 function SidebarTrigger({
   className,
   onClick,
@@ -787,7 +844,8 @@ function SidebarTrigger({
     const visible = isMobile ? !openMobile : collapse === "hidden"
 
     return (
-      <Fab
+      <SidebarFloatingTrigger
+        visible={visible}
         id={`${id}-floating-trigger`}
         data-sidebar="trigger"
         data-slot="sidebar-trigger"
@@ -795,23 +853,21 @@ function SidebarTrigger({
         data-visible={visible}
         inert={!visible}
         aria-hidden={!visible}
-        variant="tertiary"
-        placement="none"
         aria-label={label}
         aria-expanded={expanded}
         aria-controls={!isMobile || openMobile ? `${id}-panel` : undefined}
         className={cn(
           "absolute top-(--sidebar-floating-trigger-inset) inset-s-(--sidebar-floating-trigger-inset) z-20",
-          "[--fab-size-md:var(--sidebar-floating-trigger-size)] [--fab-icon-size-md:var(--sidebar-floating-trigger-icon-size)] [--fab-radius-md:var(--sidebar-floating-trigger-radius)]",
-          "[--fab-elevation-rest:var(--sidebar-floating-trigger-elevation)] [--fab-elevation-hover:var(--sidebar-floating-trigger-elevation)]",
           "transition-opacity duration-(--sidebar-speed) ease-(--sidebar-ease) data-[visible=false]:pointer-events-none data-[visible=false]:opacity-0",
+          "data-[visible=false]:duration-(--sidebar-floating-trigger-fade-out-speed)",
+          "data-[visible=true]:delay-(--sidebar-floating-trigger-fade-in-delay) data-[visible=true]:motion-reduce:delay-0",
           className
         )}
         onClick={toggle}
         {...props}
       >
-        <PanelLeftIcon className="rtl:rotate-180" />
-      </Fab>
+        <PanelLeftIcon size={20} className="rtl:rotate-180" />
+      </SidebarFloatingTrigger>
     )
   }
 
@@ -841,7 +897,7 @@ function SidebarTrigger({
       onClick={toggle}
       {...props}
     >
-      <PanelLeftIcon className="rtl:rotate-180" />
+      <PanelLeftIcon size={20} className="rtl:rotate-180" />
     </Button>
   )
 }

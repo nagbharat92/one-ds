@@ -103,13 +103,15 @@ are distinct treatments; `default` now aliases neutral Tertiary, not Primary.
 
 ### Selected state
 
-Compose `ButtonSelectionIcon` around a fill-compatible Lucide icon, such as
-BookmarkIcon. The shared part uses the Button's selected state to switch from
-`fill: none` to `fill: currentColor`, inheriting its foreground and icon-size
-tokens. It adds no wrapper geometry and is hidden from assistive technology;
-the Button retains the accessible name. Do not apply fill indiscriminately to
-open-path icons such as Plus, whose path has no fillable silhouette. Selected
-examples use bookmarks for both labelled and icon-only buttons.
+All named icons inside selected Buttons animate Material Symbols Rounded's
+variable FILL axis from 0 (outlined) to 1 (filled). This interpolates the real
+font outlines, not opacity between assets or CSS path fill. `ButtonSelectionIcon`
+remains a decorative slot, inheriting foreground and host sizing; the Button
+retains the accessible name. Timing uses `--material-icon-fill-speed` and
+`--material-icon-fill-curve`, mapped to Button effect tokens. Reduced motion
+removes interpolation, not the filled state. The local subset font preserves
+FILL 0..1 and optical size 20..48 at weight 400. Some simple symbols have identical
+outlined and filled forms. Source: https://developers.google.com/fonts/docs/material_symbols.
 
 `Button selected={boolean}` is controlled by its caller's `onClick`; it does not
 invent a second selection store. It exposes `aria-pressed`, and disabled Buttons

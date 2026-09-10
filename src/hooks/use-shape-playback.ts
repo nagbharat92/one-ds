@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { interpolate } from "flubber"
-import { shapePaths, type ShapeName } from "@/lib/shapes"
+import { shapePaths, shapeSpinKeyframes, type ShapeName } from "@/lib/shapes"
 
-export function useShapeMorph(name: ShapeName, durationOverride?: number) {
+export function useShapeMorph(name: ShapeName, durationOverride?: number, turns = 1) {
   const [path, setPath] = useState<string>(shapePaths[name].path)
   const displayedPath = useRef(path)
+  const previewRef = useRef<SVGSVGElement>(null)
+  const currentRotation = useRef(0)
 
   useEffect(() => {
     const target = shapePaths[name].path
@@ -16,10 +18,14 @@ export function useShapeMorph(name: ShapeName, durationOverride?: number) {
     const duration = durationOverride ?? Number(getComputedStyle(document.documentElement).getPropertyValue("--shape-morph-duration"))
     if (displayedPath.current === target) return
     if (reducedMotion.matches || !Number.isFinite(duration) || duration <= 0) {
+      currentRotation.current = 0
       update(target)
       return
     }
     const morph = interpolate(displayedPath.current, target, { maxSegmentLength: 2 })
+    const tokens = getComputedStyle(document.documentElement)
+    const initialRotation = currentRotation.current
+    const animation = previewRef.current?.animate(shapeSpinKeyframes(tokens, initialRotation, turns), { duration, fill: "forwards" })
     const start = performance.now()
     let frame: number
     const tick = (now: number) => {
@@ -30,6 +36,8 @@ export function useShapeMorph(name: ShapeName, durationOverride?: number) {
     const onMotionChange = () => {
       if (reducedMotion.matches) {
         cancelAnimationFrame(frame)
+        animation?.cancel()
+        currentRotation.current = 0
         update(target)
       }
     }
@@ -37,9 +45,12 @@ export function useShapeMorph(name: ShapeName, durationOverride?: number) {
     frame = requestAnimationFrame(tick)
     return () => {
       cancelAnimationFrame(frame)
+      const rotation = previewRef.current ? parseFloat(getComputedStyle(previewRef.current).rotate) : 0
+      currentRotation.current = Number.isFinite(rotation) ? rotation : 0
+      animation?.cancel()
       reducedMotion.removeEventListener("change", onMotionChange)
     }
-  }, [name, durationOverride])
+  }, [name, durationOverride, turns])
 
-  return path
+  return { path, previewRef }
 }

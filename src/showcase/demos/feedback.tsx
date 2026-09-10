@@ -5,7 +5,7 @@ import {
   TriangleAlertIcon,
   CheckCircleIcon,
   SearchIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
@@ -66,7 +66,7 @@ export const feedbackDemos: ComponentEntry[] = [
         </Alert>
       </div>
     ),
-    code: `import { InfoIcon } from "lucide-react"
+    code: `import { InfoIcon } from "@/components/ui/icons"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export function AlertDemo() {

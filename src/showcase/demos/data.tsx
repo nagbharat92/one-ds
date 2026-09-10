@@ -18,7 +18,7 @@ import {
   StarIcon,
   UserIcon,
   UsersIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
@@ -1681,7 +1681,7 @@ export function KbdDemo() {
         </Button>
       </Empty>
     ),
-    code: `import { FolderIcon } from "lucide-react"
+    code: `import { FolderIcon } from "@/components/ui/icons"
 import {
   Empty,
   EmptyDescription,

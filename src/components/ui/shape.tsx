@@ -2,6 +2,7 @@ import { useMemo, useState, type ComponentProps } from "react"
 import { interpolate } from "flubber"
 
 import { Button } from "@/components/ui/button"
+import { ButtonGroupChoice, ButtonGroupChoiceItem } from "@/components/ui/button-group"
 import { Text } from "@/components/ui/text"
 import { cn } from "@/lib/utils"
 import { shapeNames, shapePaths, type ShapeName } from "@/lib/shapes"
@@ -10,7 +11,7 @@ import { Scroller } from "@/components/ui/scroller"
 import { Canvas, CanvasToolbar } from "@/components/ui/canvas"
 import { CanvasPreviewFrame } from "@/components/ui/canvas-preview"
 import { Slider } from "@/components/ui/slider"
-import { ToolbarTitle } from "@/components/ui/toolbar"
+import { ToolbarGroup, ToolbarTitle } from "@/components/ui/toolbar"
 
 type ShapeTone = "neutral" | "purple" | "pink"
 
@@ -83,10 +84,19 @@ function ShapeBrowser() {
       maximum: read("--shape-morph-duration-max"), step: read("--shape-morph-duration-step") }
   })
   const [duration, setDuration] = useState(timing.initial)
-  const path = useShapeMorph(selected, duration)
+  const [turns, setTurns] = useState("1")
+  const { path, previewRef } = useShapeMorph(selected, duration, Number(turns))
   return (
     <CanvasPreviewFrame controls={
       <CanvasToolbar aria-label="Shape timing">
+        <ToolbarGroup>
+          <ToolbarTitle>Turns</ToolbarTitle>
+          <ButtonGroupChoice value={turns} onValueChange={setTurns} aria-label="Spin turns">
+            {["1", "3", "5"].map(value => (
+              <ButtonGroupChoiceItem key={value} value={value} aria-label={`${value} ${value === "1" ? "turn" : "turns"}`}>{value}</ButtonGroupChoiceItem>
+            ))}
+          </ButtonGroupChoice>
+        </ToolbarGroup>
         <ToolbarTitle>Duration</ToolbarTitle>
         <Slider className="min-w-0 flex-1" aria-label="Morph duration" min={timing.minimum} max={timing.maximum}
           step={timing.step} value={[duration]} onValueChange={values => setDuration(values[0])}
@@ -97,7 +107,7 @@ function ShapeBrowser() {
     <Canvas layout="wide" padding="none">
     <div className="shape-browser" data-slot="shape-browser">
       <figure className="shape-preview" data-slot="shape-morph-preview">
-        <svg viewBox="0 0 100 100" role="img" aria-label={shapePaths[selected].label}
+        <svg ref={previewRef} viewBox="0 0 100 100" role="img" aria-label={shapePaths[selected].label}
           className="shape" data-tone="purple" data-shape={selected}>
           <path d={path} />
         </svg>

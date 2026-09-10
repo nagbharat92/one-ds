@@ -124,7 +124,7 @@ function ButtonSelectionIcon({ className, ...props }: React.ComponentProps<typeo
     <Slot.Root
       data-slot="button-selection-icon"
       aria-hidden="true"
-      className={cn("fill-none group-data-[selected=true]/button:fill-current", className)}
+      className={cn("button-selection-icon", className)}
       {...props}
     />
   )

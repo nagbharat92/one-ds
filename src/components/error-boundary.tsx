@@ -1,5 +1,5 @@
 import * as React from "react"
-import { TriangleAlertIcon } from "lucide-react"
+import { TriangleAlertIcon } from "@/components/ui/icons"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 

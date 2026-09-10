@@ -5,10 +5,11 @@ import {
   PlusIcon,
   ShareIcon,
   VideoIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { Fab } from "@/components/ui/fab"
+import { Cluster } from "@/components/ui/cluster"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,6 +64,22 @@ function FabVariantsDemo() {
         </div>
       ))}
     </div>
+  )
+}
+
+function FabExpressiveDemo() {
+  return (
+    <Cluster justify="center">
+      <Fab variant="expressive" shape="cookie4" aria-label="New task">
+        <PlusIcon />
+      </Fab>
+      <Fab variant="expressive" shape="cookie6" aria-label="Compose">
+        <PencilIcon />
+      </Fab>
+      <Fab variant="expressive" shape="cookie7" aria-label="Record audio">
+        <MicIcon />
+      </Fab>
+    </Cluster>
   )
 }
 
@@ -146,7 +163,7 @@ export const fabDemos: ComponentEntry[] = [
     category: "Forms",
     installCommand: null,
     Demo: FabDefaultDemo,
-    code: `import { PlusIcon } from "lucide-react"
+    code: `import { PlusIcon } from "@/components/ui/icons"
 
 import { Fab } from "@/components/ui/fab"
 
@@ -169,6 +186,12 @@ export function FabDefaultDemo() {
         description:
           "Primary uses the pink palette for a prominent CTA. Secondary uses light purple; Tertiary is the warm-neutral default. FABs have softer corners and no shadows.",
         Demo: FabVariantsDemo,
+      },
+      {
+        name: "Expressive",
+        description:
+          "Large icon-only FABs with 4-, 6-, or 7-sided cookie silhouettes from the shared shape library. The default shape is cookie6.",
+        Demo: FabExpressiveDemo,
       },
       {
         name: "Extended",

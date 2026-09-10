@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { ArrowUpRightIcon, DownloadIcon, PlusIcon, SearchIcon } from "lucide-react"
+import { ArrowUpRightIcon, DownloadIcon, PlusIcon, SearchIcon } from "@/components/ui/icons"
 
 import rulesDocument from "@/design-system/rules.json"
 import { Badge } from "@/components/ui/badge"

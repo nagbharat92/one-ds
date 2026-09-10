@@ -29,7 +29,7 @@ import {
   ColumnsIcon,
   MoreHorizontalIcon,
   SearchIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 import { format, isValid } from "date-fns"
 
 import type { ComponentEntry } from "@/showcase/types"

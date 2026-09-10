@@ -23,7 +23,7 @@ import {
   ThumbsUpIcon,
   Trash2Icon,
   XIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"

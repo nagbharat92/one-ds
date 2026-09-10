@@ -25,10 +25,12 @@ import { surfaceDemos } from "@/showcase/demos/surfaces"
 import { fabDemos } from "@/showcase/demos/fab"
 import { swapDemos } from "@/showcase/demos/swap"
 import { referenceDemos } from "@/showcase/demos/reference"
+import { iconDemos } from "@/showcase/demos/icons"
 
 export type { ComponentEntry, ComponentExample } from "@/showcase/types"
 
 export const registry: ComponentEntry[] = [
+  ...iconDemos,
   ...referenceDemos,
   ...blockDemos,
   ...experimentDemos,

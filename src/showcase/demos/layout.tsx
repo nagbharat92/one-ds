@@ -30,7 +30,7 @@ import {
   AlignLeftIcon,
   AlignCenterIcon,
   AlignRightIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { generatedExampleCode } from "@/showcase/generated-example-code"
@@ -435,7 +435,7 @@ export function AccordionDemo() {
         </CollapsibleContent>
       </Collapsible>
     ),
-    code: `import { ChevronsUpDownIcon } from "lucide-react"
+    code: `import { ChevronsUpDownIcon } from "@/components/ui/icons"
 import {
   Collapsible,
   CollapsibleContent,
@@ -822,7 +822,7 @@ export function ResizableDemo() {
         </PageHeaderActions>
       </PageHeader>
     ),
-    code: `import { DownloadIcon, PlusIcon, RocketIcon } from "lucide-react"
+    code: `import { DownloadIcon, PlusIcon, RocketIcon } from "@/components/ui/icons"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -914,7 +914,7 @@ export function PageHeaderDemo() {
         </SectionContent>
       </Section>
     ),
-    code: `import { PlusIcon } from "lucide-react"
+    code: `import { PlusIcon } from "@/components/ui/icons"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"

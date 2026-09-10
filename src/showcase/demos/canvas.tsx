@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { ArrowUpRightIcon } from "lucide-react"
+import { ArrowUpRightIcon } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { generatedExampleCode } from "@/showcase/generated-example-code"

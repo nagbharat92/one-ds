@@ -19,7 +19,7 @@ import {
   BookmarkIcon,
   GlobeIcon,
   SearchIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona, team } from "@/lib/persona"
@@ -1131,7 +1131,7 @@ export const chatDemos: ComponentEntry[] = [
     installCommand: null,
     Demo: AIComposerDemo,
     code: `import { useState } from "react"
-  import { PaperclipIcon, PlusIcon } from "lucide-react"
+  import { PaperclipIcon, PlusIcon } from "@/components/ui/icons"
 import {
   AIComposer,
   AIComposerAction,
@@ -2142,7 +2142,7 @@ export function MessageScrollerDemo() {
         </AttachmentActions>
       </Attachment>
     ),
-    code: `import { FileIcon, XIcon } from "lucide-react"
+    code: `import { FileIcon, XIcon } from "@/components/ui/icons"
 import {
   Attachment,
   AttachmentAction,
@@ -2373,7 +2373,7 @@ export function AttachmentDemo() {
         </Marker>
       </div>
     ),
-    code: `import { CircleCheckIcon } from "lucide-react"
+    code: `import { CircleCheckIcon } from "@/components/ui/icons"
 import { Marker, MarkerContent, MarkerIcon } from "@/components/ui/marker"
 
 export function MarkerDemo() {

@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot, ToggleGroup as ToggleGroupPrimitive } from "radix-ui"
-import { CheckIcon } from "lucide-react"
+import { CheckIcon } from "@/components/ui/icons"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"

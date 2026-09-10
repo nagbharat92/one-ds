@@ -24,7 +24,7 @@ import {
   UnderlineIcon,
   WifiIcon,
   MoonIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
@@ -1214,7 +1214,7 @@ export function InputDemo() {
         </InputGroup>
       </div>
     ),
-    code: `import { SearchIcon } from "lucide-react"
+    code: `import { SearchIcon } from "@/components/ui/icons"
 import {
   InputGroup,
   InputGroupAddon,

@@ -14,8 +14,9 @@ test("Preview Tools, Toolbar, Button, and Colors snippets compile as separate mo
     "toolbar:Default", "toolbar:Variants", "toolbar:Text formatting", "toolbar:Vertical", "toolbar:With title",
     "button:Default", "button:Sizes", "button:Icon Only", "button:With Icon", "button:Favicon", "button:Favicon Sizes", "button:Rounded", "button:Loading", "button:As Child",
     "button-group:Default", "button-group:Choice", "button-group:Independent toggles", "button-group:Nested", "button-group:Split", "button-group:Select",
-    "fab:Default", "fab:Sizes", "fab:Variants", "fab:Extended", "fab:Opening a Menu",
+    "fab:Default", "fab:Sizes", "fab:Variants", "fab:Expressive", "fab:Extended", "fab:Opening a Menu",
     "shapes:Shape library",
+    "icon:SVG sizes", "icon:Box sizes", "icon:In controls",
     "text:Default", "table-of-contents:Default", "button:Icon Tools", "button:Mixed Tools", "button:Optical Spacing", "icon-label:Default", "button:Motion", "button:Selected", "colors:Material website", "surfaces:Workspace", "surfaces:Content and controls", "surfaces:Floating surface", "pointer:Default"]
   const virtualFiles = new Map(keys.map(key => {
     const snippet = snippets.get(key)

@@ -1,5 +1,58 @@
 import { expect, test } from "@playwright/test"
 
+test("shape spins anticipate and ease out for configurable turns", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" })
+  await page.goto("/#/shapes")
+  const preview = page.locator('[data-slot="shape-morph-preview"] svg')
+  const gallery = page.getByRole("group", { name: "Shape library", exact: true })
+  const turns = page.getByRole("radiogroup", { name: "Spin turns" })
+  const duration = page.getByRole("slider", { name: "Morph duration" })
+  await duration.focus()
+  await duration.press("End")
+  for (const [count, shape] of [[1, "Square"], [3, "Triangle"], [5, "Arch"]] as const) {
+    await turns.getByRole("radio", { name: `${count} ${count === 1 ? "turn" : "turns"}`, exact: true }).click()
+    await gallery.getByRole("button", { name: shape, exact: true }).click()
+    await expect.poll(() => preview.evaluate(element => element.getAnimations().length)).toBe(1)
+    const rotation = await preview.evaluate(element => {
+      const animation = element.getAnimations()[0]
+      animation.pause()
+      const effect = animation.effect as KeyframeEffect
+      const frames = effect.getKeyframes()
+      const initial = parseFloat(frames[0].rotate as string)
+      const total = Number(effect.getTiming().duration)
+      const sample = (progress: number) => {
+        animation.currentTime = total * progress
+        return parseFloat(getComputedStyle(element).rotate)
+      }
+      return { initial, anticipation: sample(0.15), travel: [0.3, 0.5, 0.7, 0.9].map(sample), final: sample(1) }
+    })
+    expect(rotation.anticipation).toBeCloseTo(rotation.initial - 18)
+    expect(rotation.final).toBe(Math.ceil(rotation.initial / 360) * 360 + count * 360)
+    for (const [index, angle] of rotation.travel.entries()) {
+      expect(angle).toBeGreaterThanOrEqual(index ? rotation.travel[index - 1] : rotation.anticipation)
+      expect(angle).toBeLessThan(rotation.final)
+    }
+    await expect(preview.locator("path")).toHaveAttribute("d", (await gallery.getByRole("button", { name: shape, exact: true }).locator("path").getAttribute("d"))!)
+  }
+  await gallery.getByRole("button", { name: "Square", exact: true }).click()
+  await expect.poll(() => preview.evaluate(element => element.getAnimations().length)).toBe(1)
+  const interrupted = await preview.evaluate(element => {
+    const animation = element.getAnimations()[0]
+    animation.pause()
+    animation.currentTime = Number(animation.effect!.getTiming().duration) * 0.4
+    return parseFloat(getComputedStyle(element).rotate)
+  })
+  await gallery.getByRole("button", { name: "Triangle", exact: true }).click()
+  expect(await preview.evaluate(element => parseFloat((element.getAnimations()[0].effect as KeyframeEffect).getKeyframes()[0].rotate as string))).toBeCloseTo(interrupted)
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await expect.poll(() => preview.evaluate(element => element.getAnimations().length)).toBe(0)
+  await expect(preview).toHaveCSS("rotate", "none")
+  await gallery.getByRole("button", { name: "Circle", exact: true }).click()
+  await expect(preview.locator("path")).toHaveAttribute("d", (await gallery.getByRole("button", { name: "Circle", exact: true }).locator("path").getAttribute("d"))!)
+  const toolbar = page.getByRole("toolbar", { name: "Shape timing", exact: true })
+  expect(await toolbar.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
+})
+
 test("shape library stays symmetric and morph controls preserve stable geometry", async ({ page }, testInfo) => {
   const errors: string[] = []
   page.on("pageerror", error => errors.push(error.message))

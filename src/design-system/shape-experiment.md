@@ -20,8 +20,9 @@ shape. The canvas contains only the preview on the left and a bounded,
 scrollable three-column gallery on the right. The shared Scroller owns inertia,
 scrollbars, and edge fades; its viewport is flush with the top and bottom canvas
 edges on desktop. Narrow screens stack the preview above the gallery, preserving
-three columns and the flush bottom edge. A shared canvas toolbar provides one
-duration slider (200-3000ms); endpoint and playback controls remain removed.
+three columns and the flush bottom edge. A shared canvas toolbar provides a
+duration slider (200-3000ms) and a turns selector (1, 3, or 5; default 1).
+Endpoint and playback controls remain removed.
 This experiment does not change product component shapes.
 
 ## Material references
@@ -40,10 +41,18 @@ hook creates an interpolator on selection, starting from the currently displayed
 path so interrupted animations do not snap to a previous endpoint. It owns
 cancellable requestAnimationFrame playback and the unitless millisecond token
 `--shape-morph-duration` (1200ms default), with toolbar overrides and range/step
-tokens in the same CSS source. Reduced motion immediately displays the chosen
-shape. This is a web experiment, not the Material morph API.
+tokens in the same CSS source. Web Animations rotates the preview while the path
+morphs: an18-degree backward anticipation, followed by the selected number of
+full turns easing directly into the upright orientation without overshoot.
+Phase offsets and curves are `--shape-spin-*` tokens. Morph progress stays bounded.
+Labels and gallery tiles do not rotate. Interrupted selections begin
+from the displayed path and rotation, then finish upright. Reduced motion removes
+both animation tracks and immediately displays the chosen shape, including when
+the preference changes during playback. This is a web experiment, not the
+Material morph API.
 
 `tests/shapes.spec.ts` checks rendered symmetry, nonempty bounds, consistent
 thumbnail positioning, label containment, three-column scrolling, automatic
 morphing, rapid selection, shared scroll fades, edge alignment, duration changes,
-and reduced motion on desktop and mobile.
+turn counts, anticipation and monotonic ease-out angles, interrupted rotation, and reduced
+motion on desktop and mobile.

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { BookmarkIcon, CheckIcon } from "lucide-react"
+import { BookmarkIcon, CheckIcon } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { generatedExampleCode } from "@/showcase/generated-example-code"
@@ -126,7 +126,7 @@ function AnnotationCornersDemo() {
               aria-pressed={bookmarked}
               onClick={() => setBookmarked((value) => !value)}
             >
-              <BookmarkIcon className={bookmarked ? "fill-current" : undefined} />
+              <BookmarkIcon data-selected={bookmarked} />
             </Button>
           </CardFooter>
         </Card>

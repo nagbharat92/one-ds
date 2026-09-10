@@ -20,7 +20,7 @@ import {
   UserPlusIcon,
   UsersIcon,
   VideoIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import {

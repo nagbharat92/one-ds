@@ -4,7 +4,7 @@ import { Menubar as MenubarPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { useOpenOnMouseUp } from "@/hooks/use-open-on-mouse-up"
 import { Scroller } from "@/components/ui/scroller"
-import { CheckIcon, ChevronRightIcon } from "lucide-react"
+import { CheckIcon, ChevronRightIcon } from "@/components/ui/icons"
 
 function Menubar({
   className,

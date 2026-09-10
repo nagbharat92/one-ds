@@ -7,6 +7,22 @@ Candidate rules are proposals: do not promote them without user approval.
 
 ## Work Within the System
 
+- Always use Material Symbols Rounded for system icons, without exception for new icon work.
+  Import named icons from `src/components/ui/icons.tsx`, including in showcases.
+  Glyph mappings and font rendering belong only in
+  `src/components/ui/icon-adapters/material.tsx`. `icon-adapters/active.ts` is the
+  single build-time adapter selection; only the public named module imports it.
+  `Icon` accepts a library-independent React SVG glyph and owns presentation.
+  Never add another icon library, local icon paths, or static outline/filled swaps.
+  Extend the active adapter and public named module for missing glyphs. A future
+  library change requires explicit approval, a compatible adapter, and updated policy
+  checks; no runtime provider or multi-library bundle. Keep sizes and font axes in tokens;
+  selected buttons animate the font's FILL axis from 0 to 1, not CSS path fill or stroke weight.
+  Reduced motion changes the fill immediately. After adding a symbol run
+  `npm run icons:update-font` to refresh the checked-in official WOFF2 subset and
+  manifest; builds and browsers must never fetch Google Fonts at runtime. Favicons remain brand
+  images; shapes, charts, annotation connectors, and popover arrows are not icons.
+  Run `npm run test:icons` for icon changes; generated examples follow the same rule.
 - First and most important: build every interface from OneDS components under `src/components/ui`
   and their named parts. Never recreate their styling or behavior locally in a page.
 - Inspect the library first. Extend the owning component for a missing capability; if no suitable

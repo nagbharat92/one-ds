@@ -5,6 +5,123 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  --icon-size-8: calc(var(--spacing) * 2);
+  --icon-size-12: calc(var(--spacing) * 3);
+  --icon-size-14: calc(var(--spacing) * 3.5);
+  --icon-size-16: calc(var(--spacing) * 4);
+  --icon-size-20: calc(var(--spacing) * 5);
+  --icon-size-24: calc(var(--spacing) * 6);
+  --icon-size-28: calc(var(--spacing) * 7);
+  --icon-size-32: calc(var(--spacing) * 8);
+  --icon-box-size-40: calc(var(--spacing) * 10);
+  --icon-box-size-48: calc(var(--spacing) * 12);
+  --icon-box-size-56: calc(var(--spacing) * 14);
+  --material-icon-font-family: "OneDS Material Symbols";
+  --material-icon-font-size: 24px;
+  --material-icon-weight: 400;
+  --material-icon-grade: 0;
+  --material-icon-optical-size: 24;
+  --material-icon-fill-default: 0;
+  --material-icon-fill-selected: 1;
+  --material-icon-fill-speed: var(--button-effects-speed);
+  --material-icon-fill-curve: var(--button-effects-curve);
+  --icon-preview-column: calc(var(--spacing) * 48);
+  --icon-preview-stage: calc(var(--spacing) * 48);
+  --icon-preview-gap: calc(var(--spacing) * 6);
+  --icon-preview-outline: 1px;
+  --icon-preview-box-ink: var(--muted-foreground);
+  --icon-preview-svg-ink: var(--destructive);
+}
+
+:is(.oneds-icon, .oneds-icon-box)[data-size="8"] { --icon-size: var(--icon-size-8); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="12"] { --icon-size: var(--icon-size-12); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="14"] { --icon-size: var(--icon-size-14); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="16"] { --icon-size: var(--icon-size-16); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="20"] { --icon-size: var(--icon-size-20); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="24"] { --icon-size: var(--icon-size-24); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="28"] { --icon-size: var(--icon-size-28); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="32"] { --icon-size: var(--icon-size-32); }
+.oneds-icon-box[data-size="40"] { --icon-size: var(--icon-box-size-40); }
+.oneds-icon-box[data-size="48"] { --icon-size: var(--icon-box-size-48); }
+.oneds-icon-box[data-size="56"] { --icon-size: var(--icon-box-size-56); }
+.oneds-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--icon-size);
+  block-size: var(--icon-size);
+  vertical-align: middle;
+}
+.oneds-icon {
+  --icon-fill: var(--material-icon-fill-default);
+  display: block;
+  color: inherit;
+}
+@layer components {
+  .oneds-icon[data-size="auto"] {
+    width: var(--icon-size-20);
+    height: var(--icon-size-20);
+  }
+}
+.button-motion[data-selected="true"] .oneds-icon,
+.button-motion[aria-pressed="true"] .oneds-icon,
+.button-motion[aria-checked="true"] .oneds-icon,
+.button-motion[data-state="on"] .oneds-icon,
+.oneds-icon[data-selected="true"] {
+  --icon-fill: var(--material-icon-fill-selected);
+}
+.oneds-icon[data-filled="true"],
+.button-motion .oneds-icon[data-filled="true"] {
+  --icon-fill: var(--material-icon-fill-selected);
+}
+.oneds-icon[data-filled="false"],
+.button-motion .oneds-icon[data-filled="false"] {
+  --icon-fill: var(--material-icon-fill-default);
+}
+@font-face {
+  font-family: "OneDS Material Symbols";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("./assets/icons/material-symbols-rounded.woff2") format("woff2");
+}
+.material-glyph text {
+  font-family: var(--material-icon-font-family);
+  font-size: var(--material-icon-font-size);
+  font-weight: var(--material-icon-weight);
+  font-style: normal;
+  letter-spacing: 0;
+  fill: currentColor;
+  stroke: none;
+  font-variation-settings: "FILL" var(--icon-fill), "GRAD" var(--material-icon-grade), "opsz" var(--material-icon-optical-size), "wght" var(--material-icon-weight);
+  transition: font-variation-settings var(--material-icon-fill-speed) var(--material-icon-fill-curve);
+}
+.material-glyph:is([data-size="8"], [data-size="12"], [data-size="14"], [data-size="16"], [data-size="20"]) { --material-icon-optical-size: 20; }
+.material-glyph[data-size="28"] { --material-icon-optical-size: 28; }
+.material-glyph[data-size="32"] { --material-icon-optical-size: 32; }
+@media (prefers-reduced-motion: reduce) {
+  .material-glyph text { transition: none; }
+}
+.icon-preview-group {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--icon-preview-column)), 1fr));
+  gap: var(--icon-preview-gap);
+}
+.icon-preview__stage {
+  position: relative;
+  width: 100%;
+  min-height: var(--icon-preview-stage);
+}
+[data-slot="icon-preview"][data-annotations="true"] [data-slot="icon-box"] {
+  outline: var(--icon-preview-outline) dotted var(--icon-preview-box-ink);
+}
+[data-slot="icon-preview"][data-annotations="true"] [data-slot="icon"] {
+  outline: var(--icon-preview-outline) dotted var(--icon-preview-svg-ink);
+}
+
 @theme inline {
     --shape-preview-size: calc(var(--spacing) * 64);
     --shape-preview-stage: calc(var(--spacing) * 84);
@@ -17,6 +134,10 @@
     --shape-choice-section-gap: var(--button-group-gap);
     --shape-choice-inner-radius: var(--button-group-inner-radius);
     --shape-morph-duration: 1200;
+    --shape-spin-anticipation: 18;
+    --shape-spin-anticipation-end: 0.15;
+    --shape-spin-anticipation-ease: cubic-bezier(0.4, 0, 0.7, 1);
+    --shape-spin-travel-ease: cubic-bezier(0.2, 0, 0.15, 1);
     --shape-morph-duration-min: 200;
     --shape-morph-duration-max: 3000;
     --shape-morph-duration-step: 100;
@@ -777,9 +898,15 @@
     --sidebar-snap-threshold: calc(var(--spacing) * 34);
     /* The header is as tall as the bar is wide, so the collapsed corner is square. */
     --sidebar-header-height: var(--sidebar-width-icon);
-    --sidebar-floating-trigger-size: calc(var(--spacing) * 12);
-    --sidebar-floating-trigger-icon-size: calc(var(--spacing) * 6);
+    --sidebar-floating-trigger-size: var(--fab-size-lg);
     --sidebar-floating-trigger-radius: var(--radius-xl);
+    --sidebar-floating-trigger-entry-scale: 0.8;
+    --sidebar-floating-trigger-spin-turns: 0.5;
+    --sidebar-floating-trigger-spin-velocity: 240;
+    --sidebar-floating-trigger-growth-velocity: 32;
+    --sidebar-floating-trigger-settle-ease: cubic-bezier(0.22, 0, 0.1, 1);
+    --sidebar-floating-trigger-fade-in-delay: var(--speed-swift);
+    --sidebar-floating-trigger-fade-out-speed: var(--speed-swift);
     --sidebar-floating-trigger-inset: calc(var(--spacing) * 4);
     --sidebar-floating-trigger-clearance: calc(
       var(--sidebar-floating-trigger-size) + var(--sidebar-floating-trigger-inset) * 2
@@ -3357,18 +3484,47 @@
   --fab-pressed: color-mix(in srgb, var(--fab-fill), var(--fab-ink) var(--state-layer-pressed-opacity));
   --fab-focus: color-mix(in srgb, var(--fab-fill), var(--fab-ink) var(--state-layer-focus-opacity));
 }
-.fab[data-variant="primary"] {
+.fab[data-variant="primary"],
+.fab[data-variant="expressive"] {
   --fab-fill: var(--theme-website-tertiary-container-light);
   --fab-ink: var(--theme-website-on-tertiary-container-light);
   --favicon-monochrome-on-primary-filter: var(--favicon-monochrome-filter);
 }
-.dark .fab[data-variant="primary"] {
+.dark .fab[data-variant="primary"],
+.dark .fab[data-variant="expressive"] {
   --fab-fill: var(--theme-website-tertiary-container-dark);
   --fab-ink: var(--theme-website-on-tertiary-container-dark);
 }
 .fab[data-variant="secondary"] {
   --fab-fill: var(--button-secondary-fill);
   --fab-ink: var(--button-secondary-ink);
+}
+
+.fab[data-variant="expressive"] > .fab__shape {
+  fill: var(--fab-fill);
+  transition: fill var(--fab-speed) var(--fab-ease);
+}
+.fab[data-variant="expressive"]:hover > .fab__shape {
+  fill: var(--fab-hover);
+}
+.fab[data-variant="expressive"][aria-expanded="true"] > .fab__shape {
+  fill: var(--fab-focus);
+}
+.fab[data-variant="expressive"]:active > .fab__shape {
+  fill: var(--fab-pressed);
+}
+.fab[data-sidebar="trigger"][data-placement="floating"] {
+  --shape-spin-travel-ease: var(--sidebar-floating-trigger-settle-ease);
+}
+@starting-style {
+  .fab[data-placement="floating"][data-visible="true"] {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fab[data-variant="expressive"] > .fab__shape {
+    transition: none;
+  }
 }
 
 .button-group {

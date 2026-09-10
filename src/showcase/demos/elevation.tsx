@@ -1,4 +1,4 @@
-import { MoreHorizontalIcon } from "lucide-react"
+import { MoreHorizontalIcon } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { Badge } from "@/components/ui/badge"

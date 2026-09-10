@@ -5,7 +5,7 @@ import {
   RefreshCwIcon,
   SquareIcon,
   XIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"

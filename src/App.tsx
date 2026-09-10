@@ -9,11 +9,11 @@ import {
   ArrowDownAZIcon,
   CodeIcon,
   EyeIcon,
-  LayoutListIcon,
+  SortIcon,
   PaletteIcon,
   RotateCcwIcon,
   TriangleAlertIcon,
-} from "lucide-react"
+} from "@/components/ui/icons"
 
 import {
   blockRegistry,
@@ -443,7 +443,7 @@ function ComponentNavigation({
               )
             }
           >
-            {sort === "alphabetical" ? <ArrowDownAZIcon /> : <LayoutListIcon />}
+            {sort === "alphabetical" ? <SortIcon /> : <ArrowDownAZIcon />}
           </Button>
         </div>
         {/* Bottom padding matches the scroll fade, so the final item stays clear. */}

@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Shape } from "@/components/ui/shape"
 
 const fabVariants = cva(
   [
@@ -22,6 +23,7 @@ const fabVariants = cva(
         secondary: "",
         tertiary: "",
         surface: "",
+        expressive: "relative bg-transparent hover:bg-transparent active:bg-transparent aria-expanded:bg-transparent",
       },
       size: {
         md: "rounded-(--fab-radius-md) [&_svg:not([class*='size-'])]:size-(--fab-icon-size-md)",
@@ -66,28 +68,48 @@ const fabVariants = cva(
 
 function Fab({
   className,
+  children,
   variant = "tertiary",
+  shape = "cookie6",
   size,
   extended,
   placement,
+  asChild,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "selected"> &
-  VariantProps<typeof fabVariants>) {
+  Omit<VariantProps<typeof fabVariants>, "variant" | "extended" | "size"> & (
+    | { variant: "expressive"; shape?: "cookie4" | "cookie6" | "cookie7"; size?: "lg"; extended?: false }
+    | { variant?: Exclude<VariantProps<typeof fabVariants>["variant"], "expressive">; shape?: never; size?: VariantProps<typeof fabVariants>["size"]; extended?: boolean }
+  )) {
+  const expressiveContent = (icon: React.ReactNode) => (
+    <>
+      <Shape name={shape} aria-hidden="true" focusable="false" className="fab__shape absolute inset-0 size-full" />
+      <span data-slot="fab-icon" className="relative inline-flex items-center justify-center">{icon}</span>
+    </>
+  )
+  const content = variant !== "expressive" ? children
+    : asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+      ? React.cloneElement(children, undefined, expressiveContent(children.props.children))
+      : expressiveContent(children)
   return (
     <Button
       data-slot="fab"
       data-variant={variant === "surface" ? "tertiary" : variant}
+      data-shape={variant === "expressive" ? shape : undefined}
       data-extended={extended ? "true" : undefined}
+      asChild={asChild}
       // Composes Button for the focus ring, asChild and the aria-label tooltip
       // M3 asks for; ghost/icon are neutral bases that fabVariants overrides.
       variant="ghost"
       size="icon"
       className={cn(
-        fabVariants({ variant, size, extended, placement }),
+        fabVariants({ variant, size: variant === "expressive" ? "lg" : size, extended, placement }),
         className
       )}
       {...props}
-    />
+    >
+      {content}
+    </Button>
   )
 }
 

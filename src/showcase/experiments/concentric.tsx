@@ -1,6 +1,6 @@
 import * as React from "react"
 import { useState } from "react"
-import { ArchiveIcon, CopyIcon, ImageIcon, MoreHorizontalIcon, PinIcon, RotateCcwIcon } from "lucide-react"
+import { ArchiveIcon, CopyIcon, ImageIcon, MoreHorizontalIcon, PinIcon, RotateCcwIcon } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { Button } from "@/components/ui/button"

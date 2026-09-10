@@ -1,4 +1,189 @@
 import { expect, test } from "@playwright/test"
+import { shapePaths } from "../src/lib/shapes"
+
+test("Material icon size anatomy and shared icon semantics stay usable", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
+  await page.goto("/#/icon")
+  await page.evaluate(() => document.fonts.load('24px "OneDS Material Symbols"'))
+  const previews = page.locator('[data-slot="icon-preview"]')
+  await expect(previews).toHaveCount(15)
+  await expect.poll(() => previews.evaluateAll(elements => elements.every(element =>
+    element.querySelector('[data-slot="annotation-layer"]')?.getAttribute("data-layout-status") === "placed"
+  ))).toBe(true)
+  expect(await previews.evaluateAll(elements => elements.every(element => {
+    const bounds = element.getBoundingClientRect()
+    const caption = element.querySelector('[data-annotate-avoid]')!.getBoundingClientRect()
+    return [...element.querySelectorAll('button[data-slot="annotation-label"]')].every(label => {
+      const rect = label.getBoundingClientRect()
+      return rect.top >= bounds.top && rect.bottom <= caption.top && rect.left >= bounds.left && rect.right <= bounds.right
+    })
+  }))).toBe(true)
+  const dimensions = await previews.evaluateAll(elements => elements.map(element => {
+    const box = element.querySelector('[data-slot="icon-box"]')!
+    const icon = element.querySelector<SVGSVGElement>('[data-slot="icon"]')!
+    const boxRect = box.getBoundingClientRect()
+    const iconRect = icon.getBoundingClientRect()
+    const stage = element.querySelector('.icon-preview__stage')!.getBoundingClientRect()
+    return {
+      box: [boxRect.width, boxRect.height], svg: [iconRect.width, iconRect.height],
+      expectedBox: Number(box.getAttribute("data-size")), expectedSvg: Number(icon.getAttribute("data-size")),
+      center: [iconRect.x + iconRect.width / 2 - boxRect.x - boxRect.width / 2,
+        iconRect.y + iconRect.height / 2 - boxRect.y - boxRect.height / 2],
+      ink: icon.getBBox().width,
+      axes: getComputedStyle(icon.querySelector("text")!).fontVariationSettings,
+      contained: boxRect.left >= stage.left && boxRect.right <= stage.right,
+    }
+  }))
+  expect(dimensions.slice(0, 8).map(row => row.expectedSvg)).toEqual([8, 12, 14, 16, 20, 24, 28, 32])
+  for (const row of dimensions) {
+    expect(row.box).toEqual([row.expectedBox, row.expectedBox])
+    expect(row.svg).toEqual([row.expectedSvg, row.expectedSvg])
+    expect(row.center[0]).toBeCloseTo(0)
+    expect(row.center[1]).toBeCloseTo(0)
+    expect(row.ink).toBeGreaterThan(0)
+    expect(row.axes).toContain('"FILL" 0')
+    expect(row.contained).toBe(true)
+  }
+  const first = previews.first()
+  await first.getByRole("button", { name: "Box", exact: true }).click()
+  await expect(first.locator('[data-slot="annotation-dimensions"]').last()).toContainText(/48.*48/)
+  await first.getByRole("button", { name: "SVG viewport", exact: true }).click()
+  await expect(first.locator('[data-slot="annotation-dimensions"]').last()).toContainText(/8.*8/)
+  await page.getByRole("group", { name: "SVG sizes display options" }).getByRole("checkbox", { name: "Annotations" }).click()
+  await expect(first.locator('[data-slot="annotation-layer"]')).toHaveAttribute("aria-hidden", "true")
+
+  const namedIcon = page.locator('#icon-in-controls [data-slot="icon"][role="img"]')
+  await expect(namedIcon).toHaveAccessibleName("Search")
+  const action = page.getByRole("button", { name: "Add item", exact: true })
+  await expect(action.locator('[data-slot="icon"]')).toHaveAttribute("aria-hidden", "true")
+  await action.focus()
+  await action.press("Enter")
+  const icon = action.locator('[data-slot="icon"]')
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty("--icon-size-20", "22px")
+    document.documentElement.style.setProperty("--material-icon-grade", "0")
+  })
+  await expect(icon).toHaveCSS("width", "22px")
+  await expect(icon.locator("text")).toHaveCSS("font-family", '"OneDS Material Symbols"')
+  await page.evaluate(() => {
+    document.documentElement.style.removeProperty("--icon-size-20")
+    document.documentElement.style.removeProperty("--material-icon-grade")
+  })
+
+  await expect(page.getByText("Current equivalents", { exact: true })).toHaveCount(0)
+  await expect(page.locator('[data-icon-comparison]')).toHaveCount(0)
+  await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" })
+  await expect(page.locator("html")).toHaveClass(/dark/)
+  expect(await namedIcon.evaluate(element =>
+    getComputedStyle(element).color === getComputedStyle(element.parentElement!).color
+  )).toBe(true)
+  expect(await page.locator('[data-slot="page-content"]').last().evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+})
+
+test("Material icons preserve host sizes and loader semantics across consumers", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  const errors: string[] = []
+  page.on("pageerror", error => errors.push(error.message))
+  for (const route of ["button", "spinner", "calendar", "dropdown-menu", "ai-composer", "site-footer"]) {
+    await page.goto(`/#/${route}`)
+    await page.evaluate(() => document.fonts.load('24px "OneDS Material Symbols"'))
+    if (route === "dropdown-menu") await page.locator('#dropdown-menu-icons').getByRole("button", { name: "Icons", exact: true }).click()
+    const icons = page.locator(route === "dropdown-menu" ? '[role="menu"] .oneds-icon' : '[data-slot="canvas"] .oneds-icon')
+    await expect(icons.first(), route).toBeAttached()
+    await expect.poll(() => icons.evaluateAll(elements => elements.flatMap(element => {
+      const svg = element as SVGSVGElement
+      const rect = svg.getBoundingClientRect()
+      if (!rect.width || !rect.height) return []
+      const style = getComputedStyle(svg)
+      return svg.getBBox().width > 0 && style.width === style.height && svg.getAttribute("viewBox") === "0 0 24 24"
+        ? [] : [{ width: style.width, height: style.height, ink: svg.getBBox().width, viewBox: svg.getAttribute("viewBox"), slot: svg.dataset.slot }]
+    })), { message: route }).toEqual([])
+    if (route === "button") {
+      await expect(page.locator('#button-icon-only [data-size="icon"] .oneds-icon').first()).toHaveCSS("width", "20px")
+      await expect(page.locator('#button-icon-only [data-size="icon-expressive"] .oneds-icon').first()).toHaveCSS("width", "24px")
+    }
+    if (route === "spinner") {
+      const spinner = page.locator('[data-slot="canvas"] [data-slot="spinner"]').first()
+      await expect(spinner).toHaveAttribute("role", "status")
+      await expect(spinner).toHaveAccessibleName("Loading")
+      await expect(spinner).not.toHaveAttribute("aria-hidden", "true")
+      await expect(spinner).toHaveCSS("animation-name", "spin")
+    }
+    if (route === "calendar") await expect(icons.first()).toHaveCSS("width", "16px")
+    if (route === "dropdown-menu") {
+      await expect(icons.first()).toHaveCSS("width", "16px")
+      await page.getByRole("menuitem", { name: "Profile", exact: true }).click()
+      await expect(page.getByRole("menu")).toHaveCount(0)
+    }
+  }
+  expect(errors).toEqual([])
+})
+
+test("expressive FAB cookies preserve icon geometry and native button states", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+  for (const mode of ["light", "dark"] as const) {
+    await page.goto("about:blank")
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    await page.goto("/#/fab")
+    await expect(page.locator("html")).toHaveClass(new RegExp(mode))
+    const buttons = page.locator('#fab-expressive [data-slot="fab"]')
+    await expect(buttons).toHaveCount(3)
+    for (const [index, button] of (await buttons.all()).entries()) {
+      const name = (["cookie4", "cookie6", "cookie7"] as const)[index]
+      await expect(button.locator('[data-slot="shape"] path')).toHaveAttribute("d", shapePaths[name].path)
+      await expect(button).toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
+      await expect(button).toHaveCSS("box-shadow", "none")
+      const geometry = await button.evaluate(element => {
+        const bounds = element.getBoundingClientRect()
+        const icon = element.querySelector('[data-slot="fab-icon"] svg')!.getBoundingClientRect()
+        const shape = element.querySelector('[data-slot="shape"]')!.getBoundingClientRect()
+        return { size: [bounds.width, bounds.height], iconSize: [icon.width, icon.height],
+          center: [icon.x + icon.width / 2 - bounds.x - bounds.width / 2,
+            icon.y + icon.height / 2 - bounds.y - bounds.height / 2],
+          shapeSize: [shape.width, shape.height] }
+      })
+      const size = 72
+      expect(geometry.size).toEqual([size, size])
+      expect(geometry.iconSize).toEqual([24, 24])
+      expect(geometry.center[0]).toBeCloseTo(0)
+      expect(geometry.center[1]).toBeCloseTo(0)
+      expect(geometry.shapeSize[0]).toBeGreaterThanOrEqual(size - 2)
+      expect(geometry.shapeSize[1]).toBeGreaterThanOrEqual(size - 2)
+    }
+    const button = buttons.first()
+    const shape = button.locator('[data-slot="shape"]')
+    await button.scrollIntoViewIfNeeded()
+    const restFill = await shape.evaluate(element => getComputedStyle(element).fill)
+    await button.hover()
+    await expect.poll(() => shape.evaluate(element => getComputedStyle(element).fill)).not.toBe(restFill)
+    const hoverFill = await shape.evaluate(element => getComputedStyle(element).fill)
+    await page.mouse.down()
+    await expect.poll(() => shape.evaluate(element => getComputedStyle(element).fill)).not.toBe(hoverFill)
+    await expect(button).toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
+    await page.mouse.up()
+    await button.evaluate(element => {
+      element.dataset.activations = "0"
+      element.addEventListener("click", () => {
+        element.dataset.activations = String(Number(element.dataset.activations) + 1)
+      })
+    })
+    await button.press("Tab")
+    await page.keyboard.press("Shift+Tab")
+    await expect(button).toBeFocused()
+    expect(await button.evaluate(element => element.matches(":focus-visible"))).toBe(true)
+    expect(await button.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe("none")
+    await button.press("Enter")
+    await button.press("Space")
+    await expect(button).toHaveAttribute("data-activations", "2")
+    await button.evaluate(element => { (element as HTMLButtonElement).disabled = true })
+    await button.evaluate(element => (element as HTMLButtonElement).click())
+    await expect(button).toHaveAttribute("data-activations", "2")
+    await expect(button).toHaveCSS("opacity", "0.5")
+    await expect(shape).toHaveCSS("transition-property", "none")
+    await expect(page.locator('#fab-default [data-slot="fab"]')).not.toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
+  }
+})
 
 test("connected ButtonGroups keep soft gaps and selected shapes without shifting neighbors", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))

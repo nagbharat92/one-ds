@@ -8,7 +8,7 @@ single-color theme experiment.
 
 - **React 19** + **TypeScript** (Vite)
 - **Tailwind CSS v4** (via `@tailwindcss/vite`)
-- **shadcn/ui** — Radix-based components, Nova preset, `neutral` base color, CSS variables, Lucide icons, Geist font
+- **shadcn/ui** — Radix-based components, Nova preset, `neutral` base color, CSS variables, Material Symbols Rounded icons, Geist font
 - **shadcn MCP** wired into VS Code for adding components on demand
 
 ## Getting started
@@ -101,8 +101,15 @@ with the same light10/20/30% and dark20/30/40% ramp. The original palette and
 `destructivePalette` comparison option are removed; text/focus colors stay unchanged.
 
 **Selected** is a controlled Button state: pass `selected={selected}` and update
-it in `onClick`. Use `ButtonSelectionIcon` with a fill-compatible icon to switch
-from outlined to filled when selected without changing its size or position.
+it in `onClick`. All shared icons inside selected Buttons use Material Symbols'
+variable `FILL` axis, smoothly interpolating from outlined (0) to filled (1).
+Icons are outlined by default; expanding a sidebar or opening a menu is not selection.
+Set `filled={true}` or `filled={false}` on a named icon to explicitly override
+the automatic selected-button fill. Omit it to follow the host's selection state.
+`ButtonSelectionIcon` remains a compatible decorative slot; no wrapper is required
+to receive the fill state. Font-axis motion uses Button effect tokens, never delays
+the action, and becomes immediate under reduced motion. Some symbols, such as Add,
+have no distinct filled silhouette; they retain their canonical Material artwork.
 Button emits `aria-pressed` and swaps square unselected corners to
 round selected corners, following Material's square-start configuration. The
 Selected showcase demonstrates Tertiary, Secondary, icon-only, and disabled
@@ -110,6 +117,38 @@ buttons at both sizes. Tertiary selects from neutral to light purple; Secondary
 selects from light purple to dark gray-purple, with their paired foregrounds.
 Primary is reserved for prominent calls to action and ignores `selected`;
 choice-group items accept only Secondary, Tertiary, or its `default` alias.
+
+### Icon Adapter
+
+Use named icons from `src/components/ui/icons.tsx`; consumers and showcases never
+import vendor assets or types. `Icon` owns sizing, color, and accessibility through
+the library-independent `IconGlyph` React SVG contract. `IconBox` owns optional
+square layout. The active adapter supplies glyph artwork and token-driven fill
+treatment, forwarding SVG attributes and refs without adding DOM wrappers.
+
+`src/components/ui/icon-adapters/active.ts` selects one adapter at build time.
+Material Symbols Rounded is the only approved adapter. To make a future
+approved swap, implement the same named glyph exports using the `IconGlyph`
+contract, add any adapter-specific styling in the central stylesheet, and change
+that one re-export. Consumers remain unchanged. Update dependencies, shadcn's
+`iconLibrary`, and the approved-library guards as part of that deliberate change.
+No runtime provider, library toggle, or dynamic icon registry is needed.
+
+`npm run test:icons` checks the boundary, exact approved glyph mappings, and a
+test-only alternate SVG adapter. It also runs through `npm run lint`. A different
+library still needs a visual review of glyphs, sizes, and selection feedback.
+
+The adapter renders the official variable font inside the existing SVG viewport,
+preserving host sizing and refs. The checked-in 42KB WOFF2 subset includes the
+required glyphs, the continuous FILL axis, and optical sizes 20-48 at weight 400.
+Smaller legacy sizes use optical size 20. Codepoints avoid visible ligature words
+during loading; the font is served locally, with no Google Fonts runtime request.
+Add mappings in `icon-adapters/material.tsx`, then run `npm run icons:update-font`.
+The subset manifest records its official download URL; Apache 2.0 license text
+lives beside the font. Brand logos use Favicon, since Material has no brand set.
+`components.json` records `material-symbols` as project policy; stock shadcn
+generation may not support this custom adapter. Normalize generated icons through
+the public module and run `npm run test:icons` before accepting generated code.
 Ordinary Buttons retain their existing shapes. Selection changes use spatial
 motion tokens and respect reduced motion; labels and dimensions remain stable.
 
