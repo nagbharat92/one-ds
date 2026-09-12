@@ -5,20 +5,11 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem, RadioGroupOption } from "@/components/ui/radio-group"
 import { Switch, SwitchGroup, SwitchGroupItem } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
-import { Toggle } from "@/components/ui/toggle"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
-  BoldIcon,
-  ItalicIcon,
-  UnderlineIcon,
-  AlignLeftIcon,
-  AlignCenterIcon,
-  AlignRightIcon,
   StarIcon,
   WifiIcon,
   BellIcon,
   MoonIcon,
-  SunIcon,
   GlobeIcon,
 } from "@/components/ui/icons"
 import {
@@ -549,16 +540,6 @@ export function SwitchDemo() {
           </Field>
         ),
       },
-      {
-        name: "Sizes",
-        description: "The small and default sizes.",
-        Demo: () => (
-          <div className="flex flex-wrap items-center gap-6">
-            <SwitchGroupItem id="sw-sz-sm" size="sm" defaultChecked>Small</SwitchGroupItem>
-            <SwitchGroupItem id="sw-sz-def" size="default" defaultChecked>Default</SwitchGroupItem>
-          </div>
-        ),
-      },
     ],
   },
   {
@@ -664,215 +645,6 @@ export function SliderDemo() {
         Demo: () => (
           <Slider defaultValue={[50]} max={100} disabled className="w-full max-w-sm" />
         ),
-      },
-    ],
-  },
-  {
-    slug: "toggle",
-    name: "Toggle",
-    description: "A two-state button that can be on or off.",
-    category: "Selection",
-    Demo: () => (
-      <Toggle aria-label="Toggle italic">
-        <BoldIcon />
-      </Toggle>
-    ),
-    code: `import { BoldIcon } from "@/components/ui/icons"
-import { Toggle } from "@/components/ui/toggle"
-
-export function ToggleDemo() {
-  return (
-    <Toggle aria-label="Toggle bold">
-      <BoldIcon />
-    </Toggle>
-  )
-}`,
-    examples: [
-      {
-        name: "Outline",
-        Demo: () => (
-          <Toggle variant="outline" aria-label="Toggle italic">
-            <ItalicIcon />
-          </Toggle>
-        ),
-      },
-      {
-        name: "With Text",
-        Demo: () => (
-          <Toggle aria-label="Toggle italic">
-            <ItalicIcon data-icon="inline-start" />
-            Italic
-          </Toggle>
-        ),
-      },
-      {
-        name: "Sizes",
-        Demo: () => (
-          <div className="flex flex-wrap items-center gap-3">
-            <Toggle size="sm" aria-label="Small bold">
-              <BoldIcon />
-            </Toggle>
-            <Toggle size="default" aria-label="Default bold">
-              <BoldIcon />
-            </Toggle>
-            <Toggle size="lg" aria-label="Large bold">
-              <BoldIcon />
-            </Toggle>
-          </div>
-        ),
-      },
-      {
-        name: "Disabled",
-        Demo: () => (
-          <Toggle disabled aria-label="Toggle underline">
-            <UnderlineIcon />
-          </Toggle>
-        ),
-      },
-    ],
-  },
-  {
-    slug: "toggle-group",
-    name: "Toggle Group",
-    description: "A set of two-state buttons that can be toggled on or off.",
-    category: "Selection",
-    Demo: () => (
-      <ToggleGroup type="multiple">
-        <ToggleGroupItem value="bold" aria-label="Bold">
-          <BoldIcon />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="italic" aria-label="Italic">
-          <ItalicIcon />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="underline" aria-label="Underline">
-          <UnderlineIcon />
-        </ToggleGroupItem>
-      </ToggleGroup>
-    ),
-    code: `import { BoldIcon, ItalicIcon, UnderlineIcon } from "@/components/ui/icons"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-
-export function ToggleGroupDemo() {
-  return (
-    <ToggleGroup type="multiple">
-      <ToggleGroupItem value="bold" aria-label="Bold">
-        <BoldIcon />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="italic" aria-label="Italic">
-        <ItalicIcon />
-      </ToggleGroupItem>
-      <ToggleGroupItem value="underline" aria-label="Underline">
-        <UnderlineIcon />
-      </ToggleGroupItem>
-    </ToggleGroup>
-  )
-}`,
-    examples: [
-      {
-        name: "Outline",
-        Demo: () => (
-          <ToggleGroup type="multiple" variant="outline">
-            <ToggleGroupItem value="bold" aria-label="Bold">
-              <BoldIcon />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="italic" aria-label="Italic">
-              <ItalicIcon />
-            </ToggleGroupItem>
-            <ToggleGroupItem value="underline" aria-label="Underline">
-              <UnderlineIcon />
-            </ToggleGroupItem>
-          </ToggleGroup>
-        ),
-      },
-      {
-        name: "Sizes",
-        Demo: () => (
-          <div className="flex flex-col gap-4">
-            <ToggleGroup type="single" size="sm">
-              <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-            </ToggleGroup>
-            <ToggleGroup type="single" size="default">
-              <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-            </ToggleGroup>
-            <ToggleGroup type="single" size="lg">
-              <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-            </ToggleGroup>
-          </div>
-        ),
-      },
-      {
-        name: "Spacing",
-        description: "Adjusting the gap between items. 0 creates a connected group.",
-        Demo: () => (
-          <div className="flex flex-col gap-4">
-            <ToggleGroup type="single" spacing={0} variant="outline">
-              <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-            </ToggleGroup>
-            <ToggleGroup type="single" spacing={1}>
-              <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-            </ToggleGroup>
-            <ToggleGroup type="single" spacing={4}>
-              <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-              <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-            </ToggleGroup>
-          </div>
-        ),
-      },
-      {
-        name: "Vertical",
-        Demo: () => (
-          <ToggleGroup type="single" orientation="vertical" variant="outline">
-            <ToggleGroupItem value="left" aria-label="Align left"><AlignLeftIcon /></ToggleGroupItem>
-            <ToggleGroupItem value="center" aria-label="Align center"><AlignCenterIcon /></ToggleGroupItem>
-            <ToggleGroupItem value="right" aria-label="Align right"><AlignRightIcon /></ToggleGroupItem>
-          </ToggleGroup>
-        ),
-      },
-      {
-        name: "Disabled",
-        Demo: () => (
-          <ToggleGroup type="single" disabled>
-            <ToggleGroupItem value="bold" aria-label="Bold"><BoldIcon /></ToggleGroupItem>
-            <ToggleGroupItem value="italic" aria-label="Italic"><ItalicIcon /></ToggleGroupItem>
-            <ToggleGroupItem value="underline" aria-label="Underline"><UnderlineIcon /></ToggleGroupItem>
-          </ToggleGroup>
-        ),
-      },
-      {
-        name: "Custom",
-        description: "Single selection with text labels and icons.",
-        Demo: () => {
-          const [value, setValue] = useState("system")
-          return (
-            <div className="flex flex-col gap-3">
-              <ToggleGroup type="single" value={value} onValueChange={(v) => { if (v) setValue(v) }} variant="outline">
-                <ToggleGroupItem value="light">
-                  <SunIcon data-icon="inline-start" />
-                  Light
-                </ToggleGroupItem>
-                <ToggleGroupItem value="dark">
-                  <MoonIcon data-icon="inline-start" />
-                  Dark
-                </ToggleGroupItem>
-                <ToggleGroupItem value="system">
-                  System
-                </ToggleGroupItem>
-              </ToggleGroup>
-              <p className="text-sm text-muted-foreground">Active: {value}</p>
-            </div>
-          )
-        },
       },
     ],
   },

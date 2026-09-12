@@ -20,10 +20,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+import { ButtonGroupChoice, ButtonGroupChoiceItem } from "@/components/ui/button-group"
 import {
   Toolbar,
   ToolbarGroup,
@@ -67,42 +64,30 @@ function ExperimentToolbar({
       aria-label="Experiment tools"
     >
       <ToolbarGroup>
-        <ToggleGroup
-          type="single"
+        <ButtonGroupChoice
           value={mode}
-          onValueChange={(value) => {
-            if (value) onModeChange(value as FormExperimentMode)
-          }}
-          variant="outline"
-          size="sm"
-          spacing={0}
+          onValueChange={(value) => onModeChange(value as FormExperimentMode)}
           aria-label="Design treatment"
           className="form-experiment__button-group"
         >
-          <ToggleGroupItem value="baseline">Original</ToggleGroupItem>
-          <ToggleGroupItem value="expressive">Expressive</ToggleGroupItem>
-        </ToggleGroup>
+          <ButtonGroupChoiceItem value="baseline">Original</ButtonGroupChoiceItem>
+          <ButtonGroupChoiceItem value="expressive">Expressive</ButtonGroupChoiceItem>
+        </ButtonGroupChoice>
       </ToolbarGroup>
 
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <ToggleGroup
-          type="single"
+        <ButtonGroupChoice
           value={evaluation}
-          onValueChange={(value) => {
-            if (value) onEvaluationChange(value as FormEvaluation)
-          }}
-          variant="outline"
-          size="sm"
-          spacing={0}
+          onValueChange={(value) => onEvaluationChange(value as FormEvaluation)}
           aria-label="Evaluation view"
           className="form-experiment__button-group"
         >
-          <ToggleGroupItem value="none">Clean</ToggleGroupItem>
-          <ToggleGroupItem value="squint">Squint</ToggleGroupItem>
-          <ToggleGroupItem value="silhouette">Silhouette</ToggleGroupItem>
-        </ToggleGroup>
+          <ButtonGroupChoiceItem value="none">Clean</ButtonGroupChoiceItem>
+          <ButtonGroupChoiceItem value="squint">Squint</ButtonGroupChoiceItem>
+          <ButtonGroupChoiceItem value="silhouette">Silhouette</ButtonGroupChoiceItem>
+        </ButtonGroupChoice>
       </ToolbarGroup>
 
       <ToolbarSpacer />

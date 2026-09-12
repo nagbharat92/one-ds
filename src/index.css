@@ -80,6 +80,9 @@
 .button-motion .oneds-icon[data-filled="false"] {
   --icon-fill: var(--material-icon-fill-default);
 }
+[data-slot="badge"] .oneds-icon {
+  --icon-fill: var(--material-icon-fill-selected);
+}
 @font-face {
   font-family: "OneDS Material Symbols";
   font-style: normal;
@@ -329,16 +332,6 @@
     --color-input: var(--input);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
-    --color-badge-blue-foreground: var(--badge-blue-foreground);
-    --color-badge-blue: var(--badge-blue);
-    --color-badge-green-foreground: var(--badge-green-foreground);
-    --color-badge-green: var(--badge-green);
-    --color-badge-sky-foreground: var(--badge-sky-foreground);
-    --color-badge-sky: var(--badge-sky);
-    --color-badge-purple-foreground: var(--badge-purple-foreground);
-    --color-badge-purple: var(--badge-purple);
-    --color-badge-red-foreground: var(--badge-red-foreground);
-    --color-badge-red: var(--badge-red);
     --color-presence-available: var(--presence-available);
     --color-presence-busy: var(--presence-busy);
     --color-presence-away: var(--presence-away);
@@ -491,19 +484,6 @@
     --destructive: oklch(0.58 0.2 var(--destructive-hue));
     --ring: oklch(0.708 0 0);
 
-     /* Badge expressions. Pale surfaces keep compact labels legible while the
-       foreground carries the hue and contrast. */
-     --badge-blue: oklch(0.95 0.04 255);
-     --badge-blue-foreground: oklch(0.46 0.2 260);
-     --badge-green: oklch(0.95 0.05 150);
-     --badge-green-foreground: oklch(0.41 0.14 150);
-     --badge-sky: oklch(0.95 0.04 225);
-     --badge-sky-foreground: oklch(0.46 0.15 230);
-     --badge-purple: oklch(0.96 0.05 300);
-     --badge-purple-foreground: oklch(0.46 0.18 300);
-    --badge-red: oklch(0.95 0.04 var(--destructive-hue));
-    --badge-red-foreground: oklch(0.5 0.18 var(--destructive-hue));
-
     /* Presence. The only chromatic accents in an otherwise neutral palette,
        because a person's availability has to read at a glance. */
     --presence-available: oklch(0.63 0.16 149);
@@ -550,7 +530,9 @@
     --card-content-group-gap: calc(var(--spacing) * 4);
     --card-footer-gap: calc(var(--spacing) * 2);
     --choice-card-padding: calc(var(--spacing) * 2.5);
-    --switch-height-default: calc(var(--spacing) * 4.6);
+    --switch-height-default: calc(var(--spacing) * 7);
+    /* Off knob: midpoint of the secondary rest/selected tones — an in-between purple. */
+    --switch-knob-off: color-mix(in srgb, var(--button-secondary-fill), var(--button-selected-secondary-fill));
     --tooltip-arrow-offset: calc(var(--spacing) * 0.5);
     --card-media-overlay: color-mix(in oklab, var(--primary) 35%, transparent);
     --code-block-action-inset: calc(var(--spacing) * 2);
@@ -829,23 +811,30 @@
     --ai-chat-recents-menu-min-height: calc(var(--spacing) * 24);
     --ai-chat-recents-menu-max-height: calc(var(--spacing) * 80);
 
-     /* Skeleton. A high-contrast travelling highlight reads more clearly than
-       a whole-surface opacity pulse while retaining the neutral palette. */
+     /* Skeleton. A travelling highlight lightens the tertiary fill (warm grey)
+       toward white in a broad, gradual band rather than a tight peak. */
     --skeleton-shimmer-speed: calc(var(--speed-pulse) * 2);
     --skeleton-shimmer-angle: 110deg;
-    --skeleton-shimmer-edge-strength: 3%;
-    --skeleton-shimmer-mid-strength: 9%;
-    --skeleton-shimmer-peak-strength: 14%;
-    --skeleton-shimmer-spread: 32%;
+    --skeleton-shimmer-base: var(--tertiary-fill);
+    --skeleton-shimmer-highlight: var(--surface-default);
+    --skeleton-shimmer-edge-strength: 14%;
+    --skeleton-shimmer-mid-strength: 42%;
+    --skeleton-shimmer-peak-strength: 78%;
+    --skeleton-shimmer-spread: 50%;
      --skeleton-shimmer-size: 200% 100%;
 
     /* Elevation. Two shadows per step: a tight ambient contact shadow plus a
        wider key shadow, so a lifted surface reads without a heavy edge. */
     --elevation-ambient: oklch(0.145 0 0 / 0.04);
     --elevation-key: oklch(0.145 0 0 / 0.1);
-    --elevation-flat: none;
-    --elevation-raised: none;
-    --elevation-floating: none;
+    /* Hairline outline shared by every elevated surface (card/dialog/menu/popover). */
+    --elevation-stroke: color-mix(in oklab, oklch(from var(--foreground) l 0 h) 6%, transparent);
+    /* Transparent no-op, not `none`, so it composes with a ring without voiding it. */
+    --elevation-flat: 0 0 transparent;
+    --elevation-raised: 0 1px 2px -1px var(--elevation-ambient),
+      0 2px 6px -1px var(--elevation-key);
+    --elevation-floating: 0 2px 4px -2px var(--elevation-ambient),
+      0 12px 28px -6px var(--elevation-key);
 
     /* Interaction state layers. The foreground role automatically produces
        dark overlays in light mode and light overlays in dark mode. */
@@ -857,24 +846,26 @@
     --state-layer-focus-opacity: calc(var(--md-sys-state-focus-state-layer-opacity) * 100%);
     --state-layer-pressed-opacity: calc(var(--md-sys-state-pressed-state-layer-opacity) * 100%);
     --state-layer-dragged-opacity: calc(var(--md-sys-state-dragged-state-layer-opacity) * 100%);
+    /* Warm tint for interaction overlays, sourced from the darker tertiary shade. */
+    --state-layer-color: var(--tertiary-ink);
     --state-layer-hover: color-mix(
       in oklab,
-      var(--foreground) var(--state-layer-hover-opacity),
+      var(--state-layer-color) var(--state-layer-hover-opacity),
       transparent
     );
     --state-layer-focus: color-mix(
       in oklab,
-      var(--foreground) var(--state-layer-focus-opacity),
+      var(--state-layer-color) var(--state-layer-focus-opacity),
       transparent
     );
     --state-layer-pressed: color-mix(
       in oklab,
-      var(--foreground) var(--state-layer-pressed-opacity),
+      var(--state-layer-color) var(--state-layer-pressed-opacity),
       transparent
     );
     --state-layer-dragged: color-mix(
       in oklab,
-      var(--foreground) var(--state-layer-dragged-opacity),
+      var(--state-layer-color) var(--state-layer-dragged-opacity),
       transparent
     );
 
@@ -1038,9 +1029,17 @@
     --annotation-line-dash: calc(var(--spacing) * 0.25);
     --annotation-line-gap: calc(var(--spacing) * 1.25);
     --slider-snap-threshold: 0.03;
-    --slider-thumb-size: calc(var(--spacing) * 3);
-    --slider-stop-width: calc(var(--spacing) * 0.5);
-    --slider-stop-height: calc(var(--spacing) * 2);
+    /* Material 3 Expressive slider geometry (XS reference: 16dp track,
+       4x44dp handle, 8dp track shape) — tokenized so scale/gap can retune. */
+    --slider-track-height: calc(var(--spacing) * 4);
+    --slider-handle-width: var(--spacing);
+    --slider-handle-width-pressed: calc(var(--spacing) * 0.5);
+    --slider-handle-height: calc(var(--spacing) * 11);
+    --slider-handle-gap: calc(var(--spacing) * 1.5);
+    --slider-track-gap-color: var(--background);
+    --slider-stop-size: var(--spacing);
+    --slider-handle-speed: var(--motion-effects-fast-speed);
+    --slider-handle-curve: var(--motion-effects-fast-curve);
     --concentric-title-size: var(--text-base);
     --concentric-title-leading: var(--text-base--line-height);
     --concentric-title-weight: var(--font-weight-semibold);
@@ -1293,17 +1292,47 @@
     --favicon-monochrome-filter: brightness(0);
     --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
     --icon-label-optical-padding: var(--spacing);
+    --field-height: var(--button-height-default);
+    --field-padding-inline: var(--button-padding-default);
+    --field-radius: var(--radius-lg);
+    --field-search-radius: calc(var(--field-height) / 2);
+    --field-icon-size: var(--button-icon-default);
+    --field-gap: var(--graphic-label-gap);
+    --field-affordance-inset: calc(
+      var(--field-padding-inline) + var(--field-icon-size) + var(--field-gap)
+    );
     --input-group-border-width: 1px;
-    --input-group-action-inset: calc(var(--spacing) - var(--input-group-border-width));
+    /* An action inside a field is derived from the field: square, inset, concentric. */
+    --field-action-inset: var(--spacing);
+    --field-action-size: calc(var(--field-height) - var(--field-action-inset) * 2);
+    --field-action-radius: calc(var(--field-radius) - var(--field-action-inset));
+    --field-action-padding-inline: calc(var(--field-action-inset) * 3);
+    --field-action-icon-size: calc(var(--field-action-size) / 2);
+    --field-control-padding-inline: calc(
+      var(--field-padding-inline) - var(--field-action-inset)
+    );
+    /* OTP slots are chunky filled tiles: expressive-sized, field-radius, gapped. */
+    --otp-slot-size: var(--button-height-expressive);
+    --otp-slot-radius: var(--field-radius);
+    --otp-slot-gap: var(--graphic-label-gap);
+    /* Checkbox/radio box, shared by Checkbox, Radio, and the Questionnaire copy. */
+    --control-size: calc(var(--spacing) * 5);
+    --control-check-size: calc(var(--spacing) * 4);
+    --control-dot-size: calc(var(--spacing) * 2.5);
+    /* Filled, borderless control surface: secondary resting, selected-secondary when checked. */
+    --control-fill: var(--button-secondary-fill);
+    /* Hover mirrors the button state-layer: fill mixed toward its ink by the hover opacity. */
+    --control-hover-fill: color-mix(in srgb, var(--button-secondary-fill), var(--button-secondary-ink) var(--state-layer-hover-opacity));
+    --control-checked-hover-fill: color-mix(in srgb, var(--button-selected-secondary-fill), var(--button-selected-secondary-ink) var(--state-layer-hover-opacity));
     --dialog-close-clearance: calc(var(--button-height-default) + var(--button-gap));
     --drawer-close-clearance: calc(var(--button-height-default) + var(--button-gap) + var(--spacing) * 4);
-    --text-body-size: var(--text-sm);
+    --text-body-size: var(--text-lg);
     --text-body-leading: 1.625;
     --text-label-size: var(--text-sm);
     --text-label-leading: 1.5;
     --text-metadata-size: var(--text-sm);
     --text-metadata-leading: 1.5;
-    --text-code-size: var(--text-xs);
+    --text-code-size: var(--text-sm);
     --text-code-leading: 1.5;
     --toc-width: calc(var(--spacing) * 48);
     --toc-layout-gap: calc(var(--spacing) * 8);
@@ -1417,16 +1446,6 @@
     --primary: var(--action-primary);
     --primary-foreground: var(--action-on-primary);
     --destructive: oklch(0.7 0.16 var(--destructive-hue));
-    --badge-blue: oklch(0.3 0.08 255);
-    --badge-blue-foreground: oklch(0.84 0.11 255);
-    --badge-green: oklch(0.3 0.07 150);
-    --badge-green-foreground: oklch(0.85 0.12 150);
-    --badge-sky: oklch(0.3 0.07 225);
-    --badge-sky-foreground: oklch(0.86 0.1 225);
-    --badge-purple: oklch(0.31 0.08 300);
-    --badge-purple-foreground: oklch(0.86 0.11 300);
-    --badge-red: oklch(0.31 0.07 var(--destructive-hue));
-    --badge-red-foreground: oklch(0.86 0.1 var(--destructive-hue));
     --annotation-bounds-color: oklch(0.84 0.11 255);
     --annotation-padding-color: oklch(0.85 0.12 150);
     --annotation-border-color: oklch(0.86 0.14 90);
@@ -1497,14 +1516,14 @@
   --surface-ink: var(--md-sys-color-on-surface);
   --surface-muted-ink: var(--md-sys-color-on-surface-variant);
   --surface-stroke: var(--md-sys-color-outline-variant);
-  --surface-outline: var(--md-sys-color-outline-variant);
-  --surface-input-outline: var(--md-sys-color-outline);
+  --surface-outline: oklch(from var(--md-sys-color-outline-variant) l 0 h);
+  --surface-input-outline: oklch(from var(--md-sys-color-outline) l 0 h);
   --background: var(--surface-canvas);
   --foreground: var(--surface-ink);
   --card: var(--surface-default);
   --card-foreground: var(--surface-ink);
   --control: var(--surface-low);
-  --popover: var(--surface-high);
+  --popover: var(--surface-default);
   --popover-foreground: var(--surface-ink);
   --muted: var(--md-sys-color-surface-container);
   --muted-foreground: var(--surface-muted-ink);
@@ -1526,6 +1545,13 @@
   --theme-field-fill: var(--md-sys-color-surface-container-highest);
 }
 
+.dark {
+  /* Soften hairlines in dark mode: a low-alpha neutral reads as soft as the light outline,
+     instead of the brighter opaque outline-variant. */
+  --surface-outline: oklch(1 0 0 / 10%);
+  --surface-input-outline: oklch(1 0 0 / 15%);
+}
+
 .color-theme[data-color-theme="custom"] {
   --button-primary-fill: var(--primary);
   --button-primary-ink: var(--primary-foreground);
@@ -1539,7 +1565,7 @@
   --card: var(--surface-default);
   --card-foreground: var(--surface-ink);
   --control: var(--surface-low);
-  --popover: var(--surface-low);
+  --popover: var(--surface-default);
   --popover-foreground: var(--surface-ink);
   --primary: var(--action-primary);
   --primary-foreground: var(--action-on-primary);
@@ -1561,10 +1587,10 @@
   --sidebar-border: var(--surface-outline);
   --sidebar-ring: var(--action-primary);
   --sidebar-inset-backdrop: var(--surface-high);
-  --state-layer-hover: color-mix(in oklab, var(--foreground) var(--state-layer-hover-opacity), transparent);
-  --state-layer-focus: color-mix(in oklab, var(--foreground) var(--state-layer-focus-opacity), transparent);
-  --state-layer-pressed: color-mix(in oklab, var(--foreground) var(--state-layer-pressed-opacity), transparent);
-  --state-layer-dragged: color-mix(in oklab, var(--foreground) var(--state-layer-dragged-opacity), transparent);
+  --state-layer-hover: color-mix(in oklab, var(--state-layer-color) var(--state-layer-hover-opacity), transparent);
+  --state-layer-focus: color-mix(in oklab, var(--state-layer-color) var(--state-layer-focus-opacity), transparent);
+  --state-layer-pressed: color-mix(in oklab, var(--state-layer-color) var(--state-layer-pressed-opacity), transparent);
+  --state-layer-dragged: color-mix(in oklab, var(--state-layer-color) var(--state-layer-dragged-opacity), transparent);
   --scrollbar-thumb: color-mix(in oklab, var(--foreground) 25%, transparent);
   --button-primary-hover: color-mix(in oklab, var(--primary), var(--primary-foreground) var(--state-layer-hover-opacity));
   --button-primary-pressed: color-mix(in oklab, var(--primary), var(--primary-foreground) var(--state-layer-pressed-opacity));
@@ -1584,40 +1610,66 @@
   --md-ref-palette-primary80: #d0bcff;
   --md-ref-palette-error40: #b3261e;
   --md-ref-palette-error80: #f2b8b5;
-  --button-primary-fill: var(--md-ref-palette-primary40);
+
+  /* The purple ladder: three tones, one source. Every purple in the system aliases
+     these, so there is no second accent drifting alongside the first. */
+  --purple-strong: var(--md-ref-palette-primary40);
+  --purple-strong-ink: var(--theme-website-on-primary-light);
+  --purple-soft: var(--theme-website-secondary-container-light);
+  --purple-soft-ink: var(--theme-website-on-secondary-container-light);
+  --purple-deep: var(--theme-website-secondary-light);
+  --purple-deep-ink: var(--theme-website-on-secondary-light);
+
+  --button-primary-fill: var(--purple-strong);
   --button-destructive-fill-opacity: 10%;
   --button-material-error: var(--md-ref-palette-error40);
   --button-destructive-hover-opacity: 20%;
   --button-destructive-pressed-opacity: 30%;
-  --button-primary-ink: var(--theme-website-on-primary-light);
-  --button-primary-state-ink: var(--theme-website-on-primary-light);
-  --button-secondary-fill: var(--theme-website-secondary-container-light);
-  --button-secondary-ink: var(--theme-website-on-secondary-container-light);
-  --button-link-ink: var(--theme-website-primary-light);
-  --button-selected-secondary-fill: var(--theme-website-secondary-light);
-  --button-selected-secondary-ink: var(--theme-website-on-secondary-light);
+  --button-primary-ink: var(--purple-strong-ink);
+  --button-primary-state-ink: var(--purple-strong-ink);
+  --button-secondary-fill: var(--purple-soft);
+  --button-secondary-ink: var(--purple-soft-ink);
+  --button-link-ink: var(--purple-strong);
+  --button-selected-secondary-fill: var(--purple-deep);
+  --button-selected-secondary-ink: var(--purple-deep-ink);
+  --ring: var(--purple-strong);
   --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
 }
 
 .dark {
-  --button-primary-fill: var(--md-ref-palette-primary80);
+  --purple-strong: var(--md-ref-palette-primary80);
+  --purple-strong-ink: var(--theme-website-on-primary-dark);
+  --purple-soft: var(--theme-website-secondary-container-dark);
+  --purple-soft-ink: var(--theme-website-on-secondary-container-dark);
+  --purple-deep: var(--theme-website-secondary-dark);
+  --purple-deep-ink: var(--theme-website-on-secondary-dark);
+
+  --button-primary-fill: var(--purple-strong);
   --button-destructive-fill-opacity: 20%;
   --button-material-error: var(--md-ref-palette-error80);
   --button-destructive-hover-opacity: 30%;
   --button-destructive-pressed-opacity: 40%;
-  --button-primary-ink: var(--theme-website-on-primary-dark);
-  --button-primary-state-ink: var(--theme-website-on-primary-dark);
-  --button-secondary-fill: var(--theme-website-secondary-container-dark);
-  --button-secondary-ink: var(--theme-website-on-secondary-container-dark);
-  --button-link-ink: var(--theme-website-primary-dark);
-  --button-selected-secondary-fill: var(--theme-website-secondary-dark);
-  --button-selected-secondary-ink: var(--theme-website-on-secondary-dark);
+  --button-primary-ink: var(--purple-strong-ink);
+  --button-primary-state-ink: var(--purple-strong-ink);
+  --button-secondary-fill: var(--purple-soft);
+  --button-secondary-ink: var(--purple-soft-ink);
+  --button-link-ink: var(--purple-strong);
+  --button-selected-secondary-fill: var(--purple-deep);
+  --button-selected-secondary-ink: var(--purple-deep-ink);
+  --ring: var(--purple-strong);
   --favicon-monochrome-on-primary-filter: brightness(0);
 }
 
+/* The Tertiary pair is the system's neutral default, so it lives at the root for every
+   consumer. State layers stay element-scoped so themed overrides recompute per element. */
+:root {
+  --tertiary-fill: var(--md-sys-color-surface-container-highest);
+  --tertiary-ink: var(--md-sys-color-on-surface-variant);
+}
+
 .button-motion {
-  --button-tertiary-fill: var(--md-sys-color-surface-container-highest);
-  --button-tertiary-ink: var(--md-sys-color-on-surface-variant);
+  --button-tertiary-fill: var(--tertiary-fill);
+  --button-tertiary-ink: var(--tertiary-ink);
   --button-tertiary-hover: color-mix(in srgb, var(--button-tertiary-fill), var(--button-tertiary-ink) var(--state-layer-hover-opacity));
   --button-tertiary-pressed: color-mix(in srgb, var(--button-tertiary-fill), var(--button-tertiary-ink) var(--state-layer-pressed-opacity));
   --button-destructive-color: var(--button-material-error);
@@ -1730,15 +1782,15 @@
   --surface-interaction: var(--md-sys-color-surface-container-highest);
   --surface-ink: var(--md-sys-color-on-surface);
   --surface-muted-ink: var(--md-sys-color-on-surface-variant);
-  --surface-outline: var(--md-sys-color-outline-variant);
-  --surface-input-outline: var(--md-sys-color-outline);
+  --surface-outline: oklch(from var(--md-sys-color-outline-variant) l 0 h);
+  --surface-input-outline: oklch(from var(--md-sys-color-outline) l 0 h);
   --surface-stroke: var(--md-sys-color-outline-variant);
   --background: var(--surface-canvas);
   --foreground: var(--surface-ink);
   --card: var(--surface-default);
   --card-foreground: var(--surface-ink);
   --control: var(--surface-low);
-  --popover: var(--md-sys-color-surface-container-high);
+  --popover: var(--surface-default);
   --popover-foreground: var(--surface-ink);
   --muted: var(--surface-container);
   --muted-foreground: var(--surface-muted-ink);
@@ -1758,10 +1810,10 @@
   --sidebar-border: var(--surface-outline);
   --sidebar-ring: var(--md-sys-color-primary);
   --sidebar-inset-backdrop: var(--md-sys-color-surface-container);
-  --state-layer-hover: color-mix(in oklab, var(--foreground) var(--state-layer-hover-opacity), transparent);
-  --state-layer-focus: color-mix(in oklab, var(--foreground) var(--state-layer-focus-opacity), transparent);
-  --state-layer-pressed: color-mix(in oklab, var(--foreground) var(--state-layer-pressed-opacity), transparent);
-  --state-layer-dragged: color-mix(in oklab, var(--foreground) var(--state-layer-dragged-opacity), transparent);
+  --state-layer-hover: color-mix(in oklab, var(--state-layer-color) var(--state-layer-hover-opacity), transparent);
+  --state-layer-focus: color-mix(in oklab, var(--state-layer-color) var(--state-layer-focus-opacity), transparent);
+  --state-layer-pressed: color-mix(in oklab, var(--state-layer-color) var(--state-layer-pressed-opacity), transparent);
+  --state-layer-dragged: color-mix(in oklab, var(--state-layer-color) var(--state-layer-dragged-opacity), transparent);
   --button-secondary-hover: color-mix(in oklab, var(--secondary), var(--secondary-foreground) var(--state-layer-hover-opacity));
   --button-secondary-pressed: color-mix(in oklab, var(--secondary), var(--secondary-foreground) var(--state-layer-pressed-opacity));
   color: var(--foreground);
@@ -1948,19 +2000,23 @@
 .color-theme[data-color-scale="website"] [data-slot="tabs-list"][data-variant="default"] [data-slot="tabs-trigger"][data-state="active"] {
   color: var(--md-sys-color-on-secondary-container);
 }
-[data-slot="badge"][data-variant="accent"] {
-  --badge-accent-fill: var(--theme-highlight-fill, var(--secondary));
-  --badge-accent-ink: var(--theme-highlight-ink, var(--secondary-foreground));
-}
 
 [data-slot="card-footer"] {
   --card-footer-fill: var(--theme-card-footer-fill, color-mix(in oklab, var(--muted) 50%, transparent));
 }
-:is([data-slot="input"], [data-slot="textarea"], [data-slot="native-select"], [data-slot="select-trigger"], [data-slot="input-group"], [data-slot="combobox-chips"], [data-slot="input-otp-slot"], [data-slot="questionnaire-input"], [data-slot="questionnaire-choice"]) {
-  --field-fill: var(--theme-field-fill, var(--control));
+/* Declared at the root, not on a data-slot list: asChild wrappers such as FormControl
+   rewrite data-slot, which would drop the control out of a slot-scoped selector and
+   leave its fill resolving to nothing. */
+:root {
+  /* Fields are Tertiary surfaces: the same pair the Tertiary Button uses. */
+  --field-fill: var(--tertiary-fill);
+  --field-ink: var(--tertiary-ink);
   --field-disabled-fill: var(--md-sys-color-surface-container);
-  --field-hover-fill: color-mix(in srgb, var(--field-fill), var(--foreground) var(--state-layer-hover-opacity));
-  --field-pressed-fill: color-mix(in srgb, var(--field-fill), var(--foreground) var(--state-layer-pressed-opacity));
+  /* Focus promotes a field one emphasis level, mirroring Tertiary-to-Secondary selection on Button. */
+  --field-focus-fill: var(--button-secondary-fill);
+  --field-focus-ink: var(--button-secondary-ink);
+  --field-hover-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-hover-opacity));
+  --field-pressed-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-pressed-opacity));
 }
 [data-slot="sidebar-menu-button"][data-active="true"] {
   background-color: var(--sidebar-selected-fill, var(--sidebar-accent));
@@ -2163,6 +2219,17 @@
 }
 
 @layer components {
+  [data-slot="search-input"] {
+    --field-radius: var(--field-search-radius);
+  }
+
+  [data-field-action] {
+    --field-action-size: calc(var(--field-height) - var(--field-action-inset) * 2);
+    --field-action-radius: calc(var(--field-radius) - var(--field-action-inset));
+    --field-action-padding-inline: calc(var(--field-action-inset) * 3);
+    --field-action-icon-size: calc(var(--field-action-size) / 2);
+  }
+
   .item-actions--hosted {
     position: absolute;
     inset-block: var(--item-hosted-action-inset);
@@ -3449,6 +3516,53 @@
   }
 }
 
+/* Material 3 Expressive slider handle: a tall primary pill separated from the
+   primary active track by a surface-colored gap, with a state-layer halo and a
+   press squeeze. Geometry lives here so the gap shadow stays fully tokenized. */
+@layer components {
+  [data-slot="slider-thumb"] {
+    --slider-state-layer-size: 0px;
+    box-shadow:
+      0 0 0 var(--slider-handle-gap) var(--slider-track-gap-color),
+      0 0 0 calc(var(--slider-handle-gap) + var(--slider-state-layer-size))
+        color-mix(in oklab, var(--button-primary-fill) 12%, transparent);
+    transition:
+      width var(--slider-handle-speed) var(--slider-handle-curve),
+      height var(--slider-handle-speed) var(--slider-handle-curve),
+      box-shadow var(--slider-handle-speed) var(--slider-handle-curve);
+  }
+
+  [data-slot="slider"][data-orientation="horizontal"] [data-slot="slider-thumb"] {
+    width: var(--slider-handle-width);
+    height: var(--slider-handle-height);
+  }
+
+  [data-slot="slider"][data-orientation="vertical"] [data-slot="slider-thumb"] {
+    width: var(--slider-handle-height);
+    height: var(--slider-handle-width);
+  }
+
+  [data-slot="slider-thumb"]:hover {
+    --slider-state-layer-size: calc(var(--spacing) * 1.5);
+  }
+
+  [data-slot="slider"][data-orientation="horizontal"] [data-slot="slider-thumb"]:active {
+    width: var(--slider-handle-width-pressed);
+    --slider-state-layer-size: calc(var(--spacing) * 2);
+  }
+
+  [data-slot="slider"][data-orientation="vertical"] [data-slot="slider-thumb"]:active {
+    height: var(--slider-handle-width-pressed);
+    --slider-state-layer-size: calc(var(--spacing) * 2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="slider-thumb"] {
+    transition: none;
+  }
+}
+
 .button-motion-expressive {
   --button-round-radius: calc(var(--button-height-expressive) / 2);
   --button-pressed-radius: var(--button-pressed-radius-expressive);
@@ -3711,36 +3825,36 @@
   }
 
   .skeleton-shimmer {
-    background-color: var(--muted);
+    background-color: var(--skeleton-shimmer-base);
     background-image: linear-gradient(
       var(--skeleton-shimmer-angle),
-      var(--muted) calc(50% - var(--skeleton-shimmer-spread)),
+      var(--skeleton-shimmer-base) calc(50% - var(--skeleton-shimmer-spread)),
       color-mix(
         in oklch,
-        var(--muted),
-        var(--foreground) var(--skeleton-shimmer-edge-strength)
+        var(--skeleton-shimmer-base),
+        var(--skeleton-shimmer-highlight) var(--skeleton-shimmer-edge-strength)
       ) calc(50% - var(--skeleton-shimmer-spread) * 0.75),
       color-mix(
         in oklch,
-        var(--muted),
-        var(--foreground) var(--skeleton-shimmer-mid-strength)
+        var(--skeleton-shimmer-base),
+        var(--skeleton-shimmer-highlight) var(--skeleton-shimmer-mid-strength)
       ) calc(50% - var(--skeleton-shimmer-spread) * 0.35),
       color-mix(
         in oklch,
-        var(--muted),
-        var(--foreground) var(--skeleton-shimmer-peak-strength)
+        var(--skeleton-shimmer-base),
+        var(--skeleton-shimmer-highlight) var(--skeleton-shimmer-peak-strength)
       ) 50%,
       color-mix(
         in oklch,
-        var(--muted),
-        var(--foreground) var(--skeleton-shimmer-mid-strength)
+        var(--skeleton-shimmer-base),
+        var(--skeleton-shimmer-highlight) var(--skeleton-shimmer-mid-strength)
       ) calc(50% + var(--skeleton-shimmer-spread) * 0.35),
       color-mix(
         in oklch,
-        var(--muted),
-        var(--foreground) var(--skeleton-shimmer-edge-strength)
+        var(--skeleton-shimmer-base),
+        var(--skeleton-shimmer-highlight) var(--skeleton-shimmer-edge-strength)
       ) calc(50% + var(--skeleton-shimmer-spread) * 0.75),
-      var(--muted) calc(50% + var(--skeleton-shimmer-spread))
+      var(--skeleton-shimmer-base) calc(50% + var(--skeleton-shimmer-spread))
     );
     background-repeat: no-repeat;
     background-size: var(--skeleton-shimmer-size);

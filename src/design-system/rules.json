@@ -72,18 +72,18 @@
       "example": null
     },
     {
-      "id": "appearance.no-shadows",
-      "title": "Do not use decorative shadows",
+      "id": "appearance.elevation",
+      "title": "Elevation is tone, a hairline, and a subtle shadow",
       "section": "Foundations",
       "status": "approved",
       "level": "Required",
-      "rule": "Do not use decorative shadows on OneDS interfaces, including FABs, cards, menus, and floating controls. Separate surfaces through color, spacing, shape, and intentional boundaries. Shared elevation and standard shadow tokens resolve to none. Do not introduce local box-shadow, drop-shadow, or shadow utility overrides to restore elevation.",
-      "why": "Shape and surface contrast provide hierarchy without a shadow-based visual language.",
-      "exceptions": "Preserve accessible keyboard focus rings and deliberate boundary rings even when their implementation uses box-shadow. They are interaction or boundary indicators, not decorative elevation.",
-      "evidence": "September 8, 2026: user explicitly rejected shadows anywhere after the FAB update. This supersedes earlier instructions to retain decorative elevation and shadow geometry.",
-      "tokens": ["--elevation-flat", "--elevation-raised", "--elevation-floating", "--shadow-xs", "--shadow-sm", "--shadow-md", "--shadow-lg"],
-      "implementation": ["src/index.css", "src/components/ui/fab.tsx"],
-      "enforcement": { "kind": "Partially automated", "detail": "Shared elevation and standard shadow scales are disabled; FAB shadow utilities are removed. A rendered check verifies FAB rest, hover, and pressed states. Local custom shadow implementations require review; focus rings are deliberately retained." },
+      "rule": "Elevation is expressed on three independent axes, each owned by one token so it tunes in a single place. TONE comes from the Material surface role, never from the elevation level: floating overlays (dialogs, menus, popovers, toasts) use the white card tone via --popover set to --surface-default, while structural panels such as sidebars stay tonal. OUTLINE is a hairline shared by every elevated surface through --elevation-stroke (the foreground at 6 percent); it is always present and provides separation. SHADOW is a subtle, soft, neutral two-layer cast, a tight ambient contact (--elevation-ambient) plus a wider key (--elevation-key), that adds depth only at raised and floating; flat carries no shadow. Three levels: flat is tone plus outline, raised is a small lift, floating is a larger soft halo. Assign floating to transient and modal overlays and raised to lifted structural surfaces; cards and panels stay flat. Never couple tone to the elevation level, reintroduce a heavy or single-blur shadow, tint the shadow, or hardcode a ring color instead of --elevation-stroke. The generic --shadow-* scale stays none, so decorative shadows outside the elevation system remain disallowed.",
+      "why": "Separating color, boundary, and depth into three single-token axes lets a floating surface read as white while a flat panel reads as tonal, and keeps hover feedback, hairlines, and depth independently tunable.",
+      "exceptions": "Tooltips remain the inverse chip and carry no cast shadow. Interaction state layers are a separate system, a warm --state-layer-color tint at the Material 8/10/10/16 percent opacities, not spatial elevation. Focus rings and deliberate boundary rings that happen to use box-shadow are indicators, not decorative elevation. --elevation-flat is a transparent no-op rather than the none keyword so it composes with a ring without voiding the whole box-shadow list. Sonner hardcodes its own shadow, so the toast overrides it with an important utility.",
+      "evidence": "September 11-12, 2026: the user reworked elevation and explicitly reversed the earlier no-shadows decision, choosing a tone-plus-outline-plus-subtle-shadow combination because some same-tone surfaces blended together. Decisions were made one at a time: three levels, always-on outline, keep both outline and shadow, subtle two-layer neutral shadows, tone owned by the surface role, overlays retargeted to white, the hairline lightened to foreground/6 and tokenized, warm state-layer tint, and the modal/transient overlays mapped to floating. This supersedes the September 8 appearance.no-shadows rule.",
+      "tokens": ["--elevation-flat", "--elevation-raised", "--elevation-floating", "--elevation-ambient", "--elevation-key", "--elevation-stroke", "--popover", "--surface-default", "--state-layer-color"],
+      "implementation": ["src/index.css", "src/components/ui/elevation.tsx", "src/components/ui/card.tsx", "src/components/ui/dialog.tsx", "src/components/ui/alert-dialog.tsx", "src/components/ui/drawer.tsx", "src/components/ui/sonner.tsx", "src/components/ui/popover.tsx", "src/components/ui/dropdown-menu.tsx"],
+      "enforcement": { "kind": "Manual", "detail": "No dedicated automated regression yet. Verified by rendered checks that the dialog composes the hairline plus the two-layer floating shadow, that flat surfaces keep their ring, that overlays resolve to the white card tone, and that state layers resolve to the warm tertiary tint; the project typecheck passes. Correct per-component level assignment and the shadow-free generic scale still require review." },
       "example": null
     },
     {
@@ -159,6 +159,21 @@
       "tokens": ["--button-primary-fill", "--button-primary-ink", "--button-primary-state-ink", "--button-secondary-fill", "--button-secondary-ink", "--button-tertiary-fill", "--button-tertiary-ink", "--button-tertiary-hover", "--button-tertiary-pressed", "--button-link-ink", "--button-primary-hover", "--button-primary-pressed", "--button-secondary-hover", "--button-secondary-pressed"],
       "implementation": ["src/index.css", "src/components/ui/button.tsx", "src/components/ui/button-group.tsx", "src/components/ui/color-theme.tsx", "tests/color-theme.spec.ts", "tests/design-rules.spec.ts", "src/design-system/material-foundation.md"],
       "enforcement": { "kind": "Partially automated", "detail": "Source checks enforce the three named variants and neutral default alias. Desktop light/dark tests cover all three fills, state contrast, disabled defaults, token propagation, selected shape/color/icon behavior, keyboard interaction, favicon adaptation, and reduced motion. Explicit primary consumers and shared supporting defaults are migrated; broader product emphasis remains a composition review decision. No full certification of destructive text contrast or connected-group interactions is claimed." },
+      "example": null
+    },
+    {
+      "id": "color.accent-restraint",
+      "title": "Primary and secondary are opt-in, never a default",
+      "section": "Color",
+      "status": "approved",
+      "level": "Required",
+      "rule": "Default to Tertiary/neutral roles for every surface, control, and field. Do not use Primary or Secondary color roles unless the composition explicitly calls for that emphasis, or the owning component already ships them as its own documented treatment. Primary's accent purple is reserved for prominent calls to action. Secondary's light purple is reserved for deliberate emphasis and the shared selected state. The system carries exactly three purple tones, defined once as --purple-strong (Primary P40/P80), --purple-soft (Secondary container) and --purple-deep (selected Secondary), each with a paired ink. Every purple consumer aliases one of them: primary buttons, links, and the focus ring all take --purple-strong, so no second accent can drift alongside the first. Fields consume the Tertiary pair through --field-fill and --field-ink and promote to --field-focus-fill on focus, so one token change moves every field together with its button. Choose emphasis deliberately in the composition and state it; never reach for an accent to make a surface look finished, and never infer it from surrounding markup.",
+      "why": "Accent color loses meaning when it is the default. Reserving Primary and Secondary keeps a prominent action and a selected state legible as exceptions, and keeps routine inputs and controls quiet.",
+      "exceptions": "Components that own an accent as part of their definition keep it: Primary buttons, the shared selected state, links, destructive intent, focus rings, status/presence/category/chart palettes, and brand assets. Explicitly themed scopes, generated themes, and experiments may set their own accents within their own scope. A caller may still opt into Primary or Secondary when the composition genuinely needs that emphasis.",
+      "evidence": "September 11, 2026: after fields were first migrated onto the Secondary Button pair, the user redirected them to Tertiary and stated the rule directly: unless specified, or unless it comes with a component, do not use primary or secondary. The user then asked to standardize the purples to a few reused tones. An audit found four competing purples, including a separate website purple used only by links; they were collapsed into the three-tone ladder. The focus ring moved from a neutral --ring, measured at 2.52:1 against the page in light mode and therefore below the 3:1 minimum for focus indicators, to --purple-strong at 6.27:1 light and 10.87:1 dark, holding 4.72:1 and 5.47:1 against a focused field's fill.",
+      "tokens": ["--purple-strong", "--purple-strong-ink", "--purple-soft", "--purple-soft-ink", "--purple-deep", "--purple-deep-ink", "--ring", "--button-primary-fill", "--button-secondary-fill", "--button-link-ink", "--button-tertiary-fill", "--button-tertiary-ink", "--field-fill", "--field-ink", "--field-focus-fill", "--field-focus-ink", "--field-hover-fill", "--field-pressed-fill"],
+      "implementation": ["src/index.css", "src/components/ui/button.tsx", "src/components/ui/input.tsx", "src/components/ui/textarea.tsx", "src/components/ui/select.tsx", "src/components/ui/native-select.tsx", "src/components/ui/input-group.tsx", "src/components/ui/combobox.tsx"],
+      "enforcement": { "kind": "Manual review", "detail": "No automated check can distinguish a deliberate accent from an unconsidered one, so reviewers verify emphasis at the composition. Field colors are centralized in --field-* tokens that alias the Tertiary Button pair, which makes a stray local accent easier to spot in review." },
       "example": null
     },
     {
@@ -272,13 +287,13 @@
       "section": "Geometry and Spacing",
       "status": "approved",
       "level": "Required",
-      "rule": "For uniformly nested rounded surfaces, derive the inner radius from the outer radius minus the actual edge-to-edge inset. If the inset contains a border, subtract that border and the padding. Clamp at zero.",
+      "rule": "Concentric corners are non-negotiable for UI. For every uniformly nested rounded surface, derive the inner radius from the actual outer radius minus the actual edge-to-edge inset. If the inset contains a border, subtract that border and the padding. Clamp at zero. Verify the equation independently for each host; matching inner radii across differently shaped hosts is not evidence of concentric geometry.",
       "why": "Independent radii make the gap swell or pinch around a corner.",
       "exceptions": "The relationship assumes aligned, uniformly inset surfaces. A small object floating in the middle of a larger surface does not share its corner center. Rings and shadows consume no layout space.",
-      "evidence": "Standing user preference: apply concentric corners by default.",
-      "tokens": ["--radius-lg", "--radius-xl"],
-      "implementation": ["src/showcase/experiments/concentric.tsx", "src/index.css"],
-      "enforcement": { "kind": "Manual review", "detail": "Inspect actual nesting and painted boundaries. Existing Concentric experiment tests do not certify every component." },
+      "evidence": "Standing user preference, reaffirmed September 11, 2026: concentric corners are non-negotiable for UI.",
+      "tokens": ["--radius-lg", "--radius-xl", "--field-radius", "--field-search-radius", "--field-action-inset", "--field-action-radius"],
+      "implementation": ["src/showcase/experiments/concentric.tsx", "src/index.css", "src/components/ui/button.tsx", "src/components/ui/input.tsx"],
+      "enforcement": { "kind": "Manual review", "detail": "Inspect actual nesting and painted boundaries, then verify inner radius equals outer radius minus the actual inset independently for every changed host. Equality between child radii in differently shaped hosts is not a valid check. Existing Concentric experiment tests do not certify every component." },
       "example": null
     },
     {

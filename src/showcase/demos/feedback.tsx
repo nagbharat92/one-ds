@@ -440,7 +440,7 @@ export function SpinnerDemo() {
               <Spinner className="size-3" />
               Syncing
             </Badge>
-            <Badge variant="outline">
+            <Badge variant="tertiary">
               <Spinner className="size-3" />
               Processing
             </Badge>

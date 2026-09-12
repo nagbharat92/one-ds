@@ -121,7 +121,7 @@ function ChoiceCard({
     <FieldLabel
       data-slot="choice-card"
       className={cn(
-        "min-h-11 cursor-pointer justify-center p-(--choice-card-padding) has-[:disabled,[data-disabled]]:cursor-not-allowed has-[:disabled,[data-disabled]]:opacity-50 *:data-[slot=field]:p-0 [&_[data-slot=checkbox]:focus-visible]:ring-0! [&_[data-slot=radio-group-item]:focus-visible]:ring-0! [&_[data-slot=switch]:focus-visible]:ring-0!",
+        "min-h-11 cursor-pointer justify-start p-(--choice-card-padding) has-[:disabled,[data-disabled]]:cursor-not-allowed has-[:disabled,[data-disabled]]:opacity-50 *:data-[slot=field]:p-0 [&_[data-slot=checkbox]:focus-visible]:ring-0! [&_[data-slot=radio-group-item]:focus-visible]:ring-0! [&_[data-slot=switch]:focus-visible]:ring-0!",
         className
       )}
       {...props}

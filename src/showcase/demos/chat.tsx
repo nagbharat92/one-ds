@@ -1050,7 +1050,7 @@ function ResponseSourcesDemo() {
           <MessageFooter>
             <MessageActions>
               {sources.map((source) => (
-                <Badge key={source.label} asChild variant="outline">
+                <Badge key={source.label} asChild variant="tertiary">
                   <a
                     href={source.href}
                     target="_blank"

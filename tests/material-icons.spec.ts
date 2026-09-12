@@ -12,13 +12,18 @@ test("sidebar icons stay outlined and equal sized while section sorting uses sor
   await expect(inlineIcon).toHaveAttribute("data-material-symbol", "dock_to_right")
   await expect(inlineIcon).toHaveCSS("width", "20px")
   await expect(inlineIcon.locator("text")).toHaveCSS("font-variation-settings", /"FILL" 0(?:,|$)/)
-  const sort = page.getByRole("button", { name: "Group by section", exact: true })
-  if (await sort.count() === 0) await page.getByRole("button", { name: "Sort alphabetically", exact: true }).click()
-  await expect(sort.locator(".material-glyph")).toHaveAttribute("data-material-symbol", "sort")
-  await sort.click()
+  // The sort toggle cycles build order -> alphabetical -> sections, each button
+  // showing the icon of the next mode it switches to.
+  const buildOrder = page.getByRole("button", { name: "Sort by build order", exact: true })
   const alphabetical = page.getByRole("button", { name: "Sort alphabetically", exact: true })
+  const sections = page.getByRole("button", { name: "Group by section", exact: true })
+  // Default is build order, so the button offers to sort alphabetically.
   await expect(alphabetical.locator(".material-glyph")).toHaveAttribute("data-material-symbol", "sort_by_alpha")
   await alphabetical.click()
+  await expect(sections.locator(".material-glyph")).toHaveAttribute("data-material-symbol", "sort")
+  await sections.click()
+  await expect(buildOrder.locator(".material-glyph")).toHaveAttribute("data-material-symbol", "stacks")
+  await buildOrder.click()
   await close.click()
   await expect(floating).toHaveAttribute("data-visible", "true")
   const floatingIcon = floating.locator(".material-glyph")

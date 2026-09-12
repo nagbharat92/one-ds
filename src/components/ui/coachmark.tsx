@@ -197,7 +197,7 @@ const coachmarkContentVariants = cva(
   {
     variants: {
       tone: {
-        default: "bg-popover text-popover-foreground ring-1 ring-foreground/10",
+        default: "bg-popover text-popover-foreground ring-1 ring-(--elevation-stroke)",
         inverted: "bg-foreground text-background",
       },
       size: {

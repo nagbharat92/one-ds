@@ -8,16 +8,21 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 const buttonGroupVariants = cva(
-  "button-group group/button-group flex w-fit max-w-full items-stretch overflow-x-auto *:focus-visible:relative *:focus-visible:z-10 [&>button:focus-visible]:ring-inset [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:min-w-0 [&>input]:flex-1",
+  "button-group group/button-group flex w-fit max-w-full items-stretch overflow-x-auto *:focus-visible:relative *:focus-visible:z-10 [&>button:focus-visible]:ring-inset [&>input:focus-visible]:ring-inset [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:min-w-0 [&>input]:flex-1",
   {
     variants: {
       orientation: {
         horizontal: "flex-row",
         vertical: "flex-col",
       },
+      spacing: {
+        default: "gap-(--button-group-gap)",
+        none: "gap-0",
+      },
     },
     defaultVariants: {
       orientation: "horizontal",
+      spacing: "default",
     },
   }
 )
@@ -25,6 +30,7 @@ const buttonGroupVariants = cva(
 function ButtonGroup({
   className,
   orientation = "horizontal",
+  spacing = "default",
   shape,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants> & {
@@ -35,8 +41,9 @@ function ButtonGroup({
       role="group"
       data-slot="button-group"
       data-orientation={orientation}
+      data-spacing={spacing}
       data-shape={shape}
-      className={cn(buttonGroupVariants({ orientation }), className)}
+      className={cn(buttonGroupVariants({ orientation, spacing }), className)}
       {...props}
     />
   )

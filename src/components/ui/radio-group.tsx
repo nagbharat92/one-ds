@@ -31,16 +31,16 @@ function RadioGroupItem({
       data-slot="radio-group-item"
       className={cn(
         controlIndicatorVariants({ shape: "circle" }),
-        "group/radio-group-item peer aspect-(--aspect-ratio-square) outline-none group-has-focus-visible/field-label:not-data-checked:border-muted-foreground after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 aria-invalid:aria-checked:border-primary dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground group-has-focus-visible/field-label:data-checked:border-primary dark:data-checked:bg-primary",
+        "group/radio-group-item peer aspect-(--aspect-ratio-square) outline-none group-has-focus-visible/field-label:not-data-checked:border-muted-foreground after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-transparent aria-invalid:ring-3 aria-invalid:ring-destructive aria-invalid:aria-checked:border-(--button-selected-secondary-fill) data-checked:border-(--button-selected-secondary-fill) data-checked:bg-(--button-selected-secondary-fill) data-checked:text-(--button-selected-secondary-ink) hover:bg-(--control-hover-fill) data-checked:hover:bg-(--control-checked-hover-fill) group-has-focus-visible/field-label:data-checked:border-(--button-selected-secondary-fill)",
         className
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator
         data-slot="radio-group-indicator"
-        className="flex size-4 items-center justify-center"
+        className="flex size-(--control-size) items-center justify-center"
       >
-        <span className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-foreground" />
+        <span className="absolute top-1/2 left-1/2 size-(--control-dot-size) -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-foreground" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )

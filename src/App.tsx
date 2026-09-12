@@ -7,6 +7,7 @@ import {
 } from "react"
 import {
   ArrowDownAZIcon,
+  BoxesIcon,
   CodeIcon,
   EyeIcon,
   SortIcon,
@@ -21,6 +22,7 @@ import {
   experimentRegistry,
   previewRegistry,
   groupedRegistry,
+  buildOrderRegistry,
   registry,
 } from "@/showcase/registry"
 import { generatedExampleCode } from "@/showcase/generated-example-code"
@@ -64,6 +66,7 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarHeaderActions,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
@@ -350,13 +353,20 @@ function ComponentNavigation({
   onNavigate: (slug: string) => void
 }) {
   const [query, setQuery] = useState("")
-  const [sort, setSort] = useState<"alphabetical" | "sections">("alphabetical")
+  const [sort, setSort] = useState<"build" | "alphabetical" | "sections">("build")
   const { isMobile, setOpenMobile } = useSidebar()
   const normalizedQuery = query.trim().toLowerCase()
   const matches = (name: string) =>
     name.toLowerCase().includes(normalizedQuery)
 
   const visibleGroups = groupedRegistry
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => matches(item.name)),
+    }))
+    .filter((group) => group.items.length > 0)
+
+  const buildGroups = buildOrderRegistry
     .map((group) => ({
       ...group,
       items: group.items.filter((item) => matches(item.name)),
@@ -402,8 +412,7 @@ function ComponentNavigation({
             OneDS
           </SidebarBrandLabel>
         </SidebarBrand>
-        <div
-          className="flex shrink-0 items-center gap-1"
+        <SidebarHeaderActions
           role="toolbar"
           aria-label="Site controls"
         >
@@ -418,7 +427,7 @@ function ComponentNavigation({
           </Button>
           <ModeToggle />
           <SidebarTrigger />
-        </div>
+        </SidebarHeaderActions>
       </SidebarHeader>
       <Separator variant="faded" />
       <div className="flex min-h-0 flex-1 flex-col pt-(--showcase-shell-content-inset)">
@@ -435,15 +444,29 @@ function ComponentNavigation({
             size="icon"
             className="shrink-0 rounded-full"
             aria-label={
-              sort === "alphabetical" ? "Group by section" : "Sort alphabetically"
+              sort === "build"
+                ? "Sort alphabetically"
+                : sort === "alphabetical"
+                  ? "Group by section"
+                  : "Sort by build order"
             }
             onClick={() =>
               setSort((current) =>
-                current === "alphabetical" ? "sections" : "alphabetical",
+                current === "build"
+                  ? "alphabetical"
+                  : current === "alphabetical"
+                    ? "sections"
+                    : "build",
               )
             }
           >
-            {sort === "alphabetical" ? <SortIcon /> : <ArrowDownAZIcon />}
+            {sort === "build" ? (
+              <ArrowDownAZIcon />
+            ) : sort === "alphabetical" ? (
+              <SortIcon />
+            ) : (
+              <BoxesIcon />
+            )}
           </Button>
         </div>
         {/* Bottom padding matches the scroll fade, so the final item stays clear. */}
@@ -460,7 +483,16 @@ function ComponentNavigation({
               </SidebarGroupContent>
             </SidebarGroup>
           )}
-          {sort === "alphabetical" ? (
+          {sort === "build" ? (
+            buildGroups.map((group) => (
+              <SidebarGroup key={group.category}>
+                <SidebarGroupLabel>{group.category}</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>{group.items.map(renderItem)}</SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            ))
+          ) : sort === "alphabetical" ? (
             <>
               {alphabeticalBlockItems.length > 0 ? (
                 <SidebarGroup>

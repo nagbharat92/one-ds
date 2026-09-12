@@ -77,7 +77,7 @@ function RuleEntry({ rule }: { rule: DesignRule }) {
         <SectionHeader>
           <SectionHeading>
             <Cluster>
-              <Badge variant={rule.status === "approved" ? "secondary" : "outline"}>{rule.level}</Badge>
+              <Badge variant={rule.status === "approved" ? "secondary" : "tertiary"}>{rule.level}</Badge>
               <Text variant="metadata" tone="muted" asChild><span>{rule.enforcement.kind}</span></Text>
               <Text variant="code" tone="muted" asChild><code>{rule.id}</code></Text>
             </Cluster>

@@ -2,7 +2,6 @@ import { useState } from "react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { REGEXP_ONLY_DIGITS } from "input-otp"
 import {
   AlignCenterIcon,
   AlignJustifyIcon,
@@ -14,7 +13,6 @@ import {
   BluetoothIcon,
   BookmarkIcon,
   ChevronDownIcon,
-  CopyIcon,
   DownloadIcon,
   ItalicIcon,
   MailIcon,
@@ -49,6 +47,7 @@ import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
@@ -71,7 +70,6 @@ import {
   InputGroupButton,
   InputGroupInput,
   InputGroupText,
-  InputGroupTextarea,
 } from "@/components/ui/input-group"
 import {
   InputOTP,
@@ -94,7 +92,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
 import { Spinner } from "@/components/ui/spinner"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
@@ -250,25 +247,24 @@ function FormDemo() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(() => {})}
-        className="w-full max-w-sm space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder={persona.handle} {...field} />
-              </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
+      <form onSubmit={form.handleSubmit(() => {})} className="w-full max-w-sm">
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder={persona.handle} {...field} />
+                </FormControl>
+                <FormDescription>This is your public display name.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </FieldGroup>
       </form>
     </Form>
   )
@@ -286,37 +282,36 @@ function FormValidationDemo() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(() => {})}
-        className="w-full max-w-sm space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="you@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input type="password" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Create account</Button>
+      <form onSubmit={form.handleSubmit(() => {})} className="w-full max-w-sm">
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="you@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Create account</Button>
+        </FieldGroup>
       </form>
     </Form>
   )
@@ -337,66 +332,65 @@ function FormControlsDemo() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(() => {})}
-        className="w-full max-w-sm space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Role</FormLabel>
-              <Select value={field.value} onValueChange={field.onChange}>
+      <form onSubmit={form.handleSubmit(() => {})} className="w-full max-w-sm">
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Role</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="viewer">Viewer</SelectItem>
+                    <SelectItem value="editor">Editor</SelectItem>
+                    <SelectItem value="admin">Admin</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="marketing"
+            render={({ field }) => (
+              <FormItem orientation="horizontal">
+                <FieldContent>
+                  <FormLabel>Product updates</FormLabel>
+                  <FormDescription>Occasional release notes.</FormDescription>
+                </FieldContent>
                 <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="viewer">Viewer</SelectItem>
-                  <SelectItem value="editor">Editor</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="marketing"
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-between gap-4">
-              <div className="grid gap-1">
-                <FormLabel>Product updates</FormLabel>
-                <FormDescription>Occasional release notes.</FormDescription>
-              </div>
-              <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="terms"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex items-center gap-2">
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="terms"
+            render={({ field }) => (
+              <FormItem orientation="horizontal">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <FormLabel>Accept terms and conditions</FormLabel>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Save preferences</Button>
+                <FieldContent>
+                  <FormLabel>Accept terms and conditions</FormLabel>
+                  <FormMessage />
+                </FieldContent>
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Save preferences</Button>
+        </FieldGroup>
       </form>
     </Form>
   )
@@ -418,25 +412,27 @@ function FormSubmittingDemo() {
         onSubmit={form.handleSubmit(
           () => new Promise((resolve) => setTimeout(resolve, 1500)),
         )}
-        className="w-full max-w-sm space-y-6"
+        className="w-full max-w-sm"
       >
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
-              <FormControl>
-                <Textarea placeholder="How can we help?" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? <Spinner /> : null}
-          {isSubmitting ? "Sending" : "Send message"}
-        </Button>
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Message</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="How can we help?" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner /> : null}
+            {isSubmitting ? "Sending" : "Send message"}
+          </Button>
+        </FieldGroup>
       </form>
     </Form>
   )
@@ -497,27 +493,6 @@ function ButtonLoadingDemo({ size = "default" }: { size?: "default" | "expressiv
         {loading && <Spinner aria-hidden="true" />}
         {loading ? "Saving..." : "Click to save"}
       </Button>
-    </div>
-  )
-}
-
-function OTPControlledDemo() {
-  const [value, setValue] = useState("")
-  return (
-    <div className="space-y-2">
-      <InputOTP maxLength={6} value={value} onChange={setValue}>
-        <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
-        </InputOTPGroup>
-      </InputOTP>
-      <p className="text-sm text-muted-foreground">
-        Entered: {value || "Nothing yet"}
-      </p>
     </div>
   )
 }
@@ -850,6 +825,18 @@ export function ButtonGroupDemo() {
 }`,
     examples: [
       {
+        name: "Spacing",
+        description:
+          "Buttons use the shared 4px group gap; quiet actions can leave the resting backplate to the primary action.",
+        Demo: () => (
+          <ButtonGroup aria-label="Spacing between buttons">
+            <Button variant="ghost">Back</Button>
+            <Button variant="tertiary">Save draft</Button>
+            <Button variant="ghost">Continue</Button>
+          </ButtonGroup>
+        ),
+      },
+      {
         name: "Choice",
         description:
           "Select one value immediately. Labels center at rest and animate aside for the selected checkmark; button widths already include its space.",
@@ -1079,15 +1066,6 @@ export function InputDemo() {
         ),
       },
       {
-        name: "File",
-        Demo: () => (
-          <div className="grid w-full max-w-sm gap-1.5">
-            <Label htmlFor="demo-input-file">Upload file</Label>
-            <Input id="demo-input-file" type="file" />
-          </div>
-        ),
-      },
-      {
         name: "Inline",
         description: "Label and input side by side.",
         Demo: () => (
@@ -1148,28 +1126,37 @@ export function InputDemo() {
       },
       {
         name: "Input Group",
-        Demo: () => (
-          <div className="grid w-full max-w-sm gap-3">
-            <InputGroup>
-              <InputGroupAddon><SearchIcon /></InputGroupAddon>
-              <InputGroupInput placeholder="Search..." />
-            </InputGroup>
-            <InputGroup>
-              <InputGroupInput placeholder="you@example.com" />
+        description: "Input with an embedded action button.",
+        Demo: function InputGroupDemo() {
+          const [email, setEmail] = useState("")
+
+          return (
+            <InputGroup className="w-full max-w-sm">
+              <InputGroupInput
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+              />
               <InputGroupAddon align="inline-end">
-                <InputGroupButton><ArrowRightIcon /></InputGroupButton>
+                <InputGroupButton
+                  aria-label="Submit email"
+                  disabled={email.length === 0}
+                >
+                  <ArrowRightIcon />
+                </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
-          </div>
-        ),
+          )
+        },
       },
       {
         name: "Button Group",
-        description: "Input joined with action buttons.",
+        description: "Input joined with a related action.",
         Demo: () => (
           <ButtonGroup className="w-full max-w-sm">
-            <Input placeholder="Enter URL..." />
-            <Button variant="secondary"><CopyIcon data-icon="inline-start" />Copy</Button>
+            <Input aria-label="Promo code" placeholder="Promo code" />
+            <Button variant="tertiary">Apply</Button>
           </ButtonGroup>
         ),
         layout: "wide",
@@ -1233,26 +1220,6 @@ export function InputGroupDemo() {
 }`,
     examples: [
       {
-        name: "Block Alignment",
-        description: "Addon content placed above or below the input.",
-        Demo: () => (
-          <div className="grid w-full max-w-sm gap-3">
-            <InputGroup>
-              <InputGroupAddon align="block-start">
-                <span className="text-sm">Label above</span>
-              </InputGroupAddon>
-              <InputGroupInput placeholder="Block start..." />
-            </InputGroup>
-            <InputGroup>
-              <InputGroupInput placeholder="Block end..." />
-              <InputGroupAddon align="block-end">
-                <span className="text-sm text-muted-foreground">Helper text below</span>
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
-        ),
-      },
-      {
         name: "Text",
         Demo: () => (
           <div className="grid w-full max-w-sm gap-3">
@@ -1272,51 +1239,14 @@ export function InputGroupDemo() {
         ),
       },
       {
-        name: "Button",
-        Demo: () => (
-          <InputGroup className="w-full max-w-sm">
-            <InputGroupInput placeholder="Search..." />
-            <InputGroupAddon align="inline-end">
-              <InputGroupButton variant="secondary">
-                <SearchIcon />
-                Search
-              </InputGroupButton>
-            </InputGroupAddon>
-          </InputGroup>
-        ),
-      },
-      {
         name: "Kbd",
-        description: "Keyboard shortcut hint inside the input.",
+        description: "A global search field showing the shortcut that focuses it, like docs or command search.",
         Demo: () => (
           <InputGroup className="w-full max-w-sm">
             <InputGroupAddon><SearchIcon /></InputGroupAddon>
-            <InputGroupInput placeholder="Search..." />
+            <InputGroupInput placeholder="Search documentation" />
             <InputGroupAddon align="inline-end">
               <Kbd>\u2318K</Kbd>
-            </InputGroupAddon>
-          </InputGroup>
-        ),
-      },
-      {
-        name: "Dropdown",
-        Demo: () => (
-          <InputGroup className="w-full max-w-sm">
-            <InputGroupInput placeholder="Search..." />
-            <InputGroupAddon align="inline-end">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <InputGroupButton>
-                    <ChevronDownIcon />
-                    Filter
-                  </InputGroupButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Name</DropdownMenuItem>
-                  <DropdownMenuItem>Date</DropdownMenuItem>
-                  <DropdownMenuItem>Status</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
             </InputGroupAddon>
           </InputGroup>
         ),
@@ -1332,36 +1262,6 @@ export function InputGroupDemo() {
             </InputGroupAddon>
           </InputGroup>
         ),
-      },
-      {
-        name: "Textarea",
-        Demo: () => {
-          const [message, setMessage] = useState("")
-          return (
-            <InputGroup className="w-full max-w-sm has-disabled:bg-transparent has-disabled:opacity-100 dark:has-disabled:bg-input/30">
-              <InputGroupTextarea
-                placeholder="Write a comment..."
-                rows={3}
-                maxLength={280}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <InputGroupAddon align="block-end">
-                <InputGroupText className="tabular-nums">
-                  {message.length}/280
-                </InputGroupText>
-                <InputGroupButton
-                  className="ml-auto"
-                  size="default"
-                  variant="secondary"
-                  disabled={message.trim().length === 0}
-                >
-                  Send
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
-          )
-        },
       },
       {
         name: "Custom Input",
@@ -1427,47 +1327,11 @@ export function InputOTPDemo() {
 }`,
     examples: [
       {
-        name: "Pattern",
-        description: "Restricts input to digits only.",
-        Demo: () => (
-          <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        ),
-      },
-      {
-        name: "Disabled",
-        Demo: () => (
-          <InputOTP maxLength={6} disabled>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
-        ),
-      },
-      {
-        name: "Controlled",
-        description: "Value managed with React state.",
-        Demo: () => <OTPControlledDemo />,
-      },
-      {
         name: "Invalid",
         Demo: () => (
           <div className="space-y-1.5">
             <InputOTP maxLength={6} defaultValue="12">
-              <InputOTPGroup className="has-aria-invalid:border-destructive has-aria-invalid:ring-destructive/20">
+              <InputOTPGroup>
                 <InputOTPSlot index={0} aria-invalid="true" />
                 <InputOTPSlot index={1} aria-invalid="true" />
                 <InputOTPSlot index={2} aria-invalid="true" />
@@ -1489,25 +1353,6 @@ export function InputOTPDemo() {
               <InputOTPSlot index={1} />
               <InputOTPSlot index={2} />
               <InputOTPSlot index={3} />
-            </InputOTPGroup>
-          </InputOTP>
-        ),
-      },
-      {
-        name: "Alphanumeric",
-        description: "Accepts both letters and numbers.",
-        Demo: () => (
-          <InputOTP maxLength={6} inputMode="text">
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-            </InputOTPGroup>
-            <InputOTPSeparator />
-            <InputOTPGroup>
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
             </InputOTPGroup>
           </InputOTP>
         ),
@@ -1637,82 +1482,32 @@ export function FieldDemo() {
 }`,
     examples: [
       {
-        name: "Textarea",
+        name: "Validation",
+        description: "Field carries the invalid state and FieldError renders the message.",
         Demo: () => (
-          <Field className="w-full max-w-sm">
-            <FieldLabel htmlFor="demo-field-textarea">Bio</FieldLabel>
-            <Textarea id="demo-field-textarea" placeholder="Tell us about yourself" />
-            <FieldDescription>You can use plain text only.</FieldDescription>
+          <Field data-invalid="true" className="w-full max-w-sm">
+            <FieldLabel htmlFor="demo-field-invalid">Email</FieldLabel>
+            <Input
+              id="demo-field-invalid"
+              aria-invalid="true"
+              defaultValue="evil rabbit"
+            />
+            <FieldError>Enter a valid email address.</FieldError>
           </Field>
         ),
       },
       {
-        name: "Select",
+        name: "Horizontal",
+        description: "The control leads the row and aligns to the first line of the label.",
         Demo: () => (
-          <Field className="w-full max-w-sm">
-            <FieldLabel>Theme</FieldLabel>
-            <Select defaultValue="system">
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a theme" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
-            <FieldDescription>Choose your preferred theme.</FieldDescription>
-          </Field>
-        ),
-      },
-      {
-        name: "Slider",
-        Demo: () => (
-          <Field className="w-full max-w-sm">
-            <FieldLabel>Volume</FieldLabel>
-            <Slider defaultValue={[50]} max={100} step={1} />
-          </Field>
-        ),
-      },
-      {
-        name: "Checkbox",
-        Demo: () => (
-          <Field orientation="horizontal">
+          <Field orientation="horizontal" className="w-full max-w-sm">
             <Checkbox id="demo-field-checkbox" />
-            <FieldLabel htmlFor="demo-field-checkbox">
-              Accept terms and conditions
-            </FieldLabel>
-          </Field>
-        ),
-      },
-      {
-        name: "Radio Group",
-        Demo: () => (
-          <FieldSet className="w-full max-w-sm">
-            <FieldLegend>Notify me about</FieldLegend>
-            <RadioGroup defaultValue="all">
-              <Field orientation="horizontal">
-                <RadioGroupItem value="all" id="demo-field-radio-all" />
-                <FieldLabel htmlFor="demo-field-radio-all">All new messages</FieldLabel>
-              </Field>
-              <Field orientation="horizontal">
-                <RadioGroupItem value="mentions" id="demo-field-radio-mentions" />
-                <FieldLabel htmlFor="demo-field-radio-mentions">Direct messages and mentions</FieldLabel>
-              </Field>
-              <Field orientation="horizontal">
-                <RadioGroupItem value="none" id="demo-field-radio-none" />
-                <FieldLabel htmlFor="demo-field-radio-none">Nothing</FieldLabel>
-              </Field>
-            </RadioGroup>
-          </FieldSet>
-        ),
-      },
-      {
-        name: "Switch",
-        Demo: () => (
-          <Field orientation="horizontal">
-            <Switch id="demo-field-switch" />
-            <FieldLabel htmlFor="demo-field-switch">Airplane mode</FieldLabel>
+            <FieldContent>
+              <FieldLabel htmlFor="demo-field-checkbox">
+                Accept terms and conditions
+              </FieldLabel>
+              <FieldDescription>You can withdraw consent at any time.</FieldDescription>
+            </FieldContent>
           </Field>
         ),
       },
@@ -1767,7 +1562,7 @@ export function FieldDemo() {
         layout: "wide",
       },
       {
-        name: "Responsive Layout",
+        name: "Responsive",
         description: "Labels move beside controls on wider screens.",
         Demo: () => (
           <FieldGroup className="w-full max-w-md">
@@ -1803,22 +1598,24 @@ export function FormDemo() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(() => {})} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder={persona.handle} {...field} />
-              </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
+      <form onSubmit={form.handleSubmit(() => {})}>
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder={persona.handle} {...field} />
+                </FormControl>
+                <FormDescription>This is your public display name.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </FieldGroup>
       </form>
     </Form>
   )

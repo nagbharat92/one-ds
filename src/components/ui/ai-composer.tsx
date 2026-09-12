@@ -41,7 +41,7 @@ function AIComposer({
         data-status={status}
         aria-busy={status === "submitted" || status === "streaming"}
         className={cn(
-          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-input bg-control bg-clip-padding p-(--ai-composer-padding) text-foreground shadow-(--ai-composer-shadow) transition-[border-color,box-shadow] duration-(--speed-swift) focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 data-[status=error]:border-destructive data-[status=error]:ring-3 data-[status=error]:ring-destructive/20 dark:data-[status=error]:ring-destructive/40",
+          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-transparent bg-(--field-fill) bg-clip-border p-(--ai-composer-padding) text-(--field-ink) shadow-(--ai-composer-shadow) transition-[background-color,border-color,box-shadow] duration-(--speed-swift) focus-within:bg-(--field-focus-fill) focus-within:text-(--field-focus-ink) focus-within:ring-3 focus-within:ring-ring data-[status=error]:ring-3 data-[status=error]:ring-destructive",
           className
         )}
         {...props}

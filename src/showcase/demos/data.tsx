@@ -281,7 +281,7 @@ function CardRichContentDemo() {
         <CardHeaderContent>
           <CardEyebrow>
             <Badge variant="secondary">Adoption</Badge>
-            <Badge variant="outline">In review</Badge>
+            <Badge variant="tertiary">In review</Badge>
           </CardEyebrow>
           <CardTitle>Design system rollout</CardTitle>
           <CardDescription>
@@ -328,7 +328,7 @@ function CardRichContentDemo() {
               Sophia and 5 teammates
             </span>
           </div>
-          <Badge variant="outline">Updated today</Badge>
+          <Badge variant="tertiary">Updated today</Badge>
         </div>
       </CardContent>
       <CardFooter className="justify-end">
@@ -595,10 +595,10 @@ export function AvatarDemo() {
     category: "Data Display",
     Demo: () => (
       <div className="flex flex-wrap items-center gap-3">
-        <Badge>Default</Badge>
+        <Badge variant="primary">Primary</Badge>
+        <Badge variant="tertiary">Tertiary</Badge>
         <Badge variant="secondary">Secondary</Badge>
         <Badge variant="destructive">Destructive</Badge>
-        <Badge variant="outline">Outline</Badge>
       </div>
     ),
     code: `import { Badge } from "@/components/ui/badge"
@@ -606,10 +606,10 @@ export function AvatarDemo() {
 export function BadgeDemo() {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Badge>Default</Badge>
+      <Badge variant="primary">Primary</Badge>
+      <Badge variant="tertiary">Tertiary</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="destructive">Destructive</Badge>
-      <Badge variant="outline">Outline</Badge>
     </div>
   )
 }`,
@@ -623,7 +623,7 @@ export function BadgeDemo() {
               <BadgeCheckIcon data-icon="inline-start" />
               Verified
             </Badge>
-            <Badge variant="outline">
+            <Badge variant="tertiary">
               Bookmark
               <BookmarkIcon data-icon="inline-end" />
             </Badge>
@@ -659,19 +659,6 @@ export function BadgeDemo() {
               <ArrowUpRightIcon data-icon="inline-end" />
             </a>
           </Badge>
-        ),
-      },
-      {
-        name: "Custom Colors",
-        description: "Badges with semantic color overrides.",
-        Demo: () => (
-          <div className="flex flex-wrap items-center gap-3">
-            <Badge className="bg-badge-blue text-badge-blue-foreground">Blue</Badge>
-            <Badge className="bg-badge-green text-badge-green-foreground">Green</Badge>
-            <Badge className="bg-badge-sky text-badge-sky-foreground">Sky</Badge>
-            <Badge className="bg-badge-purple text-badge-purple-foreground">Purple</Badge>
-            <Badge className="bg-badge-red text-badge-red-foreground">Red</Badge>
-          </div>
         ),
       },
     ],
@@ -1276,7 +1263,7 @@ export function ItemDemo() {
         Demo: () => (
           <Item variant="outline" className="w-full max-w-sm">
             <ItemHeader>
-              <Badge variant="outline">Draft</Badge>
+              <Badge variant="tertiary">Draft</Badge>
               <span className="text-xs text-muted-foreground">Today</span>
             </ItemHeader>
             <ItemContent>

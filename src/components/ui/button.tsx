@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const buttonVariants = cva(
-  "button-motion group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "button-motion group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:ring-3 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -119,6 +119,28 @@ function Button({
   )
 }
 
+function FieldActionButton({
+  className,
+  type = "button",
+  variant = "ghost",
+  size = "default",
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  return (
+    <Button
+      type={type}
+      size={size}
+      variant={variant}
+      data-field-action
+      className={cn(
+        "h-(--field-action-size) rounded-(--field-action-radius) px-(--field-action-padding-inline) has-[>svg:only-child]:w-(--field-action-size) has-[>svg:only-child]:p-0 data-[size^=icon]:w-(--field-action-size) data-[size^=icon]:p-0 [&_svg:not([class*='size-'])]:size-(--field-action-icon-size)",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
 function ButtonSelectionIcon({ className, ...props }: React.ComponentProps<typeof Slot.Root>) {
   return (
     <Slot.Root
@@ -130,4 +152,4 @@ function ButtonSelectionIcon({ className, ...props }: React.ComponentProps<typeo
   )
 }
 
-export { Button, ButtonSelectionIcon, ButtonTooltipSuppression, buttonVariants }
+export { Button, ButtonSelectionIcon, ButtonTooltipSuppression, FieldActionButton, buttonVariants }

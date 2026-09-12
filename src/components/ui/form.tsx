@@ -12,8 +12,12 @@ import {
   type FieldValues,
 } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field"
 
 const Form = FormProvider
 
@@ -72,31 +76,43 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 )
 
-function FormItem({ className, ...props }: React.ComponentProps<"div">) {
+function FormItem({ className, ...props }: React.ComponentProps<typeof Field>) {
   const id = React.useId()
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div
-        data-slot="form-item"
-        className={cn("grid gap-2", className)}
-        {...props}
-      />
+      <FormItemField className={className} {...props} />
     </FormItemContext.Provider>
+  )
+}
+
+// Split out so it can read the item context that FormItem provides.
+function FormItemField({
+  className,
+  ...props
+}: React.ComponentProps<typeof Field>) {
+  const { error } = useFormField()
+
+  return (
+    <Field
+      data-slot="form-item"
+      data-invalid={error ? true : undefined}
+      className={className}
+      {...props}
+    />
   )
 }
 
 function FormLabel({
   className,
   ...props
-}: React.ComponentProps<typeof Label>) {
+}: React.ComponentProps<typeof FieldLabel>) {
   const { error, formItemId } = useFormField()
 
   return (
-    <Label
-      data-slot="form-label"
+    <FieldLabel
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={className}
       htmlFor={formItemId}
       {...props}
     />
@@ -121,36 +137,37 @@ function FormControl({ ...props }: React.ComponentProps<typeof Slot.Root>) {
   )
 }
 
-function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
+function FormDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof FieldDescription>) {
   const { formDescriptionId } = useFormField()
 
   return (
-    <p
-      data-slot="form-description"
+    <FieldDescription
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={className}
       {...props}
     />
   )
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+function FormMessage({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof FieldError>) {
   const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message ?? "") : props.children
+  const body = error ? String(error?.message ?? "") : children
 
   if (!body) {
     return null
   }
 
   return (
-    <p
-      data-slot="form-message"
-      id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
-      {...props}
-    >
+    <FieldError id={formMessageId} className={className} {...props}>
       {body}
-    </p>
+    </FieldError>
   )
 }
 

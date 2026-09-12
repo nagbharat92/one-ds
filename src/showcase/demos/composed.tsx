@@ -153,7 +153,7 @@ function StatusBadge({ status }: { status: Payment["status"] }) {
       ? "destructive"
       : status === "processing"
         ? "secondary"
-        : "outline"
+        : "tertiary"
   return <Badge variant={variant}>{status}</Badge>
 }
 
@@ -1649,12 +1649,12 @@ function TypographyDefault() {
       <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold first:mt-0">The people of the kingdom</h2>
       <h3 className="scroll-m-20 text-2xl font-semibold">The king's plan</h3>
       <h4 className="scroll-m-20 text-xl font-semibold">People stopped telling jokes</h4>
-      <p className="leading-7 not-first:mt-6">
+      <p className="text-lg leading-7 not-first:mt-6">
         The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
         Jokester and his court jester were reinstated, and the kingdom was once again filled with laughter.
       </p>
       <a href="#" onClick={(ev) => ev.preventDefault()} className="font-medium text-primary underline underline-offset-4">Read the full story</a>
-      <p className="leading-7">
+      <p className="text-lg leading-7">
         Use the <code className="relative rounded bg-muted px-1.5 py-0.5 font-mono text-sm font-semibold">Popover</code> component for floating content.
       </p>
     </div>
@@ -1679,7 +1679,7 @@ function TypographyH4() {
 
 function TypographyParagraph() {
   return (
-    <p className="leading-7 not-first:mt-6">
+    <p className="text-lg leading-7 not-first:mt-6">
       The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
     </p>
   )
@@ -1691,7 +1691,7 @@ function TypographyLead() {
 
 function TypographyBlockquote() {
   return (
-    <blockquote className="my-6 border-l-2 pl-6 italic">
+    <blockquote className="my-6 border-l-2 pl-6 text-lg italic">
       "After all," he said, "everyone enjoys a good joke, so it's only fair that they should pay for the privilege."
     </blockquote>
   )
@@ -1699,7 +1699,7 @@ function TypographyBlockquote() {
 
 function TypographyList() {
   return (
-    <ul className="showcase-typography-list">
+    <ul className="showcase-typography-list text-lg">
       <li>1st level of puns: 5 gold coins</li>
       <li>2nd level of puns: 10 gold coins</li>
       <li>3rd level of puns: 20 gold coins</li>

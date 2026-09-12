@@ -98,18 +98,18 @@ function Slider({
       aria-label={ariaLabel}
       aria-valuetext={ariaValueText}
       className={cn(
-        "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col",
+        "relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-horizontal:min-h-(--slider-handle-height) data-vertical:h-full data-vertical:min-h-40 data-vertical:min-w-(--slider-handle-height) data-vertical:w-auto data-vertical:flex-col",
         className
       )}
       {...props}
     >
       <SliderPrimitive.Track
         data-slot="slider-track"
-        className="relative grow overflow-hidden rounded-full bg-muted data-horizontal:h-1 data-horizontal:w-full data-vertical:h-full data-vertical:w-1"
+        className="relative grow overflow-hidden rounded-full bg-muted data-horizontal:h-(--slider-track-height) data-horizontal:w-full data-vertical:h-full data-vertical:w-(--slider-track-height)"
       >
         <SliderPrimitive.Range
           data-slot="slider-range"
-          className="absolute bg-primary select-none data-horizontal:h-full data-vertical:w-full"
+          className="absolute bg-(--button-secondary-fill) select-none data-horizontal:h-full data-vertical:w-full"
         />
       </SliderPrimitive.Track>
       {snapping && points.map(point => {
@@ -121,11 +121,11 @@ function Slider({
             data-slot="slider-stop"
             data-value={point}
             aria-hidden="true"
-            ref={node => { node?.style.setProperty("--slider-stop-position", `calc(${position}% + var(--slider-thumb-size) * ${0.5 - position / 100})`) }}
-            className={cn("pointer-events-none absolute rounded-full bg-muted-foreground",
+            ref={node => { node?.style.setProperty("--slider-stop-position", `calc(${position}% + var(--slider-handle-width) * ${0.5 - position / 100})`) }}
+            className={cn("pointer-events-none absolute size-(--slider-stop-size) rounded-full bg-muted-foreground",
               orientation === "horizontal"
-                ? "inset-s-(--slider-stop-position) top-1/2 h-(--slider-stop-height) w-(--slider-stop-width) -translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2"
-                : "bottom-(--slider-stop-position) left-1/2 h-(--slider-stop-width) w-(--slider-stop-height) -translate-x-1/2 translate-y-1/2")}
+                ? "inset-s-(--slider-stop-position) top-1/2 -translate-y-1/2 -translate-x-1/2 rtl:translate-x-1/2"
+                : "bottom-(--slider-stop-position) left-1/2 -translate-x-1/2 translate-y-1/2")}
           />
         )
       })}
@@ -141,7 +141,7 @@ function Slider({
             thumbValueTexts?.[index] ??
             (_values.length === 1 ? ariaValueText : undefined)
           }
-          className="relative block size-(--slider-thumb-size) shrink-0 rounded-full border border-ring bg-(--surface-lowest) bg-clip-padding ring-ring/50 transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 disabled:pointer-events-none disabled:opacity-50"
+          className="relative block shrink-0 rounded-full bg-(--button-primary-fill) select-none after:absolute after:-inset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-disabled:pointer-events-none"
         />
       ))}
     </SliderPrimitive.Root>

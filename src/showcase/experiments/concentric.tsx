@@ -174,7 +174,7 @@ function ConcentricProjectCard({ radius, scale, mediaRef }: {
         </div>
         <div className="concentric-project-card__badges">
           <Badge variant="secondary">{archived ? "Archived" : "In progress"}</Badge>
-          {pinned && <Badge variant="outline"><PinIcon />Pinned</Badge>}
+          {pinned && <Badge variant="tertiary"><PinIcon />Pinned</Badge>}
         </div>
         </div>
         {opened && <div className="concentric-project-card__details"><span className="font-medium">Next milestone</span><span>Review the shared component collection.</span></div>}

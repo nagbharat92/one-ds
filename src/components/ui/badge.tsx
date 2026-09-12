@@ -4,23 +4,22 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+// Shared chip geometry so Badge and Kbd read as one system: same box, radius,
+// and text scale. Kbd imports this and adds only its own surface treatment.
+const badgeBaseClass =
+  "inline-flex h-5 w-fit min-w-5 shrink-0 items-center justify-center gap-1 rounded-sm px-1 text-xs font-medium whitespace-nowrap select-none [&_svg:not([class*='size-'])]:size-3"
+
 const badgeVariants = cva(
-  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>[data-slot=favicon]]:pointer-events-none [&>[data-slot=favicon]]:size-3! [&>svg]:pointer-events-none [&>svg]:size-3!",
+  `${badgeBaseClass} group/badge overflow-hidden border border-transparent transition-all focus-visible:ring-[3px] focus-visible:ring-ring aria-invalid:ring-[3px] aria-invalid:ring-destructive [&>[data-slot=favicon]]:pointer-events-none [&>[data-slot=favicon]]:size-3!`,
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
-        secondary:
-          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
-        accent:
-          "bg-(--badge-accent-fill) text-(--badge-accent-ink)",
+        default: "bg-(--tertiary-fill) text-(--tertiary-ink) [a]:hover:opacity-90",
+        tertiary: "bg-(--tertiary-fill) text-(--tertiary-ink) [a]:hover:opacity-90",
+        primary: "bg-(--button-primary-fill) text-(--button-primary-ink) [a]:hover:opacity-90",
+        secondary: "bg-(--button-secondary-fill) text-(--button-secondary-ink) [a]:hover:opacity-90",
         destructive:
           "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
-        outline:
-          "border-border text-foreground [a]:hover:bg-(--state-layer-hover) [a]:hover:text-muted-foreground",
-        ghost:
-          "hover:bg-(--state-layer-hover) hover:text-muted-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
       },
     },
     defaultVariants: {
@@ -48,4 +47,4 @@ function Badge({
   )
 }
 
-export { Badge, badgeVariants }
+export { Badge, badgeVariants, badgeBaseClass }

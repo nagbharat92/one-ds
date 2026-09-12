@@ -236,6 +236,32 @@ test("Button reduced motion, joined corners, and touch activation retain their c
   await page.mouse.up()
 })
 
+test("Field action Ghost buttons inherit push and stay contained", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" })
+  await page.goto("/#/input")
+  const fieldInput = page.locator('[data-slot="input-group"] input[placeholder="you@example.com"]')
+  await fieldInput.fill("a")
+  const fieldAction = page.getByRole("button", { name: "Submit email" })
+  await expect(page.locator("[data-field-action]")).toHaveCount(2)
+  await expect(fieldAction).toHaveAttribute("data-variant", "ghost")
+  await fieldAction.hover()
+  const field = fieldAction.locator('xpath=ancestor::*[@data-slot="input-group"][1]')
+  await page.mouse.down()
+  await expect(fieldAction).toHaveCSS("scale", "0.97")
+  await expect(fieldAction).toHaveCSS("translate", "0px 2px")
+  const [fieldBounds, actionBounds] = await Promise.all([
+    field.boundingBox(),
+    fieldAction.boundingBox(),
+  ])
+  await page.mouse.up()
+  expect(fieldBounds).not.toBeNull()
+  expect(actionBounds).not.toBeNull()
+  expect(actionBounds?.x).toBeGreaterThanOrEqual(fieldBounds?.x ?? 0)
+  expect(actionBounds?.y).toBeGreaterThanOrEqual(fieldBounds?.y ?? 0)
+  expect((actionBounds?.x ?? 0) + (actionBounds?.width ?? 0)).toBeLessThanOrEqual((fieldBounds?.x ?? 0) + (fieldBounds?.width ?? 0))
+  expect((actionBounds?.y ?? 0) + (actionBounds?.height ?? 0)).toBeLessThanOrEqual((fieldBounds?.y ?? 0) + (fieldBounds?.height ?? 0))
+})
+
 test("Button corner morph remains available only by explicit opt-in", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" })
   await page.goto("/#/button")

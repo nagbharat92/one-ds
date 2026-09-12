@@ -107,7 +107,7 @@ function QuestionnaireChoice({
     <QuestionnairePrimitive.Choice
       data-slot="questionnaire-choice"
       className={cn(
-        "group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start gap-2.5 rounded-lg border border-input bg-(--field-fill) bg-clip-padding px-3 py-2.5 text-start text-sm transition-colors outline-none select-none hover:bg-(--field-hover-fill) focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 data-invalid:border-destructive data-checked:border-primary/40 data-checked:bg-muted dark:data-checked:bg-muted",
+        "group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start gap-2.5 rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-3 py-2.5 text-start text-sm transition-colors outline-none select-none hover:bg-(--field-hover-fill) focus-within:ring-3 focus-within:ring-ring data-invalid:ring-3 data-invalid:ring-destructive data-checked:border-primary/40 data-checked:bg-muted dark:data-checked:bg-muted",
         "data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
         className
       )}
@@ -123,16 +123,16 @@ function QuestionnaireChoice({
         className={cn(
           controlIndicatorVariants(),
           // The real input is a sibling, so this copy mirrors the choice's state.
-          "pointer-events-none translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full group-data-checked/questionnaire-choice:border-primary group-data-checked/questionnaire-choice:bg-primary group-data-checked/questionnaire-choice:text-primary-foreground dark:group-data-checked/questionnaire-choice:bg-primary"
+          "pointer-events-none translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full group-data-checked/questionnaire-choice:border-(--button-selected-secondary-fill) group-data-checked/questionnaire-choice:bg-(--button-selected-secondary-fill) group-data-checked/questionnaire-choice:text-(--button-selected-secondary-ink)"
         )}
       >
         <span
           data-slot="questionnaire-choice-indicator-dot"
-          className="size-2 rounded-full bg-primary-foreground"
+          className="size-(--control-dot-size) rounded-full bg-primary-foreground"
         />
         <CheckIcon
           data-slot="questionnaire-choice-indicator-check"
-          className="size-3.5"
+          className="size-(--control-check-size)"
         />
       </span>
       <QuestionnairePrimitive.ChoiceLabel
@@ -174,7 +174,7 @@ function QuestionnaireInput({
       <QuestionnairePrimitive.Input
         data-slot="questionnaire-input"
         className={cn(
-          "h-8 min-h-11 w-full min-w-0 rounded-lg border border-input bg-(--field-fill) bg-clip-padding px-2.5 py-1 text-base transition-all outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-(--field-disabled-fill) disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 sm:min-h-0 md:text-sm dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+          "h-(--field-height) min-h-11 w-full min-w-0 rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-(--field-padding-inline) text-base font-medium text-(--field-ink) transition-all outline-none placeholder:font-normal placeholder:text-(--field-ink)/60 hover:bg-(--field-hover-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) focus-visible:ring-3 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-(--field-disabled-fill) disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive sm:min-h-0 md:text-sm",
           "selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground",
           className
         )}

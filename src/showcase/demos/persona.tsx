@@ -114,7 +114,7 @@ function PersonaAvatar({
 
 function PresenceChip({ status }: { status: PresenceStatus }) {
   return (
-    <Badge variant="outline" className="gap-1.5">
+    <Badge variant="tertiary" className="gap-1.5">
       <span
         aria-hidden="true"
         className={cn("size-1.5 rounded-full", presenceDot[status])}

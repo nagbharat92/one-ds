@@ -1,9 +1,12 @@
 # OneDS Agent Instructions
 
-Before designing or changing UI, read [Design Rules](public/design-rules.md).
-Its canonical source is [rules.json](src/design-system/rules.json); the showcase
-at `#/rules` renders the same data. Approved rules are requirements for new work.
-Candidate rules are proposals: do not promote them without user approval.
+Before changing component appearance, behavior, or API, consult the applicable
+approved rules in [Design Rules](public/design-rules.md). Reuse rules already read
+in the current session; do not reread the full generated document. Showcase-only
+editorial cleanup that does not change component styling, interaction, layout, or
+responsive behavior may rely on the summary in this file. Its canonical source is
+[rules.json](src/design-system/rules.json); the showcase at `#/rules` renders the
+same data. Candidate rules are proposals: do not promote them without user approval.
 
 ## Work Within the System
 
@@ -46,8 +49,13 @@ Candidate rules are proposals: do not promote them without user approval.
   light purple to dark gray-purple; Tertiary selects from neutral to the Secondary light-purple
   fill. Use the shared `selected` state and paired text, shape, and icon feedback, including
   inside ButtonGroupChoice. Do not simulate selection by switching the variant to Primary.
-- Follow the 4px spacing/control grid, natural-case typography, concentric corners,
-  fixed radii for growing inputs, and motion-token conventions in the full rules.
+- Follow the 4px spacing/control grid, natural-case typography, fixed radii for
+  growing inputs, and motion-token conventions in the full rules.
+- Concentric corners are non-negotiable. For every uniformly nested rounded UI,
+  derive the inner radius from the actual outer radius minus the actual edge-to-edge
+  inset, including border and padding where present, and clamp at zero. Verify this
+  equation independently for each host; matching inner radii across differently
+  shaped hosts is not evidence of concentric geometry.
 - "Icon + label" always includes icons, favicons, and loading spinners. All three use
   `--graphic-label-gap` (8px), including expressive contexts; `--button-gap` aliases it.
   These combinations use `IconLabel` and `--icon-label-optical-padding`
@@ -81,6 +89,7 @@ Candidate rules are proposals: do not promote them without user approval.
 
 | Change | Verification budget |
 | --- | --- |
+| Showcase-only editorial cleanup | For demo JSX, run touched-file lint and `npm run test:showcase-code` once. For copy or metadata only, review the diff and check whitespace. Skip workspace typecheck and browser checks unless component styling, API, layout, interaction, or responsive behavior changes. |
 | Small visual/token adjustment | Typecheck and touched-file lint once, plus one focused rendered check of the affected geometry or state. No full browser suite or build. |
 | Interaction or component API | Relevant behavior tests and typecheck/lint. Include affected consumers for shared API changes; desktop and mobile when responsive layout or input modality is at risk. |
 | Documentation or agent instructions only | Review the diff and check whitespace. No typecheck, build, browser, or unrelated rule tests. |

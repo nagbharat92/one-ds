@@ -38,7 +38,7 @@
     font-size: var(--expressive-body-size);
     line-height: var(--expressive-body-leading);
   }
-  [data-expression="expressive"] :is([data-slot="field-label"], [data-slot="alert-title"], [data-slot="sidebar-menu-button"], [data-slot="tabs-trigger"], [data-slot="toggle-group-item"]) {
+  [data-expression="expressive"] :is([data-slot="field-label"], [data-slot="alert-title"], [data-slot="sidebar-menu-button"], [data-slot="tabs-trigger"]) {
     font-size: var(--expressive-body-size);
     line-height: var(--expressive-body-leading);
     font-weight: var(--font-weight-medium);
@@ -113,8 +113,6 @@
   }
   [data-expression="expressive"] [data-slot="tabs-list"] { block-size: calc(var(--expressive-field-height) + var(--tabs-padding) * 2); }
   [data-expression="expressive"] [data-slot="tabs-trigger"] { padding-inline: var(--expressive-space-related); }
-  [data-expression="expressive"] [data-slot="toggle-group"] { gap: var(--expressive-space-related); flex-wrap: wrap; }
-  [data-expression="expressive"] [data-slot="toggle-group-item"] { min-block-size: var(--expressive-field-height); padding-inline: var(--expressive-space-related); border-radius: var(--expressive-field-radius); }
   [data-expression="expressive"] [data-slot="sidebar-menu-button"] { min-block-size: var(--expressive-field-height); border-radius: var(--expressive-field-radius); }
   [data-expression="expressive"] [data-slot="sidebar-account"] { gap: var(--expressive-space-related); block-size: auto; min-block-size: var(--expressive-action-height); }
   [data-expression="expressive"] [data-slot="sidebar-account-details"] { gap: var(--expressive-space-pair-small); }

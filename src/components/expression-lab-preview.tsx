@@ -125,10 +125,7 @@ import {
   MessageScrollerProvider,
   MessageScrollerViewport,
 } from "@/components/ui/message-scroller"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+import { ButtonGroupChoice, ButtonGroupChoiceItem } from "@/components/ui/button-group"
 export type FormExperimentMode = "baseline" | "expressive"
 export type LabScenario = "rest" | "active" | "complete" | "custom"
 
@@ -911,32 +908,28 @@ export function ExpressionLabCanvas({
                       Choose what changes next.
                     </span>
                   </div>
-                  <ToggleGroup
-                      type="single"
+                  <ButtonGroupChoice
                       value={lens}
                       onValueChange={(value) => {
-                        if (value) {
-                          onInteraction()
-                          setLens(value)
-                        }
+                        onInteraction()
+                        setLens(value)
                       }}
-                      variant="outline"
                       aria-label="Experiment lens"
                       className="max-w-full flex-wrap"
                     >
-                      <ToggleGroupItem value="color">
+                      <ButtonGroupChoiceItem value="color">
                         <PaletteIcon data-icon="inline-start" />
                         Color
-                      </ToggleGroupItem>
-                      <ToggleGroupItem value="shape">
+                      </ButtonGroupChoiceItem>
+                      <ButtonGroupChoiceItem value="shape">
                         <CircleIcon data-icon="inline-start" />
                         Shape
-                      </ToggleGroupItem>
-                      <ToggleGroupItem value="motion">
+                      </ButtonGroupChoiceItem>
+                      <ButtonGroupChoiceItem value="motion">
                         <ActivityIcon data-icon="inline-start" />
                         Motion
-                      </ToggleGroupItem>
-                    </ToggleGroup>
+                      </ButtonGroupChoiceItem>
+                    </ButtonGroupChoice>
                 </CardContent>
                 </Card>
             </div>

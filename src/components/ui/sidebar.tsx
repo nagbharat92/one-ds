@@ -9,6 +9,7 @@ import { useScrollerRef } from "@/hooks/use-scroller"
 import { cn } from "@/lib/utils"
 import { shapeSpinKeyframes } from "@/lib/shapes"
 import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
 import { ColorThemePortal } from "@/components/ui/color-theme"
 import { DragHandle } from "@/components/ui/drag-handle"
 import { Input } from "@/components/ui/input"
@@ -1194,6 +1195,21 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+function SidebarHeaderActions({
+  className,
+  ...props
+}: React.ComponentProps<typeof ButtonGroup>) {
+  return (
+    <ButtonGroup
+      data-sidebar="header-actions"
+      shape="square"
+      spacing="none"
+      className={cn("shrink-0", className)}
+      {...props}
+    />
+  )
+}
+
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -1641,6 +1657,7 @@ export {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarHeaderActions,
   SidebarInput,
   SidebarInset,
   SidebarMenu,
