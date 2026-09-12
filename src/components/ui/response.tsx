@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/icons"
 import "katex/dist/katex.min.css"
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import {
   Popover,
   PopoverContent,
@@ -331,11 +331,11 @@ function remarkCallouts() {
 }
 
 const calloutConfig = {
-  note: { Icon: InfoIcon, title: "Note", variant: "default" },
-  tip: { Icon: LightbulbIcon, title: "Tip", variant: "default" },
-  important: { Icon: CircleAlertIcon, title: "Important", variant: "default" },
-  warning: { Icon: TriangleAlertIcon, title: "Warning", variant: "default" },
-  caution: { Icon: OctagonAlertIcon, title: "Caution", variant: "destructive" },
+  note: { Icon: InfoIcon, title: "Note", variant: "neutral" },
+  tip: { Icon: LightbulbIcon, title: "Tip", variant: "neutral" },
+  important: { Icon: CircleAlertIcon, title: "Important", variant: "info" },
+  warning: { Icon: TriangleAlertIcon, title: "Warning", variant: "warning" },
+  caution: { Icon: OctagonAlertIcon, title: "Caution", variant: "error" },
 } as const
 
 type CalloutType = keyof typeof calloutConfig
@@ -355,9 +355,11 @@ function MarkdownCallout({
   const { Icon, title, variant } = calloutConfig[type]
   return (
     <Alert variant={variant} data-callout={type}>
-      <Icon />
-      <AlertTitle>{title}</AlertTitle>
-      <AlertDescription>{children}</AlertDescription>
+      <AlertIcon><Icon /></AlertIcon>
+      <AlertContent>
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription>{children}</AlertDescription>
+      </AlertContent>
     </Alert>
   )
 }
@@ -400,7 +402,7 @@ function CitationMark({
       <PopoverTrigger className="response-citation" aria-label={`Source ${label}`}>
         {children}
       </PopoverTrigger>
-      <PopoverContent align="start" className="gap-1">
+      <PopoverContent align="start" className="gap-(--space-2xs)">
         {source.href ? (
           <a
             href={source.href}

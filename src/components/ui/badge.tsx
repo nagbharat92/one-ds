@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 // Shared chip geometry so Badge and Kbd read as one system: same box, radius,
 // and text scale. Kbd imports this and adds only its own surface treatment.
 const badgeBaseClass =
-  "inline-flex h-5 w-fit min-w-5 shrink-0 items-center justify-center gap-1 rounded-sm px-1 text-xs font-medium whitespace-nowrap select-none [&_svg:not([class*='size-'])]:size-3"
+  "inline-flex h-5 w-fit min-w-5 shrink-0 items-center justify-center gap-(--space-2xs) rounded-sm px-(--space-2xs) text-xs font-medium whitespace-nowrap select-none [&_svg:not([class*='size-'])]:size-3"
 
 const badgeVariants = cva(
   `${badgeBaseClass} group/badge overflow-hidden border border-transparent transition-all focus-visible:ring-[3px] focus-visible:ring-ring aria-invalid:ring-[3px] aria-invalid:ring-destructive [&>[data-slot=favicon]]:pointer-events-none [&>[data-slot=favicon]]:size-3!`,

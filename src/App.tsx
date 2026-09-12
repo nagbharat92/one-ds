@@ -44,7 +44,7 @@ const PAGE_VARIANT_BY_SURFACE = {
 } as const
 
 const DEFAULT_LAYOUT_BY_SURFACE = {
-  default: "viewport",
+  default: "center",
   application: "application",
 } as const
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -96,7 +96,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { MaterialTheme } from "@/components/ui/material-theme"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Favicon } from "@/components/ui/favicon"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import { Kbd } from "@/components/ui/kbd"
 
 const alphabeticalRegistry = [...componentRegistry].sort((left, right) =>
@@ -168,7 +168,7 @@ function canScrollWithin(
 function DemoSandbox({
   children,
   name,
-  layout = "viewport",
+  layout = "center",
   background,
   ownsCanvas = false,
 }: {
@@ -329,13 +329,15 @@ function ExampleSection({
             {code ? (
               <CodeBlock code={code} className="showcase-example__code-block" />
             ) : (
-              <Alert variant="destructive" className="m-6 w-auto">
-                <TriangleAlertIcon />
-                <AlertTitle>No generated code for this example</AlertTitle>
-                <AlertDescription>
-                  Run <Kbd>node scripts/generate-showcase-code.mjs</Kbd> to
-                  regenerate {componentSlug}:{example.name}.
-                </AlertDescription>
+              <Alert variant="error" className="m-6 w-auto">
+                <AlertIcon><TriangleAlertIcon /></AlertIcon>
+                <AlertContent>
+                  <AlertTitle>No generated code for this example</AlertTitle>
+                  <AlertDescription>
+                    Run <Kbd>node scripts/generate-showcase-code.mjs</Kbd> to
+                    regenerate {componentSlug}:{example.name}.
+                  </AlertDescription>
+                </AlertContent>
               </Alert>
             )}
           </TabsContent>

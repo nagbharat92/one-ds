@@ -17,7 +17,7 @@ test("Preview Tools, Toolbar, Button, and Colors snippets compile as separate mo
     "fab:Default", "fab:Sizes", "fab:Variants", "fab:Expressive", "fab:Extended", "fab:Opening a Menu",
     "shapes:Shape library",
     "icon:SVG sizes", "icon:Box sizes", "icon:In controls",
-    "text:Default", "table-of-contents:Default", "button:Icon Tools", "button:Mixed Tools", "button:Optical Spacing", "icon-label:Default", "button:Motion", "button:Selected", "colors:Material website", "surfaces:Workspace", "surfaces:Content and controls", "surfaces:Floating surface", "pointer:Default"]
+    "text:Default", "table-of-contents:Default", "button:Icon Tools", "button:Mixed Tools", "button:Optical Spacing", "icon-label:Default", "button:Motion", "button:Selected", "colors:Material website", "pointer:Default"]
   const virtualFiles = new Map(keys.map(key => {
     const snippet = snippets.get(key)
     assert.ok(snippet, `Missing generated example: ${key}`)

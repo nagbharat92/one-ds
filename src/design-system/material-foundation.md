@@ -35,10 +35,6 @@ to a shared neutral source reach ordinary components, themed regions, and portal
 selects Surface or one of the five Surface container levels, with On surface or
 On surface variant. It now works globally, without requiring MaterialTheme. It applies only fill and content
 color: it does not invent padding, corners, shadow, elevation, or interactions.
-Its dedicated **Layout > Surfaces** page (`#/surfaces`) uses the reusable
-[SurfaceDiagram](../components/ui/surface-diagram.tsx) to show Workspace,
-Content and controls, and Floating surface silhouettes. Diagram shapes compose
-MaterialSurface and Card parts without product details or interactive controls.
 The Colors role inspector retains the explicit role/foreground samples.
 Card remains separate; all Card consumers now receive the same shared surface colors.
 
@@ -68,10 +64,10 @@ not new Material specification values.
 
 | Consumer | Fill | Content |
 | --- | --- | --- |
-| Canvas/content | Surface | On surface |
+| Page and Canvas | Surface (light); Surface container low (dark), through `--page-fill` | On surface |
 | Card | Surface container lowest | On surface |
 | Card footer | Surface container low | On surface |
-| Enabled fields (Input, Textarea, Select, NativeSelect, InputGroup, Combobox chips, OTP, Questionnaire input/choices) | Surface container highest | On surface |
+| Enabled field rest fill (Input, Textarea, Select, NativeSelect, InputGroup, Combobox chips, OTP, Questionnaire input/choices) | Translucent On surface tint over the host surface | On surface (value); On surface variant for placeholders and affordances |
 | Disabled field fill | Surface container | Existing disabled opacity retained |
 | Navigation surface | Surface container | On surface |
 | General interaction backplate | Surface container highest | On surface |
@@ -191,7 +187,10 @@ and `surface-variant` to the Outline variant fallback. These are adapter choices
 Strong tertiary, fixed families, surface dim/bright, and error system roles not
 verified from this website preset remain unsupported. Do not generate substitutes
 to make the role table appear complete. Existing status/chart/brand consumers
-keep their palettes until their own migration.
+keep their palettes until their own migration. Alert is one deliberate extension:
+its Success and Warning roles derive from OneDS presence status sources, while
+Neutral, Info, and Error use supported Material-informed roles. These Alert roles
+are component tokens, not additions to the Material role table.
 
 ## States and elevation
 
@@ -219,7 +218,6 @@ deliberately transparent/state-layer surfaces are not flattened into opaque fill
 | Consumer | Status | Verification |
 | --- | --- | --- |
 | Colors application/role inspector | Adopted | Exact light/dark paints, MaterialSurface pairs, tabs, portals and mobile bounds |
-| Surfaces showcase | Adopted | Three UI silhouette diagrams, role paints, noninteractive accessible images, shape containment and concentric corners, desktop/mobile and light/dark |
 | Site navigation | Adopted | Search/routing, selection, light/dark, desktop collapse/reopen, mobile Drawer |
 | Site content chrome and floating reopen control | Surfaces adopted | Shared global background/control tokens |
 | Component previews and pages | Neutral surfaces adopted | Live source-token propagation through cards, fields, tabs, diagrams and body-portaled dialogs |

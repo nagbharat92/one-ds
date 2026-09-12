@@ -92,8 +92,9 @@ function InputGroupInput({
     <Input
       data-slot="input-group-control"
       className={cn(
-        // The group owns height, shape and boundary; the control fills it and drops its own.
-        "h-full flex-1 rounded-none border-0 bg-transparent px-(--field-control-padding-inline) shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent",
+        // The group owns height, shape, boundary and state fills; the control stays transparent so its
+        // rounded-none background never pokes past the group's rounded corners on hover or focus.
+        "h-full flex-1 rounded-none border-0 bg-transparent px-(--field-control-padding-inline) shadow-none ring-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:text-inherit focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent",
         className
       )}
       {...props}
@@ -109,7 +110,7 @@ function InputGroupTextarea({
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        "flex-1 resize-none rounded-none border-0 bg-transparent py-2 shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent",
+        "flex-1 resize-none rounded-none border-0 bg-transparent py-(--space-xs) shadow-none ring-0 hover:bg-transparent focus-visible:bg-transparent focus-visible:text-inherit focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent",
         className
       )}
       {...props}

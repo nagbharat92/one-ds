@@ -12,7 +12,7 @@ async function openColors(page: Page, mode: "light" | "dark") {
   return { preview, lab }
 }
 
-async function expectRole(element: Locator, property: "color" | "background-color", token: string) {
+async function expectRole(element: Locator, property: "color" | "background-color" | "border-top-color" | "fill", token: string) {
   const expected = await element.evaluate((node, { property, token }) => {
     const probe = document.createElement("span")
     probe.style.transition = "none"
@@ -193,65 +193,334 @@ for (const mode of ["light", "dark"] as const) {
     await expect(dialog).toHaveCSS("background-color", "rgb(181, 201, 211)")
     await dialog.press("Escape")
     await page.locator("html").evaluate((element, source) => element.style.removeProperty(source), popupSource)
-    await page.goto("/#/surfaces")
+    await page.goto("/#/card")
     const surfaceSource = `--theme-website-surface-${mode}`
     await page.locator("html").evaluate((element, source) => element.style.setProperty(source, "#b5c9d3"), surfaceSource)
     await expect(page.locator("body")).toHaveCSS("background-color", "rgb(181, 201, 211)")
-    await expect(page.locator('.surface-diagram__main').first()).toHaveCSS("background-color", "rgb(181, 201, 211)")
-    await expect(page.locator('[data-slot="canvas"]').first()).toHaveCSS("background-color", "rgb(181, 201, 211)")
+    await page.locator("html").evaluate((element, source) => element.style.removeProperty(source), surfaceSource)
   })
 }
 
-test("Surfaces diagrams show color relationships with bounded noninteractive shapes", async ({ page }, testInfo) => {
-  await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
-  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
-  await page.goto("/#/surfaces")
-  await expect(page.getByRole("heading", { name: "Surfaces", exact: true })).toBeVisible()
-  const diagrams = page.locator('[data-slot="surface-diagram"]')
-  await expect(diagrams).toHaveCount(3)
-  for (const mode of ["light", "dark"] as const) {
-    await page.emulateMedia({ colorScheme: mode })
+for (const mode of ["light", "dark"] as const) {
+  test(`Alert semantic tones use owned token pairs in ${mode} mode`, async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    await page.goto("/#/alert")
     await expect(page.locator("html")).toHaveClass(new RegExp(mode))
-    for (const diagram of await diagrams.all()) {
-      await expect(diagram).toHaveAttribute("role", "img")
-      await expect(diagram).toHaveAttribute("aria-label", /silhouette/)
-      const scene = diagram.locator('.surface-diagram__scene')
-      await expect(scene).toHaveAttribute("inert", "")
-      await expect(scene).toHaveText("")
-      await expect(scene.locator('[data-kind="line"], [data-kind="heading"], [data-tone="foreground"], [data-tone="muted"], [data-tone="on-primary"], [data-tone="on-secondary"]')).toHaveCount(0)
-      await expect(scene.locator('.surface-diagram__action > *, .surface-diagram__selected > *')).toHaveCount(0)
-      await expect(scene.locator('button, input, textarea, select, a, [tabindex]')).toHaveCount(0)
-      for (const surface of await diagram.locator('[data-material-surface]').all()) {
-        const role = await surface.getAttribute("data-material-surface")
-        const content = await surface.getAttribute("data-material-content")
-        await expectRole(surface, "background-color", `--md-sys-color-${role}`)
-        await expectRole(surface, "color", `--md-sys-color-${content}`)
+    const shapes = {
+      neutral: "cookie6",
+      info: "circle",
+      success: "clover4",
+      warning: "diamond",
+      error: "cookie4",
+    } as const
+    for (const tone of ["neutral", "info", "success", "warning", "error"] as const) {
+      const alert = page.locator(`[data-slot="alert"][data-tone="${tone}"]`).first()
+      const title = alert.locator('[data-slot="alert-title"]')
+      const description = alert.locator('[data-slot="alert-description"]')
+      const icon = alert.locator('[data-slot="alert-icon"]')
+      const shape = icon.locator('[data-slot="shape"]')
+      const glyph = icon.locator('[data-slot="alert-icon-glyph"]')
+      await expect(alert).toBeVisible()
+      await expectRole(alert, "background-color", `--alert-${tone}-fill`)
+      await expectRole(title, "color", `--alert-${tone}-ink`)
+      await expectRole(description, "color", "--muted-foreground")
+      await expect(alert).toHaveAttribute("data-elevation", "flat")
+      await expect(alert).toHaveCSS("border-top-width", "0px")
+      const elevation = await alert.evaluate(element => {
+        const style = getComputedStyle(element)
+        const probe = document.createElement("span")
+        probe.style.color = style.getPropertyValue("--elevation-stroke")
+        document.body.append(probe)
+        const stroke = getComputedStyle(probe).color
+        probe.remove()
+        return { shadow: style.boxShadow, stroke }
+      })
+      expect(elevation.shadow).toContain(elevation.stroke)
+      await expect(icon).toBeVisible()
+      await expect(icon).toHaveAttribute("data-shape", shapes[tone])
+      await expect(icon).toHaveCSS("width", "56px")
+      await expect(icon).toHaveCSS("height", "56px")
+      await expect(shape).toHaveAttribute("data-shape", shapes[tone])
+      await expectRole(shape, "fill", `--alert-${tone}-ink`)
+      await expect(glyph).toHaveCSS("width", "24px")
+      await expect(glyph).toHaveCSS("height", "24px")
+      await expectRole(glyph, "color", "--surface-lowest")
+      await expect(alert.locator('[data-slot="alert-content"]')).toHaveClass(/icon-label/)
+    }
+    const anatomy = await page.locator('[data-slot="alert"][data-tone="neutral"]').first().evaluate(element => {
+      const layout = element.querySelector<HTMLElement>('[data-slot="alert-layout"]')!
+      const icon = element.querySelector<HTMLElement>('[data-slot="alert-icon"]')!
+      const content = element.querySelector<HTMLElement>('[data-slot="alert-content"]')!
+      const title = element.querySelector<HTMLElement>('[data-slot="alert-title"]')!
+      const description = element.querySelector<HTMLElement>('[data-slot="alert-description"]')!
+      const style = getComputedStyle(element)
+      const alertBounds = element.getBoundingClientRect()
+      const iconBounds = icon.getBoundingClientRect()
+      const contentBounds = content.getBoundingClientRect()
+      return {
+        gap: getComputedStyle(layout).columnGap,
+        opticalPadding: getComputedStyle(content).paddingInlineEnd,
+        leadingInset: iconBounds.left - alertBounds.left,
+        graphicGap: contentBounds.left - iconBounds.right,
+        padding: [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft],
+        radius: style.borderTopRightRadius,
+        title: {
+          size: getComputedStyle(title).fontSize,
+          lineHeight: getComputedStyle(title).lineHeight,
+          weight: getComputedStyle(title).fontWeight,
+        },
+        description: {
+          size: getComputedStyle(description).fontSize,
+          lineHeight: getComputedStyle(description).lineHeight,
+          weight: getComputedStyle(description).fontWeight,
+        },
       }
-      await expectRole(diagram.locator('.surface-diagram__action[data-primary="true"]').first(), "background-color", "--button-primary-fill")
-      const clipped = await scene.evaluate(element => Array.from(element.querySelectorAll('.surface-diagram__shape')).flatMap(shape => {
-        const parent = shape.closest('[data-slot="card"], .surface-diagram__overlay, .surface-diagram__navigation, .surface-diagram__detail, .surface-diagram__media') ?? element
-        const bounds = parent.getBoundingClientRect()
-        const rect = shape.getBoundingClientRect()
-        return rect.width <= 0 || rect.height <= 0 || rect.left < bounds.left - 1 || rect.top < bounds.top - 1 || rect.right > bounds.right + 1 || rect.bottom > bounds.bottom + 1
-          ? [{ kind: shape.getAttribute('data-kind'), parent: parent.className, width: rect.width, height: rect.height }] : []
-      }))
-      expect(clipped).toEqual([])
-      expect(await diagram.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
-    }
-    const workspace = diagrams.filter({ has: page.locator('.surface-diagram__workspace') }).first()
-    const corners = await workspace.evaluate(element => {
-      const outer = getComputedStyle(element.querySelector('.surface-diagram__scene')!)
-      const inner = getComputedStyle(element.querySelector('.surface-diagram__main')!)
-      const container = getComputedStyle(element.querySelector('.surface-diagram__workspace')!)
-      return { outer: parseFloat(outer.borderTopRightRadius), inner: parseFloat(inner.borderTopRightRadius), inset: parseFloat(container.paddingTop) }
     })
-    expect(corners.outer).toBeCloseTo(corners.inner + corners.inset, 1)
-    await expectRole(workspace.locator('[data-slot="card"]').first(), "background-color", "--md-sys-color-surface-container-lowest")
-    await expectRole(workspace.locator('.surface-diagram__selected'), "background-color", "--md-sys-color-secondary-container")
-    if (mode === "light" && testInfo.project.name === "desktop" && process.env.THEME_SCREENSHOT) {
-      await workspace.screenshot({ path: process.env.THEME_SCREENSHOT })
+    expect(anatomy).toEqual({
+      gap: "8px",
+      opticalPadding: "4px",
+      leadingInset: 16,
+      graphicGap: 16,
+      padding: ["16px", "16px", "16px", "16px"],
+      radius: "44px",
+      title: { size: "18px", lineHeight: "28px", weight: "500" },
+      description: { size: "14px", lineHeight: "21px", weight: "500" },
+    })
+  })
+}
+
+test("Alert action stays inline when roomy and stacks when narrow", async ({ page }) => {
+  await page.goto("/#/alert")
+  const alert = page.locator('#alert-action [data-slot="alert"]').first()
+  const measure = (width: string) => alert.evaluate((element, width) => {
+    element.style.width = width
+    const content = element.querySelector<HTMLElement>('[data-slot="alert-content"]')!.getBoundingClientRect()
+    const action = element.querySelector<HTMLElement>('[data-slot="alert-action"]')!
+    const button = action.querySelector<HTMLElement>('[data-slot="button"]')!
+    const alertStyle = getComputedStyle(element)
+    const buttonStyle = getComputedStyle(button)
+    const actionBounds = action.getBoundingClientRect()
+    const buttonBounds = button.getBoundingClientRect()
+    const alertBounds = element.getBoundingClientRect()
+    const result = {
+      content: { left: content.left, right: content.right, top: content.top, bottom: content.bottom },
+      action: { left: actionBounds.left, right: actionBounds.right, top: actionBounds.top, bottom: actionBounds.bottom },
+      button: { left: buttonBounds.left, right: buttonBounds.right, top: buttonBounds.top, bottom: buttonBounds.bottom },
+      alert: { left: alertBounds.left, right: alertBounds.right, top: alertBounds.top, bottom: alertBounds.bottom },
+      alertRadius: parseFloat(alertStyle.borderTopRightRadius),
+      buttonRadius: parseFloat(buttonStyle.borderTopRightRadius),
+      actionPosition: getComputedStyle(action).position,
+      overflows: element.scrollWidth > element.clientWidth + 1,
     }
+    element.style.removeProperty("width")
+    return result
+  }, width)
+  const roomy = await measure("28rem")
+  expect(roomy.action.left).toBeGreaterThanOrEqual(roomy.content.right)
+  expect(roomy.action.top).toBeLessThan(roomy.content.bottom)
+  expect(roomy.alert.right - roomy.button.right).toBeCloseTo(16, 0)
+  expect(roomy.button.top - roomy.alert.top).toBeCloseTo(16, 0)
+  expect(roomy.alertRadius).toBeCloseTo(roomy.buttonRadius + roomy.alert.right - roomy.button.right, 0)
+  expect(roomy.actionPosition).toBe("static")
+  expect(roomy.overflows).toBe(false)
+  const narrow = await measure("20rem")
+  expect(narrow.action.top).toBeGreaterThanOrEqual(narrow.content.bottom)
+  expect(narrow.action.left).toBeCloseTo(narrow.content.left, 0)
+  expect(narrow.action.right).toBeLessThanOrEqual(narrow.content.right + 1)
+  expect(narrow.alert.right - narrow.button.right).toBeCloseTo(16, 0)
+  expect(narrow.alert.bottom - narrow.button.bottom).toBeCloseTo(16, 0)
+  expect(narrow.alertRadius).toBeCloseTo(narrow.buttonRadius + narrow.alert.right - narrow.button.right, 0)
+  expect(narrow.overflows).toBe(false)
+  const button = alert.locator('[data-slot="alert-action"] [data-slot="button"]')
+  await expect(button).toHaveAttribute("data-variant", "primary")
+  await expect(button).toHaveAttribute("data-size", "expressive")
+})
+
+for (const mode of ["light", "dark"] as const) {
+  test(`Focused Input and Textarea keep neutral fills and purple rings in ${mode} mode`, async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    const samples = [
+      { route: "input", selector: '[data-slot="input"]:not(:disabled)' },
+      { route: "textarea", selector: '[data-slot="textarea"]:not(:disabled)' },
+    ]
+    for (const { route, selector } of samples) {
+      await page.goto(`/#/${route}`)
+      await expect(page.locator("html")).toHaveClass(new RegExp(mode))
+      const sample = page.locator(`[data-slot="canvas"] ${selector}`).first()
+      await expect(sample).toBeVisible()
+      await page.keyboard.press("Tab")
+      await sample.focus()
+      await expect(sample).toBeFocused()
+      await expectRole(sample, "background-color", "--field-hover-fill")
+      const focus = await sample.evaluate(element => {
+        const style = getComputedStyle(element)
+        const probe = document.createElement("span")
+        probe.style.color = style.getPropertyValue("--ring")
+        document.body.append(probe)
+        const ring = getComputedStyle(probe).color
+        probe.remove()
+        return {
+          visible: element.matches(":focus-visible"),
+          ring,
+          shadow: style.boxShadow,
+          controlOutlineWidth: style.getPropertyValue("--control-outline-width").trim(),
+        }
+      })
+      expect(focus.visible).toBe(true)
+      expect(focus.shadow).toContain(focus.ring)
+      expect(focus.shadow).toContain(`0px 0px 0px ${focus.controlOutlineWidth}`)
+    }
+  })
+}
+
+for (const mode of ["light", "dark"] as const) {
+  test(`Checkbox and Radio move from Tertiary outlines to selected fills in ${mode} mode`, async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    const samples = [
+      { route: "checkbox", slot: "checkbox" },
+      { route: "radio-group", slot: "radio-group-item" },
+    ]
+    for (const { route, slot } of samples) {
+      await page.goto(`/#/${route}`)
+      await expect(page.locator("html")).toHaveClass(new RegExp(mode))
+      const unchecked = page.locator(`[data-slot="canvas"] [data-slot="${slot}"][data-state="unchecked"]:not([aria-invalid="true"]):not(:disabled)`).first()
+      const checked = page.locator(`[data-slot="canvas"] [data-slot="${slot}"][data-state="checked"]:not([aria-invalid="true"]):not(:disabled)`).first()
+      await expect(unchecked).toBeVisible()
+      await expect(checked).toBeVisible()
+      await expect(unchecked).toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
+      const outline = await unchecked.evaluate(element => {
+        const style = getComputedStyle(element)
+        const probe = document.createElement("span")
+        probe.style.boxShadow = style.getPropertyValue("--control-outline-shadow")
+        probe.style.backgroundColor = "var(--control-outline)"
+        document.body.append(probe)
+        const expected = getComputedStyle(probe).boxShadow
+        const color = getComputedStyle(probe).backgroundColor
+        probe.style.backgroundColor = "var(--tertiary-fill)"
+        const tertiary = getComputedStyle(probe).backgroundColor
+        probe.remove()
+        return {
+          actual: style.boxShadow,
+          color,
+          expected,
+          tertiary,
+          width: style.getPropertyValue("--control-outline-width").trim(),
+        }
+      })
+      expect(outline.width).toBe("3px")
+      expect(outline.color).toBe(outline.tertiary)
+      expect(outline.actual).toContain(outline.expected)
+      await expectRole(checked, "background-color", "--button-selected-secondary-fill")
+      await expectRole(checked, "border-top-color", "--button-selected-secondary-fill")
+      const checkedOutline = await checked.evaluate(element => {
+        const style = getComputedStyle(element)
+        const probe = document.createElement("span")
+        probe.style.boxShadow = style.getPropertyValue("--control-outline-clear-shadow")
+        document.body.append(probe)
+        const expected = getComputedStyle(probe).boxShadow
+        probe.remove()
+        return { actual: style.boxShadow, expected }
+      })
+      expect(checkedOutline.actual).toContain(checkedOutline.expected)
+    }
+  })
+}
+
+test("Checkbox and Radio selection fades use Material icon timing", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" })
+  const samples = [
+    { route: "checkbox", role: "checkbox", name: "SMS", indicator: "checkbox-indicator" },
+    { route: "radio-group", role: "radio", name: "Compact", indicator: "radio-group-indicator" },
+  ] as const
+  for (const { route, role, name, indicator } of samples) {
+    await page.goto(`/#/${route}`)
+    const control = page.locator(`#${route}-group [data-slot="canvas"]`).getByRole(role, { name, exact: true }).first()
+    await expect(control).not.toBeChecked()
+    const motion = await control.evaluate((element, indicator) => {
+      const mark = element.querySelector<HTMLElement>(`[data-slot="${indicator}"]`)!
+      const before = {
+        background: getComputedStyle(element).backgroundColor,
+        markOpacity: Number(getComputedStyle(mark).opacity),
+        shadow: getComputedStyle(element).boxShadow,
+      }
+      const style = getComputedStyle(element)
+      const expectedDuration = parseFloat(style.getPropertyValue("--material-icon-fill-speed"))
+      const expectedCurve = style.getPropertyValue("--material-icon-fill-curve").trim()
+      return new Promise<{
+        before: typeof before
+        expectedDuration: number
+        expectedCurve: string
+        transitions: { property: string; duration: number; easing: string }[]
+        middle: typeof before
+        after: typeof before
+      }>(resolve => {
+        const observer = new MutationObserver(() => {
+          if (element.getAttribute("data-state") !== "checked") return
+          observer.disconnect()
+          const animations = [...element.getAnimations(), ...mark.getAnimations()]
+            .filter((animation): animation is CSSTransition => animation instanceof CSSTransition)
+          const transitions = animations.map(animation => ({
+            property: animation.transitionProperty,
+            duration: Number(animation.effect!.getTiming().duration),
+            easing: animation.effect!.getTiming().easing,
+          }))
+          animations.forEach(animation => {
+            animation.pause()
+            animation.currentTime = Number(animation.effect!.getTiming().duration) / 2
+          })
+          const middle = {
+            background: getComputedStyle(element).backgroundColor,
+            markOpacity: Number(getComputedStyle(mark).opacity),
+            shadow: getComputedStyle(element).boxShadow,
+          }
+          animations.forEach(animation => animation.finish())
+          resolve({
+            before,
+            expectedDuration,
+            expectedCurve,
+            transitions,
+            middle,
+            after: {
+              background: getComputedStyle(element).backgroundColor,
+              markOpacity: Number(getComputedStyle(mark).opacity),
+              shadow: getComputedStyle(element).boxShadow,
+            },
+          })
+        })
+        observer.observe(element, { attributes: true, attributeFilter: ["data-state"] })
+        element.click()
+      })
+    }, indicator)
+    expect(motion.before.markOpacity).toBe(0)
+    for (const property of ["background-color", "box-shadow", "opacity"]) {
+      const transition = motion.transitions.find(transition => transition.property === property)
+      expect(transition, `${route}/${property}`).toBeDefined()
+      expect(transition!.duration).toBe(motion.expectedDuration)
+      expect(transition!.easing).toBe(motion.expectedCurve)
+    }
+    expect(motion.middle.markOpacity).toBeGreaterThan(0)
+    expect(motion.middle.markOpacity).toBeLessThan(1)
+    expect(motion.middle.background).not.toBe(motion.before.background)
+    expect(motion.middle.background).not.toBe(motion.after.background)
+    expect(motion.middle.shadow).not.toBe(motion.before.shadow)
+    expect(motion.middle.shadow).not.toBe(motion.after.shadow)
+    expect(motion.after.markOpacity).toBe(1)
   }
+
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/#/checkbox")
+  const checkbox = page.locator('#checkbox-group [data-slot="canvas"]').getByRole("checkbox", { name: "SMS", exact: true }).first()
+  const reducedDurations = await checkbox.evaluate(element => {
+    const mark = element.querySelector<HTMLElement>('[data-slot="checkbox-indicator"]')!
+    return [getComputedStyle(element).transitionDuration, getComputedStyle(mark).transitionDuration]
+  })
+  expect(reducedDurations.every(duration => duration.split(",").every(value => parseFloat(value) <= 0.001))).toBe(true)
+  await checkbox.click()
+  await expect(checkbox).toBeChecked()
+  await expect(checkbox.locator('[data-slot="checkbox-indicator"]')).toHaveCSS("opacity", "1")
 })
 
 for (const mode of ["light", "dark"] as const) {

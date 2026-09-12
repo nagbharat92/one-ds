@@ -16,7 +16,7 @@ function Tabs({
       data-slot="tabs"
       data-orientation={orientation}
       className={cn(
-        "group/tabs flex gap-2 data-horizontal:flex-col",
+        "group/tabs flex gap-(--space-xs) data-horizontal:flex-col",
         className
       )}
       {...props}
@@ -25,12 +25,12 @@ function Tabs({
 }
 
 const tabsListVariants = cva(
-  "group/tabs-list relative inline-flex w-fit items-center justify-center p-(--tabs-padding) text-muted-foreground group-data-horizontal/tabs:h-9 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
+  "group/tabs-list relative inline-flex w-fit items-center justify-center p-(--tabs-padding) text-muted-foreground group-data-horizontal/tabs:h-10 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col",
   {
     variants: {
       variant: {
-        default: "bg-muted",
-        line: "gap-1 bg-transparent p-0",
+        default: "bg-(--tertiary-fill)",
+        line: "gap-(--space-2xs) bg-transparent p-(--space-none)",
       },
       shape: {
         // Concentric: the track's radius is the pill's plus the padding around it.
@@ -52,7 +52,7 @@ const tabsIndicatorVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-control shadow-(--elevation-raised) dark:border dark:border-input",
+          "bg-(--surface-lowest) shadow-(--elevation-raised) dark:bg-primary-foreground",
         line: "after:absolute after:rounded-full after:bg-foreground group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-0 group-data-horizontal/tabs:after:h-(--tabs-indicator-thickness) group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:inset-e-0 group-data-vertical/tabs:after:w-(--tabs-indicator-thickness)",
       },
       shape: {
@@ -169,14 +169,14 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "relative inline-flex h-full flex-1 items-center justify-center gap-2 rounded-md border border-transparent px-3 text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground active:bg-foreground/5 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative inline-flex h-full flex-1 cursor-pointer items-center justify-center gap-(--space-xs) rounded-md border border-transparent px-(--space-sm) text-sm font-medium whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground active:bg-foreground/5 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "data-active:text-foreground dark:data-active:text-foreground",
         // A column track is content-height, so the row states its own. flex-none
-        // is required: in a column, flex-1 would zero the basis and eat h-8.
-        "[[data-slot=tabs][data-orientation=vertical]_&]:h-8 [[data-slot=tabs][data-orientation=vertical]_&]:flex-none [[data-slot=tabs][data-orientation=vertical]_&]:justify-start",
+        // is required: in a column, flex-1 would zero the basis and eat h-9.
+        "[[data-slot=tabs][data-orientation=vertical]_&]:h-9 [[data-slot=tabs][data-orientation=vertical]_&]:flex-none [[data-slot=tabs][data-orientation=vertical]_&]:justify-start",
         "group-data-[shape=pill]/tabs-list:rounded-full",
         // Square icon tabs: the width matches the track height less its padding.
-        "[[data-slot=tabs-list][data-icon-only]_&]:w-8 [[data-slot=tabs-list][data-icon-only]_&]:flex-none [[data-slot=tabs-list][data-icon-only]_&]:px-0",
+        "[[data-slot=tabs-list][data-icon-only]_&]:w-9 [[data-slot=tabs-list][data-icon-only]_&]:flex-none [[data-slot=tabs-list][data-icon-only]_&]:px-(--space-none)",
         className
       )}
       {...props}

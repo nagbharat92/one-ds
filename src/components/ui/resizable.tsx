@@ -46,7 +46,7 @@ function ResizableHandle({
           aria-hidden="true"
           variant="grip"
           orientation="vertical"
-          className="pointer-events-none z-10 transition-all duration-(--drag-handle-speed) ease-(--drag-handle-ease) group-hover/resizable-handle:h-(--drag-handle-active-length) group-hover/resizable-handle:w-(--drag-handle-active-thickness) group-hover/resizable-handle:bg-ring group-hover/resizable-handle:shadow-(--drag-handle-active-shadow) group-focus-visible/resizable-handle:h-(--drag-handle-active-length) group-focus-visible/resizable-handle:w-(--drag-handle-active-thickness) group-focus-visible/resizable-handle:bg-ring group-focus-visible/resizable-handle:shadow-(--drag-handle-active-shadow) group-active/resizable-handle:h-(--drag-handle-active-length) group-active/resizable-handle:w-(--drag-handle-active-thickness) group-active/resizable-handle:bg-ring group-active/resizable-handle:shadow-(--drag-handle-active-shadow)"
+          className="pointer-events-none z-10 transition-all duration-(--drag-handle-speed) ease-(--drag-handle-ease) group-hover/resizable-handle:h-(--drag-handle-active-length) group-hover/resizable-handle:w-(--drag-handle-active-thickness) group-focus-visible/resizable-handle:h-(--drag-handle-active-length) group-focus-visible/resizable-handle:w-(--drag-handle-active-thickness) group-focus-visible/resizable-handle:bg-ring group-focus-visible/resizable-handle:shadow-(--drag-handle-active-shadow) group-active/resizable-handle:h-(--drag-handle-active-length) group-active/resizable-handle:w-(--drag-handle-active-thickness) group-active/resizable-handle:bg-ring group-active/resizable-handle:shadow-(--drag-handle-active-shadow)"
         />
       )}
     </ResizablePrimitive.Separator>

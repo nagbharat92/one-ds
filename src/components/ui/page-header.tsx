@@ -4,7 +4,7 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
-const pageHeaderVariants = cva("flex w-full flex-col gap-4", {
+const pageHeaderVariants = cva("flex w-full flex-col gap-(--space-md)", {
   variants: {
     variant: {
       default: "md:flex-row md:items-end md:justify-between",
@@ -39,7 +39,7 @@ function PageHeaderContent({
     <div
       data-slot="page-header-content"
       className={cn(
-        "flex min-w-0 flex-col gap-2 in-data-[variant=centered]:items-center",
+        "flex min-w-0 flex-col gap-(--space-xs) in-data-[variant=centered]:items-center",
         className
       )}
       {...props}
@@ -58,7 +58,7 @@ function PageHeaderEyebrow({
     <Comp
       data-slot="page-header-eyebrow"
       className={cn(
-        "flex items-center gap-1.5 text-sm font-medium text-muted-foreground [&_svg]:size-4 [&_svg]:shrink-0",
+        "flex items-center gap-(--space-xs) text-sm font-medium text-muted-foreground [&_svg]:size-4 [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -77,7 +77,7 @@ function PageHeaderTitle({
     <Comp
       data-slot="page-header-title"
       className={cn(
-        "text-3xl font-semibold text-balance text-foreground sm:text-4xl",
+        "text-(length:--text-title-size) leading-(--text-title-leading) font-semibold text-balance text-foreground",
         className
       )}
       {...props}
@@ -96,7 +96,7 @@ function PageHeaderDescription({
     <Comp
       data-slot="page-header-description"
       className={cn(
-        "max-w-2xl text-base text-pretty text-muted-foreground sm:text-lg",
+        "max-w-2xl text-(length:--text-lead-size) leading-(--text-lead-leading) text-pretty text-muted-foreground",
         className
       )}
       {...props}
@@ -112,7 +112,7 @@ function PageHeaderActions({
     <div
       data-slot="page-header-actions"
       className={cn(
-        "flex shrink-0 flex-wrap items-center gap-2 in-data-[variant=centered]:justify-center",
+        "flex shrink-0 flex-wrap items-center gap-(--space-xs) in-data-[variant=centered]:justify-center",
         className
       )}
       {...props}

@@ -44,16 +44,36 @@ test("Button has no outline variant or stale outline markup in published example
   assert.equal(rules.rules.find(rule => rule.id === "controls.supporting-actions").status, "approved")
 })
 
-test("showcase exposes only default and application surface tiers", () => {
+test("showcase exposes two surface tiers with compact ordinary previews", () => {
   const source = fs.readFileSync("src/showcase/types.ts", "utf8")
   assert.match(source, /surface\?: "default" \| "application"/)
   const app = fs.readFileSync("src/App.tsx", "utf8")
   assert.match(app, /default: "app"/)
-  assert.match(app, /default: "viewport"/)
-  assert.match(app, /layout = "viewport"/)
+  assert.match(app, /default: "center"/)
+  assert.match(app, /layout = "center"/)
   assert.doesNotMatch(app, /component: "docs"|medium: "app"/)
+  const styles = fs.readFileSync("src/index.css", "utf8")
+  assert.match(styles, /--showcase-preview-min-height: calc\(var\(--spacing\) \* 50\)/)
+  assert.match(styles, /--canvas-min-height: var\(--showcase-preview-min-height\)/)
   const rule = rules.rules.find(rule => rule.id === "showcase.surface-scale")
   assert.equal(rule.status, "approved")
+})
+
+test("tooltips use fixed arrowless pill geometry", () => {
+  const tooltip = fs.readFileSync("src/components/ui/tooltip.tsx", "utf8")
+  assert.match(tooltip, /rounded-xl/)
+  assert.match(tooltip, /data-\[side=top\]:mb-\(--tooltip-gap\)/)
+  assert.doesNotMatch(tooltip, /TooltipPrimitive\.Arrow|tooltip-arrow/)
+  const styles = fs.readFileSync("src/index.css", "utf8")
+  assert.match(styles, /--tooltip-gap: var\(--spacing\)/)
+  assert.doesNotMatch(styles, /tooltip-arrow/)
+  const button = fs.readFileSync("src/components/ui/button.tsx", "utf8")
+  assert.match(button, /tooltipSide = "top"/)
+  const sidebar = fs.readFileSync("src/components/ui/sidebar.tsx", "utf8")
+  assert.match(sidebar, /tooltipSide=\{side === "start" \? "right" : "left"\}/)
+  for (const id of ["geometry.tooltip-shape", "geometry.tooltip-placement"]) {
+    assert.equal(rules.rules.find(rule => rule.id === id).status, "approved")
+  }
 })
 
 test("rules carry explicit approval, evidence, exceptions, and valid implementation paths", () => {

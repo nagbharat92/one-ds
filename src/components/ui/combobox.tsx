@@ -148,7 +148,7 @@ function ComboboxItem({
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
       className={cn(
-          "relative flex w-full cursor-default items-center gap-2 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none data-highlighted:bg-(--state-layer-focus) data-highlighted:text-accent-foreground not-data-[variant=destructive]:data-highlighted:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          "relative flex w-full cursor-default items-center gap-(--space-xs) rounded-md py-(--space-2xs) pr-(--space-xl) pl-(--space-xs) text-sm outline-hidden select-none data-highlighted:bg-(--state-layer-focus) data-highlighted:text-accent-foreground not-data-[variant=destructive]:data-highlighted:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -185,7 +185,7 @@ function ComboboxLabel({
       className={cn(
         // pl matches the item inset so the label lines up with item text;
         // more space above than below binds the label to the items it labels.
-        "px-1.5 pt-1.5 pb-1 text-xs font-medium text-muted-foreground select-none",
+        "px-(--space-xs) pt-(--space-xs) pb-(--space-2xs) text-xs font-medium text-muted-foreground select-none",
         className
       )}
       {...props}
@@ -204,7 +204,7 @@ function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.Props) {
     <ComboboxPrimitive.Empty
       data-slot="combobox-empty"
       className={cn(
-        "hidden w-full justify-center py-2 text-center text-sm text-muted-foreground group-data-empty/combobox-content:flex",
+        "hidden w-full justify-center py-(--space-xs) text-center text-sm text-muted-foreground group-data-empty/combobox-content:flex",
         className
       )}
       {...props}
@@ -234,7 +234,7 @@ function ComboboxChips({
     <ComboboxPrimitive.Chips
       data-slot="combobox-chips"
       className={cn(
-        "flex min-h-8 flex-wrap items-center gap-1 rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-padding px-2.5 py-1 text-sm text-(--field-ink) transition-colors focus-within:ring-3 focus-within:ring-ring has-aria-invalid:ring-3 has-aria-invalid:ring-destructive has-data-[slot=combobox-chip]:px-1",
+        "flex min-h-8 flex-wrap items-center gap-(--space-2xs) rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-padding px-(--space-sm) py-(--space-2xs) text-sm text-(--field-ink) transition-colors focus-within:ring-3 focus-within:ring-ring has-aria-invalid:ring-3 has-aria-invalid:ring-destructive has-data-[slot=combobox-chip]:px-(--space-2xs)",
         className
       )}
       {...props}
@@ -254,7 +254,7 @@ function ComboboxChip({
     <ComboboxPrimitive.Chip
       data-slot="combobox-chip"
       className={cn(
-        "flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 rounded-sm bg-muted px-1.5 text-xs font-medium whitespace-nowrap text-foreground has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-data-[slot=combobox-chip-remove]:pr-0",
+        "flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-(--space-2xs) rounded-sm bg-muted px-(--space-xs) text-xs font-medium whitespace-nowrap text-foreground has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-data-[slot=combobox-chip-remove]:pr-(--space-none)",
         className
       )}
       {...props}

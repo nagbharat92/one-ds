@@ -41,7 +41,7 @@ import {
 } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ColorThemePortal } from "@/components/ui/color-theme"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import {
   NativeSelect,
   NativeSelectOption,
@@ -585,15 +585,17 @@ export function ExpressionLabCanvas({
             fadeSize="sm"
           >
             <div className="expression-lab__grid">
-              <Alert>
-                <SparklesIcon />
-                <AlertTitle>
-                  Comparing Expressive with the neutral baseline
-                </AlertTitle>
-                <AlertDescription>
-                  Toggle the treatment to watch shape, weight, and spacing move
-                  together.
-                </AlertDescription>
+              <Alert variant="info">
+                <AlertIcon><SparklesIcon /></AlertIcon>
+                <AlertContent>
+                  <AlertTitle>
+                    Comparing Expressive with the neutral baseline
+                  </AlertTitle>
+                  <AlertDescription>
+                    Toggle the treatment to watch shape, weight, and spacing move
+                    together.
+                  </AlertDescription>
+                </AlertContent>
               </Alert>
           <div className="expression-lab__row">
               <Card

@@ -23,7 +23,7 @@ function Card({
         variant === "default" &&
           "gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) ring-1 ring-(--elevation-stroke) has-data-[slot=card-footer]:pb-0 has-data-[slot=card-media]:pt-0 has-[>img:first-child]:pt-0 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
         variant === "code" &&
-          "h-full gap-0 overflow-hidden rounded-xl border bg-card bg-clip-padding",
+          "h-full gap-(--space-none) overflow-hidden rounded-xl border bg-card bg-clip-padding",
         className
       )}
       {...props}
@@ -173,7 +173,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-footer"
       className={cn(
-        "flex items-center gap-(--card-footer-gap) rounded-b-xl border-t bg-(--card-footer-fill) bg-clip-padding p-(--card-spacing)",
+        "flex items-center gap-(--card-footer-gap) rounded-b-xl bg-(--card-footer-fill) bg-clip-padding p-(--card-spacing)",
         className
       )}
       {...props}

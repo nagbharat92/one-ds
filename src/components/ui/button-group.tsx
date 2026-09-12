@@ -8,7 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 const buttonGroupVariants = cva(
-  "button-group group/button-group flex w-fit max-w-full items-stretch overflow-x-auto *:focus-visible:relative *:focus-visible:z-10 [&>button:focus-visible]:ring-inset [&>input:focus-visible]:ring-inset [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:min-w-0 [&>input]:flex-1",
+  // overflow-x-auto forces overflow-y to clip too, which would cut off a child's
+  // outward focus ring. Inset every child's ring so the scroll container can never
+  // clip an indicator, whatever the child type (button, input, input-group, select).
+  "button-group group/button-group flex w-fit max-w-full items-stretch overflow-x-auto *:focus-visible:relative *:focus-visible:z-10 [&>*]:ring-inset [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:min-w-0 [&>input]:flex-1",
   {
     variants: {
       orientation: {
@@ -17,7 +20,7 @@ const buttonGroupVariants = cva(
       },
       spacing: {
         default: "gap-(--button-group-gap)",
-        none: "gap-0",
+        none: "gap-(--space-none)",
       },
     },
     defaultVariants: {
@@ -134,7 +137,7 @@ function ButtonGroupText({
     <Comp
       data-slot="button-group-text"
       className={cn(
-        "flex items-center gap-2 rounded-lg bg-muted bg-clip-padding px-4 text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        "flex items-center gap-(--space-xs) rounded-lg bg-muted bg-clip-padding px-(--space-md) text-sm font-medium [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}

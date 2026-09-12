@@ -52,7 +52,7 @@ Elevation is expressed on three independent axes, each owned by one token so it 
 
 Why: Separating color, boundary, and depth into three single-token axes lets a floating surface read as white while a flat panel reads as tonal, and keeps hover feedback, hairlines, and depth independently tunable.
 
-Exceptions: Tooltips remain the inverse chip and carry no cast shadow. Interaction state layers are a separate system, a warm --state-layer-color tint at the Material 8/10/10/16 percent opacities, not spatial elevation. Focus rings and deliberate boundary rings that happen to use box-shadow are indicators, not decorative elevation. --elevation-flat is a transparent no-op rather than the none keyword so it composes with a ring without voiding the whole box-shadow list. Sonner hardcodes its own shadow, so the toast overrides it with an important utility.
+Exceptions: Tooltips remain inverse arrowless pills and carry no cast shadow. Interaction state layers are a separate system, a warm --state-layer-color tint at the Material 8/10/10/16 percent opacities, not spatial elevation. Focus rings and deliberate boundary rings that happen to use box-shadow are indicators, not decorative elevation. --elevation-flat is a transparent no-op rather than the none keyword so it composes with a ring without voiding the whole box-shadow list. Sonner hardcodes its own shadow, so the toast overrides it with an important utility.
 
 Decision evidence: September 11-12, 2026: the user reworked elevation and explicitly reversed the earlier no-shadows decision, choosing a tone-plus-outline-plus-subtle-shadow combination because some same-tone surfaces blended together. Decisions were made one at a time: three levels, always-on outline, keep both outline and shadow, subtle two-layer neutral shadows, tone owned by the surface role, overlays retargeted to white, the hairline lightened to foreground/6 and tokenized, warm state-layer tint, and the modal/transient overlays mapped to floating. This supersedes the September 8 appearance.no-shadows rule.
 
@@ -120,19 +120,19 @@ Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx
 
 ID: color.surface-accent | Color | Required | approved
 
-Neutral Material surface roles apply globally across the site and components. Keep palette values in --theme-website-<role>-light/dark tokens; :root/.dark provide canonical --md-sys-color-* roles and existing OneDS aliases. MaterialTheme must not shadow global neutral values with inline copies. Pages and canvases use Surface, cards Surface container lowest, footers and general controls Surface container low, navigation and muted regions Surface container, popovers/menus Surface container high, enabled fields and interaction backplates Surface container highest. Pair with On surface/On surface variant and use Outline for fields, not as their fill. Disabled fields use Surface container with existing disabled opacity. Default supporting actions remain neutral; website action/selection accents stay scoped through MaterialTheme, including the pastel search-button pair. State tokens retain Material's 0.08/0.10/0.10/0.16 values. Changes belong in shared components or the central adapter, never local surface literals. Do not add older primary-tint elevation overlays; preserve shadow geometry.
+Neutral Material surface roles apply globally across the site and components. Keep palette values in --theme-website-<role>-light/dark tokens; :root/.dark provide canonical --md-sys-color-* roles and existing OneDS aliases. MaterialTheme must not shadow global neutral values with inline copies. Pages and canvases share --page-fill: Surface in light mode and Surface container low in dark mode; --canvas-background always aliases --page-fill. Cards use Surface container lowest, footers and general controls Surface container low, navigation and muted regions Surface container, and popovers/menus Surface container high. Enabled field rest, hover, and focus fills use translucent On surface tints over their host surface; keyboard focus keeps its purple outline rather than replacing the fill with an accent. Pair content with On surface/On surface variant and use Outline for boundaries, not fills. Disabled fields use Surface container with existing disabled opacity. Default supporting actions remain neutral; website action/selection accents stay scoped through MaterialTheme, including the pastel search-button pair. State tokens retain Material's 0.08/0.10/0.10/0.16 values. Changes belong in shared components or the central adapter, never local surface literals. Do not add older primary-tint elevation overlays; preserve shadow geometry.
 
 Why: Use Material's coordinated palettes and paired role API directly instead of inventing color relationships or conflating secondary emphasis with an independent second hue.
 
 Exceptions: The website preset has25 mapped roles;15 neutral roles are global. Website background becomes Surface, surface-0..4 become lowest..highest, and surface-variant supplies Outline variant as explicit adapter choices. Missing strong tertiary/fixed/error roles are not invented. Explicit legacy custom/generated themes remain separate opt-ins. Primary accents outside website scopes, status/presence/category/chart palettes, brand assets, and shadow geometry retain their policies. Transparent surfaces and state layers remain composited. Dialog/drawer scrims keep their existing black10% appearance through --overlay-scrim. Role-pair contrast does not certify every component state or boundary.
 
-Decision evidence: September 7, 2026: user explicitly approved migrating all surface colors across the site and components, with one token change propagating everywhere. This supersedes the prior neutral-surface staging boundary, not the separate action-accent/shadow decisions. Resources: https://material-web.dev/theming/color/ and https://m3.material.io/foundations/interaction/states/state-layers. Website values verified at https://m3.material.io/styles/color/resources and https://m3.material.io/static/angular/styles.4c2805e602edc472.css. Source and mapping details remain in src/design-system/material-foundation.md.
+Decision evidence: September 7, 2026: user explicitly approved migrating all surface colors across the site and components, with one token change propagating everywhere. September 12, 2026: user set the dark Page fill to Surface container low for clearer Card separation and required every preview Canvas to use the Page fill. This supersedes the prior neutral-surface staging boundary, not the separate action-accent/shadow decisions. Resources: https://material-web.dev/theming/color/ and https://m3.material.io/foundations/interaction/states/state-layers. Website values verified at https://m3.material.io/styles/color/resources and https://m3.material.io/static/angular/styles.4c2805e602edc472.css. Source and mapping details remain in src/design-system/material-foundation.md.
 
 Enforcement: Partially automated. Node guards reject literal neutral background utilities and legacy dark input-border fills in UI components; palette/state contract tests remain. Desktop/mobile tests in both modes mutate one shared source token and verify propagation to page/canvas, cards, Input, Textarea, Select, InputGroup, Tabs, diagrams, and body-portaled dialogs. Navigation and application workflow regressions cover existing interactions. Broader component states and boundaries remain subject to composition review; no new shadow-system certification is claimed.
 
-Tokens: `--surface-canvas`, `--surface-lowest`, `--surface-low`, `--surface-container`, `--surface-default`, `--surface-high`, `--surface-highest`, `--surface-navigation`, `--surface-ink`, `--surface-muted-ink`, `--surface-outline`, `--surface-input-outline`, `--action-primary`, `--action-on-primary`, `--action-secondary`, `--action-on-secondary`, `--card-footer-fill`, `--field-fill`, `--sidebar-selected-fill`, `--sidebar-selected-ink`
+Tokens: `--page-fill`, `--canvas-background`, `--surface-canvas`, `--surface-lowest`, `--surface-low`, `--surface-container`, `--surface-default`, `--surface-high`, `--surface-highest`, `--surface-navigation`, `--surface-ink`, `--surface-muted-ink`, `--surface-outline`, `--surface-input-outline`, `--action-primary`, `--action-on-primary`, `--action-secondary`, `--action-on-secondary`, `--card-footer-fill`, `--field-fill`, `--sidebar-selected-fill`, `--sidebar-selected-ink`
 
-Implementation: [src/index.css](../src/index.css), [src/lib/color-theme.ts](../src/lib/color-theme.ts), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [src/components/ui/material-theme.tsx](../src/components/ui/material-theme.tsx), [src/components/ui/material-surface.tsx](../src/components/ui/material-surface.tsx), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md), [src/App.tsx](../src/App.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/input.tsx](../src/components/ui/input.tsx), [src/components/ui/sidebar.tsx](../src/components/ui/sidebar.tsx), [src/showcase/demos/colors.tsx](../src/showcase/demos/colors.tsx), [scripts/test-color-theme.mjs](../scripts/test-color-theme.mjs), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
+Implementation: [src/index.css](../src/index.css), [src/lib/color-theme.ts](../src/lib/color-theme.ts), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [src/components/ui/material-theme.tsx](../src/components/ui/material-theme.tsx), [src/components/ui/material-surface.tsx](../src/components/ui/material-surface.tsx), [src/components/ui/page.tsx](../src/components/ui/page.tsx), [src/components/ui/canvas.tsx](../src/components/ui/canvas.tsx), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md), [src/App.tsx](../src/App.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/input.tsx](../src/components/ui/input.tsx), [src/components/ui/sidebar.tsx](../src/components/ui/sidebar.tsx), [src/showcase/demos/colors.tsx](../src/showcase/demos/colors.tsx), [scripts/test-color-theme.mjs](../scripts/test-color-theme.mjs), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
 
 ### Button colors use dedicated paired tokens
 
@@ -156,19 +156,55 @@ Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx
 
 ID: color.accent-restraint | Color | Required | approved
 
-Default to Tertiary/neutral roles for every surface, control, and field. Do not use Primary or Secondary color roles unless the composition explicitly calls for that emphasis, or the owning component already ships them as its own documented treatment. Primary's accent purple is reserved for prominent calls to action. Secondary's light purple is reserved for deliberate emphasis and the shared selected state. The system carries exactly three purple tones, defined once as --purple-strong (Primary P40/P80), --purple-soft (Secondary container) and --purple-deep (selected Secondary), each with a paired ink. Every purple consumer aliases one of them: primary buttons, links, and the focus ring all take --purple-strong, so no second accent can drift alongside the first. Fields consume the Tertiary pair through --field-fill and --field-ink and promote to --field-focus-fill on focus, so one token change moves every field together with its button. Choose emphasis deliberately in the composition and state it; never reach for an accent to make a surface look finished, and never infer it from surrounding markup.
+Default to Tertiary/neutral roles for every surface, control, and field. Do not use Primary or Secondary color roles unless the composition explicitly calls for that emphasis, or the owning component already ships them as its own documented treatment. Primary's accent purple is reserved for prominent calls to action. Secondary's light purple is reserved for deliberate emphasis and the shared selected state. The system carries exactly three purple tones, defined once as --purple-strong (Primary P40/P80), --purple-soft (Secondary container) and --purple-deep (selected Secondary), each with a paired ink. Every purple consumer aliases one of them: primary buttons, links, and the focus ring all take --purple-strong, so no second accent can drift alongside the first. Field fills stay in their warm neutral state family through rest, hover, and focus; --field-focus-fill aliases --field-hover-fill while --ring alone carries purple focus emphasis. Choose emphasis deliberately in the composition and state it; never reach for an accent to make a surface look finished, and never infer it from surrounding markup.
 
 Why: Accent color loses meaning when it is the default. Reserving Primary and Secondary keeps a prominent action and a selected state legible as exceptions, and keeps routine inputs and controls quiet.
 
 Exceptions: Components that own an accent as part of their definition keep it: Primary buttons, the shared selected state, links, destructive intent, focus rings, status/presence/category/chart palettes, and brand assets. Explicitly themed scopes, generated themes, and experiments may set their own accents within their own scope. A caller may still opt into Primary or Secondary when the composition genuinely needs that emphasis.
 
-Decision evidence: September 11, 2026: after fields were first migrated onto the Secondary Button pair, the user redirected them to Tertiary and stated the rule directly: unless specified, or unless it comes with a component, do not use primary or secondary. The user then asked to standardize the purples to a few reused tones. An audit found four competing purples, including a separate website purple used only by links; they were collapsed into the three-tone ladder. The focus ring moved from a neutral --ring, measured at 2.52:1 against the page in light mode and therefore below the 3:1 minimum for focus indicators, to --purple-strong at 6.27:1 light and 10.87:1 dark, holding 4.72:1 and 5.47:1 against a focused field's fill.
+Decision evidence: September 11, 2026: after fields were first migrated onto the Secondary Button pair, the user redirected them to Tertiary and stated the rule directly: unless specified, or unless it comes with a component, do not use primary or secondary. The user then asked to standardize the purples to a few reused tones. An audit found four competing purples, including a separate website purple used only by links; they were collapsed into the three-tone ladder. The focus ring moved from a neutral --ring, measured at 2.52:1 against the page in light mode and therefore below the 3:1 minimum for focus indicators, to --purple-strong at 6.27:1 light and 10.87:1 dark. September 12, 2026: the user directed focused Input and Textarea fills to remain in the warm neutral field family so the browser's blue text selection stays distinct; the purple focus outline remains.
 
 Enforcement: Manual review. No automated check can distinguish a deliberate accent from an unconsidered one, so reviewers verify emphasis at the composition. Field colors are centralized in --field-* tokens that alias the Tertiary Button pair, which makes a stray local accent easier to spot in review.
 
 Tokens: `--purple-strong`, `--purple-strong-ink`, `--purple-soft`, `--purple-soft-ink`, `--purple-deep`, `--purple-deep-ink`, `--ring`, `--button-primary-fill`, `--button-secondary-fill`, `--button-link-ink`, `--button-tertiary-fill`, `--button-tertiary-ink`, `--field-fill`, `--field-ink`, `--field-focus-fill`, `--field-focus-ink`, `--field-hover-fill`, `--field-pressed-fill`
 
 Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/input.tsx](../src/components/ui/input.tsx), [src/components/ui/textarea.tsx](../src/components/ui/textarea.tsx), [src/components/ui/select.tsx](../src/components/ui/select.tsx), [src/components/ui/native-select.tsx](../src/components/ui/native-select.tsx), [src/components/ui/input-group.tsx](../src/components/ui/input-group.tsx), [src/components/ui/combobox.tsx](../src/components/ui/combobox.tsx)
+
+### Choice indicators move from outline to fill
+
+ID: controls.choice-indicator-colors | Color | Required | approved
+
+Checkbox, RadioGroupItem, and the passive Questionnaire choice indicator use the Tertiary pair as a tokenized 3px inset outline over a transparent interior while unchecked, matching the stroke width of Input and Textarea focus rings. Hover may strengthen that Tertiary outline but must not fill an unchecked indicator. Checked indicators retain the existing selected-Secondary border, fill, ink, and hover treatment. Selection changes fade fill, ink, border, and inset outline with the Material icon fill speed and curve; Checkbox and Radio also keep their primitive marks mounted and fade mark opacity on the same timing. Reduced motion applies the final state immediately. Preserve focus rings, invalid rings, disabled opacity, geometry, and native or primitive state semantics.
+
+Why: An outline keeps an available choice visually quiet, while the filled treatment remains an unambiguous signal that the choice is selected. Interpolating persistent layers prevents the outline, fill, and mark from blinking during that state change.
+
+Exceptions: Native task-list checkboxes inside rendered response content are browser controls and do not use the shared indicator. Switch has its own track-and-thumb selection model. Invalid indicators may suppress the purple outline so the destructive ring remains the sole boundary cue.
+
+Decision evidence: September 12, 2026: the user explicitly directed unchecked Checkbox and Radio controls to replace their fill with an outline while preserving the existing checked fill. The user then set that outline to the same 3px stroke width as Input focus rings, required the value to be tokenized, and redirected the unchecked outline from Secondary to Tertiary because Secondary looked out of place. After observing a hard blink on selection, the user directed the state change to use the smooth fill fade already established for icons.
+
+Enforcement: Partially automated. Desktop light/dark browser regressions check the tokenized 3px inset Tertiary outline, its equality with Input and Textarea focus-ring width, transparent unchecked interiors, and preserved selected-Secondary checked fills and borders for Checkbox and Radio. A focused motion regression samples intermediate fill, outline, and indicator opacity against the Material icon timing and checks immediate reduced-motion feedback. Questionnaire and exceptional states remain subject to review.
+
+Tokens: `--tertiary-fill`, `--tertiary-ink`, `--control-outline-width`, `--control-outline`, `--control-hover-outline`, `--control-outline-shadow`, `--control-hover-outline-shadow`, `--control-outline-clear-shadow`, `--button-selected-secondary-fill`, `--button-selected-secondary-ink`, `--control-checked-hover-fill`, `--material-icon-fill-speed`, `--material-icon-fill-curve`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/control-indicator.ts](../src/components/ui/control-indicator.ts), [src/components/ui/checkbox.tsx](../src/components/ui/checkbox.tsx), [src/components/ui/radio-group.tsx](../src/components/ui/radio-group.tsx), [src/components/ui/questionnaire.tsx](../src/components/ui/questionnaire.tsx)
+
+### Alerts use semantic tonal roles
+
+ID: feedback.alert-semantics | Color | Required | approved
+
+Alert is an expressive tonal feedback surface with neutral, info, success, warning, and error variants. It composes flat Elevation and the shared --elevation-stroke; semantic roles override fill and ink, never elevation. Neutral uses the Material Surface family, info uses the Secondary pair, and error derives from Material Error. Success and warning are explicit OneDS semantic extensions derived from existing status sources, not additions to the Material role table. AlertIcon composes the shared Shape component as a56px accent behind a24px Material icon; each semantic tone has a stable default shape, and callers may deliberately override it. The shape has16px leading inset and16px visual separation from the text block. AlertTitle composes Text lead at medium weight; AlertDescription composes muted Text label. The fixed44px Alert radius derives from its88px resting height, not an unbounded pill radius. Primary expressive56px action Buttons sit at the far right. At28rem they align to the top-right with16px inset; at20rem they stack at bottom-right. Their28px radius plus16px inset equals the44px Alert radius, preserving concentric corners. Default aliases neutral and destructive aliases error for compatibility, but new code uses semantic names. Visual severity does not choose live-region urgency; use live independently according to when and how urgently the message appears.
+
+Why: Material 3 Expressive uses varied shapes, emphasized type, richer color hierarchy, and ample containment to guide attention. Alert applies those tactics with existing OneDS primitives while keeping semantic meaning, accessibility, elevation, and responsive behavior stable.
+
+Exceptions: AlertDialog, toast, Badge, presence, chart, and brand palettes retain their own component contracts. Product-specific callouts may add a semantic mapping only through Alert-owned tokens and an approved API extension. Legacy default and destructive values remain aliases for compatibility, not preferred vocabulary. An Alert may omit AlertIcon, AlertTitle, or AlertAction when the content does not need them. Long or localized content increases height while retaining the fixed44px radius; never replace it with an unbounded pill radius.
+
+Decision evidence: September 12, 2026: the user approved evolving Alert around existing OneDS Material-informed components, then explicitly required it to reuse flat Elevation rather than introduce another outline system. The user next directed a more expressive treatment using the shared Shape library, lead-medium titles, muted label descriptions, more breathing room, strongly rounded concentric corners, and primary pill actions at the far right. The implementation follows Material 3 Expressive tactics for varied shape, emphasized typography, rich hierarchy, and ample containment: https://m3.material.io/blog/building-with-m3-expressive. Rendered checks measured56px shape and action geometry,18/28 medium titles,14/21 muted labels,16px leading inset and shape-to-text spacing, and the44=28+16 concentric equation at roomy and narrow action corners.
+
+Enforcement: Partially automated. Desktop light/dark browser regressions verify semantic fills and inks, flat elevation, the semantic shape map,56px/24px accent geometry, lead/label type roles,16px padding,44px radius, and shared icon-label optics. A focused responsive regression verifies primary expressive actions at the far right, no overflow, and the44=28+16 concentric equation at28rem and20rem. Callout semantics, live-region urgency, and product-specific shape choice remain review concerns.
+
+Tokens: `--elevation-flat`, `--elevation-stroke`, `--alert-padding-inline`, `--alert-padding-block`, `--alert-content-gap`, `--alert-graphic-gap`, `--alert-graphic-gap-offset`, `--alert-action-gap`, `--alert-accent-size`, `--alert-accent-icon-size`, `--alert-resting-height`, `--alert-radius`, `--alert-layout-content-columns`, `--alert-layout-icon-columns`, `--alert-layout-action-columns`, `--alert-layout-icon-action-columns`, `--alert-neutral-fill`, `--alert-neutral-ink`, `--alert-info-fill`, `--alert-info-ink`, `--alert-success-source`, `--alert-success-fill`, `--alert-success-ink`, `--alert-warning-source`, `--alert-warning-fill`, `--alert-warning-ink`, `--alert-error-source`, `--alert-error-fill`, `--alert-error-ink`, `--text-lead-size`, `--text-lead-leading`, `--text-label-size`, `--text-label-leading`, `--button-height-expressive`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/alert.tsx](../src/components/ui/alert.tsx), [src/components/ui/shape.tsx](../src/components/ui/shape.tsx), [src/components/ui/text.tsx](../src/components/ui/text.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/response.tsx](../src/components/ui/response.tsx), [src/showcase/demos/feedback.tsx](../src/showcase/demos/feedback.tsx), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
 
 ### Spacing and control geometry follow the 4px grid
 
@@ -278,6 +314,24 @@ Tokens: `--icon-label-optical-padding`, `--graphic-label-gap`, `--button-gap`
 
 Implementation: [src/components/ui/icon-label.tsx](../src/components/ui/icon-label.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/favicon.tsx](../src/components/ui/favicon.tsx), [src/index.css](../src/index.css), [src/showcase/demos/forms.tsx](../src/showcase/demos/forms.tsx)
 
+### Edge text in a control row gets optical padding
+
+ID: geometry.edge-text-optical-padding | Geometry and Spacing | Required | approved
+
+When a padded container's leading or trailing child is a bare text run rather than a control, that text receives an extra inline inset so it matches the optical padding of the controls beside it. A container's base padding is tuned for dense, self-contained controls; sparse letterforms at that same inset read as crowded, and on a rounded corner the arc pulls the visual edge inward. Opt in with data-optical-edges on the container and wrap the edge text in EdgeText (data-slot=edge-text); the first EdgeText gains padding-inline-start and the last gains padding-inline-end from --optical-edge-text-padding (8px). Interior text, controls, and non-edge text are untouched. The correction is opt-in, never automatic, so ordinary paragraphs, labels, and descriptions are never inset. Toolbar composes this through ToolbarTitle, and --toolbar-edge-text-padding aliases the shared token.
+
+Why: Optical alignment balances perceived visual weight rather than aligning bounding boxes. Bare text at a control row's edge needs more inset than a filled control to look equally inset.
+
+Exceptions: This is the fixed correction for text mixed with controls. A pure-text pill, badge, or chip instead uses radius-derived inline padding so text clears the curve; a container may override --optical-edge-text-padding to its corner radius for that case. The correction is inline only, for horizontal rows; block-edge text is not covered. Text flanked by controls on both sides still receives the inset on whichever edge it occupies.
+
+Decision evidence: September 12, 2026: user asked to generalize the toolbar's edge-text padding into a global, opt-in mechanism after confirming the fixed 8px default with a per-container radius override. Optical correction is established terminology in Material's system-icon guidance: https://m2.material.io/design/iconography/system-icons.html. The 8px amount and opt-in model are OneDS decisions carried over from the toolbar.
+
+Enforcement: Manual review. A focused rendered check verifies leading and trailing EdgeText gain 8px on their outer edge inside an opted-in container while interior text and controls do not, and that toolbars keep their existing title padding. No automated scan distinguishes edge text from ordinary text; reviewers confirm the opt-in markers.
+
+Tokens: `--optical-edge-text-padding`, `--toolbar-edge-text-padding`, `--toolbar-title-padding-start`, `--toolbar-title-padding-end`
+
+Implementation: [src/components/ui/edge-text.tsx](../src/components/ui/edge-text.tsx), [src/components/ui/toolbar.tsx](../src/components/ui/toolbar.tsx), [src/index.css](../src/index.css), [src/showcase/demos/reference.tsx](../src/showcase/demos/reference.tsx)
+
 ### Choose rounding by surface purpose
 
 ID: geometry.purpose-based-radii | Geometry and Spacing | Required | approved
@@ -330,6 +384,42 @@ Enforcement: Manual review. Check the empty and multiline states, not only the r
 
 Implementation: [src/components/ui/ai-composer.tsx](../src/components/ui/ai-composer.tsx), [src/index.css](../src/index.css)
 
+### Tooltips are arrowless inverse pills
+
+ID: geometry.tooltip-shape | Geometry and Spacing | Required | approved
+
+Render TooltipContent as an inverse rounded pill without a directional arrow or beak. Use the fixed --radius-xl corner, which equals half the resting single-line height, and preserve --tooltip-gap between the trigger and surface. Keep the radius fixed when content wraps rather than applying an unbounded pill radius.
+
+Why: The pill silhouette is simpler and quieter than a speech-bubble pointer, while fixed rounding preserves readable space if tooltip copy wraps.
+
+Exceptions: Coachmarks are larger teaching surfaces with their own anchored arrow geometry and are not tooltips. Consumer className may adjust layout, but should not restore an arrow or unbounded radius.
+
+Decision evidence: User approved removing tooltip beaks and making tooltip surfaces rounded pills on September 12, 2026.
+
+Enforcement: Automated. Source checks reject TooltipPrimitive.Arrow and the retired tooltip-arrow hooks. A browser regression verifies no arrow node, a 14px radius on the 28px resting surface, and the tokenized 4px trigger gap.
+
+Tokens: `--radius-xl`, `--tooltip-gap`
+
+Implementation: [src/components/ui/tooltip.tsx](../src/components/ui/tooltip.tsx), [src/index.css](../src/index.css)
+
+### Edge tooltips open inward
+
+ID: geometry.tooltip-placement | Geometry and Spacing | Required | approved
+
+Keep the plain Button tooltip default directly above and centered. When a control is pinned to a viewport edge, its owning composition sets the preferred side toward the viewport interior instead of relying on collision fallback to choose another axis. The floating SidebarTrigger maps a start-edge sidebar to right and an end-edge sidebar to left. Radix collision avoidance remains enabled as the fallback when the preferred side cannot fit.
+
+Why: An explicit inward side keeps an edge control's label fully in the content field and stable across viewport sizes; a top preference near the top edge otherwise flips below and makes a centered wide label project toward the outer edge.
+
+Exceptions: Material plain tooltips in app bars appear below their controls and should opt into that side in the app-bar composition. Rich tooltips default bottom-right and are a separate component role. The inward mapping is a OneDS contextual extension; Material specifies above as the ordinary plain-tooltip default, not a universal right-side default.
+
+Decision evidence: Material 3 tooltip guidance specifies plain tooltips above by default, below in app bars, and a 4dp gap from a bounded control: https://m3.material.io/components/tooltips/guidelines. Radix defaults to top/center with collision avoidance. On September 12, 2026, the user approved an inward right-side tooltip for the top-start floating sidebar control after the existing top preference was measured flipping to bottom/center.
+
+Enforcement: Automated. Source checks preserve Button's top default and SidebarTrigger's start-to-right/end-to-left mapping. A browser regression collapses the site sidebar and verifies the floating trigger tooltip resolves right/center with the tokenized 4px gap.
+
+Tokens: `--tooltip-gap`
+
+Implementation: [src/components/ui/tooltip.tsx](../src/components/ui/tooltip.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/sidebar.tsx](../src/components/ui/sidebar.tsx)
+
 ### Text stays in its natural case
 
 ID: typography.natural-case | Typography | Required | approved
@@ -347,6 +437,24 @@ Enforcement: Manual review. Inspect visible copy and styling; a blanket uppercas
 Tokens: `--font-weight-medium`
 
 Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/page-header.tsx](../src/components/ui/page-header.tsx)
+
+### Text never leaves orphans or widows
+
+ID: typography.no-orphans-widows | Typography | Required | approved
+
+Compose and generate text so no paragraph ends in an orphan (a single word or very short fragment alone on the last line) and no heading breaks with a widow. This is a layout and composition responsibility handled through the shared roles, not by hand-inserting line breaks. Body and supporting copy inherit text-wrap: pretty from the base body style; the Text title, heading, and subheading roles use text-wrap: balance so short display lines stay even. Choose a role rather than forcing breaks; reach for a non-breaking space only for genuinely inseparable pairs.
+
+Why: A ragged single-word last line or a broken heading reads as unfinished. Making wrapping a system responsibility keeps generated interfaces clean without call sites managing line breaks.
+
+Exceptions: Code, preformatted text, and single-line controls keep their own wrapping. text-wrap: balance applies only to short blocks per the browser line limit. Where a browser lacks pretty or balance, text falls back to normal wrapping with no layout break.
+
+Decision evidence: September 12, 2026: user required that generated text never leave orphans or widows and asked for it to be defined as a system rule because OneDS is authored for agents.
+
+Enforcement: Manual review. Verified by inspecting that the base body style applies pretty wrapping and that Text heading roles apply balance. No automated last-line word-count check exists; reviewers confirm generated copy uses roles rather than manual breaks.
+
+Tokens: `--text-body-size`, `--text-body-leading`, `--text-title-size`, `--text-heading-size`, `--text-subheading-size`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/text.tsx](../src/components/ui/text.tsx), [src/showcase/demos/reference.tsx](../src/showcase/demos/reference.tsx)
 
 ### Motion uses named speed and easing tokens
 
@@ -370,19 +478,37 @@ Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx
 
 ID: showcase.surface-scale | Composition | Required | approved
 
-Use the Default showcase tier for component pages: the shared app-width PageContent and roomy viewport canvas minimum, matching Concentric. Large uses the application tier with full-width PageContent and the existing application-height canvas. The former small component tier is removed; default and named examples must not fall back to its smaller geometry.
+Use the Default showcase tier for component pages with the shared app-width PageContent. Ordinary preview canvases have the tokenized 200px minimum and grow with in-flow content. Reserve the roomy viewport canvas minimum for examples that explicitly need spatial room. Large uses the application tier with full-width PageContent and the existing application-height canvas.
 
-Why: Components need consistent room for comparison and inspection. A shared size policy prevents each showcase page from inventing its own preview dimensions.
+Why: A compact shared floor keeps small components easy to inspect without repeating unnecessary empty space, while intrinsic growth and explicit viewport layouts preserve room for larger specimens.
 
-Exceptions: Canvas alignment layouts such as start and wide remain available, but standard showcase canvases share the Default minimum. Examples that own their canvas retain their component-defined anatomy and content-driven height. This rule governs the showcase shell, not the dimensions of demonstrated components or general-purpose PageContent variants.
+Exceptions: Canvas alignment layouts such as start and wide retain their alignment with the ordinary minimum. Explicit viewport examples keep the viewport minimum. Examples that own their canvas retain their component-defined anatomy and content-driven height. This rule governs the showcase shell, not the dimensions of demonstrated components or general-purpose PageContent variants.
 
-Decision evidence: User approved migrating every small showcase page to the existing default tier while preserving the large AI Chat application preview on September 7, 2026.
+Decision evidence: User approved a 200px ordinary preview minimum across the showcase while preserving explicit 448px viewport previews and application layouts on September 12, 2026.
 
-Enforcement: Partially automated. The showcase surface type permits only default and application. Desktop/mobile tests compare standard pages with Concentric, check named canvas minimums and preview controls, and verify that AI Chat retains its large application presentation. Component-owned canvas geometry is tested separately.
+Enforcement: Partially automated. The showcase surface type permits only default and application. Desktop/mobile tests verify the 200px ordinary floor, intrinsic accordion growth, explicit viewport sizing, preview controls, and the preserved AI Chat application presentation. Component-owned canvas geometry is tested separately.
 
-Tokens: `--canvas-viewport-height`, `--canvas-min-height`, `--showcase-block-preview-height`
+Tokens: `--showcase-preview-min-height`, `--canvas-viewport-height`, `--showcase-block-preview-height`
 
 Implementation: [src/App.tsx](../src/App.tsx), [src/showcase/types.ts](../src/showcase/types.ts), [src/components/ui/page.tsx](../src/components/ui/page.tsx), [src/components/ui/canvas.tsx](../src/components/ui/canvas.tsx), [src/index.css](../src/index.css)
+
+### Containers must not clip focus indicators
+
+ID: accessibility.unclipped-indicators | Accessibility | Required | approved
+
+A container that scrolls or clips must not cut off a child's focus or selection ring. Remember that overflow-x-auto forces the cross axis to clip too, so an outward box-shadow ring is silently cut on the other axis. Reserve ring clearance, keep overflow visible, or render the child's ring inset so it paints inside the clip box. In grouped controls such as ButtonGroup, inset every direct child's ring generically rather than per child type, so a new child kind (input, InputGroup, select, combobox) cannot reintroduce clipping.
+
+Why: overflow-x-auto silently forces overflow-y to clip too, so an outward ring is cut on the cross axis; the indicator must stay fully visible for keyboard users.
+
+Exceptions: Popovers, menus, and other floating surfaces intentionally clip their own content and already place focus rings inside. A deliberately inset indicator is already safe. Non-interactive decorative overflow that hosts no focusable child is unaffected.
+
+Decision evidence: September 12, 2026: an InputGroup composed inside a ButtonGroup had its focus ring clipped top and bottom because .button-group uses overflow-x-auto. The earlier fix insetting only >button and >input rings missed non-button children; the group now insets every direct child's ring.
+
+Enforcement: Partially automated. ButtonGroup insets every direct child's ring generically. A focused rendered check verified the composed InputGroup ring resolves to a 3px inset box-shadow contained within the group box. Other scroll or overflow containers that host focusable children require review.
+
+Tokens: `--ring`
+
+Implementation: [src/components/ui/button-group.tsx](../src/components/ui/button-group.tsx)
 
 ## Under Exploration
 

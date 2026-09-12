@@ -226,7 +226,7 @@ function CanvasGrid({
     <canvas ref={cursorRef} data-active={active} aria-hidden="true" className="canvas-measure__cursor" />
     <CursorFollower active={active} position={cursorPosition} variant={followerVariant} className="canvas-grid-follower">
       {({ x, y }) => followerContent ? followerContent({ x: x - originOffset.x, y: y - originOffset.y }) : (
-        <span className="flex items-center gap-3 font-mono tabular-nums">
+        <span className="flex items-center gap-(--space-sm) font-mono tabular-nums">
           <span>x {Math.round(x - originOffset.x)}</span>
           <span>y {Math.round(y - originOffset.y)}</span>
         </span>

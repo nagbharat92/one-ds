@@ -220,8 +220,8 @@ const COACHMARK_ARROW_HEIGHT = 7
 const COACHMARK_ARROW_PADDING = 24
 const COACHMARK_ARROW_TIP = 2.4
 
-// Triangle whose tip is pulled back along both edges and closed with a curve, so the
-// beak rounds off like the tooltip. Base corners stay sharp to merge into the card edge.
+// Triangle whose tip is pulled back along both edges and closed with a curve.
+// Base corners stay sharp to merge into the card edge.
 const coachmarkArrowPaths = (() => {
   const half = COACHMARK_ARROW_WIDTH / 2
   const edge = Math.hypot(half, COACHMARK_ARROW_HEIGHT)
@@ -343,7 +343,7 @@ function CoachmarkHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="coachmark-header"
       className={cn(
-        "grid gap-1 has-data-[slot=coachmark-close]:grid-cols-[minmax(0,1fr)_auto] has-data-[slot=coachmark-close]:gap-x-2",
+        "grid gap-(--space-2xs) has-data-[slot=coachmark-close]:grid-cols-[minmax(0,1fr)_auto] has-data-[slot=coachmark-close]:gap-x-(--space-xs)",
         className
       )}
       {...props}
@@ -356,7 +356,7 @@ function CoachmarkBadge({ className, ...props }: React.ComponentProps<"span">) {
     <span
       data-slot="coachmark-badge"
       className={cn(
-        "col-start-1 mb-1 w-fit rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground group-data-[tone=inverted]/coachmark:bg-control/15 group-data-[tone=inverted]/coachmark:text-background",
+        "col-start-1 mb-(--space-2xs) w-fit rounded-full bg-muted px-(--space-xs) py-(--space-hairline) text-xs font-medium text-muted-foreground group-data-[tone=inverted]/coachmark:bg-control/15 group-data-[tone=inverted]/coachmark:text-background",
         className
       )}
       {...props}
@@ -445,7 +445,7 @@ function CoachmarkFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="coachmark-footer"
       className={cn(
-        "flex items-center justify-end gap-2 has-data-[slot=coachmark-progress]:justify-between",
+        "flex items-center justify-end gap-(--space-xs) has-data-[slot=coachmark-progress]:justify-between",
         className
       )}
       {...props}
@@ -454,12 +454,12 @@ function CoachmarkFooter({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 const coachmarkPrimaryAction =
-  "rounded-full px-4 group-data-[tone=inverted]/coachmark:bg-control group-data-[tone=inverted]/coachmark:text-foreground group-data-[tone=inverted]/coachmark:hover:bg-control/90"
+  "rounded-full px-(--space-md) group-data-[tone=inverted]/coachmark:bg-control group-data-[tone=inverted]/coachmark:text-foreground group-data-[tone=inverted]/coachmark:hover:bg-control/90"
 
 const coachmarkQuietAction =
   "rounded-full group-data-[tone=inverted]/coachmark:text-background group-data-[tone=inverted]/coachmark:hover:bg-background/10 group-data-[tone=inverted]/coachmark:hover:text-background"
 
-const coachmarkSecondaryAction = cn(coachmarkQuietAction, "px-4")
+const coachmarkSecondaryAction = cn(coachmarkQuietAction, "px-(--space-md)")
 
 function CoachmarkAction({
   className,
@@ -643,7 +643,7 @@ function CoachmarkProgress({
       data-slot="coachmark-progress"
       role="group"
       aria-label={`Step ${current + 1} of ${count}`}
-      className={cn("flex items-center gap-1.5", className)}
+      className={cn("flex items-center gap-(--space-xs)", className)}
       {...props}
     >
       {Array.from({ length: count }, (_, index) => (

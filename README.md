@@ -8,7 +8,7 @@ single-color theme experiment.
 
 - **React 19** + **TypeScript** (Vite)
 - **Tailwind CSS v4** (via `@tailwindcss/vite`)
-- **shadcn/ui** — Radix-based components, Nova preset, `neutral` base color, CSS variables, Material Symbols Rounded icons, Geist font
+- **shadcn/ui** — Radix-based components, Nova preset, `neutral` base color, CSS variables, Material Symbols Rounded icons, Google Sans Flex font
 - **shadcn MCP** wired into VS Code for adding components on demand
 
 ## Getting started
@@ -151,12 +151,6 @@ generation may not support this custom adapter. Normalize generated icons throug
 the public module and run `npm run test:icons` before accepting generated code.
 Ordinary Buttons retain their existing shapes. Selection changes use spatial
 motion tokens and respect reduced motion; labels and dimensions remain stable.
-
-**Layout > Surfaces** (`#/surfaces`) shows shape-only UI diagrams: Workspace,
-Content and controls, and Floating surface. The reusable `SurfaceDiagram`
-composes MaterialSurface and real Card parts to show colors in context, without
-product text or live controls. All shapes follow the current light/dark theme.
-MaterialSurface still owns only color; Card keeps its distinct content anatomy.
 
 The reusable [Material foundation](src/design-system/material-foundation.md)
 records official sources, supported roles, compatibility mappings, and migration
@@ -510,14 +504,15 @@ edits affect them, and do not regenerate showcase code separately when running
 - Demo links and forms simulate actions without leaving or reloading the showcase.
 
 Showcase sizing has two tiers. **Default** (`surface: "default"`) uses the shared
-`PageContent` app-width column, matching Concentric, and the roomy
-`--canvas-viewport-height` minimum. All former small component pages now use it,
-including named examples. Explicit `start` and `wide` canvas layouts retain their
-alignment but share this minimum. **Large** (`surface: "application"`) retains the
-full-width page and application-height preview used by AI Chat and other application
-specimens. Blocks and Experiments infer Large unless they explicitly choose Default.
-Component-owned canvases retain their own anatomy and content-driven dimensions.
-The reusable PageContent and Canvas APIs outside the showcase remain unchanged.
+`PageContent` app-width column, matching Concentric. Ordinary canvases use the
+tokenized 200px `--showcase-preview-min-height` floor and grow with in-flow content;
+`start` and `wide` retain their alignment with the same floor. Examples that need
+more spatial room opt into `viewport` and retain `--canvas-viewport-height`.
+**Large** (`surface: "application"`) retains the full-width page and
+application-height preview used by AI Chat and other application specimens. Blocks
+and Experiments infer Large unless they explicitly choose Default. Component-owned
+canvases retain their own anatomy and content-driven dimensions. The reusable
+PageContent and Canvas APIs outside the showcase remain unchanged.
 
 The showcase is driven by category demo files under
 [src/showcase/demos](src/showcase/demos), aggregated in
@@ -561,14 +556,15 @@ separate from application components. All showcase previews use
 - `Canvas` owns the surface: `layout` selects center, start, wide, viewport, or
   application sizing; `background` selects grid or plain and defaults to plain.
   Decorative dots require an explicit `background="grid"`.
-- The Canvas page pilots content-driven sizing: use the default layout with
-  `CanvasContent` directly inside `Canvas`, without a workbench minimum. Height
-  is the larger of `--canvas-min-height` and content height plus padding and borders.
-  External toolbar and footnote heights are not part of that calculation.
+- The showcase shell defaults ordinary examples to centered, content-driven sizing.
+  Their height is the larger of `--showcase-preview-min-height` and content height
+  plus padding and borders. External toolbar and footnote heights are not part of
+  that calculation. Use the explicit `viewport` layout when an example needs the
+  roomier `--canvas-viewport-height` floor.
 - Set `annotationSpace` when a specimen supports callouts. It reserves
   `--canvas-annotation-padding-block` above and below the content regardless of
   annotation visibility, so toggling annotations does not resize the canvas.
-  Other previews retain their existing sizing until this pilot is rolled out.
+  Ordinary previews otherwise retain their content-driven sizing.
 - Place `CanvasGrid` directly inside `Canvas` for optional measurement rulers.
   It defaults to inactive; pass `active` to enable it. Keep it mounted and toggle
   `active` to preserve the specimen's layout. Its top

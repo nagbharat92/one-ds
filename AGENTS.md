@@ -34,8 +34,9 @@ same data. Candidate rules are proposals: do not promote them without user appro
   local, but all reusable appearance and interactions must be owned by library components.
 - Keep design values in `src/index.css` tokens, not arbitrary markup values or inline styles.
 - Showcase pages have Default (`surface: "default"`) and Large (`surface: "application"`)
-  tiers only. Standard pages use the app-width column and roomy canvas minimum; preserve
-  component-owned canvas anatomy and existing large application previews.
+  tiers only. Standard pages use the app-width column and a content-driven canvas with a
+  tokenized 200px minimum. Reserve the roomy viewport layout for examples that explicitly
+  need it; preserve component-owned canvas anatomy and existing large application previews.
 - Button has two tiers: `default` (40px) and `expressive` (56px).
   Icon counterparts are `icon` and `icon-expressive`, with matching square geometry.
   Do not use retired `lg`, `sm`, `xs`, or their icon counterparts on Button.
@@ -86,6 +87,13 @@ same data. Candidate rules are proposals: do not promote them without user appro
 - Before editing, choose the applicable row below, the cheapest check that could expose the
   defect, and the required gates. Treat this as the default verification ceiling, not a starting
   checklist. For mixed changes, combine only applicable gates and deduplicate shared checks.
+- Fast path for a trivial, self-evident change (one known token or class in one or two files,
+  no API, layout, or interaction shift): skip broad context-gathering and memory review, make the
+  edit directly with a uniquely anchored patch, then run typecheck and touched-file lint together
+  once. Do the browser check only when the change can alter rendered output, and cap it at one
+  focused rendered check. When a rendered check on the shared hidden tab reads a frozen or
+  mid-transition value, finish the CSSTransition before measuring instead of re-probing. Stop when
+  those pass; do not rerun overlapping suites for reassurance.
 
 | Change | Verification budget |
 | --- | --- |

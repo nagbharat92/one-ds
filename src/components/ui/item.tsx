@@ -11,7 +11,7 @@ function ItemGroup({ className, ...props }: React.ComponentProps<"div">) {
       role="list"
       data-slot="item-group"
       className={cn(
-        "group/item-group flex w-full flex-col gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2",
+        "group/item-group flex w-full flex-col gap-(--space-md) has-data-[size=sm]:gap-(--space-sm) has-data-[size=xs]:gap-(--space-xs)",
         className
       )}
       {...props}
@@ -27,7 +27,7 @@ function ItemSeparator({
     <Separator
       data-slot="item-separator"
       orientation="horizontal"
-      className={cn("my-2", className)}
+      className={cn("my-(--space-xs)", className)}
       {...props}
     />
   )
@@ -43,9 +43,9 @@ const itemVariants = cva(
         muted: "border-transparent bg-(--item-muted-background)",
       },
       size: {
-        default: "gap-2.5 px-3 py-2.5",
-        sm: "gap-2.5 px-3 py-2.5",
-        xs: "gap-2 px-2.5 py-2 in-data-[slot=dropdown-menu-content]:p-0",
+        default: "gap-(--space-sm) px-(--space-sm) py-(--space-sm)",
+        sm: "gap-(--space-sm) px-(--space-sm) py-(--space-sm)",
+        xs: "gap-(--space-xs) px-(--space-sm) py-(--space-xs) in-data-[slot=dropdown-menu-content]:p-(--space-none)",
       },
     },
     defaultVariants: {
@@ -76,7 +76,7 @@ function Item({
 }
 
 const itemMediaVariants = cva(
-  "flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&_svg]:pointer-events-none",
+  "flex shrink-0 items-center justify-center gap-(--space-xs) group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&_svg]:pointer-events-none",
   {
     variants: {
       variant: {
@@ -112,7 +112,7 @@ function ItemContent({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="item-content"
       className={cn(
-        "flex min-w-0 flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none",
+        "flex min-w-0 flex-1 flex-col gap-(--space-2xs) group-data-[size=xs]/item:gap-(--space-none) [&+[data-slot=item-content]]:flex-none",
         className
       )}
       {...props}
@@ -137,7 +137,7 @@ function ItemTitle({
     <div
       data-slot="item-title"
       className={cn(
-        "flex w-full min-w-0 items-center gap-2 overflow-hidden text-sm leading-snug font-medium underline-offset-4",
+        "flex w-full min-w-0 items-center gap-(--space-xs) overflow-hidden text-sm leading-snug font-medium underline-offset-4",
         className
       )}
       {...props}
@@ -178,7 +178,7 @@ function ItemActions({
       data-slot="item-actions"
       data-hosted={hosted}
       className={cn(
-        "flex items-center gap-2",
+        "flex items-center gap-(--space-xs)",
         hosted && "item-actions--hosted",
         className
       )}
@@ -192,7 +192,7 @@ function ItemHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="item-header"
       className={cn(
-        "flex basis-full items-center justify-between gap-2",
+        "flex basis-full items-center justify-between gap-(--space-xs)",
         className
       )}
       {...props}
@@ -205,7 +205,7 @@ function ItemFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="item-footer"
       className={cn(
-        "flex basis-full items-center justify-between gap-2",
+        "flex basis-full items-center justify-between gap-(--space-xs)",
         className
       )}
       {...props}

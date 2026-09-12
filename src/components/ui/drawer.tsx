@@ -101,7 +101,7 @@ function DrawerContent({
         <DragHandle
           aria-hidden="true"
           className={cn(
-            "mx-auto mt-4 hidden group-data-[vaul-drawer-direction=bottom]/drawer-content:block group-data-[vaul-drawer-direction=top]/drawer-content:order-last group-data-[vaul-drawer-direction=top]/drawer-content:mt-0 group-data-[vaul-drawer-direction=top]/drawer-content:mb-4 group-data-[vaul-drawer-direction=top]/drawer-content:block",
+            "mx-auto mt-(--space-md) hidden group-data-[vaul-drawer-direction=bottom]/drawer-content:block group-data-[vaul-drawer-direction=top]/drawer-content:order-last group-data-[vaul-drawer-direction=top]/drawer-content:mt-(--space-none) group-data-[vaul-drawer-direction=top]/drawer-content:mb-(--space-md) group-data-[vaul-drawer-direction=top]/drawer-content:block",
             grabber === "never" && "hidden!",
             grabberGate
           )}
@@ -138,7 +138,7 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="drawer-header"
       className={cn(
-        "flex flex-col gap-2 p-4 group-data-[close-button=true]/drawer-content:pe-(--drawer-close-clearance)",
+        "flex flex-col gap-(--space-xs) p-(--space-md) group-data-[close-button=true]/drawer-content:pe-(--drawer-close-clearance)",
         className
       )}
       {...props}
@@ -150,7 +150,7 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="drawer-footer"
-      className={cn("mt-auto flex flex-col gap-2 p-4", className)}
+      className={cn("mt-auto flex flex-col gap-(--space-xs) p-(--space-md)", className)}
       {...props}
     />
   )

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const buttonVariants = cva(
-  "button-motion group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:ring-3 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "button-motion group/button inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap outline-none select-none focus-visible:ring-3 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
@@ -32,9 +32,9 @@ const buttonVariants = cva(
           "h-(--button-height-default) gap-(--button-gap) px-(--button-padding-default) [&_svg:not([class*='size-'])]:size-(--button-icon-default)",
         expressive:
           "button-motion-expressive h-(--button-height-expressive) gap-(--button-gap) rounded-(--button-round-radius) px-(--button-padding-expressive) text-(length:--expressive-body-size) leading-(--expressive-body-leading) [&_svg:not([class*='size-'])]:size-(--button-icon-expressive)",
-        icon: "size-(--button-height-default) p-0 [&_svg:not([class*='size-'])]:size-(--button-icon-default)",
+        icon: "size-(--button-height-default) p-(--space-none) [&_svg:not([class*='size-'])]:size-(--button-icon-default)",
         "icon-expressive":
-          "button-motion-expressive size-(--button-height-expressive) rounded-(--button-round-radius) p-0 [&_svg:not([class*='size-'])]:size-(--button-icon-expressive)",
+          "button-motion-expressive size-(--button-height-expressive) rounded-(--button-round-radius) p-(--space-none) [&_svg:not([class*='size-'])]:size-(--button-icon-expressive)",
       },
     },
     defaultVariants: {
@@ -133,7 +133,7 @@ function FieldActionButton({
       variant={variant}
       data-field-action
       className={cn(
-        "h-(--field-action-size) rounded-(--field-action-radius) px-(--field-action-padding-inline) has-[>svg:only-child]:w-(--field-action-size) has-[>svg:only-child]:p-0 data-[size^=icon]:w-(--field-action-size) data-[size^=icon]:p-0 [&_svg:not([class*='size-'])]:size-(--field-action-icon-size)",
+        "h-(--field-action-size) rounded-(--field-action-radius) px-(--field-action-padding-inline) has-[>svg:only-child]:w-(--field-action-size) has-[>svg:only-child]:p-(--space-none) data-[size^=icon]:w-(--field-action-size) data-[size^=icon]:p-(--space-none) [&_svg:not([class*='size-'])]:size-(--field-action-icon-size)",
         className
       )}
       {...props}

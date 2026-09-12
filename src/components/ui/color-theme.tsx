@@ -129,7 +129,7 @@ function ColorThemeSwatches({ value, onValueChange, label = "Surface hue", disab
         if (surfaceHues.some(hue => hue.value === next)) onValueChange(next as SurfaceHue)
       }} disabled={disabled} aria-label={label}>
         {surfaceHues.map(hue => (
-              <ButtonGroupChoiceItem key={hue.value} variant="secondary" value={hue.value} aria-label={hue.label} tooltip={hue.label} className="color-theme-swatch px-2" data-surface-hue={hue.value}>
+              <ButtonGroupChoiceItem key={hue.value} variant="secondary" value={hue.value} aria-label={hue.label} tooltip={hue.label} className="color-theme-swatch px-(--space-xs)" data-surface-hue={hue.value}>
                 <span className="color-theme-swatch__color" aria-hidden="true" />
               </ButtonGroupChoiceItem>
         ))}

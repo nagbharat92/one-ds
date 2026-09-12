@@ -97,13 +97,12 @@ function TooltipContent({
         data-slot="tooltip-content"
         sideOffset={sideOffset}
         className={cn(
-          "z-50 inline-flex w-fit max-w-xs origin-top items-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
+          "z-50 inline-flex w-fit max-w-xs origin-top items-center gap-(--space-xs) rounded-xl bg-foreground px-(--space-sm) py-(--space-xs) text-xs text-background has-data-[slot=kbd]:pr-(--space-xs) **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm data-[side=top]:mb-(--tooltip-gap) data-[side=right]:ml-(--tooltip-gap) data-[side=bottom]:mt-(--tooltip-gap) data-[side=left]:mr-(--tooltip-gap) data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
           className
         )}
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow data-slot="tooltip-arrow" className="z-50 size-2.5 rotate-45 rounded-xs bg-foreground fill-foreground" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   )

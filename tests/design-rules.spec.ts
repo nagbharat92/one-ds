@@ -399,7 +399,7 @@ test("supporting actions use ghost for isolated icons and tertiary for mixed too
   await expect(page.locator('[data-content-kind="component"] [data-slot="button"][data-variant="outline"]')).toHaveCount(0)
 })
 
-test("showcase surfaces use roomy default canvases and preserve large applications", async ({ page }) => {
+test("showcase surfaces use compact intrinsic canvases and preserve spatial layouts", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/#/concentric")
   const reference = await page.locator('[data-showcase-surface="default"]').evaluate(element => ({
@@ -412,13 +412,24 @@ test("showcase surfaces use roomy default canvases and preserve large applicatio
     await expect(content).toHaveCSS("max-width", reference.maxWidth)
     expect(await content.evaluate(element => element.getBoundingClientRect().width)).toBeCloseTo(reference.width)
     const canvases = content.locator('.showcase-stage[data-slot="canvas"]')
-    await expect(canvases.first()).toHaveAttribute("data-layout", "viewport")
-    const undersized = await canvases.evaluateAll(elements => elements.filter(element =>
-      parseFloat(getComputedStyle(element).minBlockSize) < parseFloat(getComputedStyle(elements[0]).minBlockSize)
-    ).map(element => element.getAttribute("data-layout")))
-    expect(undersized).toEqual([])
+    await expect(canvases.first()).toHaveAttribute("data-layout", "center")
+    const ordinaryGeometry = await canvases.evaluateAll(elements => elements
+      .filter(element => element.getAttribute("data-layout") !== "viewport")
+      .map(element => ({
+        minHeight: parseFloat(getComputedStyle(element).minBlockSize),
+        height: element.getBoundingClientRect().height,
+      })))
+    expect(ordinaryGeometry.every(({ minHeight, height }) => minHeight === 200 && height >= minHeight)).toBe(true)
     expect(await content.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1)
   }
+  await page.goto("/#/accordion")
+  const accordionCanvas = page.locator("#accordion-multiple").locator('.showcase-stage[data-slot="canvas"]')
+  await expect(accordionCanvas).toHaveCSS("min-height", "200px")
+  for (const trigger of await accordionCanvas.getByRole("button").all()) await trigger.click()
+  await expect.poll(() => accordionCanvas.evaluate(element => element.getBoundingClientRect().height)).toBeGreaterThan(200)
+  await page.goto("/#/dialog")
+  const viewportCanvas = page.locator('.showcase-stage[data-slot="canvas"][data-layout="viewport"]').first()
+  await expect(viewportCanvas).toHaveCSS("min-height", "448px")
   await page.goto("/#/button")
   const sizes = page.locator("#button-sizes")
   await sizes.getByRole("checkbox", { name: /^(Show grid|Grid)$/ }).click()
@@ -432,6 +443,60 @@ test("showcase surfaces use roomy default canvases and preserve large applicatio
   await expect(application).toHaveCSS("max-width", "none")
   await expect(application.locator('.showcase-stage[data-slot="canvas"]').first()).toHaveAttribute("data-layout", "application")
   expect(await application.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1)
+})
+
+test("tooltips use arrowless inverse pill geometry", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/#/tooltip")
+  const trigger = page.locator("#tooltip-default").getByRole("button", { name: "Hover me", exact: true })
+  await trigger.hover()
+  const tooltip = page.locator('[data-slot="tooltip-content"]').filter({ hasText: "Add to library" })
+  await expect(tooltip).toBeVisible()
+  await tooltip.evaluate(element => element.getAnimations().forEach(animation => animation.finish()))
+  const geometry = await tooltip.evaluate((element, triggerElement) => {
+    const triggerBox = triggerElement.getBoundingClientRect()
+    const tooltipBox = element.getBoundingClientRect()
+    const side = element.getAttribute("data-side")
+    const gap = side === "top"
+      ? triggerBox.top - tooltipBox.bottom
+      : side === "bottom"
+        ? tooltipBox.top - triggerBox.bottom
+        : side === "left"
+          ? triggerBox.left - tooltipBox.right
+          : tooltipBox.left - triggerBox.right
+    return {
+      arrowCount: element.querySelectorAll('[data-slot="tooltip-arrow"]').length,
+      gap,
+      height: tooltipBox.height,
+      radius: parseFloat(getComputedStyle(element).borderRadius),
+    }
+  }, await trigger.elementHandle())
+  expect(geometry.arrowCount).toBe(0)
+  expect(geometry.radius).toBe(14)
+  expect(geometry.height).toBeCloseTo(geometry.radius * 2)
+  expect(geometry.gap).toBeCloseTo(4)
+})
+
+test("the floating sidebar tooltip opens inward", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" })
+  await page.goto("/#/accordion")
+  await page.locator('[data-slot="sidebar-trigger"][data-placement="inline"][aria-label="Close sidebar"]').click()
+  const trigger = page.locator('[data-slot="sidebar-trigger"][data-placement="floating"][data-visible="true"]')
+  await expect(trigger).toBeVisible()
+  const point = await trigger.evaluate(element => {
+    const box = element.getBoundingClientRect()
+    return { x: box.left + box.width / 2, y: box.top + box.height / 2 }
+  })
+  await page.mouse.move(point.x, point.y)
+  const tooltip = page.locator('[data-slot="tooltip-content"]').filter({ hasText: "Open sidebar" })
+  await expect(tooltip).toBeVisible()
+  await expect(tooltip).toHaveAttribute("data-side", "right")
+  await expect(tooltip).toHaveAttribute("data-align", "center")
+  await tooltip.evaluate(element => element.getAnimations().forEach(animation => animation.finish()))
+  const gap = await tooltip.evaluate((element, triggerElement) =>
+    element.getBoundingClientRect().left - triggerElement.getBoundingClientRect().right,
+  await trigger.elementHandle())
+  expect(gap).toBeCloseTo(4)
 })
 
 test("button scale fits inline action hosts and dialog close geometry", async ({ page }) => {

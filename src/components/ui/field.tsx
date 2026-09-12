@@ -10,7 +10,7 @@ function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
     <fieldset
       data-slot="field-set"
       className={cn(
-        "flex flex-col gap-4 has-[>[data-slot=checkbox-group]]:gap-3 has-[>[data-slot=radio-group]]:gap-3",
+        "flex flex-col gap-(--space-md) has-[>[data-slot=checkbox-group]]:gap-(--space-sm) has-[>[data-slot=radio-group]]:gap-(--space-sm)",
         className
       )}
       {...props}
@@ -28,7 +28,7 @@ function FieldLegend({
       data-slot="field-legend"
       data-variant={variant}
       className={cn(
-        "mb-1.5 font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base",
+        "mb-(--space-xs) font-medium data-[variant=label]:text-sm data-[variant=legend]:text-base",
         className
       )}
       {...props}
@@ -41,7 +41,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="field-group"
       className={cn(
-        "group/field-group @container/field-group flex w-full flex-col gap-(--field-group-gap) data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
+        "group/field-group @container/field-group flex w-full flex-col gap-(--field-group-gap) data-[slot=checkbox-group]:gap-(--space-sm) *:data-[slot=field-group]:gap-(--space-md)",
         className
       )}
       {...props}
@@ -50,7 +50,7 @@ function FieldGroup({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 const fieldVariants = cva(
-  "group/field flex w-full gap-2 data-[invalid=true]:text-destructive",
+  "group/field flex w-full gap-(--space-xs) data-[invalid=true]:text-destructive",
   {
     variants: {
       orientation: {
@@ -88,7 +88,7 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="field-content"
       className={cn(
-        "group/field-content flex flex-1 flex-col gap-0.5 leading-snug",
+        "group/field-content flex flex-1 flex-col gap-(--space-hairline) leading-snug",
         className
       )}
       {...props}
@@ -104,7 +104,7 @@ function FieldLabel({
     <Label
       data-slot="field-label"
       className={cn(
-        "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:transition-colors has-[>[data-slot=field]]:duration-(--speed-swift) has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-(--state-layer-hover) has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:active:bg-(--state-layer-pressed) has-[>[data-slot=field]]:has-focus-visible:border-ring has-[>[data-slot=field]]:has-focus-visible:ring-3 has-[>[data-slot=field]]:has-focus-visible:ring-ring/50 *:data-[slot=field]:p-(--choice-card-padding) dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
+        "group/field-label peer/field-label flex w-fit gap-(--space-xs) leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border has-[>[data-slot=field]]:transition-colors has-[>[data-slot=field]]:duration-(--speed-swift) has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-(--state-layer-hover) has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:active:bg-(--state-layer-pressed) has-[>[data-slot=field]]:has-focus-visible:border-ring has-[>[data-slot=field]]:has-focus-visible:ring-3 has-[>[data-slot=field]]:has-focus-visible:ring-ring/50 *:data-[slot=field]:p-(--choice-card-padding) dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
         className
       )}
@@ -121,7 +121,7 @@ function ChoiceCard({
     <FieldLabel
       data-slot="choice-card"
       className={cn(
-        "min-h-11 cursor-pointer justify-start p-(--choice-card-padding) has-[:disabled,[data-disabled]]:cursor-not-allowed has-[:disabled,[data-disabled]]:opacity-50 *:data-[slot=field]:p-0 [&_[data-slot=checkbox]:focus-visible]:ring-0! [&_[data-slot=radio-group-item]:focus-visible]:ring-0! [&_[data-slot=switch]:focus-visible]:ring-0!",
+        "min-h-11 cursor-pointer justify-start p-(--choice-card-padding) has-[:disabled,[data-disabled]]:cursor-not-allowed has-[:disabled,[data-disabled]]:opacity-50 *:data-[slot=field]:p-(--space-none) [&_[data-slot=checkbox]:focus-visible]:ring-0! [&_[data-slot=radio-group-item]:focus-visible]:ring-0! [&_[data-slot=switch]:focus-visible]:ring-0!",
         className
       )}
       {...props}
@@ -134,7 +134,7 @@ function FieldTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="field-label"
       className={cn(
-        "flex w-fit items-center gap-2 text-sm font-medium group-data-[disabled=true]/field:opacity-50",
+        "flex w-fit items-center gap-(--space-xs) text-sm font-medium group-data-[disabled=true]/field:opacity-50",
         className
       )}
       {...props}
@@ -177,7 +177,7 @@ function FieldSeparator({
       <Separator className="absolute inset-0 top-1/2" />
       {children && (
         <span
-          className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground"
+          className="relative mx-auto block w-fit bg-background px-(--space-xs) text-muted-foreground"
           data-slot="field-separator-content"
         >
           {children}
@@ -213,7 +213,7 @@ function FieldError({
     }
 
     return (
-      <ul className="ml-4 flex list-disc flex-col gap-1">
+      <ul className="ml-(--space-md) flex list-disc flex-col gap-(--space-2xs)">
         {uniqueErrors.map(
           (error, index) =>
             error?.message && <li key={index}>{error.message}</li>

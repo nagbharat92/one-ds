@@ -1,7 +1,7 @@
 import * as React from "react"
 import { TriangleAlertIcon } from "@/components/ui/icons"
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 
 type ErrorBoundaryProps = {
   children: React.ReactNode
@@ -26,10 +26,12 @@ export class ErrorBoundary extends React.Component<
     if (!error) return this.props.children
 
     return (
-      <Alert variant="destructive" live="assertive" className="max-w-md">
-        <TriangleAlertIcon />
-        <AlertTitle>{this.props.title ?? "Something went wrong"}</AlertTitle>
-        <AlertDescription>{error.message}</AlertDescription>
+      <Alert variant="error" live="assertive" className="max-w-md">
+        <AlertIcon><TriangleAlertIcon /></AlertIcon>
+        <AlertContent>
+          <AlertTitle>{this.props.title ?? "Something went wrong"}</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </AlertContent>
       </Alert>
     )
   }

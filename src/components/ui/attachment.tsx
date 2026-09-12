@@ -12,9 +12,9 @@ const attachmentVariants = cva(
     variants: {
       size: {
         default:
-          "gap-2 text-sm has-data-[slot=attachment-content]:px-2.5 has-data-[slot=attachment-content]:py-2 has-data-[slot=attachment-media]:p-2",
-        sm: "gap-2.5 text-xs has-data-[slot=attachment-content]:px-2 has-data-[slot=attachment-content]:py-1.5 has-data-[slot=attachment-media]:p-1.5",
-        xs: "gap-1.5 rounded-lg text-xs has-data-[slot=attachment-content]:px-1.5 has-data-[slot=attachment-content]:py-1 has-data-[slot=attachment-media]:p-1",
+          "gap-(--space-xs) text-sm has-data-[slot=attachment-content]:px-(--space-sm) has-data-[slot=attachment-content]:py-(--space-xs) has-data-[slot=attachment-media]:p-(--space-xs)",
+        sm: "gap-(--space-sm) text-xs has-data-[slot=attachment-content]:px-(--space-xs) has-data-[slot=attachment-content]:py-(--space-xs) has-data-[slot=attachment-media]:p-(--space-xs)",
+        xs: "gap-(--space-xs) rounded-lg text-xs has-data-[slot=attachment-content]:px-(--space-xs) has-data-[slot=attachment-content]:py-(--space-2xs) has-data-[slot=attachment-media]:p-(--space-2xs)",
       },
       orientation: {
         horizontal: "min-w-40 items-center",
@@ -117,7 +117,7 @@ function AttachmentDescription({
     <span
       data-slot="attachment-description"
       className={cn(
-        "mt-0.5 block min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive/80",
+        "mt-(--space-hairline) block min-w-0 truncate text-xs text-muted-foreground group-data-[state=error]/attachment:text-destructive/80",
         "max-w-full",
         className
       )}
@@ -187,7 +187,7 @@ function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
       ref={setRef}
       data-slot="attachment-group"
       className={cn(
-        "flex min-w-0 scroll-fade-x scroll-fade-6 snap-x snap-mandatory scroll-px-1 scrollbar-none gap-3 overflow-x-auto overscroll-x-contain py-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start",
+        "flex min-w-0 scroll-fade-x scroll-fade-6 snap-x snap-mandatory scroll-px-1 scrollbar-none gap-(--space-sm) overflow-x-auto overscroll-x-contain py-(--space-2xs) *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start",
         className
       )}
       {...props}

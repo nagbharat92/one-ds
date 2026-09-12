@@ -14,14 +14,15 @@ function Checkbox({
       data-slot="checkbox"
       className={cn(
         controlIndicatorVariants({ shape: "box" }),
-        "peer transition-colors outline-none group-has-disabled/field:opacity-50 group-has-focus-visible/field-label:not-data-checked:border-muted-foreground after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-transparent aria-invalid:ring-3 aria-invalid:ring-destructive aria-invalid:aria-checked:border-(--button-selected-secondary-fill) data-checked:border-(--button-selected-secondary-fill) data-checked:bg-(--button-selected-secondary-fill) data-checked:text-(--button-selected-secondary-ink) hover:bg-(--control-hover-fill) data-checked:hover:bg-(--control-checked-hover-fill) group-has-focus-visible/field-label:data-checked:border-(--button-selected-secondary-fill)",
+        "peer cursor-pointer outline-none group-has-disabled/field:opacity-50 group-has-focus-visible/field-label:not-data-checked:border-muted-foreground after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-transparent aria-invalid:shadow-(--control-outline-clear-shadow) aria-invalid:ring-3 aria-invalid:ring-destructive aria-invalid:aria-checked:border-(--button-selected-secondary-fill) data-checked:border-(--button-selected-secondary-fill) data-checked:bg-(--button-selected-secondary-fill) data-checked:text-(--button-selected-secondary-ink) data-checked:shadow-(--control-outline-clear-shadow) not-data-checked:hover:shadow-(--control-hover-outline-shadow) data-checked:hover:bg-(--control-checked-hover-fill) group-has-focus-visible/field-label:data-checked:border-(--button-selected-secondary-fill)",
         className
       )}
       {...props}
     >
       <CheckboxPrimitive.Indicator
+        forceMount
         data-slot="checkbox-indicator"
-        className="grid place-content-center text-current transition-none [&>svg]:size-(--control-check-size)"
+        className="grid place-content-center text-current opacity-0 transition-opacity duration-(--material-icon-fill-speed) ease-(--material-icon-fill-curve) data-[state=checked]:opacity-100 data-[state=indeterminate]:opacity-100 motion-reduce:transition-none [&>svg]:size-(--control-check-size)"
       >
         <CheckIcon
         />

@@ -46,6 +46,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
+import { Text } from "@/components/ui/text"
+import { Stack } from "@/components/ui/stack"
+import { Cluster } from "@/components/ui/cluster"
 import { Progress } from "@/components/ui/progress"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -1642,118 +1645,81 @@ function DialogQuestionnaireDemo() {
 // TYPOGRAPHY
 // ---------------------------------------------------------------------------
 
+const TYPE_SCALE = [
+  { variant: "title", name: "Title", spec: "30 / 36 \u00b7 Semibold", muted: false },
+  { variant: "heading", name: "Heading", spec: "24 / 32 \u00b7 Semibold", muted: false },
+  { variant: "subheading", name: "Subheading", spec: "18 / 24 \u00b7 Semibold", muted: false },
+  { variant: "lead", name: "Lead", spec: "18 / 28 \u00b7 Regular", muted: true },
+  { variant: "body", name: "Body", spec: "16 / 26 \u00b7 Regular", muted: false },
+  { variant: "label", name: "Label", spec: "14 / 21 \u00b7 Medium", muted: false },
+  { variant: "metadata", name: "Metadata", spec: "14 / 21 \u00b7 Regular", muted: true },
+  { variant: "code", name: "Code", spec: "14 / 21 \u00b7 Mono", muted: false },
+  { variant: "caption", name: "Caption", spec: "12 / 16 \u00b7 Regular", muted: true },
+] as const
+
+const TYPE_WEIGHTS = [
+  { className: "font-normal", name: "Regular", value: "400" },
+  { className: "font-medium", name: "Medium", value: "500" },
+  { className: "font-semibold", name: "Semibold", value: "600" },
+] as const
+
 function TypographyDefault() {
   return (
-    <div className="space-y-4">
-      <h1 className="scroll-m-20 text-4xl font-extrabold lg:text-5xl">The joke tax chronicles</h1>
-      <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold first:mt-0">The people of the kingdom</h2>
-      <h3 className="scroll-m-20 text-2xl font-semibold">The king's plan</h3>
-      <h4 className="scroll-m-20 text-xl font-semibold">People stopped telling jokes</h4>
-      <p className="text-lg leading-7 not-first:mt-6">
-        The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
-        Jokester and his court jester were reinstated, and the kingdom was once again filled with laughter.
-      </p>
-      <a href="#" onClick={(ev) => ev.preventDefault()} className="font-medium text-primary underline underline-offset-4">Read the full story</a>
-      <p className="text-lg leading-7">
-        Use the <code className="relative rounded bg-muted px-1.5 py-0.5 font-mono text-sm font-semibold">Popover</code> component for floating content.
-      </p>
-    </div>
+    <Stack gap="2xl" className="w-full max-w-2xl">
+      <Stack gap="md">
+        <Text variant="heading">Typeface</Text>
+        <Stack gap="xs">
+          <Cluster gap="sm" align="baseline">
+            <Text variant="label">Google Sans Flex</Text>
+            <Badge>Variable</Badge>
+            <Text variant="metadata" tone="muted">Headings, body, and UI</Text>
+          </Cluster>
+          <Text variant="title">The quick brown fox jumps over the lazy dog</Text>
+          <Text variant="metadata" tone="muted">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ · abcdefghijklmnopqrstuvwxyz · 0123456789
+          </Text>
+        </Stack>
+        <Stack gap="xs">
+          <Cluster gap="sm" align="baseline">
+            <Text variant="label">Monospace</Text>
+            <Badge>System stack</Badge>
+            <Text variant="metadata" tone="muted">Code, tokens, and identifiers</Text>
+          </Cluster>
+          <Text variant="code" className="text-base">--text-body-size: 16px;</Text>
+        </Stack>
+      </Stack>
+
+      <Stack gap="sm">
+        <Text variant="heading">Type scale</Text>
+        <Text variant="metadata" tone="muted">
+          Nine roles owned by the Text component. Size and line height come from semantic tokens.
+        </Text>
+        <Stack gap="none">
+          {TYPE_SCALE.map(({ variant, name, spec, muted }) => (
+            <Cluster key={name} justify="between" gap="md" className="border-b py-3 last:border-b-0">
+              <Text variant={variant} tone={muted ? "muted" : "default"}>{name}</Text>
+              <Badge>{spec}</Badge>
+            </Cluster>
+          ))}
+        </Stack>
+      </Stack>
+
+      <Stack gap="md">
+        <Text variant="heading">Weights</Text>
+        <Cluster gap="xl">
+          {TYPE_WEIGHTS.map(({ className, name, value }) => (
+            <Stack key={name} gap="xs" align="start">
+              <Text variant="title" className={className}>Ag</Text>
+              <Cluster gap="sm" align="baseline">
+                <Text variant="metadata" tone="muted">{name}</Text>
+                <Badge>{value}</Badge>
+              </Cluster>
+            </Stack>
+          ))}
+        </Cluster>
+      </Stack>
+    </Stack>
   )
-}
-
-function TypographyH1() {
-  return <h1 className="scroll-m-20 text-4xl font-extrabold lg:text-5xl">Taxing laughter: the joke tax chronicles</h1>
-}
-
-function TypographyH2() {
-  return <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold first:mt-0">The people of the kingdom</h2>
-}
-
-function TypographyH3() {
-  return <h3 className="scroll-m-20 text-2xl font-semibold">The king's plan</h3>
-}
-
-function TypographyH4() {
-  return <h4 className="scroll-m-20 text-xl font-semibold">People stopped telling jokes</h4>
-}
-
-function TypographyParagraph() {
-  return (
-    <p className="text-lg leading-7 not-first:mt-6">
-      The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax.
-    </p>
-  )
-}
-
-function TypographyLead() {
-  return <p className="text-xl text-muted-foreground">A modal dialog that interrupts the user with important content and expects a response.</p>
-}
-
-function TypographyBlockquote() {
-  return (
-    <blockquote className="my-6 border-l-2 pl-6 text-lg italic">
-      "After all," he said, "everyone enjoys a good joke, so it's only fair that they should pay for the privilege."
-    </blockquote>
-  )
-}
-
-function TypographyList() {
-  return (
-    <ul className="showcase-typography-list text-lg">
-      <li>1st level of puns: 5 gold coins</li>
-      <li>2nd level of puns: 10 gold coins</li>
-      <li>3rd level of puns: 20 gold coins</li>
-    </ul>
-  )
-}
-
-function TypographyTable() {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-24">King's Treasury</TableHead>
-          <TableHead>First year</TableHead>
-          <TableHead>Second year</TableHead>
-          <TableHead className="text-right">Third year</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">Gold coins</TableCell>
-          <TableCell>50,000</TableCell>
-          <TableCell>75,000</TableCell>
-          <TableCell className="text-right">100,000</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell className="font-medium">Joke taxes</TableCell>
-          <TableCell>10,000</TableCell>
-          <TableCell>25,000</TableCell>
-          <TableCell className="text-right">50,000</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  )
-}
-
-function TypographyInlineCode() {
-  return (
-    <p className="leading-7">
-      Use the <code className="relative rounded bg-muted px-1.5 py-0.5 font-mono text-sm font-semibold">@radix-ui/react-dialog</code> package.
-    </p>
-  )
-}
-
-function TypographyLarge() {
-  return <div className="text-lg font-semibold">Are you absolutely sure?</div>
-}
-
-function TypographySmall() {
-  return <small className="text-sm font-medium leading-none">Email address</small>
-}
-
-function TypographyMuted() {
-  return <p className="text-sm text-muted-foreground">Enter your email address.</p>
 }
 
 // ---------------------------------------------------------------------------
@@ -1854,28 +1820,13 @@ const table = useTable({ features, data, columns, rowModelFns: {} })`,
   {
     slug: "typography",
     name: "Typography",
-    description: "Typography specimens using semantic Geist/theme utilities for headings, paragraphs, inline elements, and prose.",
+    description:
+      "One reference for the type system: the Google Sans Flex typeface, the nine Text roles with their sizes and line heights, and the weights in use.",
     category: "Utilities",
     installCommand: null,
     Demo: TypographyDefault,
-    code: `<h1 className="scroll-m-20 text-4xl font-extrabold lg:text-5xl">
-  Heading
-</h1>
-<p className="leading-7">Paragraph text with <code>inline code</code>.</p>`,
-    examples: [
-      { name: "Heading 1", Demo: TypographyH1 },
-      { name: "Heading 2", Demo: TypographyH2 },
-      { name: "Heading 3", Demo: TypographyH3 },
-      { name: "Heading 4", Demo: TypographyH4 },
-      { name: "Paragraph", Demo: TypographyParagraph },
-      { name: "Lead", Demo: TypographyLead },
-      { name: "Blockquote", Demo: TypographyBlockquote },
-      { name: "List", Demo: TypographyList },
-      { name: "Table", Demo: TypographyTable },
-      { name: "Inline Code", Demo: TypographyInlineCode },
-      { name: "Large", Demo: TypographyLarge },
-      { name: "Small", Demo: TypographySmall },
-      { name: "Muted", Demo: TypographyMuted },
-    ],
+    code: `<Text variant="title">Title</Text>
+<Text variant="body">Body copy set in Geist.</Text>
+<Text variant="caption" tone="muted">Caption</Text>`,
   },
 ]

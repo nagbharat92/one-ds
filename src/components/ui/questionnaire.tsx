@@ -13,7 +13,7 @@ function Questionnaire({
   return (
     <QuestionnairePrimitive.Root
       data-slot="questionnaire"
-      className={cn("flex w-full min-w-0 flex-col gap-4", className)}
+      className={cn("flex w-full min-w-0 flex-col gap-(--space-md)", className)}
       {...props}
     />
   )
@@ -43,7 +43,7 @@ function QuestionnaireItem({
     <QuestionnairePrimitive.Item
       data-slot="questionnaire-item"
       className={cn(
-        "flex min-w-0 flex-col gap-2 border-0 p-0 outline-none",
+        "flex min-w-0 flex-col gap-(--space-xs) border-0 p-(--space-none) outline-none",
         className
       )}
       {...props}
@@ -61,7 +61,7 @@ function QuestionnaireTitle({
       className={cn(
         // Renders as a <legend>, which sits outside the fieldset's flex flow, so
         // the item gap never applies after it (same reason FieldLegend has mb).
-        "mb-2 font-heading text-base leading-snug font-medium text-pretty",
+        "mb-(--space-xs) font-heading text-base leading-snug font-medium text-pretty",
         className
       )}
       {...props}
@@ -90,7 +90,7 @@ function QuestionnaireChoices({
     <QuestionnairePrimitive.Choices
       data-slot="questionnaire-choices"
       className={cn(
-        "group/questionnaire-choices mt-2 grid min-w-0 gap-2",
+        "group/questionnaire-choices mt-(--space-xs) grid min-w-0 gap-(--space-xs)",
         className
       )}
       {...props}
@@ -107,7 +107,7 @@ function QuestionnaireChoice({
     <QuestionnairePrimitive.Choice
       data-slot="questionnaire-choice"
       className={cn(
-        "group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start gap-2.5 rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-3 py-2.5 text-start text-sm transition-colors outline-none select-none hover:bg-(--field-hover-fill) focus-within:ring-3 focus-within:ring-ring data-invalid:ring-3 data-invalid:ring-destructive data-checked:border-primary/40 data-checked:bg-muted dark:data-checked:bg-muted",
+        "group/questionnaire-choice relative flex min-h-11 cursor-pointer items-start gap-(--space-sm) rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-(--space-sm) py-(--space-sm) text-start text-sm transition-colors outline-none select-none hover:bg-(--field-hover-fill) focus-within:ring-3 focus-within:ring-ring data-invalid:ring-3 data-invalid:ring-destructive data-checked:border-primary/40 data-checked:bg-muted dark:data-checked:bg-muted",
         "data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
         className
       )}
@@ -123,7 +123,7 @@ function QuestionnaireChoice({
         className={cn(
           controlIndicatorVariants(),
           // The real input is a sibling, so this copy mirrors the choice's state.
-          "pointer-events-none translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full group-data-checked/questionnaire-choice:border-(--button-selected-secondary-fill) group-data-checked/questionnaire-choice:bg-(--button-selected-secondary-fill) group-data-checked/questionnaire-choice:text-(--button-selected-secondary-ink)"
+          "pointer-events-none translate-y-0.5 group-data-[type=radio]/questionnaire-choice:rounded-full group-data-checked/questionnaire-choice:border-(--button-selected-secondary-fill) group-data-checked/questionnaire-choice:bg-(--button-selected-secondary-fill) group-data-checked/questionnaire-choice:text-(--button-selected-secondary-ink) group-data-checked/questionnaire-choice:shadow-(--control-outline-clear-shadow)"
         )}
       >
         <span
@@ -137,7 +137,7 @@ function QuestionnaireChoice({
       </span>
       <QuestionnairePrimitive.ChoiceLabel
         data-slot="questionnaire-choice-label"
-        className="flex min-w-0 flex-1 flex-col gap-0.5 leading-snug"
+        className="flex min-w-0 flex-1 flex-col gap-(--space-hairline) leading-snug"
       >
         {children}
       </QuestionnairePrimitive.ChoiceLabel>
@@ -169,7 +169,7 @@ function QuestionnaireInput({
   return (
     <div
       data-slot="questionnaire-input-wrapper"
-      className="group/questionnaire-input relative mt-2 w-full min-w-0"
+      className="group/questionnaire-input relative mt-(--space-xs) w-full min-w-0"
     >
       <QuestionnairePrimitive.Input
         data-slot="questionnaire-input"
@@ -209,7 +209,7 @@ function QuestionnaireActions({
     <div
       data-slot="questionnaire-actions"
       className={cn(
-        "questionnaire-actions-layout mt-1 grid min-h-11 w-full items-center gap-2 sm:min-h-8",
+        "questionnaire-actions-layout mt-(--space-2xs) grid min-h-11 w-full items-center gap-(--space-xs) sm:min-h-8",
         className
       )}
       {...props}

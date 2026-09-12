@@ -9,7 +9,7 @@ import {
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
-import { Alert, AlertDescription, AlertTitle, AlertAction } from "@/components/ui/alert"
+import { Alert, AlertAction, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
@@ -53,30 +53,36 @@ export const feedbackDemos: ComponentEntry[] = [
     Demo: () => (
       <div className="grid w-full max-w-md gap-4">
         <Alert>
-          <InfoIcon />
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            You can add components to your app using the CLI.
-          </AlertDescription>
+          <AlertIcon><InfoIcon /></AlertIcon>
+          <AlertContent>
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+              You can add components to your app using the CLI.
+            </AlertDescription>
+          </AlertContent>
         </Alert>
-        <Alert variant="destructive">
-          <TriangleAlertIcon />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+        <Alert variant="error">
+          <AlertIcon><TriangleAlertIcon /></AlertIcon>
+          <AlertContent>
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
+          </AlertContent>
         </Alert>
       </div>
     ),
     code: `import { InfoIcon } from "@/components/ui/icons"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 
 export function AlertDemo() {
   return (
     <Alert>
-      <InfoIcon />
-      <AlertTitle>Heads up!</AlertTitle>
-      <AlertDescription>
-        You can add components to your app using the CLI.
-      </AlertDescription>
+      <AlertIcon><InfoIcon /></AlertIcon>
+      <AlertContent>
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          You can add components to your app using the CLI.
+        </AlertDescription>
+      </AlertContent>
     </Alert>
   )
 }`,
@@ -90,21 +96,23 @@ export function AlertDemo() {
               <div className="flex w-full max-w-md items-center gap-3">
                 <CheckCircleIcon className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Alert dismissed</span>
-                <Button size="default" variant="secondary" onClick={() => setDismissed(false)}>
+                <Button size="expressive" variant="primary" onClick={() => setDismissed(false)}>
                   Show again
                 </Button>
               </div>
             )
           }
           return (
-            <Alert className="w-full max-w-md">
-              <InfoIcon />
-              <AlertTitle>New update available</AlertTitle>
-              <AlertDescription>
-                A new version is ready to install. Restart to apply changes.
-              </AlertDescription>
+            <Alert variant="info" className="w-full max-w-md">
+              <AlertIcon><InfoIcon /></AlertIcon>
+              <AlertContent>
+                <AlertTitle>New update available</AlertTitle>
+                <AlertDescription>
+                  A new version is ready to install. Restart to apply changes.
+                </AlertDescription>
+              </AlertContent>
               <AlertAction>
-                <Button size="default" variant="secondary" onClick={() => setDismissed(true)}>
+                <Button size="expressive" variant="primary" onClick={() => setDismissed(true)}>
                   Dismiss
                 </Button>
               </AlertAction>
@@ -113,22 +121,26 @@ export function AlertDemo() {
         },
       },
       {
-        name: "Custom colors",
+        name: "Semantic tones",
         Demo: () => (
           <div className="grid w-full max-w-md gap-4">
-            <Alert className="border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
-              <CheckCircleIcon />
-              <AlertTitle>Success</AlertTitle>
-              <AlertDescription className="text-emerald-700/80 dark:text-emerald-400/80">
-                Your changes have been saved successfully.
-              </AlertDescription>
+            <Alert variant="success">
+              <AlertIcon><CheckCircleIcon /></AlertIcon>
+              <AlertContent>
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>
+                  Your changes have been saved successfully.
+                </AlertDescription>
+              </AlertContent>
             </Alert>
-            <Alert className="border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400">
-              <TriangleAlertIcon />
-              <AlertTitle>Warning</AlertTitle>
-              <AlertDescription className="text-amber-700/80 dark:text-amber-400/80">
-                Your storage is almost full. Consider upgrading your plan.
-              </AlertDescription>
+            <Alert variant="warning">
+              <AlertIcon><TriangleAlertIcon /></AlertIcon>
+              <AlertContent>
+                <AlertTitle>Warning</AlertTitle>
+                <AlertDescription>
+                  Your storage is almost full. Consider upgrading your plan.
+                </AlertDescription>
+              </AlertContent>
             </Alert>
           </div>
         ),

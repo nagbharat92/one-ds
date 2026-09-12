@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 
 const toolbarVariants = cva(
-  "flex bg-clip-padding gap-3 rounded-(--tb-radius) [--tb-inner:var(--radius-lg)] [--tb-pad:calc(var(--spacing)*3)] [--tb-pad-ends:var(--tb-pad)] [--tb-radius:calc(var(--tb-inner)+var(--tb-pad))]",
+  "flex bg-clip-padding gap-(--space-sm) rounded-(--tb-radius) [--tb-inner:var(--radius-lg)] [--tb-pad:calc(var(--spacing)*3)] [--tb-pad-ends:var(--tb-pad)] [--tb-radius:calc(var(--tb-inner)+var(--tb-pad))]",
   {
     variants: {
       variant: {
@@ -61,6 +61,7 @@ function Toolbar({
         role="toolbar"
         data-slot="toolbar"
         data-orientation={orientation}
+        {...(orientation === "horizontal" ? { "data-optical-edges": "" } : {})}
         aria-orientation={orientation ?? undefined}
         className={cn(
           toolbarVariants({ variant, orientation, sticky }),
@@ -78,7 +79,7 @@ function ToolbarGroup({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="toolbar-group"
       className={cn(
-        "flex items-center gap-1",
+        "flex items-center gap-(--space-2xs)",
         orientation === "vertical" && "flex-col items-stretch",
         className
       )}
@@ -92,7 +93,7 @@ function ToolbarTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="toolbar-title"
-      className={cn("min-w-0 text-sm font-medium", className)}
+      className={cn("edge-text min-w-0 text-sm font-medium", className)}
       {...props}
     />
   )
@@ -113,7 +114,7 @@ function ToolbarSeparator({
       data-slot="toolbar-separator"
       orientation={resolved}
       className={cn(
-        resolved === "vertical" ? "mx-1 h-6!" : "my-1 w-full",
+        resolved === "vertical" ? "mx-(--space-2xs) h-6!" : "my-(--space-2xs) w-full",
         className
       )}
       {...props}

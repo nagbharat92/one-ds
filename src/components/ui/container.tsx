@@ -15,7 +15,7 @@ const containerVariants = cva("mx-auto w-full", {
       full: "max-w-none",
     },
     gutter: {
-      true: "px-4 sm:px-6 lg:px-8",
+      true: "px-(--space-md) sm:px-(--space-lg) lg:px-(--space-xl)",
       false: "",
     },
   },

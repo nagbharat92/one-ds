@@ -176,7 +176,7 @@ function SiteHeaderGroup({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="site-header-group"
       className={cn(
-        "flex h-full items-center gap-1",
+        "flex h-full items-center gap-(--space-2xs)",
         variant === "clustered" &&
           "rounded-(--site-header-radius) border bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
         className
@@ -198,7 +198,7 @@ function SiteHeaderBrand({
     <Comp
       data-slot="site-header-brand"
       className={cn(
-        "flex shrink-0 items-center gap-2 text-base font-semibold whitespace-nowrap text-foreground transition-opacity hover:opacity-80 [&_svg]:size-5 [&_svg]:shrink-0",
+        "flex shrink-0 items-center gap-(--space-xs) text-base font-semibold whitespace-nowrap text-foreground transition-opacity hover:opacity-80 [&_svg]:size-5 [&_svg]:shrink-0",
         // A lone mark centres in a square slot, so its group renders as a
         // circle; a mark with a label pads out to clear the cap curve.
         variant !== "docked" &&
@@ -431,7 +431,7 @@ function SiteHeaderNav({
       ref={navRef}
       data-slot="site-header-nav"
       className={cn(
-        "group/site-header-nav relative flex min-w-0 items-center gap-1 text-sm",
+        "group/site-header-nav relative flex min-w-0 items-center gap-(--space-2xs) text-sm",
         className
       )}
       {...props}
@@ -547,7 +547,7 @@ function SiteHeaderSeparator({
       // the top of the row. The override must carry the same variant prefix or
       // tailwind-merge keeps both and the more specific stretch wins.
       className={cn(
-        "mx-1 h-(--site-header-separator-height)! data-vertical:self-center",
+        "mx-(--space-2xs) h-(--site-header-separator-height)! data-vertical:self-center",
         className
       )}
       {...props}

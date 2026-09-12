@@ -21,7 +21,6 @@ import { canvasDemos, canvasGridDemos } from "@/showcase/demos/canvas"
 import { cursorFollowerDemos } from "@/showcase/demos/cursor-follower"
 import { dragHandleDemos } from "@/showcase/demos/drag-handle"
 import { elevationDemos } from "@/showcase/demos/elevation"
-import { surfaceDemos } from "@/showcase/demos/surfaces"
 import { fabDemos } from "@/showcase/demos/fab"
 import { swapDemos } from "@/showcase/demos/swap"
 import { referenceDemos } from "@/showcase/demos/reference"
@@ -43,7 +42,6 @@ export const registry: ComponentEntry[] = [
   ...cursorFollowerDemos,
   ...dragHandleDemos,
   ...elevationDemos,
-  ...surfaceDemos,
   ...fabDemos,
   ...swapDemos,
   ...formsDemos,
@@ -92,8 +90,8 @@ const BUILD_ORDER: { label: string; slugs: string[] }[] = [
     slugs: [
       "button", "input", "textarea", "label", "checkbox", "radio-group",
       "switch", "slider", "badge", "kbd", "avatar", "icon",
-      "icon-label", "text", "typography", "separator", "aspect-ratio",
-      "skeleton", "spinner", "progress", "elevation", "surfaces", "swap",
+      "icon-label", "edge-text", "text", "typography", "separator", "aspect-ratio",
+      "skeleton", "spinner", "progress", "elevation", "swap",
       "drag-handle",
     ],
   },

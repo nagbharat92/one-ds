@@ -291,6 +291,36 @@ export function AccordionDemo() {
 }`,
     examples: [
       {
+        name: "Large",
+        description:
+          "A chunkier footprint for site pages — heading-and-body pairing with larger icons.",
+        Demo: () => (
+          <Accordion type="single" collapsible size="lg" className="w-full max-w-2xl">
+            <AccordionItem value="lg-1">
+              <AccordionTrigger>How do I get started?</AccordionTrigger>
+              <AccordionContent>
+                Create an account, pick a plan, and invite your team. You can be up and
+                running in a few minutes.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="lg-2">
+              <AccordionTrigger>Can I use my own domain?</AccordionTrigger>
+              <AccordionContent>
+                Yes. Connect a custom domain from the workspace settings and we handle the
+                certificate for you.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="lg-3" className="border-b-0">
+              <AccordionTrigger>What kind of support is included?</AccordionTrigger>
+              <AccordionContent>
+                Every plan includes 24/7 email and chat support, with priority response on
+                higher tiers.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        ),
+      },
+      {
         name: "Multiple",
         description: "Multiple items can be open at the same time.",
         Demo: () => (
@@ -374,11 +404,11 @@ export function AccordionDemo() {
         Demo: () => (
           <div className="flex w-full max-w-md flex-col gap-3">
             <Accordion type="single" collapsible>
-              <Card>
+              <Card className="py-0">
                 <AccordionItem value="card-1" className="border-b-0">
                   <CardContent className="p-0">
-                    <AccordionTrigger className="px-4">What is your refund policy?</AccordionTrigger>
-                    <AccordionContent className="px-4">
+                    <AccordionTrigger className="ps-4 pe-3 pt-4">What is your refund policy?</AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
                       We offer a 30-day money-back guarantee on all plans.
                     </AccordionContent>
                   </CardContent>
@@ -386,11 +416,11 @@ export function AccordionDemo() {
               </Card>
             </Accordion>
             <Accordion type="single" collapsible>
-              <Card>
+              <Card className="py-0">
                 <AccordionItem value="card-2" className="border-b-0">
                   <CardContent className="p-0">
-                    <AccordionTrigger className="px-4">Can I change plans later?</AccordionTrigger>
-                    <AccordionContent className="px-4">
+                    <AccordionTrigger className="ps-4 pe-3 pt-4">Can I change plans later?</AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
                       Yes, you can upgrade or downgrade at any time.
                     </AccordionContent>
                   </CardContent>
@@ -398,11 +428,11 @@ export function AccordionDemo() {
               </Card>
             </Accordion>
             <Accordion type="single" collapsible>
-              <Card>
+              <Card className="py-0">
                 <AccordionItem value="card-3" className="border-b-0">
                   <CardContent className="p-0">
-                    <AccordionTrigger className="px-4">Do you offer support?</AccordionTrigger>
-                    <AccordionContent className="px-4">
+                    <AccordionTrigger className="ps-4 pe-3 pt-4">Do you offer support?</AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
                       Yes, we provide 24/7 email and chat support.
                     </AccordionContent>
                   </CardContent>

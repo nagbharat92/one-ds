@@ -10,7 +10,10 @@ function Page({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="page"
-      className={cn("relative flex min-h-0 flex-1 flex-col", className)}
+      className={cn(
+        "relative flex min-h-0 flex-1 flex-col bg-(--page-fill)",
+        className
+      )}
       {...props}
     />
   )
@@ -40,7 +43,7 @@ function PageScroll({
 }
 
 const pageContentVariants = cva(
-  "page-content mx-auto flex w-full flex-col px-6 sm:px-8 lg:px-10",
+  "page-content mx-auto flex w-full flex-col px-(--space-lg) sm:px-(--space-xl) lg:px-10",
   {
     variants: {
       variant: {

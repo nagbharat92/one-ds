@@ -41,7 +41,7 @@ function SectionHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="section-header"
       className={cn(
-        "flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4",
+        "flex flex-col gap-(--space-xs) sm:flex-row sm:items-start sm:justify-between sm:gap-(--space-md)",
         className
       )}
       {...props}
@@ -53,7 +53,7 @@ function SectionHeading({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="section-heading"
-      className={cn("flex min-w-0 flex-col gap-1.5", className)}
+      className={cn("flex min-w-0 flex-col gap-(--space-xs)", className)}
       {...props}
     />
   )
@@ -70,7 +70,7 @@ function SectionTitle({
     <Comp
       data-slot="section-title"
       className={cn(
-        "text-xl font-semibold text-foreground sm:text-2xl",
+        "text-(length:--text-heading-size) leading-(--text-heading-leading) font-semibold text-foreground",
         className
       )}
       {...props}
@@ -88,7 +88,7 @@ function SectionDescription({
   return (
     <Comp
       data-slot="section-description"
-      className={cn("max-w-2xl text-sm text-pretty text-muted-foreground", className)}
+      className={cn("max-w-2xl text-(length:--text-body-size) leading-(--text-body-leading) text-pretty text-muted-foreground", className)}
       {...props}
     />
   )
@@ -98,7 +98,7 @@ function SectionActions({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="section-actions"
-      className={cn("flex shrink-0 flex-wrap items-center gap-2", className)}
+      className={cn("flex shrink-0 flex-wrap items-center gap-(--space-xs)", className)}
       {...props}
     />
   )

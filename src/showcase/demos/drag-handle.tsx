@@ -140,7 +140,7 @@ export const dragHandleDemos: ComponentEntry[] = [
       {
         name: "Grip · Resizable panels",
         description:
-          "Used inside resizable panel separators. Move within the edge threshold to enlarge, darken, and raise the grip, then drag it or focus it and use the arrow keys.",
+          "Used inside resizable panel separators. Move within the edge threshold to enlarge the grip, then drag it or focus it and use the arrow keys.",
         Demo: PanelGripDemo,
         layout: "wide",
       },

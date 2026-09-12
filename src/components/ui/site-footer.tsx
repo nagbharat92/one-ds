@@ -24,7 +24,7 @@ function SiteFooterContainer({
     <div
       data-slot="site-footer-container"
       className={cn(
-        "mx-auto flex w-full flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8",
+        "mx-auto flex w-full flex-col gap-10 px-(--space-md) py-(--space-2xl) sm:px-(--space-lg) lg:px-(--space-xl)",
         className
       )}
       {...props}
@@ -49,7 +49,7 @@ function SiteFooterIntro({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="site-footer-intro"
-      className={cn("flex flex-col gap-6 lg:max-w-sm", className)}
+      className={cn("flex flex-col gap-(--space-lg) lg:max-w-sm", className)}
       {...props}
     />
   )
@@ -66,7 +66,7 @@ function SiteFooterBrand({
     <Comp
       data-slot="site-footer-brand"
       className={cn(
-        "flex w-fit items-center gap-2 text-base font-semibold whitespace-nowrap text-foreground transition-opacity hover:opacity-80 [&_svg]:size-6 [&_svg]:shrink-0",
+        "flex w-fit items-center gap-(--space-xs) text-base font-semibold whitespace-nowrap text-foreground transition-opacity hover:opacity-80 [&_svg]:size-6 [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -95,7 +95,7 @@ function SiteFooterColumns({
     <div
       data-slot="site-footer-columns"
       className={cn(
-        "grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-4",
+        "grid grid-cols-2 gap-x-(--space-xl) gap-y-10 sm:grid-cols-3 lg:grid-cols-4",
         className
       )}
       {...props}
@@ -107,7 +107,7 @@ function SiteFooterColumn({ className, ...props }: React.ComponentProps<"div">) 
   return (
     <div
       data-slot="site-footer-column"
-      className={cn("flex flex-col gap-3", className)}
+      className={cn("flex flex-col gap-(--space-sm)", className)}
       {...props}
     />
   )
@@ -130,7 +130,7 @@ function SiteFooterNav({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="site-footer-nav"
-      className={cn("flex flex-col gap-3 text-sm", className)}
+      className={cn("flex flex-col gap-(--space-sm) text-sm", className)}
       {...props}
     />
   )
@@ -162,7 +162,7 @@ function SiteFooterNewsletter({
   return (
     <div
       data-slot="site-footer-newsletter"
-      className={cn("flex flex-col gap-3", className)}
+      className={cn("flex flex-col gap-(--space-sm)", className)}
       {...props}
     />
   )
@@ -201,7 +201,7 @@ function SiteFooterNewsletterForm({
   return (
     <form
       data-slot="site-footer-newsletter-form"
-      className={cn("flex w-full max-w-sm items-center gap-2", className)}
+      className={cn("flex w-full max-w-sm items-center gap-(--space-xs)", className)}
       {...props}
     />
   )
@@ -211,7 +211,7 @@ function SiteFooterSocial({ className, ...props }: React.ComponentProps<"div">) 
   return (
     <div
       data-slot="site-footer-social"
-      className={cn("flex items-center gap-1", className)}
+      className={cn("flex items-center gap-(--space-2xs)", className)}
       {...props}
     />
   )
@@ -255,7 +255,7 @@ function SiteFooterBottom({ className, ...props }: React.ComponentProps<"div">) 
     <div
       data-slot="site-footer-bottom"
       className={cn(
-        "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
+        "flex flex-col gap-(--space-md) sm:flex-row sm:items-center sm:justify-between",
         className
       )}
       {...props}
@@ -268,7 +268,7 @@ function SiteFooterLegal({ className, ...props }: React.ComponentProps<"nav">) {
     <nav
       data-slot="site-footer-legal"
       className={cn(
-        "flex flex-wrap items-center gap-x-4 gap-y-2 text-sm",
+        "flex flex-wrap items-center gap-x-(--space-md) gap-y-(--space-xs) text-sm",
         className
       )}
       {...props}

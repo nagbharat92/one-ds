@@ -12,7 +12,7 @@ import { Stack } from "@/components/ui/stack"
 import { Cluster } from "@/components/ui/cluster"
 import { Section, SectionHeader, SectionHeading, SectionTitle, SectionContent } from "@/components/ui/section"
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from "@/components/ui/empty"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Text } from "@/components/ui/text"
 import { TableOfContents, TableOfContentsLayout, TableOfContentsContent } from "@/components/ui/table-of-contents"
@@ -165,7 +165,7 @@ export function DesignRulesPage() {
         <Button asChild variant="secondary"><a href={`${import.meta.env.BASE_URL}design-rules.md`} download><DownloadIcon />Agent reference</a></Button>
       </Cluster>
       <Text variant="metadata" tone="muted" role="status">{visibleRules.length} rules · {visibleRules.filter(rule => rule.status === "approved").length} approved · {visibleRules.filter(rule => rule.status === "candidate").length} under exploration</Text>
-      <Alert role="note"><AlertDescription><Text tone="muted">{rulesDocument.adoption}</Text></AlertDescription></Alert>
+      <Alert role="note"><AlertContent><AlertDescription>{rulesDocument.adoption}</AlertDescription></AlertContent></Alert>
       </Stack>
       {groups.length === 0 ? (
         <Empty>

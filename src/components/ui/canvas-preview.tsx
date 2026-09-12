@@ -20,7 +20,7 @@ function CanvasPreviewFrame({
   footnote?: React.ReactNode
 }) {
   return (
-    <div className={cn("flex w-full min-w-0 flex-col gap-6", className)} {...props}>
+    <div className={cn("flex w-full min-w-0 flex-col gap-(--space-lg)", className)} {...props}>
       {controls}
       <div className="w-full min-w-0">
         {children}

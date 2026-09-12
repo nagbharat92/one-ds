@@ -66,7 +66,9 @@ import { Markdown, Response, ResponseStream } from "@/components/ui/response"
 import {
   Alert,
   AlertAction,
+  AlertContent,
   AlertDescription,
+  AlertIcon,
   AlertTitle,
 } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
@@ -1082,16 +1084,18 @@ function ResponseErrorDemo() {
         <MessageContent>
           <MessageHeader>Assistant</MessageHeader>
           {failed ? (
-            <Alert variant="destructive" live="assertive">
-              <AlertCircleIcon aria-hidden />
-              <AlertTitle>Response stopped</AlertTitle>
-              <AlertDescription>
-                The connection dropped before the answer finished.
-              </AlertDescription>
+            <Alert variant="error" live="assertive">
+              <AlertIcon><AlertCircleIcon aria-hidden /></AlertIcon>
+              <AlertContent>
+                <AlertTitle>Response stopped</AlertTitle>
+                <AlertDescription>
+                  The connection dropped before the answer finished.
+                </AlertDescription>
+              </AlertContent>
               <AlertAction>
                 <Button
-                  variant="secondary"
-                  size="default"
+                  variant="primary"
+                  size="expressive"
                   onClick={() => setFailed(false)}
                 >
                   <RotateCwIcon aria-hidden />

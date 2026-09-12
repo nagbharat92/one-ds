@@ -189,12 +189,12 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-            "grid min-w-32 items-start gap-1.5 rounded-lg border border-border/50 bg-popover bg-clip-padding px-2.5 py-1.5 text-xs shadow-(--elevation-floating)",
+            "grid min-w-32 items-start gap-(--space-xs) rounded-lg border border-border/50 bg-popover bg-clip-padding px-(--space-sm) py-(--space-xs) text-xs shadow-(--elevation-floating)",
         className
       )}
     >
       {!nestLabel ? tooltipLabel : null}
-      <div className="grid gap-1.5">
+      <div className="grid gap-(--space-xs)">
         {payload
           .filter((item) => item.type !== "none")
           .map((item, index) => {
@@ -206,7 +206,7 @@ function ChartTooltipContent({
               <div
                 key={index}
                 className={cn(
-                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  "flex w-full flex-wrap items-stretch gap-(--space-xs) [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center"
                 )}
               >
@@ -226,7 +226,7 @@ function ChartTooltipContent({
                               "w-1": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
-                              "my-0.5": nestLabel && indicator === "dashed",
+                              "my-(--space-hairline)": nestLabel && indicator === "dashed",
                             }
                           )}
                           style={
@@ -244,7 +244,7 @@ function ChartTooltipContent({
                         nestLabel ? "items-end" : "items-center"
                       )}
                     >
-                      <div className="grid gap-1.5">
+                      <div className="grid gap-(--space-xs)">
                         {nestLabel ? tooltipLabel : null}
                         <span className="text-muted-foreground">
                           {itemConfig?.label ?? item.name}
@@ -289,8 +289,8 @@ function ChartLegendContent({
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-4",
-        verticalAlign === "top" ? "pb-3" : "pt-3",
+        "flex items-center justify-center gap-(--space-md)",
+        verticalAlign === "top" ? "pb-(--space-sm)" : "pt-(--space-sm)",
         className
       )}
     >
@@ -304,7 +304,7 @@ function ChartLegendContent({
             <div
               key={index}
               className={cn(
-                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
+                "flex items-center gap-(--space-xs) [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
               )}
             >
               {itemConfig?.icon && !hideIcon ? (
