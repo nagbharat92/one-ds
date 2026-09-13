@@ -880,6 +880,7 @@ export function ExpressionLabCanvas({
                   </Button>
                   <Button
                     type="button"
+                    variant="secondary"
                     onClick={() => {
                       onInteraction()
                       setNoteSaved(true)

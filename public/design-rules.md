@@ -30,17 +30,17 @@ Implementation: [src/showcase/design-rules-page.tsx](../src/showcase/design-rule
 
 ID: icons.material-symbols | Foundations | Required | approved
 
-Material Symbols Rounded is the only approved system icon library. All consumers and showcases import named icons from src/components/ui/icons.tsx. Only that public module imports icon-adapters/active.ts, which statically selects material.tsx. The adapter renders an official self-hosted variable font inside the existing SVG viewport. Icon owns library-independent sizing and accessibility; IconBox is optional square layout, not a hit target. No other icon packages, locally drawn icons, static filled swaps, or runtime library providers are allowed. Selected Buttons automatically animate the native FILL axis from 0 to 1 using tokenized Button effect timing. Do not simulate selection with CSS path fill or stroke weight. Reduced motion applies the filled state immediately. Preserve native activation, accessible names, refs, and host geometry. Named sizes remain 8, 12, 14, 16, 20, 24, 28, and 32px; legacy sizes below 20 use optical size 20. Extend the adapter and public module for missing glyphs, then run npm run icons:update-font. The checked-in subset and manifest must cover every symbol; no network font dependency at runtime or build time. Generated examples follow the same rules.
+Material Symbols Rounded is the only approved system icon library. All consumers and showcases import named icons from src/components/ui/icons.tsx. Only that public module imports icon-adapters/active.ts, which statically selects material.tsx. The adapter renders an official self-hosted variable font inside the existing SVG viewport. Icon owns library-independent sizing and accessibility; IconBox is optional square layout, not a hit target. No other icon packages, locally drawn icons, static filled swaps, or runtime library providers are allowed. Selected Buttons automatically animate the native FILL axis from 0 to 1 using tokenized Button effect timing. Do not simulate selection with CSS path fill or stroke weight. Intrinsically asymmetric glyph artwork may receive an adapter-owned, tokenized optical correction without changing its SVG viewport; the warning triangle is lifted2px to center its visual mass. Reduced motion applies the filled state immediately. Preserve native activation, accessible names, refs, and host geometry. Named sizes remain 8, 12, 14, 16, 20, 24, 28, and 32px; legacy sizes below 20 use optical size 20. Extend the adapter and public module for missing glyphs, then run npm run icons:update-font. The checked-in subset and manifest must cover every symbol; no network font dependency at runtime or build time. Generated examples follow the same rules.
 
 Why: A shared viewport and stroke contract separates layout from artwork and prevents arbitrary SVG selectors and per-call-site values from becoming the icon API.
 
 Exceptions: Favicons remain brand images because Material does not supply brand logos. Shape artwork, charts, annotation connectors, and coachmark arrows are geometric content, not system icons. Spinner retains animation ownership with a Material glyph. Material symbols with identical outline/filled artwork retain that canonical shape; selection still has paired button color and shape feedback. Font glyph ink differs from its SVG viewport.
 
-Decision evidence: September 10, 2026: user explicitly approved replacing the prior library entirely with Material icons and smooth outlined-to-filled selected-button transitions. Google documents the variable FILL axis for exactly this interaction: https://developers.google.com/fonts/docs/material_symbols. OneDS uses the Rounded family, an official local WOFF2 subset, and codepoints to prevent ligature-word flashes.
+Decision evidence: September 10, 2026: user explicitly approved replacing the prior library entirely with Material icons and smooth outlined-to-filled selected-button transitions. Google documents the variable FILL axis for exactly this interaction: https://developers.google.com/fonts/docs/material_symbols. OneDS uses the Rounded family, an official local WOFF2 subset, and codepoints to prevent ligature-word flashes. September 12, 2026: the user observed that the warning triangle's visual mass appeared low and approved a shared2px upward optical correction while retaining its24px viewport.
 
-Enforcement: Partially automated. Icon policy tests reject other packages and adapter bypasses, check the local subset manifest against every mapping, and exercise Material and an alternate SVG adapter. Browser regressions check font load, glyph geometry, host and loader semantics, stable selection geometry, intermediate fill-axis values and changed pixels, keyboard activation, and reduced motion. Generated snippets compile. Stock shadcn output must be adapted to the public icon module before acceptance.
+Enforcement: Partially automated. Icon policy tests reject other packages and adapter bypasses, check the local subset manifest against every mapping, and exercise Material and an alternate SVG adapter. Browser regressions check font load, glyph geometry, the warning triangle's tokenized optical correction, host and loader semantics, stable selection geometry, intermediate fill-axis values and changed pixels, keyboard activation, and reduced motion. Generated snippets compile. Stock shadcn output must be adapted to the public icon module before acceptance.
 
-Tokens: `--icon-size-8`, `--icon-size-12`, `--icon-size-14`, `--icon-size-16`, `--icon-size-20`, `--icon-size-24`, `--icon-size-28`, `--icon-size-32`, `--icon-box-size-40`, `--icon-box-size-48`, `--icon-box-size-56`, `--material-icon-font-family`, `--material-icon-weight`, `--material-icon-optical-size`, `--material-icon-fill-default`, `--material-icon-fill-selected`, `--material-icon-fill-speed`, `--material-icon-fill-curve`
+Tokens: `--icon-size-8`, `--icon-size-12`, `--icon-size-14`, `--icon-size-16`, `--icon-size-20`, `--icon-size-24`, `--icon-size-28`, `--icon-size-32`, `--icon-box-size-40`, `--icon-box-size-48`, `--icon-box-size-56`, `--material-icon-font-family`, `--material-icon-weight`, `--material-icon-optical-size`, `--material-icon-fill-default`, `--material-icon-fill-selected`, `--material-icon-fill-speed`, `--material-icon-fill-curve`, `--material-icon-triangle-optical-offset-y`
 
 Implementation: [src/components/ui/icon.tsx](../src/components/ui/icon.tsx), [src/components/ui/icons.tsx](../src/components/ui/icons.tsx), [src/components/ui/icon-adapters/active.ts](../src/components/ui/icon-adapters/active.ts), [src/components/ui/icon-preview.tsx](../src/components/ui/icon-preview.tsx), [src/index.css](../src/index.css), [src/showcase/demos/icons.tsx](../src/showcase/demos/icons.tsx), [scripts/test-icons.mjs](../scripts/test-icons.mjs), [tests/design-rules.spec.ts](../tests/design-rules.spec.ts), [components.json](../components.json), [AGENTS.md](../AGENTS.md), [src/components/ui/icon-adapters/material.tsx](../src/components/ui/icon-adapters/material.tsx), [src/assets/icons/material-symbols.json](../src/assets/icons/material-symbols.json), [scripts/update-material-symbols.mjs](../scripts/update-material-symbols.mjs), [tests/material-icons.spec.ts](../tests/material-icons.spec.ts)
 
@@ -84,19 +84,73 @@ Implementation: [src/components/ui/canvas.tsx](../src/components/ui/canvas.tsx),
 
 ID: composition.card-material | Composition | Required | approved
 
-A framed card specimen must compose Card and its named parts. Let Card own its fill, boundary, radius, clipping, and internal spacing through the shared tokens. A theme surface plus local padding is not a substitute for a Card. Apply light/dark or color themes without replacing the card's material anatomy.
+A framed card specimen must compose Card and its named parts. Let Card own its fill, boundary, radius, clipping, and internal spacing through the shared tokens. Add a CardFooter divider only where scrolling content needs a persistent boundary; that divider uses the same --card-stroke alias as the outer hairline. Non-scrolling Card footers have no divider. A theme surface plus local padding is not a substitute for a Card. Apply light/dark or color themes without replacing the card's material anatomy.
 
 Why: Using a color role alone omits the shared card's containment and geometry, making experiments diverge from the library they demonstrate.
 
 Exceptions: True unframed page bands may use ColorThemeSurface. Canvas and Toolbar retain their own surface components and must not be wrapped in decorative Cards. Cards need not contain every optional named part; CardContent alone is valid for a content-only specimen.
 
-Decision evidence: Approved by the user in the September 7, 2026 Pointer experiment correction: the preview cards were plain theme surfaces instead of the existing card material.
+Decision evidence: Approved by the user in the September 7, 2026 Pointer experiment correction: the preview cards were plain theme surfaces instead of the existing card material. September 12, 2026: the user required scrolling footer dividers to use the Card stroke and removed footer dividers from non-scrolling Cards.
 
 Enforcement: Partially automated. Pointer regression tests check Card/CardContent anatomy and compare computed fill, corner radius, boundary, and spacing to shared tokens. Other compositions remain subject to manual review.
 
-Tokens: `--card`, `--card-foreground`, `--card-spacing`, `--radius-xl`
+Tokens: `--card`, `--card-foreground`, `--card-spacing`, `--card-radius`, `--card-stroke`
 
 Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [src/index.css](../src/index.css), [src/showcase/experiments/pointer.tsx](../src/showcase/experiments/pointer.tsx)
+
+### List Items use shared full and compact anatomy
+
+ID: composition.list-item | Composition | Required | approved
+
+Build list rows from Item and its named parts; do not restyle Item geometry or interaction states in consumers. Standard Items use a 26px outer radius, 16px inset, and 10px nested radius. Use the compact prop for intentional title-only rows: compact Items are 40px high with a 20px outer radius and 6px inset; their 28px media and action hosts use a 14px radius and 16px graphic. A direct 32px edit field in a compact Item uses a 4px inset and 16px radius, preserving the 40px row and concentric geometry. ItemActions hosted automatically applies compact geometry and owns its opaque truncation fade. Pair a selectable row with ItemPrimaryAction and keep ItemActions hosted as its sibling, never nest one button inside another. Use ItemMedia variant=icon for the circular media host, variant=image for the 44px image with the standard 10px inner radius, and ItemActionSlot for a mirrored transparent trailing graphic host. Default, outline, muted-selected, and hosted surfaces retain their resting tone while applying the shared 8% hover and 10% pressed state layers against the actual Canvas, Card, or Sidebar host. Item has no generic size axis; compact is the only alternate composition.
+
+Why: One geometry and state contract keeps dense conversation rows, descriptive rows, media, selection, and trailing actions aligned without consumer-specific padding, oversized controls, translucent text overlap, or invalid nested interactions.
+
+Exceptions: Avatar and circular icon media are centered fixed circles, so they are floating graphics rather than uniformly inset rounded surfaces; the concentric corner equation applies to the Item boundary and nested corner-aligned surfaces. A descriptive hosted Item grows with its description and preserves the 16px text inset below it. ItemGroup controls spacing between peer rows, and product data or selection orchestration remains local.
+
+Decision evidence: September 12, 2026: the user iterated on the List Item showcase one relationship at a time, approved full and compact geometry, circular media hosts, mirrored trailing slots, host-aware hover and pressed states, selected-row padding, image sizing, hosted truncation masking, and then explicitly approved promoting the complete treatment to every Item consumer.
+
+Enforcement: Partially automated. The Item regression verifies standard and compact dimensions, concentric radii and insets, circular media, mirrored action slots, image geometry, selection without nested buttons, hosted masking, interaction states, and propagation to Elevation, Persona, and AI-chat consumers. Design-rule source checks reject the removed Item size API and showcase-local Item styling hooks.
+
+Tokens: `--item-radius`, `--item-padding`, `--item-inner-radius`, `--item-min-height`, `--item-host-surface`, `--item-stroke`, `--item-compact-height`, `--item-compact-inset`, `--item-compact-radius`, `--item-compact-media-host-size`, `--item-compact-media-host-radius`, `--item-compact-field-inset`, `--item-compact-field-radius`, `--item-media-host-size`, `--item-media-host-radius`, `--item-media-graphic-size`, `--item-image-size`, `--item-hosted-action-fade-size`, `--state-layer-hover-opacity`, `--state-layer-pressed-opacity`
+
+Implementation: [src/components/ui/item.tsx](../src/components/ui/item.tsx), [src/index.css](../src/index.css), [src/showcase/demos/data.tsx](../src/showcase/demos/data.tsx), [src/showcase/demos/blocks.tsx](../src/showcase/demos/blocks.tsx), [src/showcase/demos/elevation.tsx](../src/showcase/demos/elevation.tsx), [src/showcase/demos/persona.tsx](../src/showcase/demos/persona.tsx), [tests/list-item.spec.ts](../tests/list-item.spec.ts)
+
+### Paired Card actions end with Secondary
+
+ID: composition.card-footer-actions | Composition | Required | approved
+
+When CardFooter contains exactly two peer actions, place the lower-priority action first and the higher-priority action second in DOM order. The higher-priority action uses Secondary; the lower-priority action uses Tertiary/default, or Ghost for a dismissive action. In a horizontal footer, end alignment places Secondary at the inline end, which is the right in left-to-right interfaces. In a vertical footer, Secondary sits at the block end, which is the bottom. Never use CSS order to create this hierarchy because keyboard and reading order must match the visual order.
+
+Why: A stable emphasis and placement pattern makes the next action predictable while preserving logical keyboard and screen-reader order.
+
+Exceptions: Single-action footers and mixed groups with three or more actions or a separate icon utility are outside the paired-action contract. A destructive action retains its destructive semantic variant but still occupies the final emphasized position.
+
+Decision evidence: September 12, 2026: the user established that Secondary is always the more important action in a two-button Card footer and must appear on the right or bottom.
+
+Enforcement: Manual review. Known two-action Card footers are migrated. Review both explicit Button variants and DOM order when adding or changing paired footer actions.
+
+Tokens: `--button-secondary-fill`, `--button-secondary-ink`, `--button-tertiary-fill`, `--button-tertiary-ink`, `--card-footer-gap`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/showcase/demos/data.tsx](../src/showcase/demos/data.tsx), [src/showcase/demos/annotation.tsx](../src/showcase/demos/annotation.tsx), [src/showcase/demos/persona.tsx](../src/showcase/demos/persona.tsx), [src/showcase/experiments/concentric.tsx](../src/showcase/experiments/concentric.tsx), [src/components/expression-lab-preview.tsx](../src/components/expression-lab-preview.tsx)
+
+### Card spacing communicates grouping
+
+ID: composition.card-spacing-rhythm | Composition | Required | approved
+
+Construct standard expressive Cards as a sequence of clear regions. Treat CardHeader as one chunk, leave24px before CardContent, and leave24px before CardFooter. Non-scrolling footers omit the divider and use8px top padding with24px inline and bottom padding. A footer after scrolling content uses the shared divider and24px top padding. The same24px token supplies the Card's top and inline insets. Keep strongly related labels, values, controls, and metadata at --card-group-gap (8px); paired footer actions also stay8px apart. Distinct groups inside CardContent use24px. Use boundaries only where scrolling requires persistent separation; otherwise proximity and open space communicate grouping. Repeated rows and peer elements use consistent alignment, sizing, and spacing so similarity remains meaningful.
+
+Why: Gestalt proximity distinguishes relationships only when within-group spacing is visibly smaller than between-group spacing. Common region and connectedness already come from Card anatomy, while consistent rhythm and similarity make dense information easier to scan without adding more visual furniture.
+
+Exceptions: Small Cards retain compact12px spacing. Code Cards keep their specialized compact geometry. Edge-to-edge scrolling content cancels the external region gap so its box meets the header and footer, while the scroller retains24px internal padding on every side. Edge-to-edge media may replace the outer inset at its edge while the24px region gap resumes between media and text.
+
+Decision evidence: September 12, 2026: the user identified the Rich Content Card as busy and dense and directed the system to apply Gestalt grouping laws and Material Expressive spacing, initially set its annotated relationships to32px, then retuned all32px Card padding and gap relationships to24px. The user also preserved flush edge-to-edge section boundaries, limited dividers to scrolling Cards, and set non-scroll footer top padding to8px. Research basis: https://lawsofux.com/law-of-proximity/, https://lawsofux.com/law-of-common-region/, https://lawsofux.com/law-of-uniform-connectedness/, https://lawsofux.com/law-of-similarity/, and https://m3.material.io/foundations/layout/understanding-layout/spacing.
+
+Enforcement: Partially automated. Standard Card showcase specimens use the expressive size; paired actions use CardFooter's responsive layout. Focused rendered checks verify24px major-region rhythm and content-group separation,8px related/action gaps, divider-free non-scroll footers with8px top padding, flush edge-to-edge boundaries with24px scroller and divided-footer padding, unchanged compact Code geometry, and responsive action containment. Product Cards outside the showcase remain subject to deliberate adoption review.
+
+Tokens: `--card-spacing`, `--card-spacing-expressive`, `--card-region-gap`, `--card-group-gap`, `--card-content-group-gap`, `--card-footer-gap`, `--space-xs`
+
+Implementation: [src/index.css](../src/index.css), [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/showcase/demos/data.tsx](../src/showcase/demos/data.tsx)
 
 ### Design values come from named tokens
 
@@ -120,17 +174,17 @@ Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx
 
 ID: color.surface-accent | Color | Required | approved
 
-Neutral Material surface roles apply globally across the site and components. Keep palette values in --theme-website-<role>-light/dark tokens; :root/.dark provide canonical --md-sys-color-* roles and existing OneDS aliases. MaterialTheme must not shadow global neutral values with inline copies. Pages and canvases share --page-fill: Surface in light mode and Surface container low in dark mode; --canvas-background always aliases --page-fill. Cards use Surface container lowest, footers and general controls Surface container low, navigation and muted regions Surface container, and popovers/menus Surface container high. Enabled field rest, hover, and focus fills use translucent On surface tints over their host surface; keyboard focus keeps its purple outline rather than replacing the fill with an accent. Pair content with On surface/On surface variant and use Outline for boundaries, not fills. Disabled fields use Surface container with existing disabled opacity. Default supporting actions remain neutral; website action/selection accents stay scoped through MaterialTheme, including the pastel search-button pair. State tokens retain Material's 0.08/0.10/0.10/0.16 values. Changes belong in shared components or the central adapter, never local surface literals. Do not add older primary-tint elevation overlays; preserve shadow geometry.
+Neutral Material surface roles apply globally across the site and components. Keep palette values in --theme-website-<role>-light/dark tokens; :root/.dark provide canonical --md-sys-color-* roles and existing OneDS aliases. MaterialTheme must not shadow global neutral values with inline copies. Pages and canvases share --page-fill: Surface in light mode and Surface container low in dark mode; --canvas-background always aliases --page-fill. Cards use Surface container lowest, and Card footers reuse the host Card background directly; the shared divider provides separation. General controls use Surface container low. Navigation and muted regions use Surface container, and popovers/menus use Surface container high. Enabled field rest, hover, and focus fills use translucent On surface tints over their host surface; keyboard focus keeps its purple outline rather than replacing the fill with an accent. Pair content with On surface/On surface variant and use Outline for boundaries, not fills. Disabled fields use Surface container with existing disabled opacity. Default supporting actions remain neutral; website action/selection accents stay scoped through MaterialTheme, including the pastel search-button pair. State tokens retain Material's 0.08/0.10/0.10/0.16 values. Changes belong in shared components or the central adapter, never local surface literals. Do not add older primary-tint elevation overlays; preserve shadow geometry.
 
 Why: Use Material's coordinated palettes and paired role API directly instead of inventing color relationships or conflating secondary emphasis with an independent second hue.
 
 Exceptions: The website preset has25 mapped roles;15 neutral roles are global. Website background becomes Surface, surface-0..4 become lowest..highest, and surface-variant supplies Outline variant as explicit adapter choices. Missing strong tertiary/fixed/error roles are not invented. Explicit legacy custom/generated themes remain separate opt-ins. Primary accents outside website scopes, status/presence/category/chart palettes, brand assets, and shadow geometry retain their policies. Transparent surfaces and state layers remain composited. Dialog/drawer scrims keep their existing black10% appearance through --overlay-scrim. Role-pair contrast does not certify every component state or boundary.
 
-Decision evidence: September 7, 2026: user explicitly approved migrating all surface colors across the site and components, with one token change propagating everywhere. September 12, 2026: user set the dark Page fill to Surface container low for clearer Card separation and required every preview Canvas to use the Page fill. This supersedes the prior neutral-surface staging boundary, not the separate action-accent/shadow decisions. Resources: https://material-web.dev/theming/color/ and https://m3.material.io/foundations/interaction/states/state-layers. Website values verified at https://m3.material.io/styles/color/resources and https://m3.material.io/static/angular/styles.4c2805e602edc472.css. Source and mapping details remain in src/design-system/material-foundation.md.
+Decision evidence: September 7, 2026: user explicitly approved migrating all surface colors across the site and components, with one token change propagating everywhere. September 12, 2026: user set the dark Page fill to Surface container low for clearer Card separation and required every preview Canvas to use the Page fill, then required Card footers to use the Card background directly rather than invent another blend token. This supersedes the prior neutral-surface staging boundary, not the separate action-accent/shadow decisions. Resources: https://material-web.dev/theming/color/ and https://m3.material.io/foundations/interaction/states/state-layers. Website values verified at https://m3.material.io/styles/color/resources and https://m3.material.io/static/angular/styles.4c2805e602edc472.css. Source and mapping details remain in src/design-system/material-foundation.md.
 
 Enforcement: Partially automated. Node guards reject literal neutral background utilities and legacy dark input-border fills in UI components; palette/state contract tests remain. Desktop/mobile tests in both modes mutate one shared source token and verify propagation to page/canvas, cards, Input, Textarea, Select, InputGroup, Tabs, diagrams, and body-portaled dialogs. Navigation and application workflow regressions cover existing interactions. Broader component states and boundaries remain subject to composition review; no new shadow-system certification is claimed.
 
-Tokens: `--page-fill`, `--canvas-background`, `--surface-canvas`, `--surface-lowest`, `--surface-low`, `--surface-container`, `--surface-default`, `--surface-high`, `--surface-highest`, `--surface-navigation`, `--surface-ink`, `--surface-muted-ink`, `--surface-outline`, `--surface-input-outline`, `--action-primary`, `--action-on-primary`, `--action-secondary`, `--action-on-secondary`, `--card-footer-fill`, `--field-fill`, `--sidebar-selected-fill`, `--sidebar-selected-ink`
+Tokens: `--page-fill`, `--canvas-background`, `--surface-canvas`, `--surface-lowest`, `--surface-low`, `--surface-container`, `--surface-default`, `--surface-high`, `--surface-highest`, `--surface-navigation`, `--surface-ink`, `--surface-muted-ink`, `--surface-outline`, `--surface-input-outline`, `--action-primary`, `--action-on-primary`, `--action-secondary`, `--action-on-secondary`, `--card`, `--field-fill`, `--sidebar-selected-fill`, `--sidebar-selected-ink`
 
 Implementation: [src/index.css](../src/index.css), [src/lib/color-theme.ts](../src/lib/color-theme.ts), [src/components/ui/color-theme.tsx](../src/components/ui/color-theme.tsx), [src/components/ui/material-theme.tsx](../src/components/ui/material-theme.tsx), [src/components/ui/material-surface.tsx](../src/components/ui/material-surface.tsx), [src/components/ui/page.tsx](../src/components/ui/page.tsx), [src/components/ui/canvas.tsx](../src/components/ui/canvas.tsx), [src/design-system/material-foundation.md](../src/design-system/material-foundation.md), [src/App.tsx](../src/App.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/components/ui/input.tsx](../src/components/ui/input.tsx), [src/components/ui/sidebar.tsx](../src/components/ui/sidebar.tsx), [src/showcase/demos/colors.tsx](../src/showcase/demos/colors.tsx), [scripts/test-color-theme.mjs](../scripts/test-color-theme.mjs), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
 
@@ -174,7 +228,7 @@ Implementation: [src/index.css](../src/index.css), [src/components/ui/button.tsx
 
 ID: controls.choice-indicator-colors | Color | Required | approved
 
-Checkbox, RadioGroupItem, and the passive Questionnaire choice indicator use the Tertiary pair as a tokenized 3px inset outline over a transparent interior while unchecked, matching the stroke width of Input and Textarea focus rings. Hover may strengthen that Tertiary outline but must not fill an unchecked indicator. Checked indicators retain the existing selected-Secondary border, fill, ink, and hover treatment. Selection changes fade fill, ink, border, and inset outline with the Material icon fill speed and curve; Checkbox and Radio also keep their primitive marks mounted and fade mark opacity on the same timing. Reduced motion applies the final state immediately. Preserve focus rings, invalid rings, disabled opacity, geometry, and native or primitive state semantics.
+Checkbox and RadioGroupItem use the Tertiary pair as a tokenized 3px inset outline over a transparent interior while unchecked, matching the stroke width of Input and Textarea focus rings. Hover may strengthen that Tertiary outline but must not fill an unchecked indicator. Checked indicators retain the existing selected-Secondary border, fill, ink, and hover treatment. Selection changes fade fill, ink, border, and inset outline with the Material icon fill speed and curve; Checkbox and Radio also keep their primitive marks mounted and fade mark opacity on the same timing. Reduced motion applies the final state immediately. Preserve focus rings, invalid rings, disabled opacity, geometry, and native or primitive state semantics.
 
 Why: An outline keeps an available choice visually quiet, while the filled treatment remains an unambiguous signal that the choice is selected. Interpolating persistent layers prevents the outline, fill, and mark from blinking during that state change.
 
@@ -182,29 +236,29 @@ Exceptions: Native task-list checkboxes inside rendered response content are bro
 
 Decision evidence: September 12, 2026: the user explicitly directed unchecked Checkbox and Radio controls to replace their fill with an outline while preserving the existing checked fill. The user then set that outline to the same 3px stroke width as Input focus rings, required the value to be tokenized, and redirected the unchecked outline from Secondary to Tertiary because Secondary looked out of place. After observing a hard blink on selection, the user directed the state change to use the smooth fill fade already established for icons.
 
-Enforcement: Partially automated. Desktop light/dark browser regressions check the tokenized 3px inset Tertiary outline, its equality with Input and Textarea focus-ring width, transparent unchecked interiors, and preserved selected-Secondary checked fills and borders for Checkbox and Radio. A focused motion regression samples intermediate fill, outline, and indicator opacity against the Material icon timing and checks immediate reduced-motion feedback. Questionnaire and exceptional states remain subject to review.
+Enforcement: Partially automated. Desktop light/dark browser regressions check the tokenized 3px inset Tertiary outline, its equality with Input and Textarea focus-ring width, transparent unchecked interiors, and preserved selected-Secondary checked fills and borders for Checkbox and Radio. A focused motion regression samples intermediate fill, outline, and indicator opacity against the Material icon timing and checks immediate reduced-motion feedback. Exceptional states remain subject to review.
 
 Tokens: `--tertiary-fill`, `--tertiary-ink`, `--control-outline-width`, `--control-outline`, `--control-hover-outline`, `--control-outline-shadow`, `--control-hover-outline-shadow`, `--control-outline-clear-shadow`, `--button-selected-secondary-fill`, `--button-selected-secondary-ink`, `--control-checked-hover-fill`, `--material-icon-fill-speed`, `--material-icon-fill-curve`
 
-Implementation: [src/index.css](../src/index.css), [src/components/ui/control-indicator.ts](../src/components/ui/control-indicator.ts), [src/components/ui/checkbox.tsx](../src/components/ui/checkbox.tsx), [src/components/ui/radio-group.tsx](../src/components/ui/radio-group.tsx), [src/components/ui/questionnaire.tsx](../src/components/ui/questionnaire.tsx)
+Implementation: [src/index.css](../src/index.css), [src/components/ui/control-indicator.ts](../src/components/ui/control-indicator.ts), [src/components/ui/checkbox.tsx](../src/components/ui/checkbox.tsx), [src/components/ui/radio-group.tsx](../src/components/ui/radio-group.tsx)
 
 ### Alerts use semantic tonal roles
 
 ID: feedback.alert-semantics | Color | Required | approved
 
-Alert is an expressive tonal feedback surface with neutral, info, success, warning, and error variants. It composes flat Elevation and the shared --elevation-stroke; semantic roles override fill and ink, never elevation. Neutral uses the Material Surface family, info uses the Secondary pair, and error derives from Material Error. Success and warning are explicit OneDS semantic extensions derived from existing status sources, not additions to the Material role table. AlertIcon composes the shared Shape component as a56px accent behind a24px Material icon; each semantic tone has a stable default shape, and callers may deliberately override it. The shape has16px leading inset and16px visual separation from the text block. AlertTitle composes Text lead at medium weight; AlertDescription composes muted Text label. The fixed44px Alert radius derives from its88px resting height, not an unbounded pill radius. Primary expressive56px action Buttons sit at the far right. At28rem they align to the top-right with16px inset; at20rem they stack at bottom-right. Their28px radius plus16px inset equals the44px Alert radius, preserving concentric corners. Default aliases neutral and destructive aliases error for compatibility, but new code uses semantic names. Visual severity does not choose live-region urgency; use live independently according to when and how urgently the message appears.
+Alert is an expressive tonal feedback surface with neutral, info, success, warning, and error variants. It composes flat Elevation and the shared --elevation-stroke; semantic roles override fill and ink, never elevation. Neutral uses the Material Surface family, info uses the Secondary pair, and error derives from Material Error. Success and warning are explicit OneDS semantic extensions derived from existing status sources, not additions to the Material role table. Every semantic fill is opaque; status tones mix their source over --alert-container-base rather than transparent because the same fill token is reused as visible glyph ink. AlertIcon composes the shared Shape component as a56px accent behind a24px Material icon rendered on the filled FILL axis; the glyph ink always equals that Alert's own surface fill. Generic warning uses TriangleAlertIcon and generic error uses AlertCircleIcon, while product-specific callouts may deliberately choose another semantic glyph. Each semantic tone has a stable default shape with more than four sides, and callers may deliberately override it. The shape has16px leading inset and16px visual separation from the text block. AlertTitle composes Text lead at medium weight; AlertDescription composes muted Text label. The fixed44px Alert radius derives from its88px resting height, not an unbounded pill radius. Primary expressive56px action Buttons sit at the far right. At28rem they align to the top-right with16px inset; at20rem they stack at bottom-right. Their28px radius plus16px inset equals the44px Alert radius, preserving concentric corners. Default aliases neutral and destructive aliases error for compatibility, but new code uses semantic names. Visual severity does not choose live-region urgency; use live independently according to when and how urgently the message appears.
 
 Why: Material 3 Expressive uses varied shapes, emphasized type, richer color hierarchy, and ample containment to guide attention. Alert applies those tactics with existing OneDS primitives while keeping semantic meaning, accessibility, elevation, and responsive behavior stable.
 
 Exceptions: AlertDialog, toast, Badge, presence, chart, and brand palettes retain their own component contracts. Product-specific callouts may add a semantic mapping only through Alert-owned tokens and an approved API extension. Legacy default and destructive values remain aliases for compatibility, not preferred vocabulary. An Alert may omit AlertIcon, AlertTitle, or AlertAction when the content does not need them. Long or localized content increases height while retaining the fixed44px radius; never replace it with an unbounded pill radius.
 
-Decision evidence: September 12, 2026: the user approved evolving Alert around existing OneDS Material-informed components, then explicitly required it to reuse flat Elevation rather than introduce another outline system. The user next directed a more expressive treatment using the shared Shape library, lead-medium titles, muted label descriptions, more breathing room, strongly rounded concentric corners, and primary pill actions at the far right. The implementation follows Material 3 Expressive tactics for varied shape, emphasized typography, rich hierarchy, and ample containment: https://m3.material.io/blog/building-with-m3-expressive. Rendered checks measured56px shape and action geometry,18/28 medium titles,14/21 muted labels,16px leading inset and shape-to-text spacing, and the44=28+16 concentric equation at roomy and narrow action corners.
+Decision evidence: September 12, 2026: the user approved evolving Alert around existing OneDS Material-informed components, then explicitly required it to reuse flat Elevation rather than introduce another outline system. The user next directed a more expressive treatment using the shared Shape library, lead-medium titles, muted label descriptions, more breathing room, strongly rounded concentric corners, and primary pill actions at the far right. The user then required Alert icon shapes to have more than four sides and all Alert glyphs to use the Material filled axis. After observing the warning triangle's low visual mass, the user approved lifting that glyph optically, replacing the triangle in generic error Alerts with the error-specific circle glyph, and matching every glyph's color to its Alert surface fill. A rendered review then exposed that translucent status fills disappeared when reused as glyph ink; those fills became opaque mixes over the Alert container base while preserving their tonal percentages. The implementation follows Material 3 Expressive tactics for varied shape, emphasized typography, rich hierarchy, and ample containment: https://m3.material.io/blog/building-with-m3-expressive. Rendered checks measured56px shape and action geometry,18/28 medium titles,14/21 muted labels,16px leading inset and shape-to-text spacing, and the44=28+16 concentric equation at roomy and narrow action corners.
 
-Enforcement: Partially automated. Desktop light/dark browser regressions verify semantic fills and inks, flat elevation, the semantic shape map,56px/24px accent geometry, lead/label type roles,16px padding,44px radius, and shared icon-label optics. A focused responsive regression verifies primary expressive actions at the far right, no overflow, and the44=28+16 concentric equation at28rem and20rem. Callout semantics, live-region urgency, and product-specific shape choice remain review concerns.
+Enforcement: Partially automated. Desktop light/dark browser regressions verify semantic fills and inks, fully opaque Alert surfaces, flat elevation, the semantic shape and glyph maps, filled glyph state, glyph color equality with the Alert surface, the warning triangle's tokenized optical lift,56px/24px accent geometry, lead/label type roles,16px padding,44px radius, and shared icon-label optics. A focused responsive regression verifies primary expressive actions at the far right, no overflow, and the44=28+16 concentric equation at28rem and20rem. Callout semantics, live-region urgency, and product-specific shape choice remain review concerns.
 
-Tokens: `--elevation-flat`, `--elevation-stroke`, `--alert-padding-inline`, `--alert-padding-block`, `--alert-content-gap`, `--alert-graphic-gap`, `--alert-graphic-gap-offset`, `--alert-action-gap`, `--alert-accent-size`, `--alert-accent-icon-size`, `--alert-resting-height`, `--alert-radius`, `--alert-layout-content-columns`, `--alert-layout-icon-columns`, `--alert-layout-action-columns`, `--alert-layout-icon-action-columns`, `--alert-neutral-fill`, `--alert-neutral-ink`, `--alert-info-fill`, `--alert-info-ink`, `--alert-success-source`, `--alert-success-fill`, `--alert-success-ink`, `--alert-warning-source`, `--alert-warning-fill`, `--alert-warning-ink`, `--alert-error-source`, `--alert-error-fill`, `--alert-error-ink`, `--text-lead-size`, `--text-lead-leading`, `--text-label-size`, `--text-label-leading`, `--button-height-expressive`
+Tokens: `--elevation-flat`, `--elevation-stroke`, `--alert-padding-inline`, `--alert-padding-block`, `--alert-content-gap`, `--alert-graphic-gap`, `--alert-graphic-gap-offset`, `--alert-action-gap`, `--alert-accent-size`, `--alert-accent-icon-size`, `--alert-accent-fill`, `--alert-accent-ink`, `--alert-container-base`, `--alert-resting-height`, `--alert-radius`, `--alert-layout-content-columns`, `--alert-layout-icon-columns`, `--alert-layout-action-columns`, `--alert-layout-icon-action-columns`, `--alert-neutral-fill`, `--alert-neutral-ink`, `--alert-info-fill`, `--alert-info-ink`, `--alert-success-source`, `--alert-success-fill`, `--alert-success-ink`, `--alert-warning-source`, `--alert-warning-fill`, `--alert-warning-ink`, `--alert-error-source`, `--alert-error-fill`, `--alert-error-ink`, `--text-lead-size`, `--text-lead-leading`, `--text-label-size`, `--text-label-leading`, `--button-height-expressive`, `--material-icon-fill-selected`, `--material-icon-triangle-optical-offset-y`
 
-Implementation: [src/index.css](../src/index.css), [src/components/ui/alert.tsx](../src/components/ui/alert.tsx), [src/components/ui/shape.tsx](../src/components/ui/shape.tsx), [src/components/ui/text.tsx](../src/components/ui/text.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/response.tsx](../src/components/ui/response.tsx), [src/showcase/demos/feedback.tsx](../src/showcase/demos/feedback.tsx), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
+Implementation: [src/index.css](../src/index.css), [src/components/ui/alert.tsx](../src/components/ui/alert.tsx), [src/components/ui/shape.tsx](../src/components/ui/shape.tsx), [src/components/ui/text.tsx](../src/components/ui/text.tsx), [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/response.tsx](../src/components/ui/response.tsx), [src/components/ui/icon-adapters/material.tsx](../src/components/ui/icon-adapters/material.tsx), [src/showcase/demos/feedback.tsx](../src/showcase/demos/feedback.tsx), [tests/color-theme.spec.ts](../tests/color-theme.spec.ts)
 
 ### Spacing and control geometry follow the 4px grid
 
@@ -295,6 +349,24 @@ Enforcement: Partially automated. Shared CSS applies the nested gap to direct ch
 Tokens: `--button-group-gap`, `--button-group-nested-gap`
 
 Implementation: [src/index.css](../src/index.css), [src/components/ui/button-group.tsx](../src/components/ui/button-group.tsx), [src/showcase/demos/forms.tsx](../src/showcase/demos/forms.tsx)
+
+### Badges use source-ready inline geometry
+
+ID: geometry.badge-scale | Geometry and Spacing | Required | approved
+
+Badge uses one expressive inline baseline: 28px fixed height, a 14px/21px label, 16px icon, favicon, or spinner, and the shared 8px graphic-to-label gap. Its 14px outer radius is half the fixed height; inline padding is derived from that radius minus the 4px base spacing so text clears the curved ends. Badge automatically applies IconLabel to ordinary labels, including labels inside asChild links, and adds the shared 4px optical correction opposite a graphic. Use Badge asChild with Favicon for linked source citations so the same component serves labels, statuses, and AI source references. Keep Kbd on its separate compact 20px/12px keyboard-hint geometry.
+
+Why: The former 20px Badge compressed 12px text and 12px favicons into a keyboard-key scale. A 28px badge follows the 26px body line box closely enough to sit with response copy while giving brand marks and source labels readable breathing room.
+
+Exceptions: AvatarBadge and presence dots are status indicators, not text badges. Inline numeric footnote marks remain owned by Response; linked source pills and source lists use Badge. Badge stays single-line; use a List Item or Card when source metadata needs multiple lines. Kbd must not inherit Badge sizing changes.
+
+Decision evidence: September 12, 2026: user explicitly asked to replace tiny, cramped badges with a more expressive multipurpose badge that can carry favicons and serve as an AI citation, using the body-aligned spacing of the supplied Google AI Overview reference.
+
+Enforcement: Partially automated. A focused desktop browser regression verifies the 28px Badge height, 14px/21px type, 14px radius, 16px favicon, actual 8px graphic gap, 4px optical label correction, asChild link semantics, and unchanged 20px/12px Kbd geometry. Correct semantic choice between a source Badge and richer source content remains a composition review.
+
+Tokens: `--badge-height`, `--badge-radius`, `--badge-padding-inline`, `--badge-font-size`, `--badge-line-height`, `--badge-graphic-size`, `--badge-gap`, `--graphic-label-gap`, `--icon-label-optical-padding`
+
+Implementation: [src/components/ui/badge.tsx](../src/components/ui/badge.tsx), [src/components/ui/kbd.tsx](../src/components/ui/kbd.tsx), [src/components/ui/favicon.tsx](../src/components/ui/favicon.tsx), [src/components/ui/icon-label.tsx](../src/components/ui/icon-label.tsx), [src/index.css](../src/index.css), [src/showcase/demos/data.tsx](../src/showcase/demos/data.tsx), [tests/design-rules.spec.ts](../tests/design-rules.spec.ts)
 
 ### Icon labels include a tokenized optical correction
 
@@ -547,3 +619,111 @@ Enforcement: Manual review. Candidate wording does not waive accessibility requi
 Tokens: `--ring`
 
 Implementation: [src/components/ui/button.tsx](../src/components/ui/button.tsx), [src/components/ui/tooltip.tsx](../src/components/ui/tooltip.tsx)
+
+### Cards own their corner radius; only the outer card is rounded
+
+ID: geometry.card-radius | Geometry and Spacing | Recommended | candidate
+
+A card's corner radius is the Card-owned --card-radius token, not a raw utility on the markup. Only the outer Card is rounded; CardHeader, CardContent, and CardFooter stay square and never restate the radius. Anything genuinely nested inside a card derives its radius from the concentric equation (outer radius minus the actual inset and border), as the code copy button does.
+
+Why: One card-owned radius token keeps the whole family consistent and lets a shape change happen in a single place, while square inner parts avoid competing curves inside the frame.
+
+Exceptions: Media that fills a card edge follows the card's top or bottom corners. Purpose-based radii still choose the token value; this rule governs ownership and nesting, not the specific step.
+
+Decision evidence: September 12, 2026: the card system moved to a Card-owned --card-radius (currently --radius-4xl, 26px), kept inner parts square, and derived the code copy button radius concentrically.
+
+Enforcement: Manual review. Proposed. Verify the outer Card uses --card-radius, inner parts are square, and nested radii are concentric. No dedicated automated check yet.
+
+Tokens: `--card-radius`, `--radius-4xl`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/index.css](../src/index.css)
+
+### A card presents one surface
+
+ID: color.card-single-surface | Color | Recommended | candidate
+
+Body, header, and footer of a card all use the --card surface. Cards do not introduce a separate footer fill or a blended tone, and headers are transparent over the card surface. Where separation is needed, the shared --card-stroke divider provides it rather than a second fill.
+
+Why: A single card surface reads as one contained object; a second fill adds visual furniture and invites parallel tokens that drift from the Material surface system.
+
+Exceptions: Edge-to-edge media supplies its own imagery. Color themes may retint --card, but the header, body, and footer still resolve to the same value.
+
+Decision evidence: September 12, 2026: the footer's borrowed sidebar tone and the later 50% blend were removed; footers now use the Card background directly, with the divider carrying separation.
+
+Enforcement: Manual review. Proposed. Verify footer and body compute the same background and no footer-fill tokens are reintroduced.
+
+Tokens: `--card`, `--card-foreground`, `--card-stroke`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/index.css](../src/index.css)
+
+### Card dividers are opt-in and only for scrolling boundaries
+
+ID: composition.card-contextual-dividers | Composition | Recommended | candidate
+
+Card dividers are opt-in through CardHeader divider and CardFooter divider, and appear only where scrolling content needs a persistent boundary. Non-scrolling headers and footers omit the divider. Every divider uses the shared --card-stroke, matching the outer hairline.
+
+Why: Dividers earn their place when scrolling content would otherwise bleed past a boundary; adding them everywhere is decorative and competes with the spacing rhythm.
+
+Exceptions: The code card and other specialized surfaces keep their own boundary treatment. Product cards may opt in per composition when their content scrolls.
+
+Decision evidence: September 12, 2026: dividers were removed from non-scroll headers and footers and retained only on the edge-to-edge scrolling example, all using --card-stroke.
+
+Enforcement: Manual review. Proposed. A focused rendered check confirmed only the scrolling footer carries a divider; other footers have none.
+
+Tokens: `--card-stroke`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx)
+
+### Code cards float a single copy action
+
+ID: composition.code-card-floating-action | Composition | Recommended | candidate
+
+The code card omits header and title and floats a tertiary copy action at the top-right, positioned from a tokenized inset with a concentric radius (card radius minus inset and border) on a tokenized stacking layer above the scroll region. A single-line code card snaps to a minimum height so the action has equal top and bottom breathing room, and copy falls back to a native command when the async clipboard is unavailable.
+
+Why: Code content is the focus; a chrome-free card with one floating, concentric action keeps attention on the code while staying operable and copyable everywhere.
+
+Exceptions: Rich response code blocks may hide line numbers; the floating action and geometry are unchanged.
+
+Decision evidence: September 12, 2026: the code card header and title were removed, the copy button became a floating tertiary action with a concentric radius and min-height snap, and a clipboard fallback was added.
+
+Enforcement: Manual review. Proposed. Rendered checks confirmed no header/title, an equal-inset 17px-radius action, and a 58px single-line height; broader adoption remains for review.
+
+Tokens: `--card-radius`, `--code-block-copy-inset`, `--code-block-copy-radius`, `--code-block-copy-layer`, `--code-block-min-height`, `--code-block-boundary-width`
+
+Implementation: [src/components/code-block.tsx](../src/components/code-block.tsx), [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/index.css](../src/index.css)
+
+### Footer padding tightens above the actions
+
+ID: composition.card-footer-padding | Composition | Recommended | candidate
+
+A non-scrolling card footer uses 8px top padding with 24px inline and bottom padding, so the actions sit close to the content above while keeping a roomy action zone. A divided footer after scrolling content uses 24px top padding to match the region rhythm.
+
+Why: The actions belong to the content above them, so a tighter top keeps that relationship while the surrounding inset stays generous; a scrolling boundary needs the full region gap.
+
+Exceptions: Small and default card sizes keep their own compact spacing. Code cards are exempt.
+
+Decision evidence: September 12, 2026: non-scroll footer top padding was set to 8px with 24px elsewhere, and the divided scrolling footer kept 24px top padding.
+
+Enforcement: Manual review. Proposed. Rendered checks confirmed 8px top on non-scroll footers and 24px top on the divided footer.
+
+Tokens: `--card-spacing`, `--card-footer-gap`, `--space-xs`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/index.css](../src/index.css)
+
+### Card actions adapt without changing order
+
+ID: composition.card-responsive-actions | Composition | Recommended | candidate
+
+Paired footer actions render as a right-aligned row on wider widths and a full-width stacked column when compact, preserving the Secondary-last order without CSS order. A header action uses CardAction so its label optically centers on the title row, dropping below the title only in the compact fallback.
+
+Why: Layout should adapt to width while keyboard and reading order stay fixed, and a title-row action should align to the title rather than to a taller control's box.
+
+Exceptions: Single-action footers and three-or-more-action groups are outside the paired-action layout. A card may keep a full-width primary action.
+
+Decision evidence: September 12, 2026: footers gained a responsive row/column layout preserving Secondary-last order, and the Login action moved to CardAction for optical title alignment with a compact fallback.
+
+Enforcement: Manual review. Proposed. Desktop/compact rendered checks confirmed row-to-stack behavior, preserved order, containment, and title-aligned header action.
+
+Tokens: `--card-footer-gap`
+
+Implementation: [src/components/ui/card.tsx](../src/components/ui/card.tsx), [src/showcase/demos/data.tsx](../src/showcase/demos/data.tsx)

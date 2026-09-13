@@ -107,7 +107,7 @@ const BUILD_ORDER: { label: string; slugs: string[] }[] = [
   {
     label: "Molecules",
     slugs: [
-      "form", "questionnaire", "combobox", "command", "dropdown-menu",
+      "form", "combobox", "dropdown-menu",
       "context-menu", "menubar", "navigation-menu", "calendar", "date-picker",
       "data-table", "chart", "carousel", "persona", "table-of-contents",
     ],

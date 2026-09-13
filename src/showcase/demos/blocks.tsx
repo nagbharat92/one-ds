@@ -97,6 +97,7 @@ import {
   ItemActions,
   ItemContent,
   ItemGroup,
+  ItemPrimaryAction,
   ItemTitle,
 } from "@/components/ui/item"
 import {
@@ -1397,6 +1398,7 @@ function AIChatBlockContent({
           inert={!isEmpty}
         >
           <Empty
+            variant="plain"
             className={cn(
               "p-0 pb-(--ai-chat-empty-greeting-gap)",
               isPanel &&
@@ -1663,9 +1665,9 @@ function ConversationHistory({
                   {visible.map((conversation) => (
                     <Item
                       key={conversation.id}
-                      size="xs"
+                      compact
                       variant={activeId === conversation.id ? "muted" : "default"}
-                      className="ai-chat-history__item flex-nowrap text-muted-foreground hover:bg-muted"
+                      className="text-muted-foreground"
                     >
                       {renamingId === conversation.id ? (
                         <SidebarInput
@@ -1688,16 +1690,15 @@ function ConversationHistory({
                           }}
                         />
                       ) : (
-                        <button
+                        <ItemPrimaryAction
                           type="button"
-                          className="ai-chat-history__item-button"
                           aria-pressed={activeId === conversation.id}
                           onClick={() => onSelect(conversation.id)}
                         >
                           <ItemContent>
                             <ItemTitle>{conversation.title}</ItemTitle>
                           </ItemContent>
-                        </button>
+                        </ItemPrimaryAction>
                       )}
                       {renamingId !== conversation.id ? (
                         <ItemActions hosted>
@@ -1706,7 +1707,6 @@ function ConversationHistory({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="ai-chat-history__item-action"
                                 aria-label={`Actions for ${conversation.title}`}
                               >
                                 <MoreHorizontalIcon />

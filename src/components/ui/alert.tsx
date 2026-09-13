@@ -43,10 +43,10 @@ const alertTones = {
 
 const alertShapes = {
   neutral: "cookie6",
-  info: "circle",
-  success: "clover4",
-  warning: "diamond",
-  error: "cookie4",
+  info: "cookie7",
+  success: "clover8",
+  warning: "pentagon",
+  error: "gem",
 } as const satisfies Record<AlertTone, ShapeName>
 
 const AlertToneContext = React.createContext<AlertTone>("neutral")
@@ -100,6 +100,9 @@ function Alert({
 function AlertIcon({ className, shape, children, ...props }: React.ComponentProps<"div"> & { shape?: ShapeName }) {
   const tone = React.useContext(AlertToneContext)
   const resolvedShape = shape ?? alertShapes[tone]
+  const filledIcon = React.isValidElement<{ filled?: boolean }>(children)
+    ? React.cloneElement(children, { filled: true })
+    : children
 
   return (
     <div
@@ -114,7 +117,7 @@ function AlertIcon({ className, shape, children, ...props }: React.ComponentProp
     >
       <Shape name={resolvedShape} aria-hidden="true" focusable="false" className="alert-icon__shape absolute inset-0 size-full" />
       <span data-slot="alert-icon-glyph" className="relative grid size-(--alert-accent-icon-size) place-items-center [&>svg]:size-(--alert-accent-icon-size)">
-        {children}
+        {filledIcon}
       </span>
     </div>
   )

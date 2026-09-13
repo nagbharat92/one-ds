@@ -67,7 +67,7 @@ not new Material specification values.
 | Page and Canvas | Surface (light); Surface container low (dark), through `--page-fill` | On surface |
 | Card | Surface container lowest | On surface |
 | Card footer | Surface container low | On surface |
-| Enabled field rest fill (Input, Textarea, Select, NativeSelect, InputGroup, Combobox chips, OTP, Questionnaire input/choices) | Translucent On surface tint over the host surface | On surface (value); On surface variant for placeholders and affordances |
+| Enabled field rest fill (Input, Textarea, Select, NativeSelect, InputGroup, Combobox chips, OTP) | Translucent On surface tint over the host surface | On surface (value); On surface variant for placeholders and affordances |
 | Disabled field fill | Surface container | Existing disabled opacity retained |
 | Navigation surface | Surface container | On surface |
 | General interaction backplate | Surface container highest | On surface |

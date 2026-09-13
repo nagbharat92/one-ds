@@ -1,7 +1,6 @@
 import { useState } from "react"
 import type { ComponentEntry } from "@/showcase/types"
 import {
-  CalculatorIcon,
   CalendarIcon,
   CloudIcon,
   CreditCardIcon,
@@ -10,7 +9,6 @@ import {
   MessageSquareIcon,
   PlusCircleIcon,
   SettingsIcon,
-  SmileIcon,
   UserIcon,
   UserPlusIcon,
   KeyboardIcon,
@@ -166,17 +164,6 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar"
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command"
 import { useIsMobile } from "@/hooks/use-mobile"
 
 export const overlaysDemos: ComponentEntry[] = [
@@ -2244,207 +2231,6 @@ export const overlaysDemos: ComponentEntry[] = [
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
-        ),
-      },
-    ],
-  },
-
-  // ---------------------------------------------------------------------------
-  // Command
-  // ---------------------------------------------------------------------------
-  {
-    slug: "command",
-    name: "Command",
-    description: "A fast, composable command menu for React.",
-    category: "Overlays",
-    Demo: () => (
-      <Command className="w-full max-w-sm rounded-lg border shadow-(--elevation-raised)">
-        <CommandInput placeholder="Type a command or search..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <CalendarIcon />
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <SmileIcon />
-              <span>Search emoji</span>
-            </CommandItem>
-            <CommandItem>
-              <CalculatorIcon />
-              <span>Calculator</span>
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem>
-              <UserIcon />
-              <span>Profile</span>
-            </CommandItem>
-            <CommandItem>
-              <CreditCardIcon />
-              <span>Billing</span>
-            </CommandItem>
-            <CommandItem>
-              <SettingsIcon />
-              <span>Settings</span>
-            </CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </Command>
-    ),
-    code: `<Command className="rounded-lg border shadow-(--elevation-raised)">
-  <CommandInput placeholder="Type a command or search..." />
-  <CommandList>
-    <CommandEmpty>No results found.</CommandEmpty>
-    <CommandGroup heading="Suggestions">
-      <CommandItem>Calendar</CommandItem>
-      <CommandItem>Search emoji</CommandItem>
-    </CommandGroup>
-  </CommandList>
-</Command>`,
-    examples: [
-      {
-        name: "Dialog",
-        description: "Command palette in a dialog overlay.",
-        layout: "viewport" as const,
-        Demo: function CmdDialog() {
-          const [open, setOpen] = useState(false)
-          return (
-            <>
-              <Button variant="secondary" onClick={() => setOpen(true)}>
-                Open command palette
-              </Button>
-              <CommandDialog open={open} onOpenChange={setOpen}>
-                <Command>
-                  <CommandInput placeholder="Type a command or search..." />
-                  <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup heading="Suggestions">
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <CalendarIcon /> Calendar
-                      </CommandItem>
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <SmileIcon /> Search emoji
-                      </CommandItem>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </CommandDialog>
-            </>
-          )
-        },
-      },
-      {
-        name: "Shortcuts",
-        description: "Command items displaying keyboard shortcuts.",
-        Demo: () => (
-          <Command className="w-full max-w-sm rounded-lg border shadow-(--elevation-raised)">
-            <CommandInput placeholder="Search..." />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup heading="Actions">
-                <CommandItem>
-                  <CalendarIcon /> Calendar
-                  <CommandShortcut>⌘K</CommandShortcut>
-                </CommandItem>
-                <CommandItem>
-                  <SmileIcon /> Search emoji
-                  <CommandShortcut>⌘E</CommandShortcut>
-                </CommandItem>
-                <CommandItem>
-                  <CalculatorIcon /> Calculator
-                  <CommandShortcut>⌘C</CommandShortcut>
-                </CommandItem>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        ),
-      },
-      {
-        name: "Dialog groups",
-        description: "Command dialog with multiple separated groups.",
-        layout: "viewport" as const,
-        Demo: function CmdDialogGroups() {
-          const [open, setOpen] = useState(false)
-          return (
-            <>
-              <Button variant="secondary" onClick={() => setOpen(true)}>
-                Grouped command dialog
-              </Button>
-              <CommandDialog open={open} onOpenChange={setOpen}>
-                <Command>
-                  <CommandInput placeholder="Type a command or search..." />
-                  <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup heading="Suggestions">
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <CalendarIcon /> Calendar
-                      </CommandItem>
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <SmileIcon /> Search emoji
-                      </CommandItem>
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <CalculatorIcon /> Calculator
-                      </CommandItem>
-                    </CommandGroup>
-                    <CommandSeparator />
-                    <CommandGroup heading="Settings">
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <UserIcon /> Profile
-                        <CommandShortcut>⌘P</CommandShortcut>
-                      </CommandItem>
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <CreditCardIcon /> Billing
-                        <CommandShortcut>⌘B</CommandShortcut>
-                      </CommandItem>
-                      <CommandItem onSelect={() => setOpen(false)}>
-                        <SettingsIcon /> Settings
-                        <CommandShortcut>⌘S</CommandShortcut>
-                      </CommandItem>
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </CommandDialog>
-            </>
-          )
-        },
-      },
-      {
-        name: "Scrollable",
-        description:
-          "Command list with enough items to demonstrate scrolling.",
-        Demo: () => (
-          <Command className="w-full max-w-sm rounded-lg border shadow-(--elevation-raised)">
-            <CommandInput placeholder="Search items..." />
-            <CommandList className="max-h-48">
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup heading="Items">
-                {[
-                  "Calendar",
-                  "Calculator",
-                  "Mail",
-                  "Contacts",
-                  "Notes",
-                  "Reminders",
-                  "Messages",
-                  "Photos",
-                  "Maps",
-                  "Weather",
-                  "Clock",
-                  "Music",
-                  "Podcasts",
-                  "News",
-                  "Books",
-                ].map((item) => (
-                  <CommandItem key={item}>
-                    <span>{item}</span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
         ),
       },
     ],

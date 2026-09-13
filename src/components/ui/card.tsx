@@ -3,6 +3,7 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { elevationVariants } from "@/components/ui/elevation"
 
 function Card({
   className,
@@ -10,7 +11,7 @@ function Card({
   variant = "default",
   ...props
 }: React.ComponentProps<"div"> & {
-  size?: "default" | "sm"
+  size?: "default" | "sm" | "expressive"
   variant?: "default" | "code"
 }) {
   return (
@@ -18,12 +19,14 @@ function Card({
       data-slot="card"
       data-size={size}
       data-variant={variant}
+      data-elevation="flat"
       className={cn(
         "group/card flex flex-col text-sm text-card-foreground",
+        elevationVariants({ level: "flat" }),
         variant === "default" &&
-          "gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) ring-1 ring-(--elevation-stroke) has-data-[slot=card-footer]:pb-0 has-data-[slot=card-media]:pt-0 has-[>img:first-child]:pt-0 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+          "gap-(--card-region-gap) overflow-hidden rounded-(--card-radius) bg-card py-(--card-spacing) ring-1 ring-(--card-stroke) has-data-[slot=card-footer]:pb-0 has-data-[slot=card-media]:pt-0 has-[>img:first-child]:pt-0 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-(--card-radius) *:[img:last-child]:rounded-b-(--card-radius)",
         variant === "code" &&
-          "h-full gap-(--space-none) overflow-hidden rounded-xl border bg-card bg-clip-padding",
+          "h-full gap-(--space-none) overflow-hidden rounded-(--card-radius) bg-card bg-clip-padding",
         className
       )}
       {...props}
@@ -31,12 +34,18 @@ function Card({
   )
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+function CardHeader({
+  className,
+  divider = false,
+  ...props
+}: React.ComponentProps<"div"> & { divider?: boolean }) {
   return (
     <div
       data-slot="card-header"
+      data-divider={divider ? "" : undefined}
       className={cn(
-        "group/card-header @container/card-header grid auto-rows-min items-start gap-(--card-header-gap) rounded-t-xl px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] has-[>[data-slot=card-header-aside]]:flex has-[>[data-slot=card-header-aside]]:flex-wrap has-[>[data-slot=card-header-aside]]:gap-(--card-header-aside-gap) [.border-b]:pb-(--card-spacing)",
+        "group/card-header @container/card-header grid auto-rows-min items-start gap-(--card-header-gap) px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] has-[>[data-slot=card-header-aside]]:flex has-[>[data-slot=card-header-aside]]:flex-wrap has-[>[data-slot=card-header-aside]]:gap-(--card-header-aside-gap)",
+        divider && "border-b pb-(--card-spacing)",
         className
       )}
       {...props}
@@ -127,12 +136,19 @@ function CardDescription({
   )
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<"div">) {
+function CardAction({
+  className,
+  responsive = false,
+  ...props
+}: React.ComponentProps<"div"> & { responsive?: boolean }) {
   return (
     <div
       data-slot="card-action"
+      data-responsive={responsive ? "" : undefined}
       className={cn(
         "col-start-2 row-start-1 self-center justify-self-end",
+        responsive &&
+          "max-sm:col-start-1 max-sm:row-start-2 max-sm:justify-self-start",
         className
       )}
       {...props}
@@ -140,11 +156,27 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardContent({ className, ...props }: React.ComponentProps<"div">) {
+function CardContent({
+  className,
+  edgeToEdge = false,
+  grouped = false,
+  ...props
+}: React.ComponentProps<"div"> & {
+  edgeToEdge?: boolean
+  grouped?: boolean
+}) {
   return (
     <div
       data-slot="card-content"
-      className={cn("px-(--card-spacing)", className)}
+      data-edge-to-edge={edgeToEdge ? "" : undefined}
+      data-grouped={grouped ? "" : undefined}
+      className={cn(
+        edgeToEdge
+          ? "-my-(--card-region-gap) px-(--space-none)"
+          : "px-(--card-spacing)",
+        grouped && "grid gap-(--card-content-group-gap)",
+        className
+      )}
       {...props}
     />
   )
@@ -168,12 +200,28 @@ function CardMedia({
   )
 }
 
-function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
+function CardFooter({
+  className,
+  layout = "row",
+  divider = false,
+  ...props
+}: React.ComponentProps<"div"> & {
+  layout?: "row" | "column" | "responsive"
+  divider?: boolean
+}) {
   return (
     <div
       data-slot="card-footer"
+      data-layout={layout}
+      data-divider={divider ? "" : undefined}
       className={cn(
-        "flex items-center gap-(--card-footer-gap) rounded-b-xl bg-(--card-footer-fill) bg-clip-padding p-(--card-spacing)",
+        "flex items-center gap-(--card-footer-gap) bg-card bg-clip-padding px-(--card-spacing) pb-(--card-spacing)",
+        divider
+          ? "border-t border-(--card-stroke) pt-(--card-spacing)"
+          : "pt-(--space-xs)",
+        layout === "column" && "flex-col items-stretch",
+        layout === "responsive" &&
+          "flex-col items-stretch sm:flex-row sm:items-center sm:justify-end",
         className
       )}
       {...props}

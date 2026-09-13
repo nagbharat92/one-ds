@@ -988,7 +988,7 @@ components.json      # shadcn config
 
 ## Installed components
 
-The showcase contains 65 component pages, including the complete installed
-shadcn/ui catalog plus Data Table, Date Picker, Questionnaire, and Typography
+The showcase contains 64 component pages, including the complete installed
+shadcn/ui catalog plus Data Table, Date Picker, and Typography
 compositions. They are grouped into Forms, Selection, Overlays, Navigation,
 Data Display, Feedback, Layout, Chat, Date, and Utilities.

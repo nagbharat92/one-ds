@@ -7,8 +7,10 @@ const rules = JSON.parse(fs.readFileSync("src/design-system/rules.json", "utf8")
 
 test("optical label correction is shared, tokenized, and explicitly directional", () => {
   const css = fs.readFileSync("src/index.css", "utf8")
-  assert.ok(css.includes("--icon-label-optical-padding: var(--spacing);"))
-  assert.ok(css.includes("--graphic-label-gap: calc(var(--spacing) * 2);"))
+  assert.ok(css.includes("--space-2xs: var(--spacing);"))
+  assert.ok(css.includes("--space-xs: calc(var(--spacing) * 2);"))
+  assert.ok(css.includes("--icon-label-optical-padding: var(--space-2xs);"))
+  assert.ok(css.includes("--graphic-label-gap: var(--space-xs);"))
   assert.ok(css.includes("--button-gap: var(--graphic-label-gap);"))
   assert.ok(css.includes("padding-inline-start: var(--icon-label-optical-padding);"))
   assert.ok(css.includes("padding-inline-end: var(--icon-label-optical-padding);"))
@@ -16,6 +18,9 @@ test("optical label correction is shared, tokenized, and explicitly directional"
   const button = fs.readFileSync("src/components/ui/button.tsx", "utf8")
   assert.match(button, /withIconLabels/)
   assert.match(button, /data-icon-label-host/)
+  const badge = fs.readFileSync("src/components/ui/badge.tsx", "utf8")
+  assert.match(badge, /withIconLabels/)
+  assert.match(badge, /data-icon-label-host/)
   const rule = rules.rules.find(rule => rule.id === "geometry.icon-label-optical-spacing")
   assert.equal(rule.status, "approved")
   assert.match(rule.rule, /opposite the graphic/)
@@ -59,13 +64,43 @@ test("showcase exposes two surface tiers with compact ordinary previews", () => 
   assert.equal(rule.status, "approved")
 })
 
+test("List Item owns full and compact geometry without a legacy size axis", () => {
+  const item = fs.readFileSync("src/components/ui/item.tsx", "utf8")
+  assert.match(item, /compact\?: boolean/)
+  assert.match(item, /data-compact=\{compact \? "" : undefined\}/)
+  assert.match(item, /function ItemPrimaryAction/)
+  assert.match(item, /function ItemActionSlot/)
+  assert.doesNotMatch(item, /data-size=\{size\}|group-data-\[size=(?:xs|sm)\]\/item/)
+
+  const legacySizeConsumers = []
+  for (const filename of ts.sys.readDirectory("src", [".tsx"]).filter(filename => !filename.endsWith("generated-example-code.ts"))) {
+    const source = ts.createSourceFile(filename, fs.readFileSync(filename, "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
+    function visit(node) {
+      if ((ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) && node.tagName.getText(source) === "Item") {
+        if (node.attributes.properties.some(property => property.name?.getText(source) === "size")) legacySizeConsumers.push(filename)
+      }
+      ts.forEachChild(node, visit)
+    }
+    visit(source)
+  }
+  assert.deepEqual(legacySizeConsumers, [])
+
+  const css = fs.readFileSync("src/index.css", "utf8")
+  for (const token of ["--item-radius", "--item-padding", "--item-inner-radius", "--item-host-surface", "--item-compact-height", "--item-compact-radius", "--item-media-host-size", "--item-image-size"]) {
+    assert.ok(css.includes(`${token}:`), token)
+  }
+  assert.match(css, /@layer item/)
+  assert.doesNotMatch(css, /data-showcase-slug="list-item"|--list-item-|list-item-(?:compact|media|action|select)/)
+  assert.equal(rules.rules.find(rule => rule.id === "composition.list-item").status, "approved")
+})
+
 test("tooltips use fixed arrowless pill geometry", () => {
   const tooltip = fs.readFileSync("src/components/ui/tooltip.tsx", "utf8")
   assert.match(tooltip, /rounded-xl/)
   assert.match(tooltip, /data-\[side=top\]:mb-\(--tooltip-gap\)/)
   assert.doesNotMatch(tooltip, /TooltipPrimitive\.Arrow|tooltip-arrow/)
   const styles = fs.readFileSync("src/index.css", "utf8")
-  assert.match(styles, /--tooltip-gap: var\(--spacing\)/)
+  assert.match(styles, /--tooltip-gap: var\(--space-2xs\)/)
   assert.doesNotMatch(styles, /tooltip-arrow/)
   const button = fs.readFileSync("src/components/ui/button.tsx", "utf8")
   assert.match(button, /tooltipSide = "top"/)

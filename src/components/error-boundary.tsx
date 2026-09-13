@@ -1,5 +1,5 @@
 import * as React from "react"
-import { TriangleAlertIcon } from "@/components/ui/icons"
+import { AlertCircleIcon } from "@/components/ui/icons"
 
 import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 
@@ -27,7 +27,7 @@ export class ErrorBoundary extends React.Component<
 
     return (
       <Alert variant="error" live="assertive" className="max-w-md">
-        <AlertIcon><TriangleAlertIcon /></AlertIcon>
+        <AlertIcon><AlertCircleIcon /></AlertIcon>
         <AlertContent>
           <AlertTitle>{this.props.title ?? "Something went wrong"}</AlertTitle>
           <AlertDescription>{error.message}</AlertDescription>

@@ -2,15 +2,14 @@ import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"
 
+import { withIconLabels } from "@/components/ui/icon-label"
 import { cn } from "@/lib/utils"
 
-// Shared chip geometry so Badge and Kbd read as one system: same box, radius,
-// and text scale. Kbd imports this and adds only its own surface treatment.
 const badgeBaseClass =
-  "inline-flex h-5 w-fit min-w-5 shrink-0 items-center justify-center gap-(--space-2xs) rounded-sm px-(--space-2xs) text-xs font-medium whitespace-nowrap select-none [&_svg:not([class*='size-'])]:size-3"
+  "inline-flex h-(--badge-height) w-fit min-w-(--badge-height) shrink-0 items-center justify-center gap-(--badge-gap) rounded-(--badge-radius) px-(--badge-padding-inline) text-(length:--badge-font-size) leading-(--badge-line-height) font-medium whitespace-nowrap select-none [&_svg:not([class*='size-'])]:size-(--badge-graphic-size)"
 
 const badgeVariants = cva(
-  `${badgeBaseClass} group/badge overflow-hidden border border-transparent transition-all focus-visible:ring-[3px] focus-visible:ring-ring aria-invalid:ring-[3px] aria-invalid:ring-destructive [&>[data-slot=favicon]]:pointer-events-none [&>[data-slot=favicon]]:size-3!`,
+  `${badgeBaseClass} group/badge overflow-hidden border border-transparent transition-all focus-visible:ring-[3px] focus-visible:ring-ring aria-invalid:ring-[3px] aria-invalid:ring-destructive [&>[data-slot=favicon]]:pointer-events-none [&>[data-slot=favicon]]:size-(--badge-graphic-size)! [&>[data-slot=spinner]]:size-(--badge-graphic-size)!`,
   {
     variants: {
       variant: {
@@ -29,6 +28,7 @@ const badgeVariants = cva(
 )
 
 function Badge({
+  children,
   className,
   variant = "default",
   asChild = false,
@@ -36,14 +36,20 @@ function Badge({
 }: React.ComponentProps<"span"> &
   VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
   const Comp = asChild ? Slot.Root : "span"
+  const content = asChild && React.isValidElement<{ children?: React.ReactNode }>(children)
+    ? React.cloneElement(children, undefined, withIconLabels(children.props.children))
+    : withIconLabels(children)
 
   return (
     <Comp
       data-slot="badge"
+      data-icon-label-host
       data-variant={variant}
       className={cn(badgeVariants({ variant }), className)}
       {...props}
-    />
+    >
+      {content}
+    </Comp>
   )
 }
 

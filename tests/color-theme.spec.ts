@@ -209,10 +209,17 @@ for (const mode of ["light", "dark"] as const) {
     await expect(page.locator("html")).toHaveClass(new RegExp(mode))
     const shapes = {
       neutral: "cookie6",
-      info: "circle",
-      success: "clover4",
-      warning: "diamond",
-      error: "cookie4",
+      info: "cookie7",
+      success: "clover8",
+      warning: "pentagon",
+      error: "gem",
+    } as const
+    const symbols = {
+      neutral: "info",
+      info: "info",
+      success: "check_circle",
+      warning: "warning",
+      error: "error",
     } as const
     for (const tone of ["neutral", "info", "success", "warning", "error"] as const) {
       const alert = page.locator(`[data-slot="alert"][data-tone="${tone}"]`).first()
@@ -221,6 +228,7 @@ for (const mode of ["light", "dark"] as const) {
       const icon = alert.locator('[data-slot="alert-icon"]')
       const shape = icon.locator('[data-slot="shape"]')
       const glyph = icon.locator('[data-slot="alert-icon-glyph"]')
+      const materialIcon = glyph.locator('[data-slot="icon"]')
       await expect(alert).toBeVisible()
       await expectRole(alert, "background-color", `--alert-${tone}-fill`)
       await expectRole(title, "color", `--alert-${tone}-ink`)
@@ -245,7 +253,30 @@ for (const mode of ["light", "dark"] as const) {
       await expectRole(shape, "fill", `--alert-${tone}-ink`)
       await expect(glyph).toHaveCSS("width", "24px")
       await expect(glyph).toHaveCSS("height", "24px")
-      await expectRole(glyph, "color", "--surface-lowest")
+      await expectRole(glyph, "color", `--alert-${tone}-fill`)
+      const renderedFill = await alert.evaluate(element => {
+        const glyph = element.querySelector<HTMLElement>('[data-slot="alert-icon-glyph"]')!
+        const fill = getComputedStyle(element).backgroundColor
+        const canvas = document.createElement("canvas")
+        canvas.width = 1
+        canvas.height = 1
+        const context = canvas.getContext("2d")!
+        context.fillStyle = fill
+        context.fillRect(0, 0, 1, 1)
+        return {
+          fill,
+          glyph: getComputedStyle(glyph).color,
+          alpha: context.getImageData(0, 0, 1, 1).data[3],
+        }
+      })
+      expect(renderedFill.glyph).toBe(renderedFill.fill)
+      expect(renderedFill.alpha).toBe(255)
+      await expect(materialIcon).toHaveAttribute("data-filled", "true")
+      await expect(materialIcon).toHaveAttribute("data-material-symbol", symbols[tone])
+      if (tone === "warning") {
+        await expect(materialIcon).toHaveAttribute("data-optical-correction", "triangle")
+        await expect(materialIcon.locator("text")).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, -2)")
+      }
       await expect(alert.locator('[data-slot="alert-content"]')).toHaveClass(/icon-label/)
     }
     const anatomy = await page.locator('[data-slot="alert"][data-tone="neutral"]').first().evaluate(element => {

@@ -54,7 +54,7 @@ function NestedElevationDemo() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Item variant="muted" size="xs" className="flex-nowrap">
+          <Item variant="muted" className="flex-nowrap">
             <ItemContent>
               <ItemTitle>
                 OneDS navigation review decisions and implementation follow-up

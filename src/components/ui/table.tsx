@@ -1,5 +1,6 @@
 import * as React from "react"
 
+import { elevationVariants } from "@/components/ui/elevation"
 import { cn } from "@/lib/utils"
 import { useScrollerRef } from "@/hooks/use-scroller"
 
@@ -9,7 +10,11 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     <div
       ref={setRef}
       data-slot="table-container"
-      className="scroll-fade-x scroll-fade-6 scrollbar-thin relative w-full overflow-x-auto"
+      data-elevation="flat"
+      className={cn(
+        "scroll-fade-x scroll-fade-6 scrollbar-thin relative w-full overflow-x-auto rounded-(--table-surface-radius) bg-card ring-1 ring-(--table-stroke)",
+        elevationVariants({ level: "flat" })
+      )}
     >
       <table
         data-slot="table"
@@ -24,7 +29,12 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn(
+        "[&_tr]:border-b",
+        "[&:has(+[data-slot=table-body]>[data-slot=table-row]:first-child:hover)>[data-slot=table-row]:last-child]:border-transparent",
+        "[&:has(+[data-slot=table-body]>[data-slot=table-row]:first-child[data-state=selected])>[data-slot=table-row]:last-child]:border-transparent",
+        className
+      )}
       {...props}
     />
   )
@@ -58,7 +68,12 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b transition-colors hover:bg-(--state-layer-hover) has-aria-expanded:bg-(--state-layer-focus) data-[state=selected]:bg-muted",
+        "border-b transition-colors *:transition-colors",
+        "hover:border-transparent hover:*:bg-(--state-layer-hover) hover:[&>*:first-child]:rounded-s-(--table-row-radius) hover:[&>*:last-child]:rounded-e-(--table-row-radius)",
+        "[&:has(+[data-slot=table-row]:hover)]:border-transparent",
+        "has-aria-expanded:*:bg-(--state-layer-focus)",
+        "data-[state=selected]:border-transparent data-[state=selected]:*:bg-muted data-[state=selected]:[&>*:first-child]:rounded-s-(--table-row-radius) data-[state=selected]:[&>*:last-child]:rounded-e-(--table-row-radius)",
+        "[&:has(+[data-slot=table-row][data-state=selected])]:border-transparent",
         className
       )}
       {...props}

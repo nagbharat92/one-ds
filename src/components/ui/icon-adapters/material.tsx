@@ -1,10 +1,10 @@
 import type { IconGlyph } from "@/components/ui/icon"
 import font from "@/assets/icons/material-symbols.json"
 
-function createGlyph(symbol: keyof typeof font.symbols): IconGlyph {
+function createGlyph(symbol: keyof typeof font.symbols, opticalCorrection?: "triangle"): IconGlyph {
   return function MaterialGlyph({ className, ...props }) {
     return (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-material-symbol={symbol} className={["material-glyph", className].filter(Boolean).join(" ")} {...props}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-material-symbol={symbol} data-optical-correction={opticalCorrection} className={["material-glyph", className].filter(Boolean).join(" ")} {...props}>
         <text x="12" y="12" textAnchor="middle" dominantBaseline="central" aria-hidden="true">{String.fromCodePoint(parseInt(font.symbols[symbol], 16))}</text>
       </svg>
     )
@@ -138,7 +138,7 @@ export const ThumbsDownIcon = createGlyph("thumb_down")
 export const ThumbsUpIcon = createGlyph("thumb_up")
 export const Trash2Icon = createGlyph("delete")
 export const TrashIcon = Trash2Icon
-export const TriangleAlertIcon = createGlyph("warning")
+export const TriangleAlertIcon = createGlyph("warning", "triangle")
 export const UnderlineIcon = createGlyph("format_underlined")
 export const UndoIcon = createGlyph("undo")
 export const UserIcon = createGlyph("person")

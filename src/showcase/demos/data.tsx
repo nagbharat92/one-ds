@@ -9,7 +9,6 @@ import {
   FolderIcon,
   ImageIcon,
   InboxIcon,
-  LinkIcon,
   LogOutIcon,
   MailIcon,
   MoreHorizontalIcon,
@@ -23,6 +22,8 @@ import {
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
 import { CodeBlock } from "@/components/code-block"
+import { AnnotationLegend } from "@/components/ui/annotation-legend"
+import { AnnotationMeasurements, type AnnotationMeasurementTarget } from "@/components/ui/annotation-measurements"
 import {
   Avatar,
   AvatarBadge,
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Favicon } from "@/components/ui/favicon"
 import {
   Card,
   CardAction,
@@ -46,9 +48,10 @@ import {
   CardMedia,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Input, SearchInput } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import { CanvasPreview } from "@/components/ui/canvas-preview"
 import { Scroller } from "@/components/ui/scroller"
 import { Spinner } from "@/components/ui/spinner"
 import {
@@ -63,6 +66,7 @@ import {
 } from "@/components/ui/table"
 import {
   Item,
+  ItemActionSlot,
   ItemActions,
   ItemContent,
   ItemDescription,
@@ -70,6 +74,7 @@ import {
   ItemFooter,
   ItemHeader,
   ItemMedia,
+  ItemPrimaryAction,
   ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item"
@@ -224,20 +229,20 @@ function ChartInteractiveDemo() {
 
 function CardLoginDemo() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card size="expressive" className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
+        <CardAction responsive>
+          <Button variant="link">Sign Up</Button>
+        </CardAction>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
-        <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction>
       </CardHeader>
       <CardContent>
         <form onSubmit={(event) => event.preventDefault()}>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
+          <div className="flex flex-col gap-(--card-content-group-gap)">
+            <div className="grid gap-(--card-group-gap)">
               <Label htmlFor="card-email">Email</Label>
               <Input
                 id="card-email"
@@ -246,12 +251,12 @@ function CardLoginDemo() {
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
+            <div className="grid gap-(--card-group-gap)">
+              <div className="flex flex-wrap items-center justify-between gap-(--card-group-gap)">
                 <Label htmlFor="card-password">Password</Label>
                 <a
                   href="#"
-                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                  className="min-w-0 text-sm underline-offset-4 hover:underline"
                   onClick={(event) => event.preventDefault()}
                 >
                   Forgot your password?
@@ -262,21 +267,42 @@ function CardLoginDemo() {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex-col">
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-        <Button variant="secondary" className="w-full">
+      <CardFooter layout="column">
+        <Button className="h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs)">
           Login with Google
+        </Button>
+        <Button type="submit" variant="secondary" className="h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs)">
+          Login
         </Button>
       </CardFooter>
     </Card>
   )
 }
 
+const cardRichContentMeasurements: AnnotationMeasurementTarget[] = [
+  {
+    target: "rich-card",
+    label: "Card",
+    kinds: ["padding", "gap"],
+    captions: {
+      padding: { top: "Top edge to badges" },
+      gaps: ["Description to progress", "Avatars to footer"],
+    },
+  },
+]
+
 function CardRichContentDemo() {
   return (
-    <Card className="w-full max-w-md">
+    <CanvasPreview
+      name="Rich Content"
+      annotationsAvailable
+      contentClassName="max-w-md"
+      footnote={({ annotations }) => annotations
+        ? <AnnotationLegend kinds={["padding", "gap"]} />
+        : undefined}
+    >
+      {({ annotations }) => <>
+    <Card data-measure="rich-card" size="expressive" className="w-full max-w-md">
       <CardHeader>
         <CardHeaderContent>
           <CardEyebrow>
@@ -297,16 +323,16 @@ function CardRichContentDemo() {
           <span className="text-sm text-muted-foreground">Adopted</span>
         </CardHeaderAside>
       </CardHeader>
-      <CardContent className="grid gap-(--card-content-group-gap)">
-        <div className="grid gap-(--card-header-gap)">
-          <div className="flex items-center justify-between gap-(--card-header-gap) text-sm">
+      <CardContent grouped>
+        <div className="grid gap-(--card-group-gap)">
+          <div className="flex items-center justify-between gap-(--card-group-gap) text-sm">
             <span className="font-medium">17 of 25 components</span>
             <span className="text-muted-foreground">Q3 target</span>
           </div>
           <Progress value={68} aria-label="Component adoption" />
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-(--card-header-gap)">
-          <div className="flex items-center gap-(--card-header-gap)">
+        <div className="flex flex-wrap items-center justify-between gap-(--card-group-gap)">
+          <div className="flex flex-wrap items-center gap-(--card-group-gap)">
             <AvatarGroup>
               <Avatar size="sm" aria-label={persona.name}>
                 <AvatarImage src={persona.avatar} alt="" />
@@ -331,20 +357,23 @@ function CardRichContentDemo() {
           <Badge variant="tertiary">Updated today</Badge>
         </div>
       </CardContent>
-      <CardFooter className="justify-end">
-        <Button variant="secondary">View report</Button>
-        <Button>
+      <CardFooter layout="responsive">
+        <Button className="h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs) sm:h-(--button-height-default) sm:w-auto sm:whitespace-nowrap sm:py-(--space-none)">View report</Button>
+        <Button variant="secondary" className="h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs) sm:h-(--button-height-default) sm:w-auto sm:whitespace-nowrap sm:py-(--space-none)">
           Continue review
-          <ArrowRightIcon data-icon="inline-end" />
+          <ArrowRightIcon className="hidden sm:block" data-icon="inline-end" />
         </Button>
       </CardFooter>
     </Card>
+    <AnnotationMeasurements active={annotations} targets={cardRichContentMeasurements} />
+      </>}
+    </CanvasPreview>
   )
 }
 
 function CardFooterActionsDemo() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card size="expressive" className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Publish changes?</CardTitle>
         <CardDescription>
@@ -356,9 +385,9 @@ function CardFooterActionsDemo() {
           Three component recipes and their usage guidance will be updated.
         </p>
       </CardContent>
-      <CardFooter className="justify-end">
+      <CardFooter layout="responsive">
         <Button variant="ghost">Cancel</Button>
-        <Button>Publish</Button>
+        <Button variant="secondary">Publish</Button>
       </CardFooter>
     </Card>
   )
@@ -366,39 +395,37 @@ function CardFooterActionsDemo() {
 
 function CardEdgeToEdgeDemo() {
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
+    <Card size="expressive" className="w-full max-w-sm">
+      <CardHeader divider>
         <CardTitle>Terms of Service</CardTitle>
         <CardDescription>
           Review the terms before accepting the agreement.
         </CardDescription>
       </CardHeader>
-      <CardContent className="-mb-(--card-spacing)">
-        <div className="-mx-(--card-spacing) border-t bg-muted/50">
-          <Scroller className="max-h-48 space-y-4 px-(--card-spacing) py-4 text-sm leading-relaxed">
-            <p>
-              These terms govern your use of the workspace, including access to
-              shared documents, project files, and collaboration tools.
-            </p>
-            <p>
-              You are responsible for the content you upload and for ensuring
-              that your team has the appropriate permissions to view or edit it.
-            </p>
-            <p>
-              We may update features or limits as the service evolves. When
-              those changes materially affect your workflow, we will notify your
-              workspace administrators.
-            </p>
-            <p>
-              By continuing, you agree to keep your account credentials secure
-              and to follow your organization&apos;s acceptable use policies.
-            </p>
-          </Scroller>
-        </div>
+      <CardContent edgeToEdge>
+        <Scroller className="max-h-48 space-y-4 p-(--card-spacing) text-sm leading-relaxed">
+          <p>
+            These terms govern your use of the workspace, including access to
+            shared documents, project files, and collaboration tools.
+          </p>
+          <p>
+            You are responsible for the content you upload and for ensuring
+            that your team has the appropriate permissions to view or edit it.
+          </p>
+          <p>
+            We may update features or limits as the service evolves. When
+            those changes materially affect your workflow, we will notify your
+            workspace administrators.
+          </p>
+          <p>
+            By continuing, you agree to keep your account credentials secure
+            and to follow your organization&apos;s acceptable use policies.
+          </p>
+        </Scroller>
       </CardContent>
-      <CardFooter className="justify-end">
-        <Button variant="secondary">Decline</Button>
-        <Button>Accept</Button>
+      <CardFooter divider layout="responsive">
+        <Button>Decline</Button>
+        <Button variant="secondary">Accept</Button>
       </CardFooter>
     </Card>
   )
@@ -406,7 +433,7 @@ function CardEdgeToEdgeDemo() {
 
 function CardImageDemo() {
   return (
-    <Card className="relative w-full max-w-sm">
+    <Card size="expressive" className="relative w-full max-w-sm">
       <CardMedia>
         <div className="card-media-overlay absolute inset-0 z-30" />
         <img
@@ -416,14 +443,13 @@ function CardImageDemo() {
         />
       </CardMedia>
       <CardHeader>
-        <CardAction>
-          <Badge variant="secondary">Featured</Badge>
-        </CardAction>
-        <CardTitle>Design systems meetup</CardTitle>
-        <CardDescription>
-          A practical talk on component APIs, accessibility, and shipping
-          faster.
-        </CardDescription>
+        <CardHeaderContent>
+          <CardTitle>Design systems meetup</CardTitle>
+          <CardDescription>
+            A practical talk on component APIs, accessibility, and shipping
+            faster.
+          </CardDescription>
+        </CardHeaderContent>
       </CardHeader>
       <CardFooter>
         <Button className="w-full">View Event</Button>
@@ -591,7 +617,7 @@ export function AvatarDemo() {
   {
     slug: "badge",
     name: "Badge",
-    description: "Displays a badge or a component that looks like a badge.",
+    description: "Displays a label, status, or linked source citation.",
     category: "Data Display",
     Demo: () => (
       <div className="flex flex-wrap items-center gap-3">
@@ -647,6 +673,34 @@ export function BadgeDemo() {
         ),
       },
       {
+        name: "Citation",
+        description: "Linked source badges pair a favicon with a readable label.",
+        Demo: () => (
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge asChild variant="tertiary">
+              <a
+                href="https://github.com/microsoft/fluentui"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <Favicon domain="github.com" alt="" data-icon="inline-start" />
+                Fluent UI +1
+              </a>
+            </Badge>
+            <Badge asChild variant="tertiary">
+              <a
+                href="https://m3.material.io/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <Favicon domain="m3.material.io" alt="" data-icon="inline-start" />
+                Material Design
+              </a>
+            </Badge>
+          </div>
+        ),
+      },
+      {
         name: "Link",
         description: "Badge rendered as a clickable link.",
         Demo: () => (
@@ -684,27 +738,27 @@ import { Label } from "@/components/ui/label"
 
 export function CardDemo() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card size="expressive" className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
+        <CardAction responsive>
+          <Button variant="link">Sign Up</Button>
+        </CardAction>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
-        <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction>
       </CardHeader>
       <CardContent>
         <form>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
+          <div className="flex flex-col gap-(--card-content-group-gap)">
+            <div className="grid gap-(--card-group-gap)">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="m@example.com" required />
             </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
+            <div className="grid gap-(--card-group-gap)">
+              <div className="flex flex-wrap items-center justify-between gap-(--card-group-gap)">
                 <Label htmlFor="password">Password</Label>
-                <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
+                <a href="#" className="min-w-0 text-sm underline-offset-4 hover:underline">
                   Forgot your password?
                 </a>
               </div>
@@ -713,9 +767,9 @@ export function CardDemo() {
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex-col">
-        <Button type="submit" className="w-full">Login</Button>
-        <Button variant="secondary" className="w-full">Login with Google</Button>
+      <CardFooter layout="column">
+        <Button className="h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs)">Login with Google</Button>
+        <Button type="submit" variant="secondary" className="h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs)">Login</Button>
       </CardFooter>
     </Card>
   )
@@ -726,17 +780,18 @@ export function CardDemo() {
         description:
           "Compose tags, multi-line supporting copy, an intrinsic aside, progress, people, and actions without a new card variant.",
         Demo: CardRichContentDemo,
+        ownsCanvas: true,
       },
       {
         name: "Footer Actions",
         description:
-          "Place related actions side by side in a compact, end-aligned footer.",
+          "Keep paired actions grouped at the end of a spacious, responsive footer.",
         Demo: CardFooterActionsDemo,
       },
       {
         name: "Edge to Edge",
         description:
-          "Use negative card-spacing margins for full-width content that stays aligned with the card inset.",
+          "Let edge-to-edge content meet the header and footer while those regions retain the shared Card inset.",
         Demo: CardEdgeToEdgeDemo,
       },
       {
@@ -926,6 +981,51 @@ export function TableDemo() {
           )
         },
       },
+      {
+        name: "Horizontal scroll",
+        description: "Wide columns stay on one line within a horizontally scrollable surface.",
+        layout: "wide" as const,
+        Demo: () => (
+          <div className="w-full max-w-md">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Invoice</TableHead>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Contact</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead>Issued</TableHead>
+                  <TableHead>Due</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">INV001</TableCell>
+                  <TableCell>{persona.name}</TableCell>
+                  <TableCell>{persona.email}</TableCell>
+                  <TableCell>Paid</TableCell>
+                  <TableCell>Credit card</TableCell>
+                  <TableCell>Aug 15, 2026</TableCell>
+                  <TableCell>Sep 15, 2026</TableCell>
+                  <TableCell className="text-right">$250.00</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium">INV002</TableCell>
+                  <TableCell>{persona.teammates[0].name}</TableCell>
+                  <TableCell>{persona.teammates[0].email}</TableCell>
+                  <TableCell>Pending</TableCell>
+                  <TableCell>Bank transfer</TableCell>
+                  <TableCell>Aug 22, 2026</TableCell>
+                  <TableCell>Sep 22, 2026</TableCell>
+                  <TableCell className="text-right">$150.00</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        ),
+      },
     ],
   },
   {
@@ -936,7 +1036,7 @@ export function TableDemo() {
     category: "Data Display",
     installCommand: "npx shadcn@latest add item",
     Demo: () => (
-      <Item className="w-full max-w-sm rounded-lg border">
+      <Item variant="outline" className="w-full max-w-sm">
         <ItemMedia>
           <Avatar size="lg">
             <AvatarImage src={persona.avatar} alt="" />
@@ -965,7 +1065,7 @@ export function TableDemo() {
 
 export function ItemDemo() {
   return (
-    <Item className="rounded-lg border">
+    <Item variant="outline">
       <ItemMedia>
         <Avatar size="lg">
           <AvatarFallback>{persona.initials}</AvatarFallback>
@@ -994,7 +1094,7 @@ export function ItemDemo() {
               ["Accessibility audit", "Friday"],
             ].map(([title, time], index) => (
               <div key={title}>
-                <Item>
+                <Item compact>
                   <ItemContent>
                     <ItemTitle>{title}</ItemTitle>
                   </ItemContent>
@@ -1029,6 +1129,14 @@ export function ItemDemo() {
                   </ItemContent>
                 </Item>
               ))}
+              {rows.map(({ Icon, title }) => (
+                <Item key={`${title}-compact`} variant="outline" compact>
+                  <ItemMedia variant="icon"><Icon /></ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{title}</ItemTitle>
+                  </ItemContent>
+                </Item>
+              ))}
             </ItemGroup>
           )
         },
@@ -1056,7 +1164,8 @@ export function ItemDemo() {
         description: "Rest, selected and disabled rows for selectable collections.",
         layout: "wide" as const,
         Demo: function ListItemStatesDemo() {
-          const [selected, setSelected] = useState("Design")
+          const compactConversation = "OneDS navigation review"
+          const [selected, setSelected] = useState(compactConversation)
           return (
             <ItemGroup className="w-full max-w-md gap-2">
               {["Design", "Engineering", "Marketing"].map((team) => (
@@ -1070,6 +1179,33 @@ export function ItemDemo() {
                   </button>
                 </Item>
               ))}
+              <Item
+                variant={selected === compactConversation ? "muted" : "default"}
+                compact
+                className="flex-nowrap"
+              >
+                <ItemPrimaryAction
+                  aria-pressed={selected === compactConversation}
+                  onClick={() => setSelected(compactConversation)}
+                >
+                  <ItemContent>
+                    <ItemTitle>{compactConversation}</ItemTitle>
+                  </ItemContent>
+                </ItemPrimaryAction>
+                <ItemActions hosted>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" aria-label="Conversation actions">
+                        <MoreHorizontalIcon />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Rename</DropdownMenuItem>
+                      <DropdownMenuItem>Archive</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </ItemActions>
+              </Item>
               <Item aria-disabled="true">
                 <ItemContent>
                   <ItemTitle>Archived workspace</ItemTitle>
@@ -1133,7 +1269,7 @@ export function ItemDemo() {
         name: "Truncation",
         description: "Long titles stay on one line and yield space to trailing content.",
         Demo: () => (
-          <Item variant="muted" size="xs" className="w-full max-w-sm flex-nowrap">
+          <Item variant="muted" className="w-full max-w-sm flex-nowrap">
             <ItemContent>
               <ItemTitle>
                 OneDS navigation review decisions and implementation follow-up
@@ -1169,30 +1305,6 @@ export function ItemDemo() {
               <ItemContent>
                 <ItemTitle>Muted</ItemTitle>
                 <ItemDescription>Subtle background fill.</ItemDescription>
-              </ItemContent>
-            </Item>
-          </div>
-        ),
-      },
-      {
-        name: "Sizes",
-        description: "Default, small and extra-small sizing.",
-        layout: "wide" as const,
-        Demo: () => (
-          <div className="flex w-full max-w-md flex-col gap-3">
-            <Item variant="outline">
-              <ItemContent>
-                <ItemTitle>Default size</ItemTitle>
-              </ItemContent>
-            </Item>
-            <Item variant="outline" size="sm">
-              <ItemContent>
-                <ItemTitle>Small size</ItemTitle>
-              </ItemContent>
-            </Item>
-            <Item variant="outline" size="xs">
-              <ItemContent>
-                <ItemTitle>Extra-small size</ItemTitle>
               </ItemContent>
             </Item>
           </div>
@@ -1281,22 +1393,41 @@ export function ItemDemo() {
       },
       {
         name: "Link",
-        description: "Clickable item rendered as an anchor.",
+        description: "Clickable items with full and compact favicon treatments.",
         Demo: () => (
-          <Item variant="outline" asChild className="w-full max-w-sm">
-            <a href="https://github.com/shadcn-ui/ui" onClick={(e) => e.preventDefault()}>
-              <ItemMedia variant="icon">
-                <LinkIcon />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>shadcn/ui repository</ItemTitle>
-                <ItemDescription>Open source component library.</ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <ArrowRightIcon className="size-4 text-muted-foreground" />
-              </ItemActions>
-            </a>
-          </Item>
+          <ItemGroup className="w-full max-w-sm gap-(--space-xs)">
+            <Item variant="outline" asChild>
+              <a href="https://github.com/shadcn-ui/ui" onClick={(e) => e.preventDefault()}>
+                <ItemMedia variant="icon">
+                  <Favicon domain="github.com" alt="" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>shadcn/ui repository</ItemTitle>
+                  <ItemDescription>Open source component library.</ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <ItemActionSlot>
+                    <ArrowRightIcon className="size-4 text-muted-foreground" />
+                  </ItemActionSlot>
+                </ItemActions>
+              </a>
+            </Item>
+            <Item variant="outline" compact asChild>
+              <a href="https://github.com/shadcn-ui/ui" onClick={(e) => e.preventDefault()}>
+                <ItemMedia variant="icon">
+                  <Favicon domain="github.com" alt="" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>shadcn/ui repository</ItemTitle>
+                </ItemContent>
+                <ItemActions>
+                  <ItemActionSlot>
+                    <ArrowRightIcon className="size-4 text-muted-foreground" />
+                  </ItemActionSlot>
+                </ItemActions>
+              </a>
+            </Item>
+          </ItemGroup>
         ),
       },
       {
@@ -1652,9 +1783,9 @@ export function KbdDemo() {
     description: "A placeholder for empty states with icon, title and actions.",
     category: "Data Display",
     Demo: () => (
-      <Empty className="w-full max-w-sm rounded-lg border">
+      <Empty>
         <EmptyHeader>
-          <EmptyMedia variant="icon">
+          <EmptyMedia variant="icon" shape="cookie6">
             <FolderIcon />
           </EmptyMedia>
           <EmptyTitle>No projects yet</EmptyTitle>
@@ -1662,7 +1793,7 @@ export function KbdDemo() {
             Create your first project to get started.
           </EmptyDescription>
         </EmptyHeader>
-        <Button size="default">
+        <Button size="expressive" variant="primary">
           <StarIcon />
           Create project
         </Button>
@@ -1676,28 +1807,30 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { Button } from "@/components/ui/button"
 
 export function EmptyDemo() {
   return (
-    <Empty className="rounded-lg border">
+    <Empty>
       <EmptyHeader>
-        <EmptyMedia variant="icon">
+        <EmptyMedia variant="icon" shape="cookie6">
           <FolderIcon />
         </EmptyMedia>
         <EmptyTitle>No projects yet</EmptyTitle>
         <EmptyDescription>Create your first project to get started.</EmptyDescription>
       </EmptyHeader>
+      <Button size="expressive" variant="primary">Create project</Button>
     </Empty>
   )
 }`,
     examples: [
       {
-        name: "Outline",
-        description: "Dashed border empty state with an action.",
+        name: "Without Action",
+        description: "A complete empty state that needs no next step.",
         Demo: () => (
-          <Empty className="w-full max-w-sm border border-dashed">
+          <Empty>
             <EmptyHeader>
-              <EmptyMedia variant="icon">
+              <EmptyMedia variant="icon" shape="cookie7">
                 <InboxIcon />
               </EmptyMedia>
               <EmptyTitle>Inbox zero</EmptyTitle>
@@ -1707,18 +1840,18 @@ export function EmptyDemo() {
         ),
       },
       {
-        name: "Background",
-        description: "Empty state with a muted background fill.",
+        name: "Tonal",
+        description: "A lower-emphasis empty state on a tonal surface.",
         Demo: () => (
-          <Empty className="w-full max-w-sm rounded-lg bg-muted/50">
+          <Empty variant="tonal">
             <EmptyHeader>
-              <EmptyMedia variant="icon">
+              <EmptyMedia variant="icon" shape="clover8">
                 <ImageIcon />
               </EmptyMedia>
               <EmptyTitle>No images</EmptyTitle>
               <EmptyDescription>Upload an image to get started.</EmptyDescription>
             </EmptyHeader>
-            <Button size="default" variant="secondary">
+            <Button size="expressive" variant="secondary">
               Upload
             </Button>
           </Empty>
@@ -1728,10 +1861,10 @@ export function EmptyDemo() {
         name: "Avatar",
         description: "Empty state led by an avatar.",
         Demo: () => (
-          <Empty className="w-full max-w-sm rounded-lg border">
+          <Empty>
             <EmptyHeader>
               <EmptyMedia>
-                <Avatar size="lg">
+                <Avatar size="lg" className="size-(--empty-media-size)!</">
                   <AvatarFallback>
                     <UserIcon />
                   </AvatarFallback>
@@ -1740,7 +1873,7 @@ export function EmptyDemo() {
               <EmptyTitle>No profile</EmptyTitle>
               <EmptyDescription>Set up your profile to continue.</EmptyDescription>
             </EmptyHeader>
-            <Button size="default">Create profile</Button>
+            <Button size="expressive" variant="secondary">Create profile</Button>
           </Empty>
         ),
       },
@@ -1748,7 +1881,7 @@ export function EmptyDemo() {
         name: "Avatar Group",
         description: "Empty state with an avatar group.",
         Demo: () => (
-          <Empty className="w-full max-w-sm rounded-lg border">
+          <Empty>
             <EmptyHeader>
               <EmptyMedia>
                 <AvatarGroup>
@@ -1768,7 +1901,7 @@ export function EmptyDemo() {
               <EmptyTitle>No team members</EmptyTitle>
               <EmptyDescription>Invite collaborators to this workspace.</EmptyDescription>
             </EmptyHeader>
-            <Button size="default" variant="secondary">
+            <Button size="expressive" variant="secondary">
               Invite
             </Button>
           </Empty>
@@ -1778,18 +1911,16 @@ export function EmptyDemo() {
         name: "Input Group",
         description: "Empty state with a search input group.",
         Demo: () => (
-          <Empty className="w-full max-w-sm rounded-lg border">
+          <Empty>
             <EmptyHeader>
               <EmptyTitle>Find something</EmptyTitle>
               <EmptyDescription>Search across all your resources.</EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <InputGroup className="w-full max-w-xs">
-                <InputGroupAddon align="inline-start">
-                  <SearchIcon />
-                </InputGroupAddon>
-                <InputGroupInput placeholder="Search..." />
-              </InputGroup>
+              <SearchInput
+                className="max-w-(--empty-search-width)"
+                placeholder="Search..."
+              />
             </EmptyContent>
           </Empty>
         ),

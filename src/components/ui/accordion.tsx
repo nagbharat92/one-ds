@@ -4,6 +4,7 @@ import * as React from "react"
 import { Accordion as AccordionPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/components/ui/button"
 import { PlusIcon, MinusIcon } from "@/components/ui/icons"
 
 type AccordionSize = "default" | "lg"
@@ -48,12 +49,13 @@ function AccordionTrigger({
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
   const size = React.useContext(AccordionSizeContext)
+  const indicatorSize = size === "lg" ? "icon-expressive" : "icon"
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "group/accordion-trigger relative flex flex-1 cursor-pointer items-start justify-between rounded-lg border border-transparent pt-(--space-sm) pb-(--accordion-content-gap) text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+          "group/accordion-trigger relative flex flex-1 cursor-pointer items-center justify-between gap-(--button-gap) rounded-lg border border-transparent pt-(--space-sm) pb-(--accordion-content-gap) text-left text-sm font-medium transition-all outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:after:border-ring disabled:pointer-events-none disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:size-4",
           size === "lg" &&
             "py-(--space-md) text-lg font-semibold **:data-[slot=accordion-trigger-icon]:size-6",
           className
@@ -61,8 +63,19 @@ function AccordionTrigger({
         {...props}
       >
         {children}
-        <PlusIcon data-slot="accordion-trigger-icon" className="pointer-events-none shrink-0 group-data-[state=open]/accordion-trigger:hidden!" />
-        <MinusIcon data-slot="accordion-trigger-icon" className="pointer-events-none hidden! shrink-0 group-data-[state=open]/accordion-trigger:block!" />
+        <span
+          aria-hidden="true"
+          data-slot="accordion-trigger-indicator"
+          data-variant="ghost"
+          data-size={indicatorSize}
+          className={cn(
+            buttonVariants({ variant: "ghost", size: indicatorSize }),
+            "pointer-events-none ml-auto text-muted-foreground group-hover/accordion-trigger:bg-(--state-layer-hover) group-hover/accordion-trigger:text-foreground group-focus-visible/accordion-trigger:bg-(--state-layer-focus) group-focus-visible/accordion-trigger:text-foreground group-active/accordion-trigger:bg-(--state-layer-pressed) group-active/accordion-trigger:text-foreground"
+          )}
+        >
+          <PlusIcon data-slot="accordion-trigger-icon" className="shrink-0 group-data-[state=open]/accordion-trigger:hidden!" />
+          <MinusIcon data-slot="accordion-trigger-icon" className="hidden! shrink-0 group-data-[state=open]/accordion-trigger:block!" />
+        </span>
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   )

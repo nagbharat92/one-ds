@@ -108,8 +108,8 @@ function ConcentricProjectForm({ radius, scale }: { radius: number; scale: "norm
         {feedback && <div role="status" className="mt-2 text-sm text-muted-foreground">{feedback}</div>}
         </CardContent>
         <CardFooter data-measure="footer" className={`flex-wrap justify-end${scale === "normal" ? "" : " concentric-card__actions"}`}>
-          <Button type="button" variant="secondary" onClick={() => { setDraft(saved); setError(false); setFeedback("Unsaved changes discarded") }}>Cancel</Button>
-          <Button type="submit" data-annotate="save">Save changes</Button>
+          <Button type="button" onClick={() => { setDraft(saved); setError(false); setFeedback("Unsaved changes discarded") }}>Cancel</Button>
+          <Button type="submit" variant="secondary" data-annotate="save">Save changes</Button>
         </CardFooter>
         </Card>
       </form>
@@ -180,8 +180,8 @@ function ConcentricProjectCard({ radius, scale, mediaRef }: {
         {opened && <div className="concentric-project-card__details"><span className="font-medium">Next milestone</span><span>Review the shared component collection.</span></div>}
       </CardContent>
       <CardFooter data-annotate="actions" data-measure="footer" className={`flex-wrap justify-end${scale === "normal" ? "" : " concentric-card__actions"}`}>
-        <Button variant="secondary" aria-pressed={following} onClick={() => setFollowing(value => !value)}>{following ? "Following" : "Follow"}</Button>
-        <Button data-annotate="action" aria-expanded={opened} onClick={() => setOpened(value => !value)}>{opened ? "Close project" : "Open project"}</Button>
+        <Button aria-pressed={following} onClick={() => setFollowing(value => !value)}>{following ? "Following" : "Follow"}</Button>
+        <Button variant="secondary" data-annotate="action" aria-expanded={opened} onClick={() => setOpened(value => !value)}>{opened ? "Close project" : "Open project"}</Button>
       </CardFooter>
     </Card>
   )

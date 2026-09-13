@@ -94,7 +94,7 @@ export function useScroller(
           ? eventTarget.closest<HTMLElement>("[data-scroll-boundary]")
           : null
       if (boundary && boundary !== el && el.contains(boundary)) return
-      // The element can be scrolled by other means (cmdk, keyboard, drag) between
+      // The element can be scrolled by other means (keyboard, drag, or code) between
       // wheel events, so measure rather than trust the last target.
       if (!running) target = position()
       // Only claim the axis this surface owns; the other one scrolls the page.

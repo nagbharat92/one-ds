@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react"
 import {
+  AlertCircleIcon,
   ArrowDownAZIcon,
   BoxesIcon,
   CodeIcon,
@@ -13,7 +14,6 @@ import {
   SortIcon,
   PaletteIcon,
   RotateCcwIcon,
-  TriangleAlertIcon,
 } from "@/components/ui/icons"
 
 import {
@@ -330,7 +330,7 @@ function ExampleSection({
               <CodeBlock code={code} className="showcase-example__code-block" />
             ) : (
               <Alert variant="error" className="m-6 w-auto">
-                <AlertIcon><TriangleAlertIcon /></AlertIcon>
+                <AlertIcon><AlertCircleIcon /></AlertIcon>
                 <AlertContent>
                   <AlertTitle>No generated code for this example</AlertTitle>
                   <AlertDescription>

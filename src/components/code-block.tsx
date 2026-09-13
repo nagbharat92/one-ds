@@ -6,10 +6,33 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useScrollerRef } from "@/hooks/use-scroller"
 
+function copyWithCommand(value: string) {
+  let copied = false
+  const handleCopy = (event: ClipboardEvent) => {
+    if (!event.clipboardData) return
+    event.clipboardData.setData("text/plain", value)
+    event.preventDefault()
+    copied = true
+  }
+
+  document.addEventListener("copy", handleCopy, { once: true })
+  const succeeded = document.execCommand("copy")
+  document.removeEventListener("copy", handleCopy)
+  return succeeded && copied
+}
+
+async function copyText(value: string) {
+  try {
+    await navigator.clipboard.writeText(value)
+    return true
+  } catch {
+    return copyWithCommand(value)
+  }
+}
+
 export function CodeBlock({
   code,
   className,
-  language,
   showLineNumbers = true,
 }: {
   code: string
@@ -21,7 +44,7 @@ export function CodeBlock({
   const setScrollRef = useScrollerRef<HTMLPreElement>()
 
   const copy = async () => {
-    await navigator.clipboard.writeText(code)
+    if (!(await copyText(code))) return
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -30,23 +53,20 @@ export function CodeBlock({
     <Card
       variant="code"
       className={cn(
-        "group/code-block min-h-(--code-block-min-height)",
+        "group/code-block relative min-h-(--code-block-min-height)",
         className
       )}
     >
-      <div className="flex items-center justify-between gap-2 border-b bg-muted ps-(--code-block-padding-inline) pe-(--code-block-action-inset) py-(--code-block-header-padding-block)">
-        <span className="font-mono text-xs text-muted-foreground">
-          {language || "Code"}
-        </span>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label={copied ? "Copied" : "Copy code"}
-          onClick={copy}
-        >
-          {copied ? <CheckIcon /> : <CopyIcon />}
-        </Button>
-      </div>
+      <Button
+        variant="tertiary"
+        size="icon"
+        data-code-block-copy
+        className="absolute top-(--code-block-copy-inset) inset-e-(--code-block-copy-inset) z-(--code-block-copy-layer) rounded-(--code-block-copy-radius)"
+        aria-label={copied ? "Copied" : "Copy code"}
+        onClick={copy}
+      >
+        {copied ? <CheckIcon /> : <CopyIcon />}
+      </Button>
       <pre
         ref={setScrollRef}
         tabIndex={0}

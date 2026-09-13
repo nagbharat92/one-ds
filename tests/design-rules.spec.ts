@@ -1,6 +1,38 @@
 import { expect, test } from "@playwright/test"
 import { shapePaths } from "../src/lib/shapes"
 
+test("Badges use source-ready geometry while Kbd remains compact", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
+  await page.goto("/#/badge")
+
+  const badge = page.locator('[data-slot="canvas"] [data-slot="badge"]').filter({ hasText: "Primary" }).first()
+  await expect(badge).toHaveCSS("height", "28px")
+  await expect(badge).toHaveCSS("font-size", "14px")
+  await expect(badge).toHaveCSS("line-height", "21px")
+  await expect(badge).toHaveCSS("border-radius", "14px")
+  await expect(badge.locator(':scope > [data-slot="icon-label"]')).toHaveCSS("padding-inline", "0px")
+
+  const citation = page.getByRole("link", { name: "Fluent UI +1", exact: true })
+  const favicon = citation.locator(':scope > [data-slot="favicon"]')
+  const label = citation.locator(':scope > [data-slot="icon-label"]')
+  await expect(citation).toHaveAttribute("data-slot", "badge")
+  await expect(citation).toHaveCSS("column-gap", "8px")
+  await expect(favicon).toHaveCSS("width", "16px")
+  await expect(favicon).toHaveCSS("height", "16px")
+  await expect(label).toHaveCSS("padding-right", "4px")
+  expect(await citation.evaluate(element => {
+    const graphic = element.querySelector('[data-slot="favicon"]')!.getBoundingClientRect()
+    const text = element.querySelector('[data-slot="icon-label"]')!.getBoundingClientRect()
+    return text.left - graphic.right
+  })).toBeCloseTo(8)
+
+  await page.goto("/#/kbd")
+  const kbd = page.locator('[data-slot="canvas"] [data-slot="kbd"]').first()
+  await expect(kbd).toHaveCSS("height", "20px")
+  await expect(kbd).toHaveCSS("font-size", "12px")
+})
+
 test("Material icon size anatomy and shared icon semantics stay usable", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })

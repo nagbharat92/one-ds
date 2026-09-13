@@ -8,6 +8,13 @@ type AnnotationMeasurementTarget = {
   target: string
   label: string
   kinds: readonly AnnotationKind[]
+  captions?: {
+    bounds?: string
+    padding?: Partial<Record<keyof MeasurementEdges, string>>
+    border?: Partial<Record<keyof MeasurementEdges, string>>
+    margin?: Partial<Record<keyof MeasurementEdges, string>>
+    gaps?: readonly string[]
+  }
 }
 type MeasuredRegion = {
   item: AnnotationCalloutItem & { kind: AnnotationKind }
@@ -102,7 +109,7 @@ function AnnotationMeasurements({
             : undefined
           regions.push({ item: { id, target: `measurement:${id}`, kind, side, label: true, content: caption }, rect, clipPath })
         }
-        if (specification.kinds.includes("bounds")) append("bounds", "box", box, "top", `${specification.label} bounds`)
+        if (specification.kinds.includes("bounds")) append("bounds", "box", box, "top", specification.captions?.bounds ?? `${specification.label} bounds`)
         if (source.getClientRects().length > 1 || style.display === "inline") {
           if (specification.kinds.some(kind => kind !== "bounds")) issues.push(`${specification.label}: box-model regions require a single block or inline-block box.`)
           continue
@@ -112,7 +119,9 @@ function AnnotationMeasurements({
         }
         for (const region of measureBoxRegions({ box, padding, border, margin })) {
           if (specification.kinds.includes(region.kind)) {
-            append(region.kind, region.side, region.rect, region.side, `${specification.label} ${region.kind} ${region.side}`, region.kind !== "margin")
+            const caption = specification.captions?.[region.kind]?.[region.side]
+              ?? `${specification.label} ${region.kind} ${region.side}`
+            append(region.kind, region.side, region.rect, region.side, caption, region.kind !== "margin")
           }
         }
         if (!specification.kinds.includes("gap")) continue
@@ -138,7 +147,7 @@ function AnnotationMeasurements({
           issues.push(`${specification.label}: only single-row or single-column gaps matching the CSS gap are supported.`)
           continue
         }
-        gaps.forEach((rect, index) => append("gap", String(index), rect, axis === "horizontal" ? "bottom" : "right", `${specification.label} gap ${index + 1}`))
+        gaps.forEach((rect, index) => append("gap", String(index), rect, axis === "horizontal" ? "bottom" : "right", specification.captions?.gaps?.[index] ?? `${specification.label} gap ${index + 1}`))
       }
       for (const element of observed) {
         if (!nextObserved.has(element)) { resize.unobserve(element); observed.delete(element) }

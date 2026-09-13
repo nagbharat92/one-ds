@@ -78,9 +78,9 @@ function AnnotationDimensionsSpecimen({ active }: { active: boolean }) {
         </CardHeader>
         <CardFooter data-measure="footer" className="relative justify-end">
           <div className="relative">
-            <Button variant="secondary" onClick={() => setSaved(false)}>Cancel</Button>
+            <Button onClick={() => setSaved(false)}>Cancel</Button>
           </div>
-          <Button onClick={() => setSaved(true)}>Save</Button>
+          <Button variant="secondary" onClick={() => setSaved(true)}>Save</Button>
         </CardFooter>
       </Card>
     </div>

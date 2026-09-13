@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { toast } from "sonner"
 import {
+  AlertCircleIcon,
   InfoIcon,
   TriangleAlertIcon,
   CheckCircleIcon,
@@ -62,7 +63,7 @@ export const feedbackDemos: ComponentEntry[] = [
           </AlertContent>
         </Alert>
         <Alert variant="error">
-          <AlertIcon><TriangleAlertIcon /></AlertIcon>
+          <AlertIcon><AlertCircleIcon /></AlertIcon>
           <AlertContent>
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
@@ -89,36 +90,22 @@ export function AlertDemo() {
     examples: [
       {
         name: "Action",
-        Demo: () => {
-          const [dismissed, setDismissed] = useState(false)
-          if (dismissed) {
-            return (
-              <div className="flex w-full max-w-md items-center gap-3">
-                <CheckCircleIcon className="size-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Alert dismissed</span>
-                <Button size="expressive" variant="primary" onClick={() => setDismissed(false)}>
-                  Show again
-                </Button>
-              </div>
-            )
-          }
-          return (
-            <Alert variant="info" className="w-full max-w-md">
-              <AlertIcon><InfoIcon /></AlertIcon>
-              <AlertContent>
-                <AlertTitle>New update available</AlertTitle>
-                <AlertDescription>
-                  A new version is ready to install. Restart to apply changes.
-                </AlertDescription>
-              </AlertContent>
-              <AlertAction>
-                <Button size="expressive" variant="primary" onClick={() => setDismissed(true)}>
-                  Dismiss
-                </Button>
-              </AlertAction>
-            </Alert>
-          )
-        },
+        Demo: () => (
+          <Alert variant="info" className="w-full max-w-md">
+            <AlertIcon><InfoIcon /></AlertIcon>
+            <AlertContent>
+              <AlertTitle>New update available</AlertTitle>
+              <AlertDescription>
+                A new version is ready to install. Restart to apply changes.
+              </AlertDescription>
+            </AlertContent>
+            <AlertAction>
+              <Button size="expressive" variant="primary">
+                Dismiss
+              </Button>
+            </AlertAction>
+          </Alert>
+        ),
       },
       {
         name: "Semantic tones",
@@ -480,10 +467,10 @@ export function SpinnerDemo() {
       {
         name: "Empty",
         Demo: () => (
-          <Empty className="w-full max-w-sm border">
+          <Empty variant="tonal">
             <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <Spinner className="size-4" />
+              <EmptyMedia variant="icon" shape="cookie9">
+                <Spinner className="size-(--empty-media-graphic-size)" />
               </EmptyMedia>
               <EmptyTitle>Loading data</EmptyTitle>
               <EmptyDescription>

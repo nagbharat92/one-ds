@@ -549,14 +549,14 @@ function PersonaContactCardDemo() {
           {persona.workingHours}
         </PersonaMetaLine>
       </CardContent>
-      <CardFooter className="gap-2">
+      <CardFooter>
         <Button className="flex-1">
-          <MessageSquareIcon data-icon="inline-start" />
-          Message
-        </Button>
-        <Button variant="secondary" className="flex-1">
           <VideoIcon data-icon="inline-start" />
           Meet
+        </Button>
+        <Button variant="secondary" className="flex-1">
+          <MessageSquareIcon data-icon="inline-start" />
+          Message
         </Button>
       </CardFooter>
     </Card>
@@ -566,7 +566,7 @@ function PersonaContactCardDemo() {
 function PersonaSizesDemo() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-4">
-      <Item size="xs">
+      <Item compact>
         <ItemMedia>
           <PersonaAvatar size="sm" />
         </ItemMedia>
@@ -574,7 +574,7 @@ function PersonaSizesDemo() {
           <ItemTitle>{persona.name}</ItemTitle>
         </ItemContent>
       </Item>
-      <Item size="sm">
+      <Item>
         <ItemMedia>
           <PersonaAvatar />
         </ItemMedia>
@@ -727,7 +727,7 @@ function PersonaTeamDemo() {
       <CardContent>
         <ItemGroup>
           {team.map((member) => (
-            <Item key={member.id} size="sm">
+            <Item key={member.id}>
               <ItemMedia>
                 <PersonaAvatar person={member} />
               </ItemMedia>
