@@ -1,0 +1,1760 @@
+:root {
+  --overlay-scrim: rgb(0 0 0 / 10%);
+  --surface-warm-chroma: 0.003;
+  --surface-warm-hue: 85;
+  --surface-ground-lightness: 0.988;
+  --surface-ground-dark-lightness: 0.145;
+  --surface-backplate-dark-lightness: 0.269;
+  --surface-backplate-ground-weight: 94%;
+  --surface-stroke-ground-weight: 90%;
+  --theme-hue-warm: 85;
+  --theme-hue-rose: 12;
+  --theme-hue-green: 155;
+  --theme-hue-blue: 245;
+  --theme-hue-lilac: 305;
+  --theme-material-seed-warm: #734e00;
+  --theme-material-seed-rose: #8b3343;
+  --theme-material-seed-green: #006836;
+  --theme-material-seed-blue: #005993;
+  --theme-material-seed-lilac: #65418a;
+  --theme-website-background-light: #fefbff;
+  --theme-website-background-dark: #141314;
+  --theme-website-on-background-light: #1c1b1d;
+  --theme-website-on-background-dark: #e6e1e3;
+  --theme-website-surface-light: #fefbff;
+  --theme-website-surface-dark: #141314;
+  --theme-website-on-surface-light: #2a2731;
+  --theme-website-on-surface-dark: #e6e1e3;
+  --theme-website-surface-container-lowest-light: #ffffff;
+  --theme-website-surface-container-lowest-dark: #0f0e0f;
+  --theme-website-surface-container-low-light: #f8f1f6;
+  --theme-website-surface-container-low-dark: #1c1b1d;
+  --theme-website-surface-container-light: #f2ecee;
+  --theme-website-surface-container-dark: #211f21;
+  --theme-website-surface-container-high-light: #ece7e9;
+  --theme-website-surface-container-high-dark: #2b292b;
+  --theme-website-surface-container-highest-light: #e6e1e3;
+  --theme-website-surface-container-highest-dark: #363436;
+  --theme-website-surface-variant-light: #e8e0e8;
+  --theme-website-surface-variant-dark: #4d4256;
+  --theme-website-on-surface-variant-light: #4d4256;
+  --theme-website-on-surface-variant-dark: #cbc4cc;
+  --theme-website-inverse-surface-light: #303030;
+  --theme-website-inverse-surface-dark: #e6e1e3;
+  --theme-website-inverse-on-surface-light: #f5eff1;
+  --theme-website-inverse-on-surface-dark: #323032;
+  --theme-website-primary-light: #6442d6;
+  --theme-website-primary-dark: #9f86ff;
+  --theme-website-on-primary-light: #ffffff;
+  --theme-website-on-primary-dark: #1a0056;
+  --theme-website-primary-container-light: #9f86ff;
+  --theme-website-primary-container-dark: #4b21bd;
+  --theme-website-on-primary-container-light: #1e0060;
+  --theme-website-on-primary-container-dark: #e7deff;
+  --theme-website-secondary-light: #5d5d74;
+  --theme-website-secondary-dark: #a1a1ba;
+  --theme-website-on-secondary-light: #ffffff;
+  --theme-website-on-secondary-dark: #151629;
+  --theme-website-secondary-container-light: #dcdaf5;
+  --theme-website-secondary-container-dark: #45455a;
+  --theme-website-on-secondary-container-light: #21182b;
+  --theme-website-on-secondary-container-dark: #e2e0fb;
+  --theme-website-tertiary-container-light: #f1d3f9;
+  --theme-website-tertiary-container-dark: #553f5d;
+  --theme-website-on-tertiary-container-light: #271430;
+  --theme-website-on-tertiary-container-dark: #f7d8ff;
+  --theme-website-outline-light: #787579;
+  --theme-website-outline-dark: #928f94;
+  --theme-website-outline-variant-light: #e8e0e8;
+  --theme-website-outline-variant-dark: #4d4256;
+  --theme-primary-lightness: 0.45;
+  --theme-primary-chroma: 0.12;
+  --theme-primary-dark-lightness: 0.8;
+  --theme-primary-dark-chroma: 0.1;
+  --theme-on-primary: oklch(1 0 0);
+  --theme-on-primary-dark: oklch(0.18 0 0);
+  --theme-swatch-lightness: 0.86;
+  --theme-swatch-chroma: 0.075;
+  --destructive-hue: 12;
+  --theme-preview-surface-seed: #807b71;
+  --theme-surface-chroma: 4;
+  --theme-accent-chroma: 48;
+  --theme-secondary-chroma: 12;
+  --theme-tone-canvas-light: 99;
+  --theme-tone-low-light: 98;
+  --theme-tone-default-light: 97;
+  --theme-tone-high-light: 94;
+  --theme-tone-ink-light: 10;
+  --theme-tone-muted-ink-light: 35;
+  --theme-tone-outline-light: 75;
+  --theme-tone-input-outline-light: 50;
+  --theme-tone-primary-light: 35;
+  --theme-tone-on-primary-light: 100;
+  --theme-tone-secondary-light: 82;
+  --theme-tone-on-secondary-light: 20;
+  --theme-tone-canvas-dark: 6;
+  --theme-tone-low-dark: 10;
+  --theme-tone-default-dark: 14;
+  --theme-tone-high-dark: 20;
+  --theme-tone-ink-dark: 95;
+  --theme-tone-muted-ink-dark: 75;
+  --theme-tone-outline-dark: 40;
+  --theme-tone-input-outline-dark: 60;
+  --theme-tone-primary-dark: 80;
+  --theme-tone-on-primary-dark: 20;
+  --theme-tone-secondary-dark: 38;
+  --theme-tone-on-secondary-dark: 98;
+  --theme-swatch-size: var(--button-height-default);
+  --theme-preview-padding: calc(var(--spacing) * 6);
+  --theme-preview-nav-width: calc(var(--spacing) * 44);
+  --theme-preview-content-min: calc(var(--spacing) * 64);
+  --action-primary: oklch(0.205 0 0);
+  --action-on-primary: oklch(0.985 0 0);
+    --primary: var(--action-primary);
+    --primary-foreground: var(--action-on-primary);
+    --destructive: oklch(0.58 0.2 var(--destructive-hue));
+    --ring: oklch(0.708 0 0);
+
+    /* Presence. The only chromatic accents in an otherwise neutral palette,
+       because a person's availability has to read at a glance. */
+    --presence-available: oklch(0.63 0.16 149);
+    --presence-busy: var(--destructive);
+    --presence-away: oklch(0.75 0.15 75);
+    --presence-offline: var(--muted-foreground);
+
+    --chart-1: var(--chart-primary);
+    --chart-2: var(--chart-secondary);
+    --chart-3: var(--chart-tertiary);
+    --chart-4: var(--chart-quaternary);
+    --chart-5: var(--chart-danger);
+    --radius: 0.625rem;
+
+    /* Reusable spacing scale. One named ladder every component consumes for gaps,
+       padding, and insets so the same relationship reads the same everywhere. All
+       steps derive from the 4px --spacing grid. Sizes/widths keep their own tokens. */
+    --space-none: 0px;
+    --space-hairline: calc(var(--spacing) * 0.5); /* 2px */
+    --space-2xs: var(--spacing); /* 4px */
+    --space-xs: calc(var(--spacing) * 2); /* 8px */
+    --space-sm: calc(var(--spacing) * 3); /* 12px */
+    --space-md: calc(var(--spacing) * 4); /* 16px */
+    --space-lg: calc(var(--spacing) * 6); /* 24px */
+    --space-xl: calc(var(--spacing) * 8); /* 32px */
+    --space-2xl: calc(var(--spacing) * 12); /* 48px */
+    --space-3xl: calc(var(--spacing) * 16); /* 64px */
+
+     /* Media geometry. Components consume named ratios so image, artwork,
+       chart and illustration surfaces stay coordinated from one scale. */
+     --aspect-ratio-square: 1 / 1;
+     --aspect-ratio-landscape: 16 / 9;
+     --aspect-ratio-portrait: 3 / 4;
+
+     /* Card rhythm. Related elements stay close, distinct regions separate clearly,
+       and expressive cards gain more outer negative space without loosening pairs. */
+    --optical-edge-text-padding: var(--space-xs);
+    --toolbar-edge-text-padding: var(--optical-edge-text-padding);
+    --toolbar-title-padding-start: var(--toolbar-edge-text-padding);
+    --toolbar-title-padding-end: var(--toolbar-edge-text-padding);
+    --checkbox-group-gap: var(--space-sm);
+    --checkbox-group-column-gap: var(--space-none);
+    --checkbox-group-text-padding-right: var(--space-sm);
+    --checkbox-group-label-gap: var(--space-xs);
+    --switch-group-gap: var(--space-sm);
+    --switch-group-column-gap: var(--space-none);
+    --switch-group-label-gap: var(--space-xs);
+    --switch-group-text-padding-right: var(--space-sm);
+    --radio-group-row-gap: var(--space-xs);
+    --radio-group-column-gap: var(--space-none);
+    --radio-group-label-gap: var(--space-xs);
+    --radio-group-text-padding-right: var(--space-sm);
+    --separator-thickness: 1px;
+    --separator-stroke-subtle: var(--card-stroke);
+    --separator-stroke-neutral: color-mix(in oklab, oklch(from var(--foreground) l 0 h) 14%, transparent);
+    --separator-stroke: var(--separator-stroke-subtle);
+    --separator-wavy-height: var(--space-xs);
+    --card-spacing-small: var(--space-sm);
+    --card-spacing-default: var(--space-lg);
+    --card-spacing-expressive: var(--space-lg);
+    --card-spacing: var(--card-spacing-default);
+    --card-region-gap-small: var(--space-sm);
+    --card-region-gap-default: var(--space-lg);
+    --card-region-gap-expressive: var(--space-lg);
+    --card-radius: var(--radius-4xl);
+    --card-stroke: var(--elevation-stroke);
+    --scroll-area-radius: var(--card-radius);
+    --card-header-gap: var(--space-xs);
+    --card-header-eyebrow-gap: var(--space-xs);
+    --card-header-aside-gap: var(--space-lg);
+    --card-header-aside-content-gap: var(--space-2xs);
+    --card-header-content-min: calc(var(--spacing) * 56);
+    --card-group-gap: var(--space-xs);
+    --card-content-group-gap-small: var(--space-sm);
+    --card-content-group-gap-default: var(--space-md);
+    --card-content-group-gap-expressive: var(--space-lg);
+    --card-footer-gap: var(--space-xs);
+    --dialog-width: calc(var(--spacing) * 140);
+    --dialog-spacing: var(--card-spacing-expressive);
+    --dialog-region-gap: var(--card-region-gap-expressive);
+    --dialog-header-gap: var(--card-header-gap);
+    --dialog-content-group-gap: var(--card-content-group-gap-default);
+    --dialog-footer-gap: var(--card-footer-gap);
+    --dialog-footer-padding-block-start: var(--space-xs);
+    --dialog-radius: var(--card-radius);
+    --dialog-stroke: var(--card-stroke);
+    --empty-surface: var(--card);
+    --alert-dialog-width: var(--dialog-width);
+    --alert-dialog-width-sm: calc(var(--spacing) * 96);
+    --alert-dialog-spacing: var(--dialog-spacing);
+    --alert-dialog-region-gap: var(--space-sm);
+    --alert-dialog-header-gap: var(--dialog-header-gap);
+    --alert-dialog-title-description-gap: var(--space-2xs);
+    --alert-dialog-header-padding-block-start: var(--space-xs);
+    --alert-dialog-footer-gap: var(--dialog-footer-gap);
+    --alert-dialog-footer-padding-block-start: var(--dialog-footer-padding-block-start);
+    --alert-dialog-radius: var(--dialog-radius);
+    --alert-dialog-stroke: var(--dialog-stroke);
+    --alert-dialog-media-size: var(--button-height-expressive);
+    --alert-dialog-media-icon-size: var(--button-icon-expressive);
+    --alert-dialog-media-fill: var(--button-secondary-fill);
+    --alert-dialog-media-ink: var(--button-secondary-ink);
+    --alert-dialog-media-radius: calc(var(--alert-dialog-radius) - var(--alert-dialog-spacing));
+    --empty-tonal-surface: var(--surface-low);
+    --empty-stroke: var(--elevation-stroke);
+    --empty-radius: var(--card-radius);
+    --empty-max-width: calc(var(--spacing) * 112);
+    --empty-padding: var(--space-xl);
+    --empty-region-gap: var(--space-lg);
+    --empty-header-gap: var(--space-xs);
+    --empty-media-offset: var(--space-xs);
+    --empty-media-size: var(--space-3xl);
+    --empty-media-graphic-size: var(--icon-size-32);
+    --empty-media-fill: var(--button-primary-fill);
+    --empty-media-ink: var(--button-primary-ink);
+    --empty-content-gap: var(--space-xs);
+    --empty-content-max-width: calc(var(--spacing) * 80);
+    --empty-search-width: calc(var(--spacing) * 60);
+    --choice-card-padding: var(--space-sm);
+    --switch-height-default: calc(var(--spacing) * 7);
+    /* Off knob: midpoint of the secondary rest/selected tones — an in-between purple. */
+    --switch-knob-off: color-mix(in srgb, var(--button-secondary-fill), var(--button-selected-secondary-fill));
+    --tooltip-gap: var(--space-2xs);
+    --card-media-overlay: color-mix(in oklab, var(--primary) 35%, transparent);
+    --code-block-boundary-width: 1px;
+    --code-block-copy-inset: var(--space-xs);
+    --code-block-copy-layer: 1;
+    --code-block-min-height: calc(var(--button-height-default) + var(--code-block-copy-inset) * 2 + var(--code-block-boundary-width) * 2);
+    --code-block-padding-block: var(--space-md);
+    --code-block-padding-inline: var(--space-md);
+    --code-block-line-number-width: calc(var(--spacing) * 10);
+    --code-block-line-number-gap: var(--space-md);
+
+     /* List Item. Hosted actions float above long text instead of consuming its
+       layout width; the fade preserves readability beneath the action. */
+     --item-hosted-action-fade-size: calc(var(--spacing) * 8);
+     --item-hosted-action-speed: var(--speed-swift);
+     --item-hosted-action-ease: var(--ease-settle);
+
+    /* Motion. Every token names a SPEED, never a count of milliseconds —
+       pick how the change should read and let the scale own the timing. */
+    --speed-instant: 100ms;
+    --speed-swift: 160ms;
+    --speed-brisk: 240ms;
+    --speed-gentle: 300ms;
+    --speed-slow: 450ms;
+    /* Repeating cadence rather than a transition, e.g. a blinking caret. */
+    --speed-pulse: 1000ms;
+    --motion-spatial-fast-speed: 350ms;
+    --motion-spatial-fast-curve: cubic-bezier(0.42, 1.67, 0.21, 0.90);
+    --motion-effects-fast-speed: 150ms;
+    --motion-effects-fast-curve: cubic-bezier(0.31, 0.94, 0.34, 1);
+    --button-spatial-speed: var(--motion-spatial-fast-speed);
+    --button-spatial-curve: var(--motion-spatial-fast-curve);
+    --button-effects-speed: var(--motion-effects-fast-speed);
+    --button-effects-curve: var(--motion-effects-fast-curve);
+    --button-press-distance: calc(var(--spacing) * 0.5);
+    --button-press-scale: 0.97;
+    --button-pressed-radius-default: calc(var(--spacing) * 2);
+    --button-pressed-radius-expressive: calc(var(--spacing) * 3);
+    --button-selection-square-radius-default: calc(var(--spacing) * 3);
+    --button-selection-square-radius-expressive: calc(var(--spacing) * 4);
+    --button-group-choice-icon-size: var(--button-icon-default);
+    --button-group-choice-icon-size-sm: calc(var(--spacing) * 3.5);
+    --button-group-choice-icon-size-xs: calc(var(--spacing) * 3);
+    --button-group-gap: var(--space-2xs);
+    --button-group-nested-gap: var(--space-sm);
+    --button-group-inner-radius: calc(var(--spacing) * 2);
+    --button-group-choice-gap: var(--graphic-label-gap);
+    --button-group-choice-gap-small: var(--space-2xs);
+    --button-group-choice-speed: var(--speed-swift);
+    --button-group-choice-ease: var(--ease-glide);
+    /* glide decelerates into place, settle is the neutral curve, exit accelerates away. */
+    --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    /* gentle spring: a soft overshoot that settles back into place. */
+    --ease-spring: cubic-bezier(0.34, 1.42, 0.5, 1);
+    --collapsible-collapse-height-speed: var(--sidebar-speed);
+    --collapsible-collapse-fade-speed: calc(
+      var(--collapsible-collapse-height-speed) / 2
+    );
+    --collapsible-expand-height-speed: var(--collapsible-collapse-fade-speed);
+    --collapsible-expand-fade-speed: var(--collapsible-collapse-height-speed);
+    --collapsible-ease: var(--sidebar-ease);
+
+    /* AI composer. Its fixed radius is derived from the circular footer
+       control, the surrounding inset and the shell stroke. It therefore reads
+       as a pill at rest without turning into a stadium as the prompt grows. */
+    --ai-composer-max-width: calc(var(--spacing) * 192);
+     --ai-composer-control-size: var(--button-height-default);
+    --ai-composer-padding: var(--space-xs);
+    --ai-composer-border-width: 1px;
+    --ai-composer-gap: var(--space-xs);
+    --ai-composer-tool-gap: var(--space-2xs);
+    --ai-composer-tool-padding-inline: var(--space-sm);
+    --ai-composer-tool-icon-size: calc(var(--spacing) * 4);
+    --ai-composer-input-min-height: calc(var(--spacing) * 11);
+    --ai-composer-input-max-height: calc(var(--spacing) * 40);
+    --ai-composer-input-padding-inline: var(--space-sm);
+    --ai-composer-input-padding-block: var(--space-xs);
+    --ai-composer-input-line-height: calc(var(--spacing) * 6);
+    --ai-composer-speed: var(--speed-gentle);
+    --ai-composer-ease: var(--ease-glide);
+    --ai-composer-shadow: var(--elevation-raised);
+
+    /* How much of the transcript column a directed message may occupy. */
+    --bubble-max-width: 80%;
+    --bubble-radius: var(--radius-2xl);
+    --bubble-padding-inline: var(--space-md);
+    --bubble-padding-block: calc(var(--spacing) * 2.5);
+    --bubble-gap: var(--space-xs);
+    --bubble-reaction-height: calc(var(--spacing) * 6);
+    --bubble-reaction-radius: calc(var(--bubble-reaction-height) / 2);
+    --bubble-reaction-padding-inline: var(--space-xs);
+    --bubble-reaction-gap: var(--space-2xs);
+
+    /* Message rows and parts. */
+    --message-gap: var(--space-xs);
+    --message-avatar-size: calc(var(--spacing) * 8);
+    --message-header-gap: var(--space-xs);
+    --message-footer-gap: var(--space-xs);
+    --message-actions-gap: var(--space-2xs);
+
+    /* Message scroller and edge controls. */
+    --message-scroller-gap: var(--space-lg);
+    --message-scroller-button-size: calc(var(--spacing) * 10);
+    --message-scroller-button-radius: calc(var(--message-scroller-button-size) / 2);
+
+    /* File attachments. Concentric math: inner radius = outer radius - padding (14px - 8px = 6px). */
+    --attachment-radius: var(--radius-xl);
+    --attachment-padding: var(--space-xs);
+    --attachment-inner-radius: calc(var(--attachment-radius) - var(--attachment-padding));
+    --attachment-gap: var(--space-xs);
+    --attachment-media-size: calc(var(--spacing) * 10);
+    --attachment-media-size-sm: calc(var(--spacing) * 8);
+    --attachment-media-size-xs: calc(var(--spacing) * 7);
+
+    /* Timeline and event markers. */
+    --marker-gap: var(--space-xs);
+    --marker-pill-height: calc(var(--spacing) * 6);
+    --marker-pill-radius: calc(var(--marker-pill-height) / 2);
+    --marker-pill-padding-inline: var(--space-sm);
+
+    /* Assistant response. The surface owns block rhythm and the streaming
+       caret; richer content keeps the metrics of its own component. */
+    /* The answer column matches the composer's text width (its box minus the
+       form padding and the input's inline padding), so answer text, user
+       bubbles and the composer text all sit on the same margins. */
+    --response-max-width: calc(
+      var(--ai-composer-max-width) - 2 *
+        (var(--ai-composer-padding) + var(--ai-composer-input-padding-inline))
+    );
+    --response-gap: var(--space-sm);
+    --response-list-indent: calc(var(--spacing) * 5);
+    --response-caret-width: 1px;
+    --response-caret-height: var(--text-sm);
+    --response-caret-gap: var(--space-2xs);
+    --response-caret-speed: var(--speed-pulse);
+    /* Base reveal cadence: time to show one character at the floor rate. The
+       throttle speeds up or eases off from here to hold a small buffer. */
+    --response-stream-char-speed: 12ms;
+    /* Characters the reveal stays behind a growing source, the fraction it
+       speeds up by when it falls further behind, and the window it samples the
+       source rate over. */
+    --response-stream-buffer: 9;
+    --response-stream-adjust: 0.2;
+    --response-stream-rate-window: 10s;
+    /* Rich content flows in normal block order, so each relationship owns its
+       rhythm: a generous lead before a heading, a tight gap to the content it
+       introduces, and a calmer gap between everything else. */
+    --response-gap: var(--space-md);
+    --response-heading-gap: var(--space-xl);
+    --response-heading-gap-tight: var(--space-sm);
+    --response-list-gap: var(--space-xs);
+    /* Heading ladder, scaled for the 16px expressive answer body. */
+    --response-h1-size: var(--text-2xl);
+    --response-h1-line-height: var(--text-2xl--line-height);
+    --response-h2-size: var(--text-xl);
+    --response-h2-line-height: var(--text-xl--line-height);
+    --response-h3-size: var(--text-lg);
+    --response-h3-line-height: var(--text-lg--line-height);
+    --response-h4-size: var(--text-base);
+    --response-h4-line-height: var(--text-base--line-height);
+    /* Element roles, so the whole surface re-themes from one place. */
+    --response-heading-color: var(--foreground);
+    --response-strong-color: var(--foreground);
+    --response-muted-color: var(--muted-foreground);
+    --response-rule-color: var(--border);
+    --response-rule-width: 1px;
+    --response-quote-color: var(--muted-foreground);
+    --response-quote-border-color: var(--border);
+    --response-quote-border-width: 2px;
+    --response-quote-padding-inline: var(--space-md);
+    --response-code-color: var(--foreground);
+    --response-code-bg: var(--muted);
+    --response-code-padding-inline: calc(var(--spacing) * 1.5);
+    --response-code-padding-block: var(--space-hairline);
+    --response-code-radius: var(--radius-sm);
+    --response-table-border-color: var(--border);
+    --response-table-header-bg: var(--muted);
+    --response-table-padding-inline: var(--space-sm);
+    --response-table-padding-block: var(--space-xs);
+    --response-table-radius: var(--radius-md);
+    --table-surface-radius: var(--radius-md);
+    --table-stroke: var(--card-stroke);
+    --table-header-height: calc(var(--spacing) * 14);
+    --table-row-radius: var(--table-header-height);
+    --table-header-padding-inline: var(--space-xs);
+    --table-edge-optical-padding: var(--space-md);
+    --table-edge-cell-padding: calc(
+      var(--table-header-padding-inline) +
+        var(--table-edge-optical-padding)
+    );
+    --table-filter-search-max-width: calc(var(--spacing) * 180);
+    --table-visibility-control-width: calc(var(--spacing) * 40);
+    --response-task-size: 1.25em;
+    --response-task-gap: var(--space-sm);
+    --response-image-radius: var(--radius-3xl);
+    --response-image-border-color: var(--border);
+    --response-caption-color: var(--muted-foreground);
+    --response-caption-gap: var(--space-xs);
+    --response-citation-color: var(--muted-foreground);
+    --response-citation-bg: var(--muted);
+    --response-citation-radius: var(--radius-xs);
+    --response-citation-padding-inline: var(--space-2xs);
+    --response-citation-gap: var(--space-hairline);
+    --response-sources-label-gap: var(--space-xs);
+
+    /* AI chat block. The block only owns composition-level geometry; every
+       control and message keeps the metrics of its source component. */
+    /* The turn box matches the composer box; its content is inset by the
+       composer's text margin (form padding + input inline padding) so answers
+       and user bubbles land on the composer text edges — identical in the
+       full-page and side-panel layouts. */
+    --ai-chat-content-width: var(--ai-composer-max-width);
+    --ai-chat-turn-inset: calc(
+      var(--ai-composer-padding) + var(--ai-composer-input-padding-inline)
+    );
+    --ai-chat-border-width: 1px;
+    --ai-chat-radius: var(--showcase-block-surface-radius);
+    --ai-chat-history-width: calc(var(--spacing) * 64);
+    --ai-chat-history-padding: var(--space-md);
+    /* One inset for the brand row, Recents bar and list, so the rail keeps a
+       32px control centred at both widths and nothing shifts when collapsing. */
+    --ai-chat-history-rail-inset: calc(
+      (var(--sidebar-width-icon) - var(--ai-chat-history-recents-height)) / 2
+    );
+    --ai-chat-history-gap: var(--space-sm);
+    --ai-chat-history-content-padding-block: var(--space-none);
+    --ai-chat-history-action-inset: var(--space-hairline);
+    --ai-chat-history-item-gap: var(--space-hairline);
+    /* Matches the list item's own inline padding. */
+    --ai-chat-history-item-text-inset: calc(var(--spacing) * 2.5);
+    --ai-chat-history-recents-height: calc(var(--spacing) * 8);
+    --ai-chat-history-recents-icon-size: calc(var(--spacing) * 4);
+    --ai-chat-header-height: calc(var(--spacing) * 12);
+    --ai-chat-top-band-height: var(--ai-chat-header-height);
+    --ai-chat-gutter: clamp(
+      calc(var(--spacing) * 4),
+      4vw,
+      calc(var(--spacing) * 8)
+    );
+    --ai-chat-transcript-padding-block: var(--space-lg);
+    --ai-chat-fade-clearance: max(
+      var(--ai-chat-transcript-padding-block),
+      var(--scroll-fade-size)
+    );
+    --ai-chat-scroll-settle-offset: calc(var(--spacing) * 2);
+    --ai-chat-scroll-inset: calc(
+      var(--ai-chat-fade-clearance) + var(--ai-chat-scroll-settle-offset)
+    );
+    --ai-chat-transcript-gap: var(--space-lg);
+    --ai-chat-action-gap: var(--space-2xs);
+    --ai-chat-empty-greeting-gap: var(--space-lg);
+    --ai-chat-empty-suggestions-gap: var(--space-md);
+    --ai-chat-empty-chip-gap: var(--space-xs);
+    /* The empty-state greeting and chips stay on the composer, not the turn column. */
+    --ai-chat-empty-suggestions-width: var(--ai-composer-max-width);
+    /* Equal flex growth divides the counterweight between both sides. Include
+       the header, then double the desired offset, to anchor against the full
+       block midpoint rather than the content area below the header. */
+    --ai-chat-empty-composer-anchor-offset: calc(var(--spacing) * 10);
+    --ai-chat-empty-composer-counterweight: calc(
+      var(--ai-chat-header-height) +
+        var(--ai-chat-empty-composer-anchor-offset) * 2
+    );
+    --ai-chat-greeting-size: var(--text-3xl);
+    --ai-chat-greeting-line-height: var(--text-3xl--line-height);
+    --ai-chat-greeting-tracking: var(--tracking-tight);
+    --ai-chat-message-enter-distance: calc(var(--spacing) * 2);
+    --ai-chat-message-speed: var(--speed-gentle);
+    --ai-chat-message-ease: var(--ease-glide);
+    --ai-chat-scroll-speed: var(--speed-slow);
+    --ai-chat-scroll-ease: var(--ease-glide);
+    --ai-chat-layout-speed: var(--speed-slow);
+    --ai-chat-layout-ease: var(--ease-glide);
+    --ai-chat-stream-speed: calc(var(--speed-pulse) * 2);
+    /* Intent timer, not motion: how long a copy confirmation is held before
+       the action returns to its resting icon and label. */
+    --ai-chat-copy-reset-delay: calc(var(--speed-pulse) * 1.5);
+    --ai-chat-shadow: var(--elevation-floating);
+
+    /* Side panel layout. 360px is Chrome's kSidePanelDefaultContentWidth,
+       which is both the default and the hard minimum a panel can be dragged
+       to, so it is the width this layout is designed against. The max-width
+       is the threshold at which `layout="auto"` adopts the panel treatment:
+       below it a docked history rail can no longer coexist with a usable
+       conversation column. */
+    --ai-chat-panel-min-width: calc(var(--spacing) * 90);
+    --ai-chat-panel-max-width: calc(var(--spacing) * 160);
+    --ai-chat-panel-gutter: calc(var(--spacing) * 4);
+    --ai-chat-panel-transcript-padding-block: var(--space-md);
+    --ai-chat-panel-greeting-size: var(--text-xl);
+    --ai-chat-panel-greeting-line-height: var(--text-xl--line-height);
+    --ai-chat-panel-bubble-max-width: 92%;
+    /* Every gap around the docked composer is one value: greeting to
+       suggestions, suggestions to composer, and composer to the panel edge. */
+    --ai-chat-panel-stack-gap: var(--ai-chat-panel-gutter);
+    /* Lines a suggestion's leading glyph up with the composer's own leading
+       action glyph, which sits one composer padding plus half a control in. */
+    --ai-chat-panel-suggestion-indent: calc(var(--spacing) * 2);
+     /* The greeting joins the suggestion glyph column: suggestion indent plus
+       the chip's leading padding and border. */
+     --ai-chat-panel-greeting-indent: calc(
+      var(--ai-chat-panel-suggestion-indent) + var(--spacing) * 2 +
+        var(--ai-chat-border-width)
+     );
+    --ai-chat-panel-reveal-fade-speed: var(--speed-swift);
+    --ai-chat-recents-menu-width: calc(var(--spacing) * 64);
+    --ai-chat-recents-menu-min-height: calc(var(--spacing) * 24);
+    --ai-chat-recents-menu-max-height: calc(var(--spacing) * 80);
+
+    --progress-height: calc(var(--spacing) * 2);
+
+     /* Skeleton. A travelling highlight lightens the tertiary fill (warm grey)
+       toward white in a broad, gradual band rather than a tight peak. */
+    --skeleton-shimmer-speed: calc(var(--speed-pulse) * 2);
+    --skeleton-shimmer-angle: 110deg;
+    --skeleton-shimmer-base: var(--tertiary-fill);
+    --skeleton-shimmer-highlight: var(--surface-default);
+    --skeleton-shimmer-edge-strength: 14%;
+    --skeleton-shimmer-mid-strength: 42%;
+    --skeleton-shimmer-peak-strength: 78%;
+    --skeleton-shimmer-spread: 50%;
+     --skeleton-shimmer-size: 200% 100%;
+
+    /* Elevation. Two shadows per step: a tight ambient contact shadow plus a
+       wider key shadow, so a lifted surface reads without a heavy edge. */
+    --elevation-ambient: oklch(0.145 0 0 / 0.04);
+    --elevation-key: oklch(0.145 0 0 / 0.1);
+    /* Hairline outline shared by every elevated surface (card/dialog/menu/popover). */
+    --elevation-stroke: color-mix(in oklab, oklch(from var(--foreground) l 0 h) 10%, transparent);
+    /* Transparent no-op, not `none`, so it composes with a ring without voiding it. */
+    --elevation-flat: 0 0 transparent;
+    --elevation-raised: 0 1px 2px -1px var(--elevation-ambient),
+      0 2px 6px -1px var(--elevation-key);
+    --elevation-floating: 0 2px 4px -2px var(--elevation-ambient),
+      0 12px 28px -6px var(--elevation-key);
+
+    /* Interaction state layers. The foreground role automatically produces
+       dark overlays in light mode and light overlays in dark mode. */
+    --md-sys-state-hover-state-layer-opacity: 0.08;
+    --md-sys-state-focus-state-layer-opacity: 0.10;
+    --md-sys-state-pressed-state-layer-opacity: 0.10;
+    --md-sys-state-dragged-state-layer-opacity: 0.16;
+    --state-layer-hover-opacity: calc(var(--md-sys-state-hover-state-layer-opacity) * 100%);
+    --state-layer-focus-opacity: calc(var(--md-sys-state-focus-state-layer-opacity) * 100%);
+    --state-layer-pressed-opacity: calc(var(--md-sys-state-pressed-state-layer-opacity) * 100%);
+    --state-layer-dragged-opacity: calc(var(--md-sys-state-dragged-state-layer-opacity) * 100%);
+    /* Warm tint for interaction overlays, sourced from the darker tertiary shade. */
+    --state-layer-color: var(--tertiary-ink);
+    --state-layer-hover: color-mix(
+      in oklab,
+      var(--state-layer-color) var(--state-layer-hover-opacity),
+      transparent
+    );
+    --state-layer-focus: color-mix(
+      in oklab,
+      var(--state-layer-color) var(--state-layer-focus-opacity),
+      transparent
+    );
+    --state-layer-pressed: color-mix(
+      in oklab,
+      var(--state-layer-color) var(--state-layer-pressed-opacity),
+      transparent
+    );
+    --state-layer-dragged: color-mix(
+      in oklab,
+      var(--state-layer-color) var(--state-layer-dragged-opacity),
+      transparent
+    );
+    /* Expressive grouped menus (Dropdown, Context, Menubar). Chunk and item
+       radii stay concentric across the shared 4px inset. */
+    --menu-chunk-gap: var(--space-2xs);
+    --menu-chunk-padding: var(--space-2xs);
+    --menu-item-height: var(--item-compact-height);
+    --menu-item-edge-radius: var(--item-compact-radius);
+    --menu-chunk-radius: calc(
+      var(--menu-item-edge-radius) +
+        var(--menu-chunk-padding)
+    );
+    --menu-item-inner-radius: var(--radius-xl);
+    --menu-item-padding-inline: var(--space-sm);
+    --menu-divider-margin-inline: var(--menu-item-padding-inline);
+    --menu-label-icon-padding-start: var(--menu-item-padding-inline);
+    --menu-item-hover-fill: color-mix(
+      in srgb,
+      var(--popover),
+      var(--state-layer-color) var(--state-layer-hover-opacity)
+    );
+    --menu-item-focus-fill: color-mix(
+      in srgb,
+      var(--popover),
+      var(--state-layer-color) var(--state-layer-focus-opacity)
+    );
+    --menu-item-pressed-fill: color-mix(
+      in srgb,
+      var(--popover),
+      var(--state-layer-color) var(--state-layer-dragged-opacity)
+    );
+    --combobox-list-max-height: min(
+      calc(var(--spacing) * 72 - var(--spacing) * 9),
+      calc(var(--available-height) - var(--spacing) * 9)
+    );
+    --combobox-chip-height: calc(var(--spacing) * 5.25);
+    --navigation-menu-indicator-arrow-shift: 60%;
+
+    --dialog-max-height: calc(100svh - var(--spacing) * 16);
+    --drawer-inset: var(--space-xs);
+    --drawer-width: 75%;
+    --drawer-padding: var(--space-lg);
+    --drawer-inner-radius: var(--radius-lg);
+    --drawer-radius: calc(
+      var(--drawer-padding) + var(--drawer-inner-radius)
+    );
+    --drawer-gap: var(--space-lg);
+    --drawer-close-inset: var(--drawer-padding);
+    --drawer-close-clearance: calc(
+      var(--button-height-default) + var(--button-gap)
+    );
+
+    /* Popover geometry. Expressive floating surface following the concentric rule. */
+    --popover-padding: var(--space-lg);
+    --popover-inner-radius: var(--radius-lg);
+    --popover-radius: calc(
+      var(--popover-padding) + var(--popover-inner-radius)
+    );
+    --popover-gap: var(--space-md);
+    --popover-header-gap: var(--space-xs);
+    --popover-width: calc(var(--spacing) * 80);
+    --popover-close-clearance: calc(
+      var(--button-height-default) + var(--button-gap)
+    );
+
+    /* Hover Card geometry. Expressive floating surface following the concentric rule. */
+    --hover-card-padding: var(--space-lg);
+    --hover-card-inner-radius: var(--radius-lg);
+    --hover-card-radius: calc(
+      var(--hover-card-padding) + var(--hover-card-inner-radius)
+    );
+    --hover-card-gap: var(--space-md);
+    --hover-card-header-gap: var(--space-xs);
+    --hover-card-width: calc(var(--spacing) * 80);
+
+    /* Toast / Sonner geometry. Expressive floating overlay following the concentric rule. */
+    --toast-padding: var(--space-lg);
+    --toast-inner-radius: var(--radius-lg);
+    --toast-radius: calc(
+      var(--toast-padding) + var(--toast-inner-radius)
+    );
+    --toast-gap: var(--space-2xs);
+    --toast-content-gap: calc(var(--space-lg) - var(--space-2xs));
+    --toast-icon-gap: calc(var(--space-md) - var(--space-2xs));
+    --toast-text-edge-padding: var(--space-md);
+    --toast-width: calc(var(--spacing) * 135);
+
+    /* Sidebar geometry and motion. Expressive floating / overlay panel following the concentric rule. */
+    --sidebar-floating-padding: var(--space-md);
+    --sidebar-radius: calc(
+      var(--item-compact-radius) + var(--sidebar-floating-padding)
+    );
+    --sidebar-inset-radius: var(--radius-xl);
+    --sidebar-inset-margin: var(--space-xs);
+    --sidebar-menu-badge-height: calc(var(--spacing) * 5);
+    --sidebar-menu-badge-radius: calc(var(--sidebar-menu-badge-height) / 2);
+    --sidebar-menu-badge-padding-inline: var(--space-2xs);
+    --sidebar-selected-fill: var(--button-secondary-fill);
+    --sidebar-selected-ink: var(--button-secondary-ink);
+    --sidebar-selected-hover: color-mix(
+      in srgb,
+      var(--button-secondary-fill),
+      var(--button-secondary-ink) var(--state-layer-hover-opacity)
+    );
+    --sidebar-selected-pressed: color-mix(
+      in srgb,
+      var(--button-secondary-fill),
+      var(--button-secondary-ink) var(--state-layer-pressed-opacity)
+    );
+
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+    --sidebar-width: calc(var(--spacing) * 64);
+    --sidebar-width-icon: calc(var(--spacing) * 12);
+    /* The collapsed float pads the bar, so gap and container share one value. */
+    --sidebar-width-icon-floating: calc(
+      var(--sidebar-width-icon) + var(--spacing) * 4
+    );
+    /* Sidebar navigation reuses compact Item geometry while keeping its icon
+       centered on the 48px rail in expanded and collapsed states. */
+    --sidebar-menu-group-inset: var(--sidebar-padding);
+    --sidebar-menu-group-inset-collapsed: calc(
+      (var(--sidebar-width-icon) - var(--item-compact-height)) / 2
+    );
+    --sidebar-menu-button-collapsed-padding: calc(
+      (var(--item-compact-height) - var(--item-compact-media-graphic-size)) / 2
+    );
+    /* Outer vertical breathing room for the header and footer edges. */
+    --sidebar-padding: var(--space-md);
+    /* Horizontal padding for menu buttons; also anchors the badge inset. */
+    --sidebar-menu-button-padding-inline: var(--space-sm);
+    /* Keep a menu label clear of a trailing badge: edge inset + badge + gap. */
+    --sidebar-menu-badge-reserved-space: calc(
+      var(--sidebar-menu-button-padding-inline) +
+        var(--sidebar-menu-badge-height) + var(--space-xs)
+    );
+    --sidebar-menu-action-reserved-space: calc(
+      var(--item-compact-inset) + var(--item-compact-media-host-size) +
+        var(--graphic-label-gap)
+    );
+    --sidebar-width-mobile: calc(var(--spacing) * 72);
+    --sidebar-width-min: calc(var(--spacing) * 44);
+    --sidebar-width-max: calc(var(--spacing) * 110);
+    --sidebar-snap-threshold: calc(var(--spacing) * 34);
+    /* The header is as tall as the bar is wide, so the collapsed corner is square. */
+    --sidebar-header-height: var(--sidebar-width-icon);
+    --sidebar-floating-trigger-size: var(--fab-size-lg);
+    --sidebar-floating-trigger-radius: var(--radius-xl);
+    --sidebar-floating-trigger-entry-scale: 0.8;
+    --sidebar-floating-trigger-spin-turns: 0.5;
+    --sidebar-floating-trigger-spin-velocity: 240;
+    --sidebar-floating-trigger-growth-velocity: 32;
+    --sidebar-floating-trigger-settle-ease: cubic-bezier(0.22, 0, 0.1, 1);
+    --sidebar-floating-trigger-fade-in-delay: var(--speed-swift);
+    --sidebar-floating-trigger-fade-out-speed: var(--speed-swift);
+    --sidebar-floating-trigger-inset: var(--space-md);
+    --sidebar-floating-trigger-clearance: calc(
+      var(--sidebar-floating-trigger-size) + var(--sidebar-floating-trigger-inset) * 2
+    );
+    --sidebar-floating-trigger-elevation: var(--elevation-raised);
+    --sidebar-resize-handle-width: calc(var(--spacing) * 4);
+    --sidebar-resize-handle-offset: calc(var(--sidebar-resize-handle-width) / -2);
+    /* Keeps the line clear of an inset card's rounded corner (8px margin + 14px radius). */
+    --sidebar-resize-handle-inset: var(--space-lg);
+    --sidebar-resize-step: calc(var(--spacing) * 4);
+    --sidebar-peek-edge-width: calc(var(--spacing) * 6);
+    --sidebar-inset-backdrop: var(--muted);
+    --sidebar-ease: var(--ease-glide);
+    --sidebar-speed: var(--speed-slow);
+    /* Hover affordances only. Collapsing rides --sidebar-speed so width and fade move together. */
+    --sidebar-fade-speed: var(--speed-swift);
+    /* Intent timers, not motion. */
+    --sidebar-peek-open-delay: 90ms;
+    --sidebar-peek-close-delay: 320ms;
+
+    /* Drag handle. One primitive: a grabber for drawers, a grip for resizers. */
+    --drag-handle-thickness: calc(var(--spacing) * 1);
+    --drag-handle-grip-length: calc(var(--spacing) * 6);
+    --drag-handle-grabber-length: calc(var(--spacing) * 25);
+    --drag-handle-active-thickness: calc(var(--spacing) * 1.5);
+    --drag-handle-active-length: calc(var(--spacing) * 8);
+    --drag-handle-active-shadow: var(--elevation-raised);
+    --drag-handle-proximity-size: calc(var(--spacing) * 6);
+    --drag-handle-speed: var(--speed-brisk);
+    --drag-handle-ease: var(--ease-glide);
+
+    /* Resizable separator & handle. Expressive proximity threshold, line illumination, and grip affordance. */
+    --resizable-handle-thickness: 1px;
+    --resizable-handle-proximity-size: calc(var(--spacing) * 6);
+    --resizable-handle-line-rest: var(--border);
+    --resizable-handle-line-hover: color-mix(in oklab, var(--ring) 50%, transparent);
+    --resizable-handle-line-active: var(--ring);
+    --resizable-handle-speed: var(--speed-brisk);
+    --resizable-handle-ease: var(--ease-glide);
+
+    /* Floating action button. One per screen, the primary constructive action. */
+    --fab-size-md: calc(var(--spacing) * 14);
+    --fab-size-lg: calc(var(--spacing) * 18);
+    --fab-icon-size-md: var(--button-icon-expressive);
+    --fab-icon-size-lg: var(--button-icon-expressive);
+    --fab-radius-md: calc(var(--spacing) * 5);
+    --fab-radius-lg: calc(var(--spacing) * 7);
+    /* Inline padding equals the corner radius, so a label never crowds the curve. */
+    --fab-extended-padding-inline: calc(var(--spacing) * 5);
+    --fab-extended-gap: var(--space-xs);
+    --fab-inset: var(--space-md);
+    /* M3 widens the margin from 16 to 24 once the window is expanded. */
+    --fab-inset-expanded: var(--space-lg);
+    --fab-elevation-rest: var(--elevation-raised);
+    --fab-elevation-hover: var(--elevation-floating);
+    --fab-speed: var(--speed-swift);
+    --fab-ease: var(--ease-settle);
+
+    /* Tabs. The pill crosses one pivot per --tabs-pivot-speed, so a two-tab
+       jump takes twice as long instead of travelling twice as fast. */
+    --tabs-pivot-speed: var(--speed-instant);
+    --tabs-ease: var(--ease-glide);
+    --tabs-padding: var(--space-hairline);
+    --tabs-indicator-thickness: calc(var(--spacing) * 0.5);
+
+    /* Site header. A docked bar belongs to the window frame; a floating one is
+       a surface lifted above the content layer. */
+    --site-header-height: calc(var(--spacing) * 14);
+    --site-header-gap: var(--space-md);
+    --site-header-gutter: clamp(
+      calc(var(--spacing) * 4),
+      4vw,
+      calc(var(--spacing) * 6)
+    );
+    /* Distance a floating shell keeps from the viewport edge. */
+    --site-header-inset: var(--space-md);
+    --site-header-padding: calc(var(--spacing) * 1.5);
+    --site-header-border-width: 1px;
+    --site-header-cluster-gap: var(--space-xs);
+    --site-header-title-gap: var(--space-xs);
+    --site-header-action-gap: var(--space-xs);
+    /* Fixed at half the resting height, never a pill: it reads as a perfect
+       capsule on one row and as a rounded rectangle if the shell ever wraps. */
+    --site-header-radius: calc(var(--site-header-height) / 2);
+    /* Concentric: an item touching the corner shares the shell's centre. The
+       stroke counts — the item nests inside the border box, not the border. */
+    --site-header-item-radius: calc(
+      var(--site-header-radius) - var(--site-header-border-width) -
+        var(--site-header-padding)
+    );
+    /* An item that fills the shell's inner height, e.g. a dock icon. Filling it
+       is what makes the item radius concentric: item-size/2 == item-radius. */
+    --site-header-item-size: calc(
+      var(--site-header-height) -
+        (var(--site-header-border-width) + var(--site-header-padding)) * 2
+    );
+    --site-header-separator-height: calc(var(--spacing) * 6);
+    /* Padding equals the cap radius, so a label never crowds the curve and an
+       icon-only item stays exactly square. */
+    --site-header-item-padding-inline: var(--site-header-item-radius);
+    --site-header-shadow: var(--elevation-floating);
+    --site-header-speed: var(--speed-swift);
+
+    /* Docked scale. Standard 40px interactive height and 20px pill radius matching Button
+       and compact Item, centered in the 56px header with 8px vertical margin. */
+    --site-header-flat-item-height: calc(var(--spacing) * 10);
+    --site-header-flat-item-radius: calc(var(--spacing) * 5);
+    --site-header-flat-item-padding-inline: var(--space-md);
+    --site-header-flat-menu-padding: var(--space-2xs);
+
+    /* Active indicator surface: uses the shared Secondary container purple pair. */
+    --site-header-indicator-fill: var(--button-secondary-fill);
+    --site-header-indicator-ink: var(--button-secondary-ink);
+
+    /* The overflow menu is a vertical slice of the bar it belongs to: a row is
+       shaped exactly like a bar item, and the sheet is that row plus its pad.
+       The sheet is ringed, not bordered, so it loses only the padding. */
+    --site-header-menu-width: calc(var(--spacing) * 52);
+    --site-header-menu-padding: var(--site-header-padding);
+    --site-header-menu-radius: calc(
+        var(--site-header-item-radius) + var(--site-header-menu-padding)
+    );
+    --site-header-flat-menu-radius: calc(
+        var(--site-header-flat-item-radius) + var(--site-header-flat-menu-padding)
+    );
+    /* The backplate crosses one link per pivot-speed, so a jump across the whole
+       nav moves at the same speed as a jump to its neighbour. */
+    --site-header-pivot-speed: var(--speed-instant);
+    --site-header-ease: var(--ease-glide);
+
+    /* Site footer — tokenized geometry, spacing, and surfaces */
+    --site-footer-padding-block: var(--space-3xl);
+    --site-footer-padding-inline: var(--space-xl);
+    --site-footer-gap: var(--space-2xl);
+    --site-footer-column-gap: var(--space-xl);
+    --site-footer-item-gap: var(--space-sm);
+    --site-footer-title-gap: var(--space-sm);
+    --site-footer-social-size: var(--button-height-default);
+    --site-footer-social-radius: var(--button-round-radius);
+    --site-footer-floating-radius: var(--radius-3xl);
+    --site-footer-floating-inset: var(--space-lg);
+    --site-footer-floating-shadow: var(--elevation-raised);
+    --site-footer-surface: var(--sidebar);
+    --site-footer-surface-floating: var(--surface-lowest);
+    --showcase-header-height: calc(var(--spacing) * 14);
+    --showcase-copy-width: calc(var(--spacing) * 192);
+    --canvas-min-height: calc(var(--spacing) * 72);
+    --annotation-clearance: calc(var(--spacing) * 2);
+    --annotation-measurement-tolerance: 0.05px;
+    --annotation-label-distance-min: calc(var(--spacing) * 4);
+    --annotation-label-distance-max: calc(var(--spacing) * 16);
+    --annotation-boundary-inset: calc(var(--spacing) * 6);
+    --annotation-label-reserve: calc(var(--spacing) * 10);
+    --annotation-connector-radius: var(--radius-lg);
+    --annotation-outline-inset: var(--spacing);
+    --annotation-line-width: calc(var(--spacing) * 0.375);
+    --annotation-line-dash: calc(var(--spacing) * 0.25);
+    --annotation-line-gap: calc(var(--spacing) * 1.25);
+    --slider-snap-threshold: 0.03;
+    /* Material 3 Expressive slider geometry (XS reference: 16dp track,
+       4x44dp handle, 8dp track shape) — tokenized so scale/gap can retune. */
+    --slider-track-height: calc(var(--spacing) * 4);
+    --slider-handle-width: var(--spacing);
+    --slider-handle-width-pressed: calc(var(--spacing) * 0.5);
+    --slider-handle-height: calc(var(--spacing) * 11);
+    --slider-handle-gap: calc(var(--spacing) * 1.5);
+    --slider-track-gap-color: var(--background);
+    --slider-stop-size: var(--spacing);
+    --slider-handle-speed: var(--motion-effects-fast-speed);
+    --slider-handle-curve: var(--motion-effects-fast-curve);
+    --concentric-title-size: var(--text-base);
+    --concentric-title-leading: var(--text-base--line-height);
+    --concentric-title-weight: var(--font-weight-semibold);
+    --concentric-copy-size: var(--text-sm);
+    --concentric-copy-leading: var(--text-sm--line-height);
+    --concentric-copy-gap: var(--spacing);
+    --concentric-text-pair-gap-small: var(--spacing);
+    --concentric-text-pair-gap-large: calc(var(--spacing) * 2);
+    --concentric-reference-radius: calc(var(--spacing) * 5);
+    --field-group-gap: calc(var(--spacing) * 5);
+    --concentric-reference-inset: calc(var(--spacing) * 2.5);
+    --concentric-reference-inner: calc(var(--spacing) * 2.5);
+    --concentric-media-icon-size: calc(var(--spacing) * 6);
+    --concentric-expressive-title-size: var(--text-xl);
+    --concentric-expressive-title-leading: var(--text-xl--line-height);
+    --concentric-expressive-title-weight: var(--font-weight-bold);
+    --concentric-expressive-copy-size: var(--text-base);
+    --concentric-expressive-copy-leading: var(--text-base--line-height);
+    --concentric-expressive-label-size: var(--text-base);
+    --concentric-expressive-label-leading: calc(var(--spacing) * 6);
+    --concentric-expressive-control-padding-block: calc(var(--spacing) * 1.75);
+    --concentric-expressive-control-padding-inline: calc(var(--spacing) * 4);
+    --concentric-expressive-control-min-height: calc(var(--spacing) * 10);
+    --concentric-expressive-control-border: 1px;
+    --concentric-expressive-media-size: calc(var(--spacing) * 20);
+    --concentric-expressive-media-icon-size: calc(var(--spacing) * 7);
+    --concentric-large-title-size: var(--text-2xl);
+    --concentric-large-title-leading: var(--text-2xl--line-height);
+    --concentric-large-copy-size: var(--text-lg);
+    --concentric-large-copy-leading: var(--text-lg--line-height);
+    --concentric-large-label-size: var(--text-lg);
+    --concentric-large-label-leading: calc(var(--spacing) * 7);
+    --concentric-large-control-padding-block: calc(var(--spacing) * 2.25);
+    --concentric-large-control-padding-inline: calc(var(--spacing) * 5);
+    --concentric-large-control-min-height: calc(var(--spacing) * 12);
+    --concentric-large-media-size: calc(var(--spacing) * 24);
+    --concentric-large-media-icon-size: calc(var(--spacing) * 8);
+    --concentric-project-width: calc(var(--spacing) * 120);
+    --concentric-project-control-height: calc(var(--spacing) * 8);
+    --concentric-project-control-icon: calc(var(--spacing) * 4);
+    --concentric-project-label-size: var(--text-sm);
+    --concentric-project-label-leading: calc(var(--spacing) * 5);
+    --concentric-project-avatar-size: calc(var(--spacing) * 8);
+    --concentric-project-metadata-size: var(--text-xs);
+    --concentric-project-metadata-leading: var(--text-xs--line-height);
+    --concentric-medium-min-text-size: var(--text-sm);
+    --concentric-medium-min-text-leading: var(--text-sm--line-height);
+    --concentric-medium-badge-height: calc(var(--spacing) * 6);
+    --concentric-medium-button-padding-block: calc(var(--spacing) * 4);
+    --concentric-medium-action-gap: calc(var(--spacing) * 3);
+    --concentric-medium-button-height: calc(var(--concentric-expressive-label-leading) + var(--concentric-medium-button-padding-block) * 2);
+    --concentric-project-metadata-gap: calc(var(--spacing) * 2);
+    --concentric-project-owner-gap: var(--concentric-project-metadata-gap);
+    --concentric-project-badge-radius: var(--radius-sm);
+    --concentric-project-menu-padding: var(--spacing);
+    --concentric-project-menu-width: calc(var(--spacing) * 60);
+    --concentric-project-menu-row-padding: calc(var(--spacing) * 2);
+    --concentric-project-menu-row-gap: calc(var(--spacing) * 2);
+    --concentric-form-width: calc(var(--spacing) * 120);
+    --concentric-form-input-padding: calc(var(--spacing) * 3);
+    --concentric-field-radius: calc(var(--spacing) * 3);
+    --textarea-resize-handle-size: calc(var(--spacing) * 4);
+    --textarea-resize-radius: var(--concentric-field-radius);
+    --textarea-resize-grip-size: calc(var(--spacing) * 3);
+    --textarea-resize-grip-stroke: 1px;
+    --textarea-resize-grip-long: calc(var(--spacing) * 2.5);
+    --textarea-resize-grip-short: calc(var(--spacing) * 1.5);
+    --textarea-resize-grip-inset: calc(var(--spacing) * 0.5);
+    --textarea-resize-grip-offset: calc(var(--spacing) * 1.5);
+    --textarea-resize-handle-inset: calc(var(--textarea-resize-radius) / 3);
+    --textarea-resize-step: 16;
+    --concentric-medium-field-height: calc(var(--spacing) * 12);
+    --concentric-medium-field-padding-block: var(--spacing);
+    --concentric-medium-field-padding-inline: calc(var(--spacing) * 4);
+    --concentric-medium-field-indicator-size: calc(var(--spacing) * 4);
+    --concentric-medium-field-indicator-gap: calc(var(--spacing) * 3);
+    --concentric-form-textarea-lines: 3;
+    --concentric-form-switch-inset: calc(var(--spacing) * 0.5);
+    --annotation-anchor-radius: calc(var(--spacing) * 0.75);
+    --annotation-corner-gap: var(--spacing);
+    --annotation-corner-stroke: calc(var(--spacing) * 0.75);
+    --annotation-bounds-color: oklch(0.46 0.2 260);
+    --annotation-padding-color: oklch(0.41 0.14 150);
+    --annotation-border-color: oklch(0.48 0.1 90);
+    --annotation-margin-color: oklch(0.5 0.13 55);
+    --annotation-gap-color: oklch(0.46 0.18 300);
+    --annotation-color: var(--annotation-bounds-color);
+    --annotation-label-background: var(--background);
+    --annotation-fill-opacity: 24%;
+    --annotation-fill-hover-opacity: 36%;
+    --annotation-fill-selected-opacity: 44%;
+    --annotation-fill-pressed-opacity: 56%;
+    --annotation-pressed-mix: 85%;
+    --annotation-highlight-foreground: oklch(0.985 0 0);
+    --annotation-layer: 10;
+    --annotation-dim-opacity: 0.2;
+    --annotation-reveal-duration: var(--speed-gentle);
+    --annotation-transition-duration: var(--speed-swift);
+    --annotation-ease: var(--ease-settle);
+    --annotation-font-size: var(--text-xs);
+    --annotation-line-height: var(--text-xs--line-height);
+    --annotation-font-weight: var(--font-weight-medium);
+    --annotation-shadow: var(--shadow-xs);
+    --annotation-group-gap: calc(var(--spacing) * 1.5);
+    --annotation-label-gap: var(--spacing);
+    --annotation-label-padding-inline: calc(var(--spacing) * 1.5);
+    --annotation-label-padding-block: calc(var(--spacing) * 0.5);
+    --annotation-label-radius: var(--radius-md);
+    --annotation-label-border-width: 1px;
+    --annotation-label-hit-inset: var(--spacing);
+    --annotation-selected-gap: calc(var(--spacing) * 0.5);
+    --annotation-marker-size: calc(var(--spacing) * 6);
+    --annotation-marker-hit-inset: calc(var(--spacing) * 2);
+    --annotation-dot-size: calc(var(--spacing) * 3);
+    --annotation-dot-border-width: calc(var(--spacing) * 0.5);
+    --annotation-circle-radius: 50%;
+    --annotation-region-radius: var(--radius-md);
+    --annotation-region-focus-width: calc(var(--spacing) * 0.5);
+    --annotation-region-focus-offset: calc(var(--annotation-region-focus-width) * -1);
+    --annotation-legend-column-gap: calc(var(--spacing) * 4);
+    --annotation-legend-row-gap: calc(var(--spacing) * 2);
+    --annotation-legend-label-gap: calc(var(--spacing) * 2);
+    --annotation-legend-dot-size: calc(var(--spacing) * 2);
+    --canvas-viewport-height: calc(var(--spacing) * 112);
+    --canvas-padding: calc(var(--spacing) * 8);
+    --canvas-annotation-padding-block: max(
+      calc(var(--spacing) * 20),
+      calc(var(--canvas-measure-ruler-size) + var(--annotation-boundary-inset) +
+        var(--annotation-label-distance-min) + var(--annotation-label-reserve))
+    );
+    --canvas-radius: var(--radius-xl);
+    --canvas-background: var(--page-fill);
+    --canvas-border-color: var(--border);
+    --canvas-border-width: 1px;
+    --canvas-split-position: 50%;
+    --canvas-split-card-background: var(--card);
+    --canvas-split-sidebar-background: var(--sidebar);
+    --canvas-split-divider-color: var(--canvas-border-color);
+    --canvas-split-divider-width: var(--canvas-border-width);
+    --canvas-grid-size: calc(var(--spacing) * 6);
+    --canvas-grid-dot: 1px;
+    --canvas-grid-color: color-mix(in oklab, var(--border) 70%, transparent);
+    --canvas-measure-step: var(--spacing);
+    --canvas-measure-major-every: 5;
+    --canvas-measure-label-step: calc(var(--canvas-measure-step) * var(--canvas-measure-major-every) * 2);
+    --canvas-measure-ruler-size: calc(var(--spacing) * 8);
+    --canvas-measure-tick-size: calc(var(--spacing) * 2);
+    --canvas-measure-marker-size: calc(var(--spacing) * 1.5);
+    --pointer-size-compact: 16px;
+    --pointer-size-default: 24px;
+    --pointer-size-large: 32px;
+    --pointer-growth-subtle: 1.25;
+    --pointer-growth-default: 1.5;
+    --pointer-growth-bold: 2;
+    --pointer-fill: #fff;
+    --pointer-layer: 1000;
+    --pointer-easing-linear: linear;
+    --pointer-easing-ease-in: cubic-bezier(0.42, 0, 1, 1);
+    --pointer-easing-ease-out: cubic-bezier(0, 0, 0.58, 1);
+    --pointer-easing-ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+    --pointer-velocity-min: 50;
+    --pointer-velocity-max: 3000;
+    --pointer-velocity-step: 50;
+    --pointer-settings-control-width: calc(var(--spacing) * 40);
+    --pointer-snap-move-velocity: 1200;
+    --pointer-snap-width-velocity: 900;
+    --pointer-snap-height-velocity: 600;
+    --pointer-snap-radius-velocity: 600;
+    --pointer-snap-release-velocity: 1400;
+    --pointer-snap-capture-curve: cubic-bezier(0.2, 0, 0, 1);
+    --pointer-snap-release-curve: cubic-bezier(0.2, 0, 0, 1);
+    --pointer-sprint-move-velocity: 600;
+    --pointer-sprint-width-velocity: 700;
+    --pointer-sprint-height-velocity: 160;
+    --pointer-sprint-radius-velocity: 300;
+    --pointer-sprint-release-velocity: 850;
+    --pointer-sprint-capture-curve: cubic-bezier(0, 0.1, 0.1, 1);
+    --pointer-sprint-release-curve: cubic-bezier(0, 1, 0.1, 1);
+    --pointer-stretch-move-velocity: 400;
+    --pointer-stretch-width-velocity: 850;
+    --pointer-stretch-height-velocity: 90;
+    --pointer-stretch-radius-velocity: 200;
+    --pointer-stretch-release-velocity: 650;
+    --pointer-stretch-capture-curve: cubic-bezier(0.1, 0.7, 0.1, 1);
+    --pointer-stretch-release-curve: cubic-bezier(0, 1, 0.1, 1);
+    --cursor-follower-offset: calc(var(--spacing) * 4);
+    --cursor-follower-inset: var(--space-xs);
+    --cursor-follower-padding-inline: var(--space-xs);
+    --cursor-follower-padding-block: var(--space-2xs);
+    --cursor-follower-radius: var(--radius-4xl);
+    --cursor-follower-shadow: var(--elevation-raised);
+    --cursor-follower-background: var(--popover);
+    --cursor-follower-foreground: var(--popover-foreground);
+    --cursor-follower-border: var(--border);
+    --cursor-follower-border-width: 1px;
+    --cursor-follower-accent: var(--primary);
+    --cursor-follower-on-accent: var(--primary-foreground);
+    --cursor-follower-font-size: var(--text-xs);
+    --cursor-follower-line-height: var(--text-xs--line-height);
+    --cursor-follower-layer: 20;
+    --cursor-follower-origin-x: 0px;
+    --cursor-follower-origin-y: 0px;
+    --canvas-measure-stroke: 1px;
+    --canvas-measure-grid-layer: -1;
+    --canvas-measure-cursor-layer: calc(var(--cursor-follower-layer) + 1);
+    --canvas-measure-font-size: calc(var(--text-xs) * 5 / 6);
+    --canvas-measure-accent: var(--primary);
+    --canvas-measure-guide-color: color-mix(in oklab, var(--canvas-measure-accent) 20%, transparent);
+    --canvas-measure-major-color: color-mix(in oklab, var(--foreground) 12%, transparent);
+    --canvas-measure-minor-color: color-mix(in oklab, var(--foreground) 2%, transparent);
+    --canvas-measure-label-color: var(--muted-foreground);
+    --canvas-measure-ruler-background: var(--background);
+    --canvas-workbench-height: calc(var(--spacing) * 96);
+    --canvas-region-gap: calc(var(--spacing) * 20);
+    --canvas-footer-gap: calc(var(--spacing) * 3);
+    --canvas-footer-font-size: var(--text-xs);
+    --canvas-footer-line-height: var(--text-xs--line-height);
+    --canvas-application-padding: calc(var(--spacing) * 4);
+    --canvas-application-radius: calc(var(--radius-3xl) + var(--canvas-application-padding));
+    --canvas-application-height: calc(100svh - var(--spacing) * 32);
+    --showcase-preview-min-height: calc(var(--spacing) * 50);
+    --showcase-preview-viewport-height: var(--canvas-viewport-height);
+    --showcase-preview-padding: var(--canvas-padding);
+    --showcase-block-preview-padding: calc(var(--spacing) * 4);
+    --showcase-block-surface-radius: var(--radius-3xl);
+    --showcase-block-preview-radius: calc(
+      var(--showcase-block-surface-radius) + var(--showcase-block-preview-padding)
+    );
+    --showcase-block-preview-height: calc(
+      100svh - var(--showcase-header-row-height) -
+        var(--showcase-page-gutter) * 2
+    );
+    --showcase-preview-grid: var(--canvas-grid-size);
+    --showcase-preview-dot: var(--canvas-grid-dot);
+    --showcase-page-gutter: clamp(calc(var(--spacing) * 4), 4vw, calc(var(--spacing) * 10));
+    --showcase-page-block-padding: calc(var(--spacing) * 10);
+    --showcase-header-row-height: calc(
+      var(--site-header-height) + var(--site-header-inset) * 2
+    );
+    --showcase-sidebar-trigger-inset: calc(
+      var(--sidebar-floating-padding) +
+        (var(--showcase-header-row-height) - var(--sidebar-floating-trigger-size)) / 2
+    );
+    --showcase-shell-content-inset: calc(var(--spacing) * 4);
+    --showcase-shell-divider-size: 1px;
+    --showcase-content-start: var(--showcase-shell-content-inset);
+    --showcase-section-gap: calc(var(--spacing) * 30);
+    --showcase-example-gap: calc(var(--spacing) * 5);
+    /* Floating placement eats 2x --sidebar-floating-padding into the panel's
+       visible width, so this is padded up to keep the panel at least as wide
+       as the pre-floating 256px column. */
+    --showcase-sidebar-width: calc(var(--spacing) * 76);
+    --showcase-sidebar-wip-badge-height: calc(var(--spacing) * 5);
+    --showcase-sidebar-wip-badge-radius: calc(var(--showcase-sidebar-wip-badge-height) / 2);
+    --showcase-sidebar-wip-badge-padding-inline: var(--space-2xs);
+    --showcase-sidebar-wip-badge-inset: calc(var(--item-compact-radius) - var(--showcase-sidebar-wip-badge-radius));
+    --showcase-sidebar-wip-badge-edge-offset: calc(var(--showcase-sidebar-wip-badge-inset) - var(--item-compact-inset));
+
+    --button-height-default: calc(var(--spacing) * 10);
+    --button-height-expressive: calc(var(--spacing) * 14);
+    --button-icon-default: calc(var(--spacing) * 5);
+    --button-icon-expressive: calc(var(--spacing) * 6);
+    --button-padding-default: var(--space-md);
+    --button-padding-expressive: var(--space-lg);
+    --graphic-label-gap: var(--space-xs);
+    --button-gap: var(--graphic-label-gap);
+    --chip-height: calc(var(--spacing) * 8);
+    --chip-height-sm: calc(var(--spacing) * 7);
+    --chip-height-xs: calc(var(--spacing) * 6);
+    --chip-padding-inline: var(--space-sm);
+    --chip-padding-inline-sm: var(--space-xs);
+    --chip-gap: var(--space-xs);
+    --chip-gap-sm: calc(var(--spacing) * 1.5);
+    --chip-icon-size: var(--icon-size-16);
+    --chip-icon-size-sm: var(--icon-size-14);
+    --chip-remove-size: var(--icon-size-16);
+    --badge-height: calc(var(--spacing) * 7);
+    --badge-radius: calc(var(--badge-height) / 2);
+    --badge-padding-inline: calc(var(--badge-radius) - var(--space-2xs));
+    --badge-font-size: var(--text-label-size);
+    --badge-line-height: var(--text-label-leading);
+    --badge-graphic-size: var(--icon-size-16);
+    --badge-gap: var(--graphic-label-gap);
+    --favicon-monochrome-filter: brightness(0);
+    --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
+    --icon-label-optical-padding: var(--space-2xs);
+    --accordion-content-gap: var(--space-sm);
+    --field-height: var(--button-height-default);
+    --field-padding-inline: var(--button-padding-default);
+    --field-radius: var(--radius-lg);
+    --field-search-radius: calc(var(--field-height) / 2);
+    --field-icon-size: var(--button-icon-default);
+    --field-gap: var(--graphic-label-gap);
+    --field-affordance-inset: calc(
+      var(--field-padding-inline) + var(--field-icon-size) + var(--field-gap)
+    );
+    --input-group-border-width: 1px;
+    /* An action inside a field is derived from the field: square, inset, concentric. */
+    --field-action-inset: var(--space-2xs);
+    --field-action-size: calc(var(--field-height) - var(--field-action-inset) * 2);
+    --field-action-radius: calc(var(--field-radius) - var(--field-action-inset));
+    --field-action-padding-inline: calc(var(--field-action-inset) * 3);
+    --field-action-icon-size: calc(var(--field-action-size) / 2);
+    --field-control-padding-inline: calc(
+      var(--field-padding-inline) - var(--field-action-inset)
+    );
+    /* OTP slots are chunky filled tiles: expressive-sized, field-radius, gapped. */
+    --otp-slot-size: var(--button-height-expressive);
+    --otp-slot-radius: var(--field-radius);
+    --otp-slot-gap: var(--graphic-label-gap);
+    /* Checkbox/radio box, shared by Checkbox and Radio only. */
+    --control-size: calc(var(--spacing) * 5);
+    --control-check-size: calc(var(--spacing) * 4);
+    --control-dot-size: calc(var(--spacing) * 2.5);
+    --control-outline-width: 3px;
+    --control-fill: var(--button-secondary-fill);
+    --control-hover-fill: color-mix(in srgb, var(--button-secondary-fill), var(--button-secondary-ink) var(--state-layer-hover-opacity));
+    /* Checkbox and Radio use the Tertiary pair as outlines while unchecked. */
+    --control-outline: var(--tertiary-fill);
+    --control-hover-outline: color-mix(in srgb, var(--tertiary-fill), var(--tertiary-ink) var(--state-layer-hover-opacity));
+    --control-outline-shadow: inset 0 0 0 var(--control-outline-width) var(--control-outline);
+    --control-hover-outline-shadow: inset 0 0 0 var(--control-outline-width) var(--control-hover-outline);
+    --control-outline-clear-shadow: inset 0 0 0 var(--control-outline-width) transparent;
+    --control-checked-hover-fill: color-mix(in srgb, var(--button-selected-secondary-fill), var(--button-selected-secondary-ink) var(--state-layer-hover-opacity));
+    --calendar-padding: var(--space-xs);
+    --calendar-gap: var(--space-md);
+    --calendar-cell-size: var(--button-height-default);
+    --calendar-cell-radius: calc(var(--calendar-cell-size) / 2);
+    --calendar-selected-scale: 1;
+    --calendar-selected-radius: var(--calendar-cell-radius);
+    --calendar-surface-radius: calc(var(--calendar-cell-radius) + var(--calendar-padding));
+    --calendar-surface: var(--popover);
+    --calendar-outline: var(--elevation-stroke);
+    --calendar-shadow: var(--elevation-raised);
+    --calendar-range-fill: var(--button-secondary-fill);
+    --calendar-range-ink: var(--button-secondary-ink);
+    --calendar-selected-fill: var(--theme-website-tertiary-container-light);
+    --calendar-selected-ink: var(--theme-website-on-tertiary-container-light);
+    --calendar-selected-hover-fill: color-mix(in srgb, var(--calendar-selected-fill), var(--calendar-selected-ink) var(--state-layer-hover-opacity));
+    --calendar-selected-pressed-fill: color-mix(in srgb, var(--calendar-selected-fill), var(--calendar-selected-ink) var(--state-layer-pressed-opacity));
+    --calendar-selected-stroke-width: var(--space-hairline);
+    --calendar-selected-stroke-color: var(--calendar-surface);
+    --date-picker-time-select-width: calc(var(--field-height) * 2);
+    /* Alert anatomy and semantic extensions. Material supplies Neutral, Secondary,
+       and Error; Success and Warning extend the existing OneDS status sources. */
+    --alert-padding-inline: var(--space-md);
+    --alert-padding-block: var(--space-md);
+    --alert-content-gap: var(--space-2xs);
+    --alert-graphic-gap: var(--space-md);
+    --alert-graphic-gap-offset: calc(var(--alert-graphic-gap) - var(--graphic-label-gap));
+    --alert-action-gap: var(--space-md);
+    --alert-accent-size: var(--button-height-expressive);
+    --alert-accent-icon-size: var(--button-icon-expressive);
+    --alert-resting-height: calc(var(--alert-accent-size) + var(--alert-padding-block) * 2);
+    --alert-radius: calc(var(--alert-resting-height) / 2);
+    --alert-layout-content-columns: minmax(0, 1fr);
+    --alert-layout-icon-columns: auto minmax(0, 1fr);
+    --alert-layout-action-columns: minmax(0, 1fr) auto;
+    --alert-layout-icon-action-columns: auto minmax(0, 1fr) auto;
+    --alert-container-base: var(--surface-canvas);
+    --alert-status-container-opacity: 12%;
+    --alert-status-source-weight: 50%;
+    --alert-neutral-fill: var(--surface-low);
+    --alert-neutral-ink: var(--surface-ink);
+    --alert-info-fill: var(--button-secondary-fill);
+    --alert-info-ink: var(--button-secondary-ink);
+    --alert-success-source: var(--presence-available);
+    --alert-success-fill: color-mix(in oklab, var(--alert-success-source) var(--alert-status-container-opacity), var(--alert-container-base));
+    --alert-success-ink: color-mix(in oklab, var(--alert-success-source) var(--alert-status-source-weight), var(--surface-ink));
+    --alert-warning-source: var(--presence-away);
+    --alert-warning-fill: color-mix(in oklab, var(--alert-warning-source) var(--alert-status-container-opacity), var(--alert-container-base));
+    --alert-warning-ink: color-mix(in oklab, var(--alert-warning-source) var(--alert-status-source-weight), var(--surface-ink));
+    --alert-error-source: var(--button-material-error);
+    --alert-error-fill: color-mix(in oklab, var(--alert-error-source) var(--button-destructive-fill-opacity), var(--alert-container-base));
+    --alert-error-ink: var(--alert-error-source);
+    --dialog-close-clearance: calc(var(--button-height-default) + var(--button-gap));
+    --drawer-close-clearance: calc(var(--button-height-default) + var(--button-gap));
+    --popover-close-clearance: calc(var(--button-height-default) + var(--button-gap));
+    --text-title-size: var(--text-3xl);
+    --text-title-leading: var(--text-3xl--line-height);
+    --text-heading-size: var(--text-2xl);
+    --text-heading-leading: var(--text-2xl--line-height);
+    --text-subheading-size: var(--text-lg);
+    --text-subheading-leading: 1.333;
+    --text-lead-size: var(--text-lg);
+    --text-lead-leading: var(--text-lg--line-height);
+    --text-body-size: var(--text-base);
+    --text-body-leading: 1.625;
+    --text-label-size: var(--text-sm);
+    --text-label-leading: 1.5;
+    --text-metadata-size: var(--text-sm);
+    --text-metadata-leading: 1.5;
+    --text-code-size: var(--text-sm);
+    --text-code-leading: 1.5;
+    --text-caption-size: var(--text-xs);
+    --text-caption-leading: var(--text-xs--line-height);
+    --toc-width: calc(var(--spacing) * 48);
+    --toc-layout-gap: var(--space-xl);
+    --toc-item-gap: var(--space-xs);
+    --toc-inline-gap: var(--space-md);
+    --toc-sticky-inset: var(--space-xl);
+    --toc-max-height: calc(100svh - var(--toc-sticky-inset) * 2);
+    --toc-font-size: var(--text-sm);
+    --toc-line-height: 1.625;
+    --toc-focus-width: calc(var(--spacing) / 2);
+
+
+    /* Expression lab. This is a neutral control condition: a stable app-sized
+       composition whose relationships can be changed one experiment at a time. */
+    --expression-lab-border-width: 1px;
+    --expressive-title-size: var(--concentric-expressive-title-size);
+    --expressive-title-leading: var(--concentric-expressive-title-leading);
+    --expressive-body-size: var(--concentric-expressive-copy-size);
+    --expressive-body-leading: var(--concentric-expressive-label-leading);
+    --expressive-caption-size: var(--concentric-medium-min-text-size);
+    --expressive-caption-leading: var(--concentric-medium-min-text-leading);
+    --expressive-space-section: calc(var(--spacing) * 6);
+    --expressive-space-related: var(--concentric-medium-action-gap);
+    --expressive-space-pair: var(--concentric-text-pair-gap-large);
+    --expressive-space-pair-small: var(--concentric-text-pair-gap-small);
+    --expressive-action-height: var(--concentric-medium-button-height);
+    --expressive-action-padding-block: var(--concentric-medium-button-padding-block);
+    --expressive-field-height: var(--concentric-medium-field-height);
+    --expressive-field-padding-inline: var(--concentric-medium-field-padding-inline);
+    --expressive-field-padding-block: var(--concentric-medium-field-padding-block);
+    --expressive-field-radius: var(--concentric-field-radius);
+    --expressive-control-radius: var(--expressive-space-section);
+    --expressive-surface-radius: calc(var(--radius-xl) + var(--expressive-space-section) * 2 - var(--concentric-reference-radius));
+    --expressive-avatar-size: calc(var(--spacing) * 10);
+    --expressive-icon-size: calc(var(--spacing) * 6);
+    --expressive-header-height: calc(var(--expressive-field-height) + var(--expressive-space-pair) * 2);
+    --expressive-native-select-inset: calc(var(--expressive-field-padding-inline) * 2 + var(--expressive-space-related));
+    --expressive-textarea-min-height: calc(var(--expressive-body-leading) * 3 + var(--expressive-field-padding-inline) * 2);
+    --expressive-menu-width: calc(var(--spacing) * 72);
+    --expressive-menu-padding: calc(var(--spacing) * 2);
+    --expressive-menu-row-radius: calc(var(--radius-md) + var(--expressive-space-section) - var(--concentric-reference-inner));
+    --expressive-column-min: calc(var(--spacing) * 80);
+    --expressive-choice-min: calc(var(--spacing) * 56);
+    --expressive-check-size: calc(var(--spacing) * 5);
+    --expressive-check-icon-size: calc(var(--spacing) * 4);
+    --expressive-collapsed-avatar-size: calc(var(--spacing) * 6);
+    --expression-lab-radius: var(--radius-3xl);
+    --expression-lab-header-padding: calc(var(--spacing) * 4);
+    --expression-lab-content-padding: calc(var(--spacing) * 6);
+    --expression-lab-gap: calc(var(--spacing) * 4);
+    --expression-lab-section-gap: calc(var(--spacing) * 6);
+    --expression-lab-item-gap: calc(var(--spacing) * 3);
+    --expression-lab-copy-gap: calc(var(--spacing) * 1);
+    --expression-lab-column-min: calc(var(--spacing) * 48);
+    --expression-lab-span-wide: 7;
+    --expression-lab-span-narrow: 5;
+    --expression-lab-progress-height: calc(var(--spacing) * 2);
+    --expression-lab-chat-min-height: calc(var(--spacing) * 96);
+    --expression-lab-chat-transcript-min-height: calc(var(--spacing) * 52);
+    --expression-lab-chat-padding: calc(var(--spacing) * 4);
+
+    --scroll-fade-size: min(12%, calc(var(--spacing) * 10));
+    --scroll-fade-reveal: calc(var(--spacing) * 8);
+    --carousel-stroke-clearance: 1px;
+    --carousel-control-inset: var(--space-xs);
+    --carousel-gap: var(--space-md);
+    --carousel-item-padding: calc(var(--carousel-gap) / 2);
+    --carousel-slide-size: calc(100% - var(--scroll-fade-size) * 2);
+    --carousel-speed: var(--speed-swift);
+    --carousel-auto-speed: 5000ms;
+    --carousel-dot-size: calc(var(--spacing) * 1.5);
+    --carousel-progress-width: calc(var(--spacing) * 8);
+    --carousel-progress-gap: var(--space-xs);
+    --carousel-progress-inset: var(--space-md);
+    --scrollbar-size: calc(var(--spacing) * 1.5);
+    --scrollbar-radius: var(--radius-lg);
+    --scrollbar-thumb: color-mix(in oklab, var(--foreground) 25%, transparent);
+    --scrollbar-track: transparent;
+
+    /* ScrollArea. Expressive custom scrollbar track and tactile expanding thumb. */
+    --scroll-area-track-size: calc(var(--spacing) * 2.5);
+    --scroll-area-track-padding: var(--space-hairline);
+    --scroll-area-track-active-padding: 1px;
+    --scroll-area-thumb-radius: var(--radius-full);
+    --scroll-area-thumb-rest: color-mix(in oklab, var(--foreground) 25%, transparent);
+    --scroll-area-thumb-hover: color-mix(in oklab, var(--foreground) 45%, transparent);
+    --scroll-area-thumb-active: color-mix(in oklab, var(--foreground) 70%, transparent);
+    --scroll-area-track-hover: color-mix(in oklab, var(--foreground) 4%, transparent);
+    --scroll-area-speed: var(--speed-swift);
+    --scroll-area-ease: var(--ease-glide);
+
+    --page-fill: var(--md-sys-color-surface);
+    --page-scroll-offset: 0px;
+    --page-pad-block-start: calc(var(--spacing) * 20);
+    --page-pad-block-end: calc(var(--spacing) * 24);
+    --page-content-gap: var(--space-xl);
+    --page-enter-duration: 600ms;
+    --page-enter-stagger: 60ms;
+    --page-enter-distance: calc(var(--spacing) * 4);
+    --page-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --page-gutter-sm: var(--space-lg);
+    --page-gutter-md: var(--space-xl);
+    --page-gutter-lg: calc(var(--spacing) * 10);
+    --page-preview-height: calc(var(--spacing) * 130);
+    --page-banner-radius: calc(var(--spacing) * 8);
+    --page-banner-padding-block: calc(var(--spacing) * 20);
+    --page-banner-padding-inline: var(--space-xl);
+    --page-banner-gap: var(--space-md);
+    --showcase-page-header-max-width: calc(
+      var(--container-max-width-lg) - var(--page-gutter-lg) * 2
+    );
+    --showcase-page-header-compact-width: calc(var(--spacing) * 128);
+    --showcase-page-header-speed: var(--speed-gentle);
+    --showcase-page-header-enter-move-ease: var(--ease-spring);
+    --showcase-page-header-exit-move-ease: cubic-bezier(0.5, 0, 0.66, -0.42);
+    --showcase-page-header-enter-size-ease: var(--ease-glide);
+    --showcase-page-header-exit-size-ease: cubic-bezier(1, 0, 0.68, 0.28);
+    --showcase-page-header-enter-fade-ease: ease;
+    --showcase-page-header-exit-fade-ease: cubic-bezier(0.75, 0, 0.75, 0.9);
+    --showcase-page-header-bar-height: calc(
+      var(--button-height-default) + var(--space-sm) * 2 +
+        var(--separator-thickness) * 2
+    );
+    --showcase-page-header-sticky-inset: calc(
+      var(--showcase-sidebar-trigger-inset) +
+        (var(--sidebar-floating-trigger-size) - var(--showcase-page-header-bar-height)) / 2
+    );
+    --page-header-gap: var(--space-md);
+    --page-header-content-gap: var(--space-xs);
+    --page-header-eyebrow-gap: var(--space-xs);
+    --page-header-actions-gap: var(--space-xs);
+    --page-header-hero-gap: var(--space-lg);
+    --page-header-hero-padding-block: var(--space-xl);
+    --text-display-size: var(--text-4xl);
+    --text-display-leading: var(--text-4xl--line-height);
+    --section-scroll-margin: calc(var(--spacing) * 20);
+    --section-header-gap: var(--space-xs);
+    --section-header-gap-sm: var(--space-md);
+    --section-heading-gap: var(--space-xs);
+    --section-eyebrow-gap: var(--space-xs);
+    --section-actions-gap: var(--space-xs);
+    --container-max-width-prose: 48rem;
+    --container-max-width-sm: 48rem;
+    --container-max-width-md: 64rem;
+    --container-max-width-lg: 72rem;
+    --container-max-width-xl: 80rem;
+    --container-gutter-sm: var(--space-md);
+    --container-gutter-md: var(--space-lg);
+    --container-gutter-lg: var(--space-xl);
+    --coachmark-width: calc(var(--spacing) * 80);
+    --coachmark-width-sm: calc(var(--spacing) * 64);
+    --coachmark-width-lg: calc(var(--spacing) * 96);
+    --coachmark-padding: var(--space-lg);
+    --coachmark-padding-inline: var(--coachmark-padding);
+    --coachmark-padding-block-start: var(--coachmark-padding);
+    --coachmark-padding-block-end: var(--coachmark-padding);
+    --coachmark-inner-radius: var(--radius-lg);
+    --coachmark-radius: calc(
+      var(--coachmark-padding) + var(--coachmark-inner-radius)
+    );
+    --coachmark-gap: var(--space-lg);
+    --coachmark-media-width: calc(100% + var(--coachmark-padding) * 2);
+    --coachmark-media-inset-inline: calc(var(--coachmark-padding) * -1);
+    --coachmark-media-inset-block-start: calc(
+      var(--coachmark-padding) * -1
+    );
+    --coachmark-close-clearance: calc(
+      var(--button-height-default) + var(--button-gap)
+    );
+    --coachmark-beacon-size: calc(var(--spacing) * 3);
+    --coachmark-beacon-scale: 2.5;
+    --coachmark-beacon-opacity: 0.5;
+    --coachmark-beacon-duration: 2000ms;
+    --coachmark-beacon-ease: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dark {
+  --favicon-monochrome-filter: brightness(0) invert(1);
+  --favicon-monochrome-on-primary-filter: brightness(0);
+  --action-primary: oklch(0.922 0 0);
+  --action-on-primary: oklch(0.205 0 0);
+    --primary: var(--action-primary);
+    --primary-foreground: var(--action-on-primary);
+    --destructive: oklch(0.7 0.16 var(--destructive-hue));
+    --annotation-bounds-color: oklch(0.84 0.11 255);
+    --annotation-padding-color: oklch(0.85 0.12 150);
+    --annotation-border-color: oklch(0.86 0.14 90);
+    --annotation-margin-color: oklch(0.84 0.12 55);
+    --annotation-gap-color: oklch(0.86 0.11 300);
+    --annotation-highlight-foreground: oklch(0.205 0 0);
+    --presence-available: oklch(0.72 0.17 149);
+    --presence-away: oklch(0.81 0.15 75);
+    --ring: oklch(0.556 0 0);
+    --chart-1: var(--chart-primary);
+    --chart-2: var(--chart-secondary);
+    --chart-3: var(--chart-tertiary);
+    --chart-4: var(--chart-quaternary);
+    --chart-5: var(--chart-danger);
+    /* A shadow has to be far denser on a dark canvas to register at all. */
+    --elevation-ambient: oklch(0 0 0 / 0.3);
+    --elevation-key: oklch(0 0 0 / 0.55);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-ring: oklch(0.556 0 0);
+}
+
+:root {
+  --md-sys-color-background: var(--theme-website-background-light);
+  --md-sys-color-on-background: var(--theme-website-on-background-light);
+  --md-sys-color-surface: var(--theme-website-surface-light);
+  --md-sys-color-on-surface: var(--theme-website-on-surface-light);
+  --md-sys-color-surface-container-lowest: var(--theme-website-surface-container-lowest-light);
+  --md-sys-color-surface-container-low: var(--theme-website-surface-container-low-light);
+  --md-sys-color-surface-container: var(--theme-website-surface-container-light);
+  --md-sys-color-surface-container-high: var(--theme-website-surface-container-high-light);
+  --md-sys-color-surface-container-highest: var(--theme-website-surface-container-highest-light);
+  --md-sys-color-surface-variant: var(--theme-website-surface-variant-light);
+  --md-sys-color-on-surface-variant: var(--theme-website-on-surface-variant-light);
+  --md-sys-color-inverse-surface: var(--theme-website-inverse-surface-light);
+  --md-sys-color-inverse-on-surface: var(--theme-website-inverse-on-surface-light);
+  --md-sys-color-outline: var(--theme-website-outline-light);
+  --md-sys-color-outline-variant: var(--theme-website-outline-variant-light);
+}
+
+.dark {
+  --md-sys-color-background: var(--theme-website-background-dark);
+  --md-sys-color-on-background: var(--theme-website-on-background-dark);
+  --md-sys-color-surface: var(--theme-website-surface-dark);
+  --page-fill: var(--md-sys-color-surface-container-low);
+  --md-sys-color-on-surface: var(--theme-website-on-surface-dark);
+  --md-sys-color-surface-container-lowest: var(--theme-website-surface-container-lowest-dark);
+  --md-sys-color-surface-container-low: var(--theme-website-surface-container-low-dark);
+  --md-sys-color-surface-container: var(--theme-website-surface-container-dark);
+  --md-sys-color-surface-container-high: var(--theme-website-surface-container-high-dark);
+  --md-sys-color-surface-container-highest: var(--theme-website-surface-container-highest-dark);
+  --md-sys-color-surface-variant: var(--theme-website-surface-variant-dark);
+  --md-sys-color-on-surface-variant: var(--theme-website-on-surface-variant-dark);
+  --md-sys-color-inverse-surface: var(--theme-website-inverse-surface-dark);
+  --md-sys-color-inverse-on-surface: var(--theme-website-inverse-on-surface-dark);
+  --md-sys-color-outline: var(--theme-website-outline-dark);
+  --md-sys-color-outline-variant: var(--theme-website-outline-variant-dark);
+}
+
+:root, .dark {
+  --surface-ground: var(--md-sys-color-surface);
+  --surface-canvas: var(--md-sys-color-surface);
+  --surface-low: var(--md-sys-color-surface-container-low);
+  --surface-default: var(--md-sys-color-surface-container-lowest);
+  --surface-high: var(--md-sys-color-surface-container-high);
+  --surface-backplate: var(--md-sys-color-surface-container);
+  --surface-navigation: var(--md-sys-color-surface-container);
+  --surface-interaction: var(--md-sys-color-surface-container-highest);
+  --surface-ink: var(--md-sys-color-on-surface);
+  --surface-muted-ink: var(--md-sys-color-on-surface-variant);
+  --surface-stroke: var(--md-sys-color-outline-variant);
+  --surface-outline: oklch(0.85 0 0);
+  --surface-input-outline: oklch(from var(--md-sys-color-outline) l 0 h);
+  --background: var(--surface-canvas);
+  --foreground: var(--surface-ink);
+  /* Flat cards sit flush with the canvas; the --elevation-stroke ring provides separation,
+     not a lighter tone. Only the footer introduces a second tone (the sidebar fill). */
+  --card: var(--surface-canvas);
+  --card-foreground: var(--surface-ink);
+  --control: var(--surface-low);
+  --popover: var(--surface-default);
+  --popover-foreground: var(--surface-ink);
+  --muted: var(--md-sys-color-surface-container);
+  --muted-foreground: var(--surface-muted-ink);
+  --accent: var(--surface-interaction);
+  --accent-foreground: var(--surface-ink);
+  --border: var(--surface-outline);
+  --input: var(--surface-input-outline);
+  --action-secondary: var(--surface-backplate);
+  --action-on-secondary: var(--surface-ink);
+  --secondary: var(--action-secondary);
+  --secondary-foreground: var(--action-on-secondary);
+  --sidebar: var(--surface-navigation);
+  --sidebar-foreground: var(--surface-ink);
+  --sidebar-hover-fill: color-mix(in srgb, var(--surface-ink) var(--state-layer-hover-opacity), transparent);
+  --sidebar-accent: var(--sidebar-hover-fill);
+  --sidebar-accent-foreground: var(--surface-ink);
+  --sidebar-border: var(--surface-outline);
+}
+
+.dark {
+  /* Soften hairlines in dark mode: a low-alpha neutral reads as soft as the light outline,
+     instead of the brighter opaque outline-variant. */
+  --surface-outline: oklch(1 0 0 / 14%);
+  --surface-input-outline: oklch(1 0 0 / 15%);
+}
+
+.color-theme[data-color-theme="custom"] {
+  --button-primary-fill: var(--primary);
+  --button-primary-ink: var(--primary-foreground);
+  --surface-ground: var(--surface-canvas);
+  --surface-backplate: var(--surface-high);
+  --surface-stroke: var(--surface-outline);
+  --surface-navigation: var(--surface-high);
+  --surface-interaction: var(--surface-high);
+  --background: var(--surface-canvas);
+  --foreground: var(--surface-ink);
+  --card: var(--surface-canvas);
+  --card-foreground: var(--surface-ink);
+  --control: var(--surface-low);
+  --popover: var(--surface-default);
+  --popover-foreground: var(--surface-ink);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--action-on-primary);
+  --secondary: var(--action-secondary);
+  --secondary-foreground: var(--action-on-secondary);
+  --muted: var(--surface-high);
+  --muted-foreground: var(--surface-muted-ink);
+  --accent: var(--surface-interaction);
+  --accent-foreground: var(--surface-ink);
+  --border: var(--surface-outline);
+  --input: var(--surface-input-outline);
+  --ring: var(--action-primary);
+  --sidebar: var(--surface-navigation);
+  --sidebar-foreground: var(--surface-ink);
+  --sidebar-primary: var(--action-primary);
+  --sidebar-primary-foreground: var(--action-on-primary);
+  --sidebar-accent: var(--action-secondary);
+  --sidebar-accent-foreground: var(--action-on-secondary);
+  --sidebar-border: var(--surface-outline);
+  --sidebar-ring: var(--action-primary);
+  --sidebar-inset-backdrop: var(--surface-high);
+  --state-layer-hover: color-mix(in oklab, var(--state-layer-color) var(--state-layer-hover-opacity), transparent);
+  --state-layer-focus: color-mix(in oklab, var(--state-layer-color) var(--state-layer-focus-opacity), transparent);
+  --state-layer-pressed: color-mix(in oklab, var(--state-layer-color) var(--state-layer-pressed-opacity), transparent);
+  --state-layer-dragged: color-mix(in oklab, var(--state-layer-color) var(--state-layer-dragged-opacity), transparent);
+  --scrollbar-thumb: color-mix(in oklab, var(--foreground) 25%, transparent);
+  --button-primary-hover: color-mix(in oklab, var(--primary), var(--primary-foreground) var(--state-layer-hover-opacity));
+  --button-primary-pressed: color-mix(in oklab, var(--primary), var(--primary-foreground) var(--state-layer-pressed-opacity));
+  --button-secondary-hover: color-mix(in oklab, var(--secondary), var(--secondary-foreground) var(--state-layer-hover-opacity));
+  --button-secondary-pressed: color-mix(in oklab, var(--secondary), var(--secondary-foreground) var(--state-layer-pressed-opacity));
+  color: var(--foreground);
+}
+
+:root, .dark {
+  --surface-lowest: var(--md-sys-color-surface-container-lowest);
+  --surface-container: var(--md-sys-color-surface-container);
+  --surface-highest: var(--md-sys-color-surface-container-highest);
+}
+
+:root {
+  --md-ref-palette-primary40: #6750a4;
+  --md-ref-palette-primary80: #d0bcff;
+  --md-ref-palette-error40: #b3261e;
+  --md-ref-palette-error80: #f2b8b5;
+
+  /* The purple ladder: three tones, one source. Every purple in the system aliases
+     these, so there is no second accent drifting alongside the first. */
+  --purple-strong: var(--md-ref-palette-primary40);
+  --purple-strong-ink: var(--theme-website-on-primary-light);
+  --purple-soft: var(--theme-website-secondary-container-light);
+  --purple-soft-ink: var(--theme-website-on-secondary-container-light);
+  --purple-deep: var(--theme-website-secondary-light);
+  --purple-deep-ink: var(--theme-website-on-secondary-light);
+
+  --button-primary-fill: var(--purple-strong);
+  --button-destructive-fill-opacity: 10%;
+  --button-material-error: var(--md-ref-palette-error40);
+  --button-destructive-hover-opacity: 20%;
+  --button-destructive-pressed-opacity: 30%;
+  --button-primary-ink: var(--purple-strong-ink);
+  --button-primary-state-ink: var(--purple-strong-ink);
+  --button-secondary-fill: var(--purple-soft);
+  --button-secondary-ink: var(--purple-soft-ink);
+  --button-link-ink: var(--purple-strong);
+  --button-selected-secondary-fill: var(--purple-deep);
+  --button-selected-secondary-ink: var(--purple-deep-ink);
+  --ring: var(--purple-strong);
+  --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
+
+  --chart-primary: var(--purple-strong);
+  --chart-secondary: var(--theme-website-tertiary-light);
+  --chart-tertiary: var(--theme-website-primary-light);
+  --chart-quaternary: var(--theme-website-secondary-light);
+  --chart-danger: var(--button-material-error);
+  --chart-axis-ink: var(--surface-muted-ink);
+  --chart-grid-stroke: color-mix(in srgb, var(--surface-outline) 56%, transparent);
+  --chart-grid-dash: 3 6;
+  --chart-cursor-fill: color-mix(in srgb, var(--button-secondary-fill) 52%, transparent);
+  --chart-cursor-stroke: color-mix(in srgb, var(--button-selected-secondary-fill) 42%, transparent);
+  --chart-bar-radius: var(--radius-xl);
+  --chart-indicator-size: var(--space-xs);
+  --chart-indicator-radius: var(--radius-xs);
+  --chart-tooltip-radius: var(--menu-chunk-radius);
+  --chart-tooltip-padding-inline: var(--menu-chunk-radius);
+  --chart-tooltip-padding-block: var(--space-sm);
+  --chart-tooltip-gap: var(--space-xs);
+}
+
+.dark {
+  --purple-strong: var(--md-ref-palette-primary80);
+  --purple-strong-ink: var(--theme-website-on-primary-dark);
+  --purple-soft: var(--theme-website-secondary-container-dark);
+  --purple-soft-ink: var(--theme-website-on-secondary-container-dark);
+  --purple-deep: var(--theme-website-secondary-dark);
+  --purple-deep-ink: var(--theme-website-on-secondary-dark);
+
+  --button-primary-fill: var(--purple-strong);
+  --button-destructive-fill-opacity: 20%;
+  --button-material-error: var(--md-ref-palette-error80);
+  --button-destructive-hover-opacity: 30%;
+  --button-destructive-pressed-opacity: 40%;
+  --button-primary-ink: var(--purple-strong-ink);
+  --button-primary-state-ink: var(--purple-strong-ink);
+  --button-secondary-fill: var(--purple-soft);
+  --button-secondary-ink: var(--purple-soft-ink);
+  --button-link-ink: var(--purple-strong);
+  --button-selected-secondary-fill: var(--purple-deep);
+  --button-selected-secondary-ink: var(--purple-deep-ink);
+  --calendar-selected-fill: var(--theme-website-tertiary-container-dark);
+  --calendar-selected-ink: var(--theme-website-on-tertiary-container-dark);
+  --ring: var(--purple-strong);
+  --favicon-monochrome-on-primary-filter: brightness(0);
+
+  --chart-primary: var(--purple-strong);
+  --chart-secondary: var(--theme-website-tertiary-dark);
+  --chart-tertiary: var(--theme-website-primary-dark);
+  --chart-quaternary: var(--theme-website-secondary-dark);
+  --chart-danger: var(--button-material-error);
+}
+
+/* The Tertiary pair is the system's neutral default, so it lives at the root for every
+   consumer. State layers stay element-scoped so themed overrides recompute per element. */
+:root {
+  --tertiary-fill: var(--md-sys-color-surface-container-highest);
+  --tertiary-ink: var(--md-sys-color-on-surface-variant);
+}
+

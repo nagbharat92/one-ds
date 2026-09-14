@@ -1,0 +1,30 @@
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    /* Un-roled text defaults to the body role. */
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-leading);
+    /* Running text never leaves an orphan on its last line; headings opt into balance. */
+    text-wrap: pretty;
+    }
+  html {
+    @apply font-sans;
+    }
+
+  /* Native number spinners are unlabelled ~10px pointer-only targets. Arrow keys
+     still step the value once they are hidden. */
+  input[type="number"] {
+    -webkit-appearance: textfield;
+    appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+}

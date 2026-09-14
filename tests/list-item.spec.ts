@@ -132,7 +132,9 @@ test("List Item selection, hosted actions, and consumers use the shared contract
   for (const item of await compactItems.all()) {
     await expect(item.locator(':scope > [data-slot="item-primary-action"]')).toHaveAttribute("aria-pressed", "true")
   }
-  await states.locator('button[data-slot="item"]').filter({ hasText: "Engineering" }).first().click()
+  const engineeringRow = states.locator('button[data-slot="item"]').filter({ hasText: "Engineering" }).first()
+  await engineeringRow.click()
+  await expect(engineeringRow.locator('[data-slot="badge"]')).toHaveCSS("height", "28px")
   for (const item of await compactItems.all()) {
     await expect(item.locator(':scope > [data-slot="item-primary-action"]')).toHaveAttribute("aria-pressed", "false")
   }
@@ -277,6 +279,13 @@ test("Sidebar navigation uses the compact Item contract without shifting its rai
   expect(siteStates.host).toEqual(siteStates.sidebar)
   expect(siteStates.hover).not.toEqual(siteStates.host)
   expect(siteStates.pressed).not.toEqual(siteStates.hover)
+
+  const chartBadge = siteNavigation.locator('[data-showcase-nav-item="chart"] [data-slot="badge"]')
+  await expect(chartBadge).toHaveCSS("height", "20px")
+  const personaRow = siteNavigation.locator('[data-showcase-nav-item="persona"]')
+  await personaRow.locator("button").click()
+  const personaBadge = personaRow.locator('[data-slot="badge"]')
+  await expect(personaBadge).toHaveCSS("height", "20px")
 
   if (testInfo.project.use.isMobile) return
 

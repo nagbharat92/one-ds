@@ -1,0 +1,126 @@
+@layer experiment {
+.form-experiment {
+    --form-experiment-gap: calc(var(--spacing) * 3);
+    --form-experiment-toolbar-padding: calc(var(--spacing) * 2);
+    --form-experiment-compact-width: calc(var(--spacing) * 144);
+    --form-experiment-tools-layer: 10;
+    --form-experiment-squint-blur: calc(var(--spacing) * 2);
+    --form-experiment-preview-speed: var(--speed-gentle);
+    --form-experiment-preview-ease: var(--ease-glide);
+    --form-experiment-card-radius: var(--radius-xl);
+    --form-experiment-circle-radius: 50%;
+    --form-experiment-hero-radius: calc(
+      var(--radius-3xl) + var(--spacing) * 2
+    );
+    --form-experiment-square-radius: var(--radius-md);
+    --form-experiment-squircle-radius: var(--radius-4xl);
+    --form-experiment-island-padding: calc(var(--spacing) * 1);
+    --form-experiment-island-gap: calc(var(--spacing) * 1);
+    --form-experiment-island-radius: calc(
+      var(--form-experiment-island-item-radius) +
+        var(--form-experiment-island-padding)
+    );
+    --form-experiment-island-item-radius: var(--radius-lg);
+    --form-experiment-progress-height: calc(var(--spacing) * 3);
+    --form-experiment-progress-radius: calc(
+      var(--form-experiment-progress-height) / 2
+    );
+    --form-experiment-control-standard: calc(var(--spacing) * 11);
+    --form-experiment-control-large: calc(var(--spacing) * 14);
+    --form-experiment-control-focal: calc(var(--spacing) * 17);
+    --form-experiment-action-standard: calc(var(--spacing) * 11);
+    --form-experiment-action-large: calc(var(--spacing) * 12);
+    --form-experiment-action-focal: calc(var(--spacing) * 13);
+    --form-experiment-action-padding-inline: calc(var(--spacing) * 4);
+    --form-experiment-icon-standard: calc(var(--spacing) * 4);
+    --form-experiment-icon-large: calc(var(--spacing) * 5);
+    --form-experiment-icon-focal: calc(var(--spacing) * 6);
+    --form-experiment-density-compact: calc(var(--spacing) * 4);
+    --form-experiment-density-balanced: calc(var(--spacing) * 6);
+    --form-experiment-density-spacious: calc(var(--spacing) * 8);
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    gap: var(--form-experiment-gap);
+    overflow: hidden;
+}
+
+.form-experiment[data-tools-hidden="true"] {
+    grid-template-rows: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .form-experiment__toolbar {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--form-experiment-toolbar-padding);
+    overflow-x: auto;
+  }
+
+  .form-experiment__toolbar > [data-slot="toolbar-group"] {
+    flex: none;
+  }
+
+  .form-experiment__button-group {
+    flex: none;
+  }
+
+  .form-experiment__viewport {
+    min-inline-size: 0;
+    min-block-size: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    margin-inline: auto;
+    overflow: hidden;
+    transition-property: inline-size;
+    transition-duration: var(--form-experiment-preview-speed);
+    transition-timing-function: var(--form-experiment-preview-ease);
+  }
+
+  .form-experiment__viewport[data-preview-size="compact"] {
+    inline-size: min(100%, var(--form-experiment-compact-width));
+  }
+
+  .form-experiment__reveal {
+    position: absolute;
+    inset-block-start: var(--form-experiment-toolbar-padding);
+    inset-inline-end: var(--form-experiment-toolbar-padding);
+    z-index: var(--form-experiment-tools-layer);
+    border-radius: var(--form-experiment-circle-radius);
+  }
+
+
+  .form-experiment__viewport[data-evaluation="squint"] .expression-lab {
+    filter: blur(var(--form-experiment-squint-blur));
+  }
+
+  .form-experiment__viewport[data-evaluation="silhouette"] .expression-lab,
+  .form-experiment__viewport[data-evaluation="silhouette"]
+    .expression-lab
+    * {
+    color: transparent;
+    text-shadow: none;
+  }
+
+  .form-experiment__viewport[data-evaluation="silhouette"]
+    .expression-lab
+    :is(svg, img) {
+    opacity: 0;
+  }
+
+  .form-experiment__viewport[data-evaluation="silhouette"]
+    .expression-lab
+    :is(input, textarea)::placeholder {
+    color: transparent;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-experiment__viewport {
+    transition: none;
+  }
+}
