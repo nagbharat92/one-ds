@@ -19,6 +19,7 @@ import {
   BookmarkIcon,
   GlobeIcon,
   SearchIcon,
+  CodeIcon,
 } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
@@ -112,7 +113,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
@@ -331,8 +331,8 @@ function AIComposerAddMenu() {
           </AIComposerAction>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top" align="start">
-          <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
           <DropdownMenuGroup>
+            <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
             <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
               <PaperclipIcon aria-hidden />
               Add files
@@ -342,22 +342,23 @@ function AIComposerAddMenu() {
               Add images
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Tools</DropdownMenuLabel>
-          <DropdownMenuCheckboxItem
-            checked={webSearch}
-            onCheckedChange={(checked) => setWebSearch(checked === true)}
-          >
-            <GlobeIcon aria-hidden />
-            Search web
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={deepResearch}
-            onCheckedChange={(checked) => setDeepResearch(checked === true)}
-          >
-            <SearchIcon aria-hidden />
-            Deep research
-          </DropdownMenuCheckboxItem>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Tools</DropdownMenuLabel>
+            <DropdownMenuCheckboxItem
+              checked={webSearch}
+              onCheckedChange={(checked) => setWebSearch(checked === true)}
+            >
+              <GlobeIcon aria-hidden />
+              Search web
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={deepResearch}
+              onCheckedChange={(checked) => setDeepResearch(checked === true)}
+            >
+              <SearchIcon aria-hidden />
+              Deep research
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
       {webSearch ? (
@@ -482,18 +483,105 @@ function AIComposerAttachmentsDemo() {
 }
 
 function AIComposerToolsDemo() {
+  const [tools, setTools] = useState({
+    webSearch: true,
+    codeInterpreter: false,
+    deepResearch: false,
+  })
+
   return (
     <AIComposer>
-      <AIComposerInput aria-label="Message" placeholder="Ask anything" />
+      <AIComposerInput
+        aria-label="Message"
+        placeholder="Type a prompt or toggle tools below…"
+      />
       <AIComposerFooter>
         <AIComposerTools>
           <AIComposerAddMenu />
+          {tools.webSearch ? (
+            <AIComposerTool
+              variant="secondary"
+              aria-pressed="true"
+              dismissible
+              onDismiss={() =>
+                setTools((t) => ({ ...t, webSearch: false }))
+              }
+            >
+              <GlobeIcon />
+              Search web
+            </AIComposerTool>
+          ) : null}
+          {tools.codeInterpreter ? (
+            <AIComposerTool
+              variant="secondary"
+              aria-pressed="true"
+              dismissible
+              onDismiss={() =>
+                setTools((t) => ({ ...t, codeInterpreter: false }))
+              }
+            >
+              <CodeIcon />
+              Code interpreter
+            </AIComposerTool>
+          ) : null}
+          {tools.deepResearch ? (
+            <AIComposerTool
+              variant="secondary"
+              aria-pressed="true"
+              dismissible
+              onDismiss={() =>
+                setTools((t) => ({ ...t, deepResearch: false }))
+              }
+            >
+              <SearchIcon />
+              Deep research
+            </AIComposerTool>
+          ) : null}
         </AIComposerTools>
         <AIComposerActions>
           <AIComposerSubmit />
         </AIComposerActions>
       </AIComposerFooter>
     </AIComposer>
+  )
+}
+
+function AIComposerMiniDemo() {
+  const [prompt, setPrompt] = useState("")
+  const [status, setStatus] = useState<AIComposerStatus>("ready")
+
+  return (
+    <div className="flex w-full max-w-md flex-col gap-4">
+      <AIComposer
+        size="mini"
+        status={status}
+        onSubmit={(event) => {
+          event.preventDefault()
+          if (!prompt.trim()) return
+          setStatus("streaming")
+        }}
+      >
+        <AIComposerInput
+          aria-label="Quick message"
+          placeholder="Ask a quick question…"
+          value={prompt}
+          onChange={(event) => setPrompt(event.target.value)}
+        />
+        <AIComposerFooter>
+          <AIComposerTools>
+            <AIComposerAddMenu />
+          </AIComposerTools>
+          <AIComposerActions>
+            <AIComposerSubmit
+              status={status}
+              onClick={
+                status === "streaming" ? () => setStatus("ready") : undefined
+              }
+            />
+          </AIComposerActions>
+        </AIComposerFooter>
+      </AIComposer>
+    </div>
   )
 }
 
@@ -1213,9 +1301,16 @@ export function AIComposerDemo() {
         Demo: AIComposerToolsDemo,
       },
       {
+        name: "Mini",
+        description:
+          "A compact, clean single-line composer with generous padding, 40px buttons, and 37px concentric corners.",
+        layout: "center",
+        Demo: AIComposerMiniDemo,
+      },
+      {
         name: "States",
         description:
-          "Ready, submitted, streaming, error and disabled states keep one stable geometry.",
+          "Controls keep stable metrics across states while the composer expands only when the prompt wraps.",
         layout: "wide",
         Demo: AIComposerStatesDemo,
       },

@@ -555,13 +555,41 @@ test("Checkbox and Radio selection fades use Material icon timing", async ({ pag
 })
 
 for (const mode of ["light", "dark"] as const) {
-  test(`Shared Buttons use Primary Secondary Tertiary and Material destructive tokens in ${mode} mode`, async ({ page }, testInfo) => {
+  test(`Primary Button offers purple and pink in ${mode} mode`, async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
     await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
     await page.goto("/#/button")
     await expect(page.locator("html")).toHaveClass(new RegExp(mode))
     const canvas = page.locator('#button-default [data-slot="canvas"]')
-    await expect(canvas.getByRole("button", { name: "Primary", exact: true })).toHaveCount(2)
+    const purple = canvas.locator('[data-variant="primary"][data-primary-color="purple"][data-size="default"]')
+    const pink = canvas.locator('[data-variant="primary"][data-primary-color="pink"][data-size="default"]')
+
+    await expect(purple).toHaveText("Primary purple")
+    await expectRole(purple, "background-color", "--button-primary-fill")
+    await expectRole(purple, "color", "--button-primary-ink")
+    await expect(pink).toHaveText("Primary pink")
+    await expectRole(pink, "background-color", "--button-primary-pink-fill")
+    await expectRole(pink, "color", "--button-primary-pink-ink")
+    await expect(pink).toHaveCSS("background-color", mode === "light" ? "rgb(241, 211, 249)" : "rgb(85, 63, 93)")
+    await expect(pink).toHaveCSS("color", mode === "light" ? "rgb(39, 20, 48)" : "rgb(247, 216, 255)")
+
+    await pink.hover()
+    await expectRole(pink, "background-color", "--button-primary-hover")
+    await page.mouse.down()
+    await expectRole(pink, "background-color", "--button-primary-pressed")
+    await page.mouse.up()
+  })
+}
+
+for (const mode of ["light", "dark"] as const) {
+  test(`Shared Buttons use purple and pink Primary, Secondary, Tertiary, and Material destructive tokens in ${mode} mode`, async ({ page }, testInfo) => {
+    await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    await page.goto("/#/button")
+    await expect(page.locator("html")).toHaveClass(new RegExp(mode))
+    const canvas = page.locator('#button-default [data-slot="canvas"]')
+    await expect(canvas.getByRole("button", { name: "Primary purple", exact: true })).toHaveCount(2)
+    await expect(canvas.getByRole("button", { name: "Primary pink", exact: true })).toHaveCount(2)
     await expect(canvas.getByRole("button", { name: "Secondary", exact: true })).toHaveCount(2)
     await expect(canvas.getByRole("button", { name: "Tertiary", exact: true })).toHaveCount(2)
     await expect(canvas.getByRole("button", { name: "Material destructive", exact: true })).toHaveCount(0)
@@ -569,7 +597,7 @@ for (const mode of ["light", "dark"] as const) {
     const generic = await page.locator("html").evaluate(element => ["--primary", "--secondary"].map(token => getComputedStyle(element).getPropertyValue(token)))
     for (const size of ["default", "expressive"]) {
       for (const [variant, family] of [["primary", "primary"], ["secondary", "secondary"], ["tertiary", "tertiary"]]) {
-        const button = canvas.locator(`[data-variant="${variant}"][data-size="${size}"]:not([data-selected])`)
+        const button = canvas.locator(`[data-variant="${variant}"][data-size="${size}"]:not([data-selected])${variant === "primary" ? '[data-primary-color="purple"]' : ""}`)
         await page.getByRole("heading", { name: "Button", exact: true }).hover()
         await expectRole(button, "background-color", `--button-${family}-fill`)
         await expectRole(button, "color", `--button-${family}-ink`)
@@ -600,10 +628,15 @@ for (const mode of ["light", "dark"] as const) {
         }
       }
     }
-    const primary = canvas.locator('[data-variant="primary"][data-size="default"]:not([data-selected])')
+    const primary = canvas.locator('[data-variant="primary"][data-primary-color="purple"][data-size="default"]:not([data-selected])')
+    const pink = canvas.locator('[data-variant="primary"][data-primary-color="pink"][data-size="default"]:not([data-selected])')
     await page.getByRole("heading", { name: "Button", exact: true }).hover()
     await expect(primary).toHaveCSS("background-color", mode === "light" ? "rgb(103, 80, 164)" : "rgb(208, 188, 255)")
     await expect(primary).toHaveCSS("color", mode === "light" ? "rgb(255, 255, 255)" : "rgb(26, 0, 86)")
+    await expect(pink).toHaveCSS("background-color", mode === "light" ? "rgb(241, 211, 249)" : "rgb(85, 63, 93)")
+    await expect(pink).toHaveCSS("color", mode === "light" ? "rgb(39, 20, 48)" : "rgb(247, 216, 255)")
+    await expectRole(pink, "background-color", "--button-primary-pink-fill")
+    await expectRole(pink, "color", "--button-primary-pink-ink")
     for (const size of ["default", "expressive"]) {
       const material = canvas.locator(`[data-variant="destructive"][data-size="${size}"]`)
       const states = testInfo.project.use.isMobile ? ["fill", "pressed"] : ["fill", "hover", "pressed"]
@@ -630,7 +663,7 @@ for (const mode of ["light", "dark"] as const) {
     }
     expect(await canvas.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
     await expect(canvas.locator('[data-variant="secondary"][data-size="default"]')).toHaveCSS("background-color", mode === "light" ? "rgb(220, 218, 245)" : "rgb(69, 69, 90)")
-    await expect(canvas.locator('[data-variant="link"][data-size="default"]')).toHaveCSS("color", mode === "light" ? "rgb(100, 66, 214)" : "rgb(159, 134, 255)")
+    await expect(canvas.locator('[data-variant="link"][data-size="default"]')).toHaveCSS("color", mode === "light" ? "rgb(103, 80, 164)" : "rgb(208, 188, 255)")
     const disabled = page.locator('#button-motion button[disabled]').first()
     await expect(disabled).toBeDisabled()
     await expect(disabled).toHaveCSS("opacity", "0.5")

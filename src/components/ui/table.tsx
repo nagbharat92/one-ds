@@ -1,5 +1,7 @@
 import * as React from "react"
 
+import { Button } from "@/components/ui/button"
+import { EdgeText } from "@/components/ui/edge-text"
 import { elevationVariants } from "@/components/ui/elevation"
 import { cn } from "@/lib/utils"
 import { useScrollerRef } from "@/hooks/use-scroller"
@@ -63,16 +65,43 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   )
 }
 
+function isBareTableText(children: React.ReactNode) {
+  const parts = React.Children.toArray(children)
+  return (
+    parts.length > 0 &&
+    parts.every(
+      (part) => typeof part === "string" || typeof part === "number"
+    )
+  )
+}
+
+function withTableEdgeText(children: React.ReactNode) {
+  if (isBareTableText(children)) {
+    return <EdgeText>{children}</EdgeText>
+  }
+
+  if (
+    React.isValidElement<{ children?: React.ReactNode }>(children) &&
+    children.type === "span" &&
+    isBareTableText(children.props.children)
+  ) {
+    return <EdgeText asChild>{children}</EdgeText>
+  }
+
+  return children
+}
+
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
+      data-optical-edges
       className={cn(
-        "border-b transition-colors *:transition-colors",
-        "hover:border-transparent hover:*:bg-(--state-layer-hover) hover:[&>*:first-child]:rounded-s-(--table-row-radius) hover:[&>*:last-child]:rounded-e-(--table-row-radius)",
+        "border-b transition-colors *:transition-colors [&>*:first-child]:rounded-s-(--table-row-radius) [&>*:last-child]:rounded-e-(--table-row-radius)",
+        "hover:border-transparent hover:*:bg-(--state-layer-hover)",
         "[&:has(+[data-slot=table-row]:hover)]:border-transparent",
         "has-aria-expanded:*:bg-(--state-layer-focus)",
-        "data-[state=selected]:border-transparent data-[state=selected]:*:bg-muted data-[state=selected]:[&>*:first-child]:rounded-s-(--table-row-radius) data-[state=selected]:[&>*:last-child]:rounded-e-(--table-row-radius)",
+        "data-[state=selected]:border-transparent data-[state=selected]:*:bg-muted",
         "[&:has(+[data-slot=table-row][data-state=selected])]:border-transparent",
         className
       )}
@@ -81,12 +110,43 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   )
 }
 
-function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+function TableHead({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"th">) {
   return (
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 px-(--space-xs) text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-(--space-none)",
+        "h-(--table-header-height) px-(--table-header-padding-inline) text-left align-middle font-medium whitespace-nowrap text-foreground [&:first-child:not(:has(>.edge-text))]:ps-(--table-edge-cell-padding) [&:last-child:not(:has(>.edge-text))]:pe-(--table-edge-cell-padding) [&:has([data-table-sort-button])]:px-(--space-none) [&:has([role=checkbox])]:pr-(--space-none)",
+        className
+      )}
+      {...props}
+    >
+      {withTableEdgeText(children)}
+    </th>
+  )
+}
+
+type TableSortButtonProps = Omit<
+  React.ComponentProps<typeof Button>,
+  "size" | "variant"
+>
+
+function TableSortButton({
+  className,
+  type = "button",
+  ...props
+}: TableSortButtonProps) {
+  return (
+    <Button
+      type={type}
+      variant="secondary"
+      size="default"
+      data-table-sort-button
+      className={cn(
+        "rounded-(--button-round-radius) px-(--table-header-padding-inline)",
         className
       )}
       {...props}
@@ -94,16 +154,22 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   )
 }
 
-function TableCell({ className, ...props }: React.ComponentProps<"td">) {
+function TableCell({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<"td">) {
   return (
     <td
       data-slot="table-cell"
       className={cn(
-        "p-(--space-xs) align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-(--space-none)",
+        "p-(--space-xs) align-middle whitespace-nowrap [&:first-child:not(:has(>.edge-text))]:ps-(--table-edge-cell-padding) [&:last-child:not(:has(>.edge-text))]:pe-(--table-edge-cell-padding) [&:has([role=checkbox])]:pr-(--space-none)",
         className
       )}
       {...props}
-    />
+    >
+      {withTableEdgeText(children)}
+    </td>
   )
 }
 
@@ -129,4 +195,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableSortButton,
 }

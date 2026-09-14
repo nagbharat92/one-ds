@@ -19,6 +19,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Separator } from "@/components/ui/separator"
+import { Badge } from "@/components/ui/badge"
+import { Favicon } from "@/components/ui/favicon"
 import { CodeBlock } from "@/components/code-block"
 import { cn } from "@/lib/utils"
 
@@ -39,7 +51,7 @@ function Response({
       data-streaming={streaming}
       aria-busy={streaming || undefined}
       className={cn(
-        "w-full max-w-(--response-max-width) min-w-0 text-sm leading-relaxed wrap-break-word",
+        "w-full max-w-(--response-max-width) min-w-0 text-base leading-relaxed wrap-break-word",
         className
       )}
       {...props}
@@ -354,7 +366,11 @@ function MarkdownCallout({
       : "note"
   const { Icon, title, variant } = calloutConfig[type]
   return (
-    <Alert variant={variant} data-callout={type}>
+    <Alert
+      variant={variant}
+      data-callout={type}
+      className="w-fit max-w-full @container-normal pe-[calc(var(--alert-padding-inline)*2)]"
+    >
       <AlertIcon><Icon /></AlertIcon>
       <AlertContent>
         <AlertTitle>{title}</AlertTitle>
@@ -423,6 +439,31 @@ function CitationMark({
   )
 }
 
+// A footnote definition rendered as a linked source pill. Per the design system,
+// source lists use Badge (with a Favicon for external links), not bespoke markup.
+function SourceBadge({ label }: { label: string }) {
+  const source = React.useContext(CitationContext)[label]
+  if (!source) return null
+  const title = source.title ?? source.href ?? "Source"
+  const external = source.href ? /^https?:\/\//i.test(source.href) : false
+  if (!source.href) {
+    return <Badge variant="tertiary">{title}</Badge>
+  }
+  return (
+    <Badge asChild variant="tertiary">
+      <a
+        href={source.href}
+        {...(external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
+      >
+        {external ? (
+          <Favicon domain={source.href} alt="" data-icon="inline-start" />
+        ) : null}
+        {title}
+      </a>
+    </Badge>
+  )
+}
+
 const markdownComponents = {
   pre: ({ children }: { children?: React.ReactNode }) => {
     const codeEl = React.Children.toArray(children)[0]
@@ -433,13 +474,64 @@ const markdownComponents = {
     const code = markdownNodeText(
       codeProps ? codeProps.children : children
     ).replace(/\n$/, "")
-    return <CodeBlock code={code} language={language} showLineNumbers={false} />
+    return (
+      <CodeBlock
+        code={code}
+        language={language}
+        showLineNumbers={false}
+      />
+    )
+  },
+  li: ({
+    node,
+    children,
+    ...props
+  }: {
+    node?: { properties?: Record<string, unknown> }
+    children?: React.ReactNode
+  }) => {
+    // GFM footnote items (id="user-content-fn-N") become linked source badges.
+    const id = node?.properties?.id
+    if (typeof id === "string" && id.startsWith("user-content-fn-")) {
+      return <SourceBadge label={id.replace("user-content-fn-", "")} />
+    }
+    return <li {...props}>{children}</li>
   },
   table: ({ children }: { children?: React.ReactNode }) => (
-    <div className="response-table">
-      <table>{children}</table>
-    </div>
+    <Table className="w-full">
+      {children}
+    </Table>
   ),
+  thead: ({ children }: { children?: React.ReactNode }) => (
+    <TableHeader>{children}</TableHeader>
+  ),
+  tbody: ({ children }: { children?: React.ReactNode }) => (
+    <TableBody>{children}</TableBody>
+  ),
+  tr: ({ children }: { children?: React.ReactNode }) => (
+    <TableRow>{children}</TableRow>
+  ),
+  th: ({ children }: { children?: React.ReactNode }) => (
+    <TableHead>{children}</TableHead>
+  ),
+  td: ({ children }: { children?: React.ReactNode }) => (
+    <TableCell>{children}</TableCell>
+  ),
+  hr: () => (
+    <Separator tone="subtle" className="my-(--response-gap)" />
+  ),
+  input: (props: React.ComponentProps<"input">) => {
+    if (props.type === "checkbox") {
+      return (
+        <Checkbox
+          checked={props.checked}
+          disabled={props.disabled}
+          className="align-middle inline-flex -translate-y-px me-(--response-task-gap)"
+        />
+      )
+    }
+    return <input {...props} />
+  },
   a: ({ href, children }: { href?: string; children?: React.ReactNode }) => {
     // A footnote reference (#…fn-N, not the fnref backref) becomes a citation.
     if (href && href.includes("fn-") && !href.includes("fnref")) {

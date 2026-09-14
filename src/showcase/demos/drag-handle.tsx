@@ -53,7 +53,7 @@ function PanelGripDemo() {
     <div className="h-80 w-full max-w-2xl shrink-0">
       <ResizablePanelGroup
         orientation="horizontal"
-        className="rounded-lg border"
+        className="rounded-(--card-radius) ring-1 ring-(--card-stroke) bg-card"
       >
         <ResizablePanel defaultSize={40} minSize={20}>
           <div className="flex h-full items-center justify-center p-4 text-sm font-medium">
@@ -86,7 +86,7 @@ function SidebarGripDemo() {
     <div className="h-80 w-full max-w-2xl shrink-0">
       <ResizablePanelGroup
         orientation="horizontal"
-        className="rounded-lg border"
+        className="rounded-(--card-radius) ring-1 ring-(--card-stroke) bg-card"
       >
         <ResizablePanel defaultSize={35} minSize={20}>
           <div className="flex h-full flex-col justify-between bg-muted p-4">
@@ -124,7 +124,7 @@ export const dragHandleDemos: ComponentEntry[] = [
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
 
-<ResizablePanelGroup orientation="horizontal">
+<ResizablePanelGroup orientation="horizontal" className="rounded-(--card-radius) ring-1 ring-(--card-stroke) bg-card">
   <ResizablePanel defaultSize={40}>Sidebar</ResizablePanel>
   <ResizableHandle withHandle />
   <ResizablePanel defaultSize={60}>Content</ResizablePanel>

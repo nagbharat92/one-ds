@@ -5,13 +5,14 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const gapVariants = {
-  none: "gap-0",
-  xs: "gap-1",
-  sm: "gap-2",
-  md: "gap-4",
-  lg: "gap-6",
-  xl: "gap-8",
-  "2xl": "gap-12",
+  none: "gap-(--space-none)",
+  xs: "gap-(--space-2xs)",
+  sm: "gap-(--space-xs)",
+  md: "gap-(--space-md)",
+  lg: "gap-(--space-lg)",
+  xl: "gap-(--space-xl)",
+  "2xl": "gap-(--space-2xl)",
+  "3xl": "gap-(--space-3xl)",
 } as const
 
 const stackVariants = cva("flex flex-col", {
@@ -29,10 +30,15 @@ const stackVariants = cva("flex flex-col", {
       end: "justify-end",
       between: "justify-between",
     },
+    divided: {
+      true: "divide-y divide-(--separator-stroke)",
+      false: "",
+    },
   },
   defaultVariants: {
     gap: "md",
     align: "stretch",
+    divided: false,
   },
 })
 
@@ -41,6 +47,7 @@ function Stack({
   gap,
   align,
   justify,
+  divided,
   asChild = false,
   ...props
 }: React.ComponentProps<"div"> &
@@ -50,7 +57,8 @@ function Stack({
   return (
     <Comp
       data-slot="stack"
-      className={cn(stackVariants({ gap, align, justify }), className)}
+      data-divided={divided ? "" : undefined}
+      className={cn(stackVariants({ gap, align, justify, divided }), className)}
       {...props}
     />
   )

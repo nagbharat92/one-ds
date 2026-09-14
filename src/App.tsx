@@ -26,7 +26,16 @@ import {
   registry,
 } from "@/showcase/registry"
 import { generatedExampleCode } from "@/showcase/generated-example-code"
-import { DesignRulesPage } from "@/showcase/design-rules-page"
+import {
+  DesignRulesPage,
+  designRulesPageHeader,
+} from "@/showcase/design-rules-page"
+import {
+  AgentCatalogPage,
+  agentCatalogPageHeader,
+} from "@/showcase/agent-catalog-page"
+import { NotesPage, notesPageHeader } from "@/showcase/notes-page"
+import { ShowcasePageHeader } from "@/showcase/showcase-page-header"
 import type { ComponentEntry, ComponentExample } from "@/showcase/types"
 
 type SurfaceTier = NonNullable<ComponentEntry["surface"]>
@@ -48,11 +57,12 @@ const DEFAULT_LAYOUT_BY_SURFACE = {
   application: "application",
 } as const
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Separator } from "@/components/ui/separator"
-import { CardContent } from "@/components/ui/card"
+import { Item, ItemContent, ItemTitle } from "@/components/ui/item"
 import { Canvas } from "@/components/ui/canvas"
 import { CanvasGrid } from "@/components/ui/canvas-grid"
 import { CanvasPreviewControls, CanvasPreviewFrame } from "@/components/ui/canvas-preview"
@@ -69,7 +79,6 @@ import {
   SidebarHeaderActions,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
@@ -78,14 +87,9 @@ import {
 import { Page, PageContent, PageScroll } from "@/components/ui/page"
 import { SearchInput } from "@/components/ui/input"
 import {
-  PageHeader,
-  PageHeaderContent,
-  PageHeaderDescription,
-  PageHeaderTitle,
-} from "@/components/ui/page-header"
-import {
   Section,
   SectionActions,
+  SectionContent,
   SectionDescription,
   SectionHeader,
   SectionHeading,
@@ -98,6 +102,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { Favicon } from "@/components/ui/favicon"
 import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import { Kbd } from "@/components/ui/kbd"
+import type { HangOffset } from "@/lib/hang"
 
 const alphabeticalRegistry = [...componentRegistry].sort((left, right) =>
   left.name.localeCompare(right.name),
@@ -112,6 +117,33 @@ const alphabeticalPreviewTools = [...previewRegistry].sort((left, right) =>
   left.name.localeCompare(right.name),
 )
 const defaultComponentSlug = alphabeticalRegistry[0].slug
+const wipSidebarSlugs = new Set(["chart", "carousel", "persona", "table-of-contents"])
+
+type SidebarNavigationItem = Pick<ComponentEntry, "slug" | "name"> & {
+  wip?: boolean
+}
+
+function withSidebarMetadata(
+  component: Pick<ComponentEntry, "slug" | "name">,
+): SidebarNavigationItem {
+  return {
+    ...component,
+    wip: wipSidebarSlugs.has(component.slug),
+  }
+}
+
+function SidebarWipBadge({ show = false }: { show?: boolean }) {
+  if (!show) return null
+
+  return (
+    <Badge
+      variant="primary"
+      className="ms-auto me-(--showcase-sidebar-wip-badge-edge-offset) h-(--showcase-sidebar-wip-badge-height) min-w-(--showcase-sidebar-wip-badge-height) rounded-(--showcase-sidebar-wip-badge-radius) px-(--showcase-sidebar-wip-badge-padding-inline) text-(length:--text-caption-size) leading-(--text-caption-leading)"
+    >
+      WIP
+    </Badge>
+  )
+}
 
 function useHashRoute() {
   const [hash, setHash] = useState(
@@ -229,9 +261,11 @@ function DemoSandbox({
 function ExampleSection({
   componentSlug,
   example,
+  hang = true,
 }: {
   componentSlug: string
   example: ComponentExample
+  hang?: HangOffset
 }) {
   const [resetKey, setResetKey] = useState(0)
   const [view, setView] = useState("preview")
@@ -309,7 +343,7 @@ function ExampleSection({
         className="showcase-example__tabs gap-6"
       >
         {header}
-        <CardContent className="showcase-example__panels">
+        <SectionContent hang={hang} className="showcase-example__panels">
           <TabsContent
             value="preview"
             forceMount
@@ -341,7 +375,7 @@ function ExampleSection({
               </Alert>
             )}
           </TabsContent>
-        </CardContent>
+        </SectionContent>
       </Tabs>
     </Section>
   )
@@ -388,18 +422,27 @@ function ComponentNavigation({
     matches(item.name),
   )
 
-  const renderItem = (component: Pick<ComponentEntry, "slug" | "name">) => (
-    <SidebarMenuItem key={component.slug}>
-      <SidebarMenuButton
-        type="button"
-        isActive={activeSlug === component.slug}
-        onClick={() => {
-          onNavigate(component.slug)
-          if (isMobile) setOpenMobile(false)
-        }}
+  const renderItem = (component: SidebarNavigationItem) => (
+    <SidebarMenuItem key={component.slug} data-showcase-nav-item={component.slug}>
+      <Item
+        compact
+        asChild
+        variant={activeSlug === component.slug ? "muted" : "default"}
       >
-        {component.name}
-      </SidebarMenuButton>
+        <button
+          type="button"
+          aria-pressed={activeSlug === component.slug}
+          onClick={() => {
+            onNavigate(component.slug)
+            if (isMobile) setOpenMobile(false)
+          }}
+        >
+          <ItemContent>
+            <ItemTitle>{component.name}</ItemTitle>
+          </ItemContent>
+          <SidebarWipBadge show={component.wip} />
+        </button>
+      </Item>
     </SidebarMenuItem>
   )
 
@@ -473,7 +516,7 @@ function ComponentNavigation({
         </div>
         {/* Bottom padding matches the scroll fade, so the final item stays clear. */}
         <SidebarContent
-          className="gap-7 px-2 pt-4 pb-6"
+          className="gap-7 pt-4 pb-6"
           role="navigation"
           aria-label="OneDS library"
         >
@@ -485,12 +528,28 @@ function ComponentNavigation({
               </SidebarGroupContent>
             </SidebarGroup>
           )}
+          {matches("Agent Catalog") && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Reference</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>{renderItem({ slug: "catalog", name: "Agent Catalog" })}</SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
+          {matches("Notes") && (
+            <SidebarGroup>
+              <SidebarGroupLabel>Notes</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>{renderItem({ slug: "notes", name: "Notes" })}</SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
           {sort === "build" ? (
             buildGroups.map((group) => (
               <SidebarGroup key={group.category}>
                 <SidebarGroupLabel>{group.category}</SidebarGroupLabel>
                 <SidebarGroupContent>
-                  <SidebarMenu>{group.items.map(renderItem)}</SidebarMenu>
+                  <SidebarMenu>{group.items.map(withSidebarMetadata).map(renderItem)}</SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
             ))
@@ -501,7 +560,7 @@ function ComponentNavigation({
                   <SidebarGroupLabel>Blocks</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      {alphabeticalBlockItems.map(renderItem)}
+                      {alphabeticalBlockItems.map(withSidebarMetadata).map(renderItem)}
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
@@ -511,7 +570,7 @@ function ComponentNavigation({
                   <SidebarGroupLabel>Experiments</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      {alphabeticalExperimentItems.map(renderItem)}
+                      {alphabeticalExperimentItems.map(withSidebarMetadata).map(renderItem)}
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
@@ -521,7 +580,7 @@ function ComponentNavigation({
                   <SidebarGroupLabel>Preview Tools</SidebarGroupLabel>
                   <SidebarGroupContent>
                     <SidebarMenu>
-                      {alphabeticalPreviewItems.map(renderItem)}
+                      {alphabeticalPreviewItems.map(withSidebarMetadata).map(renderItem)}
                     </SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
@@ -530,7 +589,7 @@ function ComponentNavigation({
                 <SidebarGroup>
                   <SidebarGroupLabel>Components</SidebarGroupLabel>
                   <SidebarGroupContent>
-                    <SidebarMenu>{alphabeticalItems.map(renderItem)}</SidebarMenu>
+                    <SidebarMenu>{alphabeticalItems.map(withSidebarMetadata).map(renderItem)}</SidebarMenu>
                   </SidebarGroupContent>
                 </SidebarGroup>
               ) : null}
@@ -540,7 +599,7 @@ function ComponentNavigation({
               <SidebarGroup key={group.category}>
                 <SidebarGroupLabel>{group.category}</SidebarGroupLabel>
                 <SidebarGroupContent>
-                  <SidebarMenu>{group.items.map(renderItem)}</SidebarMenu>
+                  <SidebarMenu>{group.items.map(withSidebarMetadata).map(renderItem)}</SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>
             ))
@@ -551,13 +610,9 @@ function ComponentNavigation({
   )
 }
 
-function ComponentPage({ slug }: { slug: string }) {
-  const entry = registry.find((component) => component.slug === slug) ?? registry[0]
+function ComponentPage({ entry }: { entry: ComponentEntry }) {
   const tier = surfaceTier(entry)
-  const installCommand =
-    entry.installCommand === undefined
-      ? `npx shadcn@latest add ${entry.slug}`
-      : entry.installCommand
+
   const defaultExample = {
     name: entry.defaultExampleName ?? "Default",
     Demo: entry.Demo,
@@ -575,35 +630,16 @@ function ComponentPage({ slug }: { slug: string }) {
   ]
 
   return (
-    <>
-      <PageHeader className="showcase-component__header">
-        <PageHeaderContent className="w-full">
-          <PageHeaderTitle className="showcase-component__title">
-            {entry.name}
-          </PageHeaderTitle>
-          <PageHeaderDescription className="showcase-component__description">
-            {entry.description}
-          </PageHeaderDescription>
-          {installCommand ? (
-            <CodeBlock
-              code={installCommand}
-              showLineNumbers={false}
-              className="showcase-component__command"
-            />
-          ) : null}
-        </PageHeaderContent>
-      </PageHeader>
-
-      <div className="showcase-component__examples">
-        {examples.map((example) => (
-          <ExampleSection
-            key={example.name}
-            componentSlug={entry.slug}
-            example={example}
-          />
-        ))}
-      </div>
-    </>
+    <div className="showcase-component__examples">
+      {examples.map((example) => (
+        <ExampleSection
+          key={example.name}
+          componentSlug={entry.slug}
+          example={example}
+          hang={example.hang ?? entry.hang ?? true}
+        />
+      ))}
+    </div>
   )
 }
 
@@ -611,14 +647,30 @@ function App() {
   const [slug, navigate] = useHashRoute()
   const scrollRef = useRef<HTMLDivElement>(null)
   const isRulesPage = slug === "rules"
+  const isCatalogPage = slug === "catalog"
+  const isNotesPage = slug === "notes"
+  const isCustomPage = isRulesPage || isCatalogPage || isNotesPage
   const activeEntry = registry.find((entry) => entry.slug === slug) ?? registry[0]
-  const contentKind =
-    activeEntry.category === "Blocks"
+  const activePageHeader = isRulesPage
+    ? designRulesPageHeader
+    : isCatalogPage
+      ? agentCatalogPageHeader
+      : isNotesPage
+        ? notesPageHeader
+        : { title: activeEntry.name, description: activeEntry.description }
+  const activeInstallCommand = isCustomPage
+    ? null
+    : activeEntry.installCommand === undefined
+      ? `npx shadcn@latest add ${activeEntry.slug}`
+      : activeEntry.installCommand
+  const contentKind = isCustomPage
+    ? "reference"
+    : activeEntry.category === "Blocks"
       ? "block"
       : activeEntry.category === "Experiments"
         ? "experiment"
         : "component"
-  const pageVariant = isRulesPage ? "app" : PAGE_VARIANT_BY_SURFACE[surfaceTier(activeEntry)]
+  const pageVariant = isCustomPage ? "app" : PAGE_VARIANT_BY_SURFACE[surfaceTier(activeEntry)]
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: "auto" })
@@ -634,7 +686,7 @@ function App() {
       }
     >
       <MaterialTheme asChild data-theme-scope="showcase-navigation">
-        <Sidebar collapsible="hidden" edge="faded">
+        <Sidebar collapsible="hidden" edge="faded" placement="floating">
           <ComponentNavigation activeSlug={slug} onNavigate={navigate} />
         </Sidebar>
       </MaterialTheme>
@@ -643,14 +695,28 @@ function App() {
         <SidebarTrigger placement="floating" />
         <Page>
           <PageScroll ref={scrollRef}>
+            <ShowcasePageHeader
+              key={`header-${slug}`}
+              title={activePageHeader.title}
+              description={activePageHeader.description}
+              command={activeInstallCommand}
+            />
             <PageContent
               variant={pageVariant}
               key={slug}
               className="showcase-page-content"
-              data-content-kind={isRulesPage ? "reference" : contentKind}
-              data-showcase-surface={isRulesPage ? "default" : surfaceTier(activeEntry)}
+              data-content-kind={isCustomPage ? "reference" : contentKind}
+              data-showcase-surface={isCustomPage ? "default" : surfaceTier(activeEntry)}
             >
-              {isRulesPage ? <DesignRulesPage /> : <ComponentPage slug={slug} />}
+              {isRulesPage ? (
+                <DesignRulesPage />
+              ) : isCatalogPage ? (
+                <AgentCatalogPage />
+              ) : isNotesPage ? (
+                <NotesPage />
+              ) : (
+                <ComponentPage entry={activeEntry} />
+              )}
             </PageContent>
           </PageScroll>
         </Page>

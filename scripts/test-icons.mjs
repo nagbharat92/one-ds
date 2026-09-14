@@ -10,7 +10,15 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 const walk = directory => fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? walk(`${directory}/${entry.name}`) : [`${directory}/${entry.name}`])
 const adapterPath = "src/components/ui/icon-adapters/material.tsx"
-const geometricOwners = new Set([adapterPath, "src/components/ui/annotation.tsx", "src/components/ui/coachmark.tsx", "src/components/ui/shape.tsx"])
+const geometricOwners = new Set([
+  adapterPath,
+  "src/components/ui/annotation.tsx",
+  "src/components/ui/coachmark.tsx",
+  "src/components/ui/shape.tsx",
+  "src/components/ui/separator.tsx",
+  "src/showcase/demos/layout.tsx",
+  "snippet:separator:Demo Only",
+])
 const forbidden = /hugeicons|lucide|phosphor|@tabler\/icons|@heroicons|@radix-ui\/react-icons|@fluentui\/react-icons|@remixicon|iconoir|react-icons\/|@mui\/icons-material/i
 
 function checkSource(filename, text) {

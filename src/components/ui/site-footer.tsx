@@ -1,18 +1,81 @@
 import * as React from "react"
 import { Slot } from "radix-ui"
+import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
+import { Separator } from "@/components/ui/separator"
 
-function SiteFooter({ className, ...props }: React.ComponentProps<"footer">) {
+type SiteFooterVariant = "default" | "docked" | "floating" | "inverted"
+
+const SiteFooterContext = React.createContext<SiteFooterVariant>("default")
+
+function useSiteFooterVariant() {
+  return React.useContext(SiteFooterContext)
+}
+
+const siteFooterVariants = cva("w-full transition-colors", {
+  variants: {
+    variant: {
+      default: "text-foreground",
+      docked: "text-foreground",
+      floating:
+        "mx-auto my-(--space-lg) max-w-7xl rounded-(--site-footer-floating-radius) border border-(--elevation-stroke) bg-(--site-footer-surface-floating) shadow-(--site-footer-floating-shadow) text-foreground",
+      inverted: "dark text-foreground",
+    },
+  },
+  defaultVariants: {
+    variant: "docked",
+  },
+})
+
+function SiteFooter({
+  className,
+  variant = "docked",
+  wave = true,
+  children,
+  ...props
+}: React.ComponentProps<"footer"> & {
+  variant?: SiteFooterVariant
+  wave?: boolean
+}) {
+  const resolvedVariant = variant === "default" ? "docked" : variant
+  const isFloating = resolvedVariant === "floating"
+  const hasWave = !isFloating && wave
+
   return (
-    <footer
-      data-slot="site-footer"
-      className={cn(
-        "w-full border-t border-border/60 bg-background text-foreground",
-        className
-      )}
-      {...props}
-    />
+    <SiteFooterContext.Provider value={resolvedVariant}>
+      <footer
+        data-slot="site-footer"
+        data-variant={resolvedVariant}
+        className={cn(siteFooterVariants({ variant: resolvedVariant }), className)}
+        {...props}
+      >
+        {hasWave && (
+          <div
+            data-slot="site-footer-wave"
+            className="relative z-10 -mb-px w-full overflow-hidden leading-none"
+          >
+            <Separator
+              variant="wavy"
+              wavySize="medium"
+              tone={resolvedVariant === "inverted" ? "subtle" : "neutral"}
+              fill="bottom"
+              fillClassName="fill-(--sidebar) text-(--sidebar)"
+              className="block w-full text-(--separator-stroke)"
+            />
+          </div>
+        )}
+        <div
+          data-slot="site-footer-body"
+          className={cn(
+            "w-full",
+            !isFloating && "bg-sidebar"
+          )}
+        >
+          {children}
+        </div>
+      </footer>
+    </SiteFooterContext.Provider>
   )
 }
 
@@ -20,11 +83,16 @@ function SiteFooterContainer({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const variant = useSiteFooterVariant()
+
   return (
     <div
       data-slot="site-footer-container"
       className={cn(
-        "mx-auto flex w-full flex-col gap-10 px-(--space-md) py-(--space-2xl) sm:px-(--space-lg) lg:px-(--space-xl)",
+        "mx-auto flex w-full flex-col gap-(--site-footer-gap)",
+        variant === "floating"
+          ? "p-(--site-footer-floating-inset)"
+          : "px-(--site-footer-padding-inline) py-(--site-footer-padding-block)",
         className
       )}
       {...props}
@@ -37,7 +105,7 @@ function SiteFooterTop({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="site-footer-top"
       className={cn(
-        "flex flex-col gap-10 lg:flex-row lg:justify-between",
+        "flex flex-col gap-(--site-footer-gap) lg:flex-row lg:justify-between",
         className
       )}
       {...props}
@@ -66,7 +134,7 @@ function SiteFooterBrand({
     <Comp
       data-slot="site-footer-brand"
       className={cn(
-        "flex w-fit items-center gap-(--space-xs) text-base font-semibold whitespace-nowrap text-foreground transition-opacity hover:opacity-80 [&_svg]:size-6 [&_svg]:shrink-0",
+        "flex w-fit cursor-pointer items-center gap-(--space-xs) rounded-sm text-base font-semibold whitespace-nowrap text-foreground outline-none transition-opacity hover:opacity-85 focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-6 [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -81,7 +149,7 @@ function SiteFooterDescription({
   return (
     <p
       data-slot="site-footer-description"
-      className={cn("max-w-xs text-sm text-pretty text-muted-foreground", className)}
+      className={cn("max-w-xs text-sm text-pretty leading-relaxed text-muted-foreground", className)}
       {...props}
     />
   )
@@ -95,7 +163,7 @@ function SiteFooterColumns({
     <div
       data-slot="site-footer-columns"
       className={cn(
-        "grid grid-cols-2 gap-x-(--space-xl) gap-y-10 sm:grid-cols-3 lg:grid-cols-4",
+        "grid grid-cols-2 gap-x-(--site-footer-column-gap) gap-y-(--site-footer-gap) sm:grid-cols-3 lg:grid-cols-4",
         className
       )}
       {...props}
@@ -107,7 +175,7 @@ function SiteFooterColumn({ className, ...props }: React.ComponentProps<"div">) 
   return (
     <div
       data-slot="site-footer-column"
-      className={cn("flex flex-col gap-(--space-sm)", className)}
+      className={cn("flex flex-col gap-(--site-footer-title-gap)", className)}
       {...props}
     />
   )
@@ -120,7 +188,7 @@ function SiteFooterColumnTitle({
   return (
     <h3
       data-slot="site-footer-column-title"
-      className={cn("text-sm font-semibold text-foreground", className)}
+      className={cn("text-sm font-semibold tracking-tight text-foreground", className)}
       {...props}
     />
   )
@@ -130,7 +198,7 @@ function SiteFooterNav({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
       data-slot="site-footer-nav"
-      className={cn("flex flex-col gap-(--space-sm) text-sm", className)}
+      className={cn("flex flex-col gap-(--site-footer-item-gap) text-sm", className)}
       {...props}
     />
   )
@@ -147,7 +215,7 @@ function SiteFooterLink({
     <Comp
       data-slot="site-footer-link"
       className={cn(
-        "w-fit text-muted-foreground transition-colors hover:text-foreground",
+        "w-fit cursor-pointer rounded-xs text-sm text-muted-foreground transition-colors duration-(--speed-swift) ease-(--ease-settle) outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50",
         className
       )}
       {...props}
@@ -162,7 +230,7 @@ function SiteFooterNewsletter({
   return (
     <div
       data-slot="site-footer-newsletter"
-      className={cn("flex flex-col gap-(--space-sm)", className)}
+      className={cn("flex flex-col gap-(--site-footer-item-gap)", className)}
       {...props}
     />
   )
@@ -175,7 +243,7 @@ function SiteFooterNewsletterTitle({
   return (
     <h3
       data-slot="site-footer-newsletter-title"
-      className={cn("text-sm font-semibold text-foreground", className)}
+      className={cn("text-sm font-semibold tracking-tight text-foreground", className)}
       {...props}
     />
   )
@@ -188,7 +256,7 @@ function SiteFooterNewsletterDescription({
   return (
     <p
       data-slot="site-footer-newsletter-description"
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-sm leading-relaxed text-muted-foreground", className)}
       {...props}
     />
   )
@@ -211,7 +279,7 @@ function SiteFooterSocial({ className, ...props }: React.ComponentProps<"div">) 
   return (
     <div
       data-slot="site-footer-social"
-      className={cn("flex items-center gap-(--space-2xs)", className)}
+      className={cn("flex items-center gap-(--space-xs)", className)}
       {...props}
     />
   )
@@ -228,7 +296,7 @@ function SiteFooterSocialLink({
     <Comp
       data-slot="site-footer-social-link"
       className={cn(
-        "inline-flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors outline-none hover:bg-(--state-layer-hover) active:bg-(--state-layer-pressed) hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-4 [&_svg]:shrink-0",
+        "button-motion inline-flex size-(--site-footer-social-size) shrink-0 cursor-pointer items-center justify-center rounded-full bg-(--tertiary-fill) text-muted-foreground outline-none transition-colors duration-(--speed-swift) ease-(--ease-settle) hover:bg-(--button-tertiary-hover) hover:text-foreground active:translate-y-(--button-press-distance) active:scale-(--button-press-scale) active:bg-(--button-tertiary-pressed) focus-visible:ring-3 focus-visible:ring-ring [&_svg]:size-5 **:data-[slot=favicon]:size-5 [&_svg]:shrink-0",
         className
       )}
       {...props}
@@ -238,13 +306,14 @@ function SiteFooterSocialLink({
 
 function SiteFooterSeparator({
   className,
+  variant = "faded",
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<typeof Separator>) {
   return (
-    <div
+    <Separator
       data-slot="site-footer-separator"
-      role="separator"
-      className={cn("h-px w-full bg-border/60", className)}
+      variant={variant}
+      className={cn("w-full", className)}
       {...props}
     />
   )
@@ -268,7 +337,7 @@ function SiteFooterLegal({ className, ...props }: React.ComponentProps<"nav">) {
     <nav
       data-slot="site-footer-legal"
       className={cn(
-        "flex flex-wrap items-center gap-x-(--space-md) gap-y-(--space-xs) text-sm",
+        "flex flex-wrap items-center gap-x-(--space-lg) gap-y-(--space-xs) text-sm",
         className
       )}
       {...props}

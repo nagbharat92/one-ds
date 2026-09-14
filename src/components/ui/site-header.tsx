@@ -54,7 +54,7 @@ const nestedItemSizing = [
   "[&_[data-slot=button]]:rounded-(--site-header-item-radius)",
   // Fills must reach the border box, or a button paints shorter than the link
   // backplate beside it.
-  "[&_[data-slot=button]]:bg-clip-border",
+  "**:data-[slot=button]:bg-clip-border",
   "[&_[data-slot=button]:not([data-size^=icon])]:px-(--site-header-item-padding-inline)",
   "[&_[data-slot=button][data-size^=icon]]:w-(--site-header-item-size)",
   // Ties Button's own `svg:not([class*='size-'])` rule, so it needs the extra
@@ -87,8 +87,8 @@ const siteHeaderVariants = cva(
       },
     },
     compoundVariants: [
-      { variant: "docked", position: "top", class: "border-b" },
-      { variant: "docked", position: "bottom", class: "border-t" },
+      { variant: "docked", position: "top", class: "border-b border-border/60" },
+      { variant: "docked", position: "bottom", class: "border-t border-border/60" },
       {
         variant: ["floating", "clustered"],
         // The inset gutter must stay click-through; only the shell takes pointers.
@@ -137,7 +137,7 @@ const siteHeaderContainerVariants = cva(
       variant: {
         docked: "mx-auto w-full px-(--site-header-gutter)",
         floating:
-          "w-auto max-w-full rounded-(--site-header-radius) border bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
+          "w-auto max-w-full rounded-(--site-header-radius) border border-(--elevation-stroke) bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
         // The shell stays invisible; each group carries its own chrome instead.
         clustered: "w-auto max-w-full gap-(--site-header-cluster-gap)",
       },
@@ -178,7 +178,7 @@ function SiteHeaderGroup({ className, ...props }: React.ComponentProps<"div">) {
       className={cn(
         "flex h-full items-center gap-(--space-2xs)",
         variant === "clustered" &&
-          "rounded-(--site-header-radius) border bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
+          "rounded-(--site-header-radius) border border-(--elevation-stroke) bg-popover bg-clip-padding px-(--site-header-padding) shadow-(--site-header-shadow)",
         className
       )}
       {...props}
@@ -198,11 +198,11 @@ function SiteHeaderBrand({
     <Comp
       data-slot="site-header-brand"
       className={cn(
-        "flex shrink-0 items-center gap-(--space-xs) text-base font-semibold whitespace-nowrap text-foreground transition-opacity hover:opacity-80 [&_svg]:size-5 [&_svg]:shrink-0",
+        "flex shrink-0 cursor-pointer items-center gap-(--space-xs) rounded-(--site-header-flat-item-radius) text-base font-semibold whitespace-nowrap text-foreground outline-none transition-all duration-(--site-header-speed) ease-(--ease-settle) hover:opacity-85 active:scale-[0.98] focus-visible:ring-3 focus-visible:ring-ring/50 [&_svg]:size-5 [&_svg]:shrink-0",
         // A lone mark centres in a square slot, so its group renders as a
         // circle; a mark with a label pads out to clear the cap curve.
         variant !== "docked" &&
-          "h-(--site-header-item-size) min-w-(--site-header-item-size) justify-center has-[span]:px-(--site-header-item-padding-inline)",
+          "h-(--site-header-item-size) min-w-(--site-header-item-size) justify-center rounded-(--site-header-item-radius) has-[span]:px-(--site-header-item-padding-inline)",
         className
       )}
       {...props}
@@ -298,8 +298,10 @@ function SiteHeaderIndicator() {
       aria-hidden
       data-slot="site-header-indicator"
       className={cn(
-        "pointer-events-none absolute top-0 left-0 h-(--site-header-indicator-h) w-(--site-header-indicator-w) translate-x-(--site-header-indicator-x) translate-y-(--site-header-indicator-y) rounded-md bg-muted opacity-0 transition-none group-data-ready/site-header-nav:opacity-100 group-data-ready/site-header-nav:transition-[translate,width,height] group-data-ready/site-header-nav:duration-(--site-header-travel-duration) group-data-ready/site-header-nav:ease-(--site-header-ease)",
-        variant !== "docked" && "rounded-(--site-header-item-radius)"
+        "pointer-events-none absolute top-0 left-0 h-(--site-header-indicator-h) w-(--site-header-indicator-w) translate-x-(--site-header-indicator-x) translate-y-(--site-header-indicator-y) bg-(--site-header-indicator-fill) opacity-0 transition-none group-data-ready/site-header-nav:opacity-100 group-data-ready/site-header-nav:transition-[translate,width,height] group-data-ready/site-header-nav:duration-(--site-header-travel-duration) group-data-ready/site-header-nav:ease-(--site-header-ease)",
+        variant === "docked"
+          ? "rounded-(--site-header-flat-item-radius)"
+          : "rounded-(--site-header-item-radius)"
       )}
     />
   )
@@ -504,9 +506,8 @@ function SiteHeaderLink({
       aria-current={isActive ? "page" : undefined}
       className={cn(
         // relative keeps the link above the absolutely placed backplate.
-        "relative inline-flex shrink-0 items-center font-medium whitespace-nowrap text-muted-foreground transition-colors duration-(--site-header-speed) ease-(--ease-settle) outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 data-[active=true]:text-foreground [&_svg]:size-4 [&_svg]:shrink-0",
+        "relative inline-flex shrink-0 cursor-pointer items-center justify-center font-medium whitespace-nowrap text-muted-foreground outline-none transition-colors duration-(--site-header-speed) ease-(--ease-settle) hover:bg-(--state-layer-hover) hover:text-foreground active:scale-[0.98] active:bg-(--state-layer-pressed) focus-visible:ring-3 focus-visible:ring-ring/50 data-[active=true]:text-(--site-header-indicator-ink) data-[active=true]:hover:bg-transparent [&_svg]:size-5 [&_svg]:shrink-0 data-[active=true]:[&_.oneds-icon]:[--icon-fill:var(--material-icon-fill-selected)]",
         itemShape(variant),
-        variant !== "docked" && "[&_svg]:size-5",
         className
       )}
       {...props}
@@ -524,7 +525,7 @@ function SiteHeaderActions({
     <div
       data-slot="site-header-actions"
       className={cn(
-        "flex shrink-0 items-center gap-(--site-header-action-gap) [&_[data-slot=button]]:bg-clip-border [&_[data-slot=dropdown-menu-trigger]]:bg-clip-border",
+        "flex shrink-0 items-center gap-(--site-header-action-gap) **:data-[slot=button]:bg-clip-border **:data-[slot=dropdown-menu-trigger]:bg-clip-border",
         // A shell that hugs its content has no slack to push actions into.
         variant === "docked" &&
           "ms-auto me-(--site-header-actions-edge-offset)",

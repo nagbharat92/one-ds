@@ -24,7 +24,6 @@ function CalendarDemo() {
       mode="single"
       selected={date}
       onSelect={setDate}
-      className="rounded-md border shadow-(--elevation-raised)"
     />
   )
 }
@@ -35,7 +34,7 @@ function RangeCalendarDemo() {
     to: addDays(new Date(), 6),
   })
   return (
-    <div className="space-y-3">
+    <div className="grid gap-(--space-sm)">
       <Calendar
         mode="range"
         selected={range}
@@ -43,7 +42,6 @@ function RangeCalendarDemo() {
         resetOnSelect
         numberOfMonths={2}
         showOutsideDays={false}
-        className="rounded-md border shadow-(--elevation-raised)"
       />
       <p className="text-sm text-muted-foreground">
         {range?.from
@@ -59,7 +57,7 @@ function RangeCalendarDemo() {
 function MonthYearSelectorDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   return (
-    <div className="space-y-3">
+    <div className="grid gap-(--space-sm)">
       <Calendar
         mode="single"
         selected={date}
@@ -67,7 +65,6 @@ function MonthYearSelectorDemo() {
         captionLayout="dropdown"
         startMonth={new Date(2020, 0)}
         endMonth={addMonths(new Date(), 12)}
-        className="rounded-md border shadow-(--elevation-raised)"
       />
       <p className="text-sm text-muted-foreground">
         {date ? format(date, "PPP") : "Pick a date"}
@@ -87,8 +84,8 @@ const PRESETS: { label: string; value: () => Date }[] = [
 function PresetsDemo() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   return (
-    <div className="flex flex-col gap-3 sm:flex-row">
-      <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-(--space-sm) sm:flex-row">
+      <div className="flex flex-col gap-(--space-2xs)">
         {PRESETS.map((p) => (
           <Button
             key={p.label}
@@ -106,7 +103,6 @@ function PresetsDemo() {
         mode="single"
         selected={date}
         onSelect={setDate}
-        className="rounded-md border shadow-(--elevation-raised)"
       />
     </div>
   )
@@ -141,16 +137,15 @@ function DateTimePickerDemo() {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="grid gap-(--space-sm)">
       <Calendar
         mode="single"
         selected={date}
         onSelect={handleDateSelect}
-        className="rounded-md border shadow-(--elevation-raised)"
       />
-      <div className="flex items-center gap-2 px-1">
+      <div className="flex items-center gap-(--space-xs) px-(--space-2xs)">
         <span className="text-sm font-medium">Time</span>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-(--space-2xs)">
           <Select
             value={time.hour}
             onValueChange={(hour) =>
@@ -221,7 +216,7 @@ const BOOKED_DAYS = [
 function BookedDatesDemo() {
   const [date, setDate] = useState<Date | undefined>()
   return (
-    <div className="space-y-3">
+    <div className="grid gap-(--space-sm)">
       <Calendar
         mode="single"
         selected={date}
@@ -229,7 +224,6 @@ function BookedDatesDemo() {
         disabled={BOOKED_DAYS}
         modifiers={{ booked: BOOKED_DAYS }}
         modifiersClassNames={{ booked: "line-through opacity-50" }}
-        className="rounded-md border shadow-(--elevation-raised)"
       />
       <p className="text-sm text-muted-foreground">
         {date
@@ -261,7 +255,6 @@ export function CalendarDemo() {
       mode="single"
       selected={date}
       onSelect={setDate}
-      className="rounded-md border shadow-(--elevation-raised)"
     />
   )
 }`,

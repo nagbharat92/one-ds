@@ -1,0 +1,17 @@
+# Rules for src/showcase/demos/composed.tsx
+
+Generated from src/design-system/rules.json. Do not edit directly.
+
+1 scoped rule. Read _always.md as well.
+
+### Table headers and rows use pill geometry
+
+controls.table-header | Required | approved | enforcement: Automated
+
+Every TableHead uses the shared 56px --table-header-height. Sortable columns use TableSortButton rather than composing a generic Button locally. TableSortButton is always the 40px default-size Secondary Button with a 20px pill radius, leaving an 8px vertical inset inside the header row. Interior sortable TableHeads remove their own inline padding and the trigger owns --table-header-padding-inline, so plain and sortable labels align without doubled padding; a sort control in the first or last column retains the row's optical edge inset around its complete backplate. Button owns the 8px graphic-label gap and 20px icon; do not add local icon margins or size overrides. Every TableRow applies --table-row-radius to both outer cells at rest so hover, focus, expanded, and selected fills share stable pill endcaps. The row radius equals the 56px header token and clamps to half each rendered row height, keeping variable-height rows fully rounded. TableRow also opts into the shared EdgeText mechanism with a table-specific 16px --table-edge-optical-padding. Detectable bare text and text-only spans receive that directional correction through EdgeText; first and last cells without a detectable EdgeText use --table-edge-cell-padding, combining the normal 8px inset with the 16px optical adjustment for a 24px total edge inset. This fallback covers header, body, and footer rows plus rich or control content, while interior cells remain unchanged. A Data Table filtering composition uses the standard SearchInput centered above Table in one stable full-width column. SearchInput stays responsive at width 100% up to --table-filter-search-max-width (720px), while Table remains full width and retains identical inline bounds when filtering replaces populated rows with an empty result row. A Data Table visibility composition also uses one stable full-width column so hiding columns never changes the Table container width. Its column menu trigger is a centered 160px --table-visibility-control-width Secondary Button with the 20px pill radius; Button owns the standard 8px graphic gap and 20px icon. A Data Table Column Toggle composition likewise uses a stable full-width column and centers its wrapping controls; toggling columns never changes the Table container width.
+
+Exceptions: Plain text, checkbox, and non-sortable headers still use TableHead and therefore retain the 56px row, but they do not render TableSortButton. Body-row height remains content-driven, and transparent resting rows do not add a fill merely to expose their pill shape. Edge controls are not wrapped in EdgeText; their outer cell supplies the equivalent 24px inset. Non-table Button geometry and the global 8px EdgeText default are unaffected.
+
+Tokens: `--table-header-height`, `--table-header-padding-inline`, `--table-row-radius`, `--table-edge-optical-padding`, `--table-edge-cell-padding`, `--table-filter-search-max-width`, `--table-visibility-control-width`, `--optical-edge-text-padding`, `--button-height-default`, `--button-round-radius`, `--button-gap`, `--button-icon-default`, `--button-secondary-fill`, `--button-secondary-ink`
+
+Files: src/components/ui/table.tsx, src/index.css, src/showcase/demos/composed.tsx, tests/table.spec.ts

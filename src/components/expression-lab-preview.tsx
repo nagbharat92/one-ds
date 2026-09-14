@@ -280,8 +280,8 @@ function ExpressionLabComposerAddMenu({
         </DropdownMenuTrigger>
         <ColorThemePortal>
         <DropdownMenuContent side="top" align="start" data-expression={mode}>
-          <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
           <DropdownMenuGroup>
+            <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
             <DropdownMenuItem onSelect={() => fileInputRef.current?.click()}>
               <PaperclipIcon />
               Add files
@@ -291,26 +291,27 @@ function ExpressionLabComposerAddMenu({
               Add images
             </DropdownMenuItem>
           </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel>Tools</DropdownMenuLabel>
-          <DropdownMenuCheckboxItem
-            checked={webSearch}
-            onCheckedChange={(checked) =>
-              onWebSearchChange(checked === true)
-            }
-          >
-            <GlobeIcon />
-            Search web
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={deepResearch}
-            onCheckedChange={(checked) =>
-              onDeepResearchChange(checked === true)
-            }
-          >
-            <SearchIcon />
-            Deep research
-          </DropdownMenuCheckboxItem>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Tools</DropdownMenuLabel>
+            <DropdownMenuCheckboxItem
+              checked={webSearch}
+              onCheckedChange={(checked) =>
+                onWebSearchChange(checked === true)
+              }
+            >
+              <GlobeIcon />
+              Search web
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={deepResearch}
+              onCheckedChange={(checked) =>
+                onDeepResearchChange(checked === true)
+              }
+            >
+              <SearchIcon />
+              Deep research
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
         </ColorThemePortal>
       </DropdownMenu>

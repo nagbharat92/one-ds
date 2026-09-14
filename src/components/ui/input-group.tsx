@@ -7,13 +7,25 @@ import { FieldActionButton } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
+export type InputGroupProps = React.ComponentProps<"div"> & {
+  focusRing?: boolean
+}
+
+function InputGroup({
+  className,
+  focusRing = true,
+  ...props
+}: InputGroupProps) {
   return (
     <div
       data-slot="input-group"
+      data-focus-ring={focusRing ? "true" : "false"}
       role="group"
       className={cn(
-        "group/input-group relative flex h-(--field-height) w-full min-w-0 items-center rounded-(--field-radius) bg-(--field-fill) p-(--field-action-inset) text-(--field-ink) transition-colors outline-none hover:bg-(--field-hover-fill) in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-[>[data-slot=input-group-control]:disabled]:bg-(--field-disabled-fill) has-[>[data-slot=input-group-control]:disabled]:opacity-50 has-[>[data-slot=input-group-control]:disabled]:hover:bg-(--field-disabled-fill) has-[[data-slot=input-group-control]:focus-visible]:bg-(--field-focus-fill) has-[[data-slot=input-group-control]:focus-visible]:text-(--field-focus-ink) has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto has-[>[data-align=block-end]]:[&>input]:pt-3 has-[>[data-align=block-start]]:[&>input]:pb-3",
+        "group/input-group relative flex h-(--field-height) w-full min-w-0 items-center rounded-(--field-radius) bg-(--field-fill) p-(--field-action-inset) text-(--field-ink) transition-colors outline-none hover:bg-(--field-hover-fill) in-data-[slot=combobox-content]:rounded-(--menu-item-edge-radius) in-data-[slot=combobox-content]:p-(--menu-chunk-padding) in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-[>[data-slot=input-group-control]:disabled]:bg-(--field-disabled-fill) has-[>[data-slot=input-group-control]:disabled]:opacity-50 has-[>[data-slot=input-group-control]:disabled]:hover:bg-(--field-disabled-fill) has-[[data-slot=input-group-control]:focus-visible]:bg-(--field-focus-fill) has-[[data-slot=input-group-control]:focus-visible]:text-(--field-focus-ink) has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto has-[>[data-align=block-end]]:[&>input]:pt-3 has-[>[data-align=block-start]]:[&>input]:pb-3",
+        focusRing
+          ? "has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot=input-group-control]:focus-visible]:ring-ring has-[[data-slot][aria-invalid=true]]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-destructive"
+          : "focus-within:ring-0 has-[[data-slot=input-group-control]:focus-visible]:ring-0",
         className
       )}
       {...props}
@@ -118,7 +130,7 @@ function InputGroupTextarea({
   )
 }
 
-type SearchInputProps = Omit<
+export type SearchInputProps = Omit<
   React.ComponentProps<"input">,
   "type" | "value" | "defaultValue" | "onChange"
 > & {
@@ -127,6 +139,8 @@ type SearchInputProps = Omit<
   onValueChange?: (value: string) => void
   onChange?: React.ChangeEventHandler<HTMLInputElement>
   clearable?: boolean
+  focusRing?: boolean
+  selectOnFocus?: boolean
 }
 
 // A search field is an InputGroup: a leading icon, the control, and a clear action.
@@ -136,16 +150,26 @@ function SearchInput({
   defaultValue,
   onValueChange,
   onChange,
+  onFocus,
+  onMouseDown,
+  onMouseUp,
+  onBlur,
   clearable = true,
   disabled,
   placeholder = "Search",
   "aria-label": ariaLabel = "Search",
+  focusRing = true,
+  selectOnFocus = true,
+  ref,
   ...props
 }: SearchInputProps) {
   const inputRef = React.useRef<HTMLInputElement>(null)
+  React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement)
+
   const isControlled = value !== undefined
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? "")
   const currentValue = isControlled ? value : internalValue
+  const isMouseInvokingRef = React.useRef(false)
 
   const setValue = React.useCallback(
     (next: string) => {
@@ -165,6 +189,55 @@ function SearchInput({
     [setValue, onChange]
   )
 
+  const handleMouseDown = React.useCallback<
+    React.MouseEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      if (selectOnFocus && document.activeElement !== event.currentTarget) {
+        isMouseInvokingRef.current = true
+      }
+      onMouseDown?.(event)
+    },
+    [selectOnFocus, onMouseDown]
+  )
+
+  const handleMouseUp = React.useCallback<
+    React.MouseEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      if (isMouseInvokingRef.current) {
+        isMouseInvokingRef.current = false
+        if (event.currentTarget.value.length > 0) {
+          event.currentTarget.select()
+        }
+      }
+      onMouseUp?.(event)
+    },
+    [onMouseUp]
+  )
+
+  const handleFocus = React.useCallback<
+    React.FocusEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      if (selectOnFocus && event.currentTarget.value.length > 0) {
+        event.currentTarget.select()
+      }
+      onFocus?.(event)
+    },
+    [selectOnFocus, onFocus]
+  )
+
+  const handleBlur = React.useCallback<
+    React.FocusEventHandler<HTMLInputElement>
+  >(
+    (event) => {
+      isMouseInvokingRef.current = false
+      onBlur?.(event)
+    },
+    [onBlur]
+  )
+
   const clear = React.useCallback(() => {
     setValue("")
     inputRef.current?.focus()
@@ -173,7 +246,11 @@ function SearchInput({
   const showClear = clearable && currentValue.length > 0 && !disabled
 
   return (
-    <InputGroup data-slot="search-input" className={className}>
+    <InputGroup
+      data-slot="search-input"
+      focusRing={focusRing}
+      className={className}
+    >
       <InputGroupAddon>
         <SearchIcon />
       </InputGroupAddon>
@@ -182,6 +259,10 @@ function SearchInput({
         type="search"
         value={currentValue}
         onChange={handleChange}
+        onFocus={handleFocus}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onBlur={handleBlur}
         disabled={disabled}
         placeholder={placeholder}
         aria-label={ariaLabel}

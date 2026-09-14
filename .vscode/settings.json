@@ -1,0 +1,16 @@
+{
+  "search.exclude": {
+    "**/dist/**": true,
+    "**/playwright-report/**": true,
+    "**/public/design-rules.md": true,
+    "**/src/showcase/generated-example-code.ts": true,
+    "**/test-results/**": true
+  },
+  "files.watcherExclude": {
+    "**/dist/**": true,
+    "**/playwright-report/**": true,
+    "**/public/design-rules.md": true,
+    "**/src/showcase/generated-example-code.ts": true,
+    "**/test-results/**": true
+  }
+}

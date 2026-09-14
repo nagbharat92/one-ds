@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils"
 const dragHandleVariants = cva("block shrink-0 rounded-full", {
   variants: {
     variant: {
-      grabber: "bg-muted",
-      grip: "bg-border",
+      grabber: "bg-(--drag-handle-fill-rest)",
+      grip: "bg-(--drag-handle-fill-rest)",
     },
     orientation: {
       horizontal: "",

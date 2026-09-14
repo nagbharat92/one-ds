@@ -98,6 +98,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Stack } from "@/components/ui/stack"
 import { Cluster } from "@/components/ui/cluster"
 import { Text } from "@/components/ui/text"
+import { generatedExampleCode } from "@/showcase/generated-example-code"
 
 function ConnectedButtonGroupsDemo() {
   return (
@@ -597,13 +598,14 @@ export const formsDemos: ComponentEntry[] = [
     slug: "button",
     name: "Button",
     codeSource: "complete",
-    description: "Tertiary is the neutral default for general actions. Choose Primary or Secondary explicitly for tonal emphasis. Selected buttons retain their square-to-round selection behavior.",
+    description: "Tertiary is the neutral default for general actions. Choose Primary purple, Primary pink, or Secondary explicitly for tonal emphasis. Selected buttons retain their square-to-round selection behavior.",
     category: "Forms",
     Demo: () => (
       <div className="flex flex-col gap-6">
         {(["default", "expressive"] as const).map((size) => (
           <div key={size} className="flex flex-wrap items-center gap-3">
-            <Button size={size} variant="primary">Primary</Button>
+            <Button size={size} variant="primary">Primary purple</Button>
+            <Button size={size} variant="primary" primaryColor="pink">Primary pink</Button>
             <Button size={size} variant="secondary">Secondary</Button>
             <Button size={size}>Tertiary</Button>
             <Button size={size} variant="destructive">Destructive</Button>
@@ -614,25 +616,7 @@ export const formsDemos: ComponentEntry[] = [
         ))}
       </div>
     ),
-    code: `import { Button } from "@/components/ui/button"
-
-export function ButtonDemo() {
-  return (
-    <div className="flex flex-col gap-6">
-      {(["default", "expressive"] as const).map((size) => (
-        <div key={size} className="flex flex-wrap items-center gap-3">
-          <Button size={size} variant="primary">Primary</Button>
-          <Button size={size} variant="secondary">Secondary</Button>
-          <Button size={size}>Tertiary</Button>
-          <Button size={size} variant="destructive">Destructive</Button>
-          <SelectedButtonDemo size={size} />
-          <Button size={size} variant="ghost">Ghost</Button>
-          <Button size={size} variant="link">Link</Button>
-        </div>
-      ))}
-    </div>
-  )
-}`,
+    code: generatedExampleCode["button:Default"],
     examples: [
       {
         name: "Selected",
@@ -1169,6 +1153,16 @@ export function InputDemo() {
             <SearchInput placeholder="Search" />
             <SearchInput defaultValue="Design tokens" />
             <SearchInput disabled placeholder="Search" />
+          </div>
+        ),
+      },
+      {
+        name: "No Focus Ring",
+        description: "Input without focus ring for embedded or frameless surfaces.",
+        Demo: () => (
+          <div className="grid w-full max-w-sm gap-3">
+            <Input focusRing={false} placeholder="Input without focus ring" />
+            <SearchInput focusRing={false} placeholder="Search without focus ring" />
           </div>
         ),
       },

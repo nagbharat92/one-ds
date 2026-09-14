@@ -4,22 +4,30 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { elevationVariants } from "@/components/ui/elevation"
+import { resolveHang, type HangOffset } from "@/lib/hang"
 
 function Card({
   className,
   size = "default",
   variant = "default",
+  hang = false,
+  style,
   ...props
 }: React.ComponentProps<"div"> & {
   size?: "default" | "sm" | "expressive"
   variant?: "default" | "code"
+  hang?: HangOffset
 }) {
+  const { dataHang, hangStyle, isHanging } = resolveHang(hang)
+
   return (
     <div
       data-slot="card"
       data-size={size}
       data-variant={variant}
+      data-hang={dataHang}
       data-elevation="flat"
+      style={{ ...hangStyle, ...style }}
       className={cn(
         "group/card flex flex-col text-sm text-card-foreground",
         elevationVariants({ level: "flat" }),
@@ -27,6 +35,7 @@ function Card({
           "gap-(--card-region-gap) overflow-hidden rounded-(--card-radius) bg-card py-(--card-spacing) ring-1 ring-(--card-stroke) has-data-[slot=card-footer]:pb-0 has-data-[slot=card-media]:pt-0 has-[>img:first-child]:pt-0 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-(--card-radius) *:[img:last-child]:rounded-b-(--card-radius)",
         variant === "code" &&
           "h-full gap-(--space-none) overflow-hidden rounded-(--card-radius) bg-card bg-clip-padding",
+        isHanging && "card--hang",
         className
       )}
       {...props}

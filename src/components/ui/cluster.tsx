@@ -4,16 +4,19 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+const gapVariants = {
+  none: "gap-(--space-none)",
+  xs: "gap-(--space-2xs)",
+  sm: "gap-(--space-xs)",
+  md: "gap-(--space-md)",
+  lg: "gap-(--space-lg)",
+  xl: "gap-(--space-xl)",
+  "2xl": "gap-(--space-2xl)",
+} as const
+
 const clusterVariants = cva("flex", {
   variants: {
-    gap: {
-      none: "gap-0",
-      xs: "gap-1",
-      sm: "gap-2",
-      md: "gap-4",
-      lg: "gap-6",
-      xl: "gap-8",
-    },
+    gap: gapVariants,
     align: {
       start: "items-start",
       center: "items-center",
@@ -31,11 +34,16 @@ const clusterVariants = cva("flex", {
       true: "flex-wrap",
       false: "flex-nowrap",
     },
+    divided: {
+      true: "divide-x divide-(--separator-stroke)",
+      false: "",
+    },
   },
   defaultVariants: {
     gap: "sm",
     align: "center",
     wrap: true,
+    divided: false,
   },
 })
 
@@ -45,6 +53,7 @@ function Cluster({
   align,
   justify,
   wrap,
+  divided,
   asChild = false,
   ...props
 }: React.ComponentProps<"div"> &
@@ -54,7 +63,8 @@ function Cluster({
   return (
     <Comp
       data-slot="cluster"
-      className={cn(clusterVariants({ gap, align, justify, wrap }), className)}
+      data-divided={divided ? "" : undefined}
+      className={cn(clusterVariants({ gap, align, justify, wrap, divided }), className)}
       {...props}
     />
   )

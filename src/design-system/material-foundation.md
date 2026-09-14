@@ -75,18 +75,20 @@ not new Material specification values.
 | Default tab indicator and general control surface | Surface container low | On surface |
 | Slider thumb | Surface container lowest | Existing ring role |
 | Website selected navigation and filled tabs | Secondary container | On secondary container |
-| Primary Button (explicit) | Baseline Primary P40/P80 | On primary |
+| Primary Button, purple (explicit; default Primary color) | Baseline Primary P40/P80 | On primary |
+| Primary Button, pink (explicit `primaryColor="pink"`) | Tertiary container | On tertiary container |
 | Secondary Button (explicit) | Secondary container | On secondary container |
 | Tertiary Button (default) | Surface container highest | On surface variant |
 | Link Button | Transparent | Website Primary |
 | Popover/menu | Surface container high | On surface |
 
-Primary uses baseline P40/P80 with the existing On primary text pair.
+Primary purple uses baseline P40/P80 with the existing On primary text pair.
+Primary pink uses the website Tertiary container/On tertiary container pair.
 Secondary retains Secondary container/On secondary container. Tertiary uses
 the warm neutral Surface container highest/On surface variant pair. Public variants are
 `primary`, `secondary`, and `tertiary`; omitted variants and `default` use Tertiary.
-Choose Primary or Secondary only when emphasis is needed. Pink Tertiary container is reserved for later selective
-FAB treatment; no FAB-specific implementation is included in this change.
+Primary accepts `primaryColor="purple" | "pink"` and defaults to purple. Choose
+Primary or Secondary only when emphasis is needed.
 
 ## Button color tuning
 
@@ -94,7 +96,7 @@ Adopted comparison: **Destructive** now uses Material Error40/Error80 as its
 background tint source globally. The old destructive background palette and
 `destructivePalette` option are removed. `--button-destructive-color` references
 `--button-material-error`; existing10/20/30% light and20/30/40% dark tint states
-remain. Text and focus colors are unchanged. Primary, Secondary, and Tertiary
+remain. Text and focus colors are unchanged. Primary purple, Primary pink, Secondary, and Tertiary
 are distinct treatments; `default` now aliases neutral Tertiary, not Primary.
 
 ### Selected state
@@ -163,8 +165,10 @@ requires the explicitly deferred foreground pass. Tonal backgrounds remain
 the existing website Secondary container pair. No new palette is inferred from
 the supplied screenshot.
 
-Button colors were adopted globally on September 8, 2026. Tune
+Button colors were adopted globally on September 8, 2026, and Primary pink was
+added as an explicit option on September 13, 2026. Tune
 `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`,
+`--button-primary-pink-fill`, `--button-primary-pink-ink`,
 `--button-secondary-fill`, `--button-secondary-ink`, and `--button-link-ink` in
 index.css. These alias the established website palette in each appearance.
 Generic `--primary` and `--secondary` remain separate so button tuning does not
@@ -173,8 +177,9 @@ their own mappings.
 
 Filled buttons calculate opaque sRGB hover/pressed mixes locally from their
 fill and state foreground, using the existing 8%/10% state tokens. Filled
-uses On primary in resting, hover, and pressed states. This supersedes the
-earlier pink search-button mapping and its alternate interaction foreground.
+purple uses On primary in resting, hover, and pressed states; Pink uses On
+tertiary container. Purple remains the default, while the earlier pink
+search-button mapping returns only through explicit `primaryColor="pink"`.
 Tests cover both sizes and modes, actual mouse/press states, disabled opacity,
 source-token propagation, and unchanged generic aliases. Website accent variables
 now reference CSS source tokens rather than applying cached hex copies.

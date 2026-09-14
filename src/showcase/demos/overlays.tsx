@@ -19,6 +19,7 @@ import {
   AlignLeftIcon,
   AlignCenterIcon,
   AlignRightIcon,
+  BookmarkIcon,
   Trash2Icon,
   CopyIcon,
   ScissorsIcon,
@@ -28,12 +29,15 @@ import {
   ImageIcon,
   PencilIcon,
   SparklesIcon,
+  LinkIcon,
+  UsersIcon,
 } from "@/components/ui/icons"
 
 import { Button } from "@/components/ui/button"
 import { Scroller } from "@/components/ui/scroller"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Kbd } from "@/components/ui/kbd"
 import { Separator } from "@/components/ui/separator"
 import { persona } from "@/lib/persona"
@@ -43,7 +47,6 @@ import {
   CoachmarkAnchor,
   CoachmarkBadge,
   CoachmarkBeacon,
-  CoachmarkClose,
   CoachmarkContent,
   CoachmarkDescription,
   CoachmarkDismiss,
@@ -99,15 +102,21 @@ import {
 } from "@/components/ui/drawer"
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
+  PopoverFooter,
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { Switch } from "@/components/ui/switch"
 import {
   HoverCard,
   HoverCardContent,
+  HoverCardDescription,
+  HoverCardHeader,
+  HoverCardTitle,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import {
@@ -153,6 +162,7 @@ import {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
+  MenubarGroup,
   MenubarItem,
   MenubarMenu,
   MenubarRadioGroup,
@@ -346,15 +356,17 @@ export const overlaysDemos: ComponentEntry[] = [
               Make changes to your profile here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-3">
-            <Label htmlFor="demo-dialog-name">Name</Label>
-            <Input id="demo-dialog-name" defaultValue={persona.name} />
-          </div>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="demo-dialog-name">Name</FieldLabel>
+              <Input id="demo-dialog-name" defaultValue={persona.name} />
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="tertiary">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" variant="secondary">Save changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -369,7 +381,7 @@ export const overlaysDemos: ComponentEntry[] = [
       <DialogDescription>Make changes to your profile.</DialogDescription>
     </DialogHeader>
     <DialogFooter>
-      <Button type="submit">Save changes</Button>
+      <Button type="submit" variant="secondary">Save changes</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>`,
@@ -416,10 +428,10 @@ export const overlaysDemos: ComponentEntry[] = [
               </p>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="secondary">Decline</Button>
+                  <Button variant="tertiary">Decline</Button>
                 </DialogClose>
                 <DialogClose asChild>
-                  <Button>Accept</Button>
+                  <Button variant="secondary">Accept</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
@@ -453,9 +465,9 @@ export const overlaysDemos: ComponentEntry[] = [
               </DialogBody>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="secondary">Close</Button>
+                  <Button variant="tertiary">Close</Button>
                 </DialogClose>
-                <Button>Got it</Button>
+                <Button variant="secondary">Got it</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -555,7 +567,7 @@ export const overlaysDemos: ComponentEntry[] = [
                   Recent updates to the project.
                 </DrawerDescription>
               </DrawerHeader>
-              <Scroller fadeSize="sm" className="min-h-0 flex-1 space-y-3 px-4">
+              <Scroller fadeSize="sm" className="min-h-0 flex-1 space-y-3">
                 {Array.from({ length: 15 }, (_, i) => (
                   <p key={i} className="text-sm text-muted-foreground">
                     v1.{i + 1}.0 — Bug fixes and performance improvements.
@@ -585,7 +597,7 @@ export const overlaysDemos: ComponentEntry[] = [
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent>
-                  <div className="mx-auto w-full max-w-sm">
+                  <div className="mx-auto flex w-full max-w-sm flex-col gap-(--drawer-gap)">
                     <DrawerHeader>
                       <DrawerTitle>{dir} drawer</DrawerTitle>
                       <DrawerDescription>
@@ -696,12 +708,12 @@ export const overlaysDemos: ComponentEntry[] = [
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent>
-                  <div className="mx-auto w-full max-w-sm">
+                  <div className="mx-auto flex w-full max-w-sm flex-col gap-(--drawer-gap)">
                     <DrawerHeader>
                       <DrawerTitle>{title}</DrawerTitle>
                       <DrawerDescription>{desc}</DrawerDescription>
                     </DrawerHeader>
-                    <div className="space-y-3 px-4">
+                    <div className="space-y-3">
                       <Label htmlFor="resp-drawer-name">Name</Label>
                       <Input
                         id="resp-drawer-name"
@@ -741,9 +753,9 @@ export const overlaysDemos: ComponentEntry[] = [
                 </div>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="tertiary">Cancel</Button>
                   </DialogClose>
-                  <Button onClick={() => setOpen(false)}>Save</Button>
+                  <Button variant="secondary" onClick={() => setOpen(false)}>Save</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -766,22 +778,28 @@ export const overlaysDemos: ComponentEntry[] = [
         <PopoverTrigger asChild>
           <Button variant="secondary">Open popover</Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
-          <div className="grid gap-3">
-            <div className="space-y-1">
-              <h4 className="font-medium leading-none">Dimensions</h4>
-              <p className="text-sm text-muted-foreground">
-                Set the dimensions for the layer.
-              </p>
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="demo-pop-width">Width</Label>
-              <Input
-                id="demo-pop-width"
-                defaultValue="100%"
-                className="col-span-2 h-8"
-              />
-            </div>
+        <PopoverContent>
+          <PopoverHeader>
+            <PopoverTitle>Dimensions</PopoverTitle>
+            <PopoverDescription>
+              Set the dimensions for the layer.
+            </PopoverDescription>
+          </PopoverHeader>
+          <div className="grid grid-cols-3 items-center gap-(--space-sm)">
+            <Label htmlFor="demo-pop-width">Width</Label>
+            <Input
+              id="demo-pop-width"
+              defaultValue="100%"
+              className="col-span-2 rounded-(--popover-inner-radius)"
+            />
+          </div>
+          <div className="grid grid-cols-3 items-center gap-(--space-sm)">
+            <Label htmlFor="demo-pop-height">Height</Label>
+            <Input
+              id="demo-pop-height"
+              defaultValue="auto"
+              className="col-span-2 rounded-(--popover-inner-radius)"
+            />
           </div>
         </PopoverContent>
       </Popover>
@@ -790,7 +808,20 @@ export const overlaysDemos: ComponentEntry[] = [
   <PopoverTrigger asChild>
     <Button variant="secondary">Open popover</Button>
   </PopoverTrigger>
-  <PopoverContent className="w-80">Place content here.</PopoverContent>
+  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Dimensions</PopoverTitle>
+      <PopoverDescription>Set the dimensions for the layer.</PopoverDescription>
+    </PopoverHeader>
+    <div className="grid grid-cols-3 items-center gap-3">
+      <Label htmlFor="demo-pop-width">Width</Label>
+      <Input
+        id="demo-pop-width"
+        defaultValue="100%"
+        className="col-span-2"
+      />
+    </div>
+  </PopoverContent>
 </Popover>`,
     examples: [
       {
@@ -806,7 +837,7 @@ export const overlaysDemos: ComponentEntry[] = [
                     {s}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent side={s} className="w-80">
+                <PopoverContent side={s}>
                   <PopoverHeader>
                     <PopoverTitle className="capitalize">
                       {s} side
@@ -819,8 +850,8 @@ export const overlaysDemos: ComponentEntry[] = [
                     </PopoverDescription>
                   </PopoverHeader>
                   <Separator />
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <CalendarIcon className="size-3.5" />
+                  <div className="flex items-center gap-(--space-xs) text-xs text-muted-foreground">
+                    <CalendarIcon className="size-4" />
                     <span>Preview · updated moments ago</span>
                   </div>
                 </PopoverContent>
@@ -842,7 +873,7 @@ export const overlaysDemos: ComponentEntry[] = [
                     {a}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align={a} className="w-80">
+                <PopoverContent align={a}>
                   <PopoverHeader>
                     <PopoverTitle className="capitalize">
                       {a} aligned
@@ -861,7 +892,7 @@ export const overlaysDemos: ComponentEntry[] = [
       },
       {
         name: "With form",
-        description: "Popover containing a form with inputs.",
+        description: "Popover containing a form with inputs and action footer.",
         Demo: function PopoverForm() {
           const [saved, setSaved] = useState("")
           return (
@@ -870,9 +901,9 @@ export const overlaysDemos: ComponentEntry[] = [
                 <PopoverTrigger asChild>
                   <Button variant="secondary">Set dimensions</Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80">
+                <PopoverContent>
                   <form
-                    className="grid gap-3"
+                    className="flex flex-col gap-(--popover-gap)"
                     onSubmit={(e) => {
                       e.preventDefault()
                       const fd = new FormData(e.currentTarget)
@@ -881,33 +912,38 @@ export const overlaysDemos: ComponentEntry[] = [
                       )
                     }}
                   >
-                    <div className="space-y-1">
-                      <h4 className="font-medium leading-none">Dimensions</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Set width and height.
-                      </p>
+                    <PopoverHeader>
+                      <PopoverTitle>Dimensions</PopoverTitle>
+                      <PopoverDescription>
+                        Set width and height for the selected layer.
+                      </PopoverDescription>
+                    </PopoverHeader>
+                    <div className="flex flex-col gap-(--space-sm)">
+                      <div className="grid grid-cols-3 items-center gap-(--space-sm)">
+                        <Label htmlFor="pop-form-w">Width</Label>
+                        <Input
+                          id="pop-form-w"
+                          name="pop-w"
+                          defaultValue="100%"
+                          className="col-span-2 rounded-(--popover-inner-radius)"
+                        />
+                      </div>
+                      <div className="grid grid-cols-3 items-center gap-(--space-sm)">
+                        <Label htmlFor="pop-form-h">Height</Label>
+                        <Input
+                          id="pop-form-h"
+                          name="pop-h"
+                          defaultValue="50px"
+                          className="col-span-2 rounded-(--popover-inner-radius)"
+                        />
+                      </div>
                     </div>
-                    <div className="grid grid-cols-3 items-center gap-3">
-                      <Label htmlFor="pop-form-w">Width</Label>
-                      <Input
-                        id="pop-form-w"
-                        name="pop-w"
-                        defaultValue="100%"
-                        className="col-span-2 h-8"
-                      />
-                    </div>
-                    <div className="grid grid-cols-3 items-center gap-3">
-                      <Label htmlFor="pop-form-h">Height</Label>
-                      <Input
-                        id="pop-form-h"
-                        name="pop-h"
-                        defaultValue="50px"
-                        className="col-span-2 h-8"
-                      />
-                    </div>
-                    <Button type="submit" size="default">
-                      Save
-                    </Button>
+                    <PopoverFooter>
+                      <PopoverClose asChild>
+                        <Button variant="secondary">Cancel</Button>
+                      </PopoverClose>
+                      <Button type="submit">Save</Button>
+                    </PopoverFooter>
                   </form>
                 </PopoverContent>
               </Popover>
@@ -917,6 +953,41 @@ export const overlaysDemos: ComponentEntry[] = [
             </div>
           )
         },
+      },
+      {
+        name: "With close button",
+        description:
+          "Popover with an integrated dismiss action and confirmation footer.",
+        Demo: () => (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="secondary">Layer settings</Button>
+            </PopoverTrigger>
+            <PopoverContent showCloseButton>
+              <PopoverHeader>
+                <PopoverTitle>Layer settings</PopoverTitle>
+                <PopoverDescription>
+                  Configure automated visibility and opacity controls.
+                </PopoverDescription>
+              </PopoverHeader>
+              <Separator />
+              <div className="flex items-center justify-between gap-(--space-sm)">
+                <div className="flex flex-col gap-(--space-hairline)">
+                  <span className="text-sm font-medium">Visible</span>
+                  <span className="text-xs text-muted-foreground">
+                    Render this layer in the viewport
+                  </span>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <PopoverFooter>
+                <PopoverClose asChild>
+                  <Button variant="secondary">Done</Button>
+                </PopoverClose>
+              </PopoverFooter>
+            </PopoverContent>
+          </Popover>
+        ),
       },
     ],
   },
@@ -934,19 +1005,19 @@ export const overlaysDemos: ComponentEntry[] = [
         <HoverCardTrigger asChild>
           <Button variant="link">@{persona.handle}</Button>
         </HoverCardTrigger>
-        <HoverCardContent className="w-80">
-          <div className="flex gap-3">
-            <Avatar>
-              <AvatarImage src={persona.avatar} alt="" />
+        <HoverCardContent>
+          <div className="flex gap-(--space-sm)">
+            <Avatar size="lg">
+              <AvatarImage src={persona.avatar} alt={persona.name} />
               <AvatarFallback>{persona.initials}</AvatarFallback>
             </Avatar>
-            <div className="space-y-1">
-              <h4 className="text-sm font-semibold">{persona.name}</h4>
-              <p className="text-sm">
+            <div className="flex min-w-0 flex-col gap-(--space-hairline)">
+              <HoverCardTitle>{persona.name}</HoverCardTitle>
+              <HoverCardDescription>
                 {persona.title} · {persona.department} at {persona.company}.
-              </p>
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <CalendarIcon className="size-3.5" />
+              </HoverCardDescription>
+              <div className="flex items-center gap-(--space-xs) pt-(--space-2xs) text-xs text-muted-foreground">
+                <CalendarIcon className="size-4" />
                 <span>Joined {persona.startedLabel}</span>
               </div>
             </div>
@@ -958,21 +1029,17 @@ export const overlaysDemos: ComponentEntry[] = [
   <HoverCardTrigger asChild>
     <Button variant="link">@{persona.handle}</Button>
   </HoverCardTrigger>
-  <HoverCardContent className="w-80">
+  <HoverCardContent>
     <div className="flex gap-3">
-      <Avatar>
-        <AvatarImage src={persona.avatar} alt="" />
+      <Avatar size="lg">
+        <AvatarImage src={persona.avatar} alt={persona.name} />
         <AvatarFallback>{persona.initials}</AvatarFallback>
       </Avatar>
-      <div className="space-y-1">
-        <h4 className="text-sm font-semibold">{persona.name}</h4>
-        <p className="text-sm">
+      <div className="flex flex-col gap-1">
+        <HoverCardTitle>{persona.name}</HoverCardTitle>
+        <HoverCardDescription>
           {persona.title} · {persona.department} at {persona.company}.
-        </p>
-        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <CalendarIcon className="size-3.5" />
-          <span>Joined {persona.startedLabel}</span>
-        </div>
+        </HoverCardDescription>
       </div>
     </div>
   </HoverCardContent>
@@ -987,19 +1054,19 @@ export const overlaysDemos: ComponentEntry[] = [
             <HoverCardTrigger asChild>
               <Button variant="link">Design tokens</Button>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80">
-              <div className="space-y-2">
-                <h4 className="text-sm font-semibold">Design tokens</h4>
-                <p className="text-sm text-muted-foreground">
+            <HoverCardContent>
+              <HoverCardHeader>
+                <HoverCardTitle>Design tokens</HoverCardTitle>
+                <HoverCardDescription>
                   Named values for color, spacing, radius and type. Components
                   read tokens instead of raw values, so a theme change is a
                   one-place edit and every surface stays in step.
-                </p>
-                <Separator />
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <CalendarIcon className="size-3.5" />
-                  <span>Updated 2 days ago · 4 min read</span>
-                </div>
+                </HoverCardDescription>
+              </HoverCardHeader>
+              <Separator />
+              <div className="flex items-center gap-(--space-xs) text-xs text-muted-foreground">
+                <CalendarIcon className="size-4" />
+                <span>Updated 2 days ago · 4 min read</span>
               </div>
             </HoverCardContent>
           </HoverCard>
@@ -1018,14 +1085,14 @@ export const overlaysDemos: ComponentEntry[] = [
                   Radix primitives
                 </Button>
               </HoverCardTrigger>
-              <HoverCardContent className="w-72">
-                <div className="space-y-1">
-                  <h4 className="text-sm font-semibold">Radix Primitives</h4>
-                  <p className="text-sm text-muted-foreground">
+              <HoverCardContent>
+                <HoverCardHeader>
+                  <HoverCardTitle>Radix Primitives</HoverCardTitle>
+                  <HoverCardDescription>
                     Unstyled, accessible components that own focus, keyboard and
                     positioning behaviour. Styling stays entirely ours.
-                  </p>
-                </div>
+                  </HoverCardDescription>
+                </HoverCardHeader>
               </HoverCardContent>
             </HoverCard>{" "}
             so the behaviour is handled for us and the tokens do the rest.
@@ -1045,22 +1112,22 @@ export const overlaysDemos: ComponentEntry[] = [
                     {s}
                   </Button>
                 </HoverCardTrigger>
-                <HoverCardContent side={s} className="w-80">
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-semibold capitalize">
+                <HoverCardContent side={s}>
+                  <HoverCardHeader>
+                    <HoverCardTitle className="capitalize">
                       {s} side
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
+                    </HoverCardTitle>
+                    <HoverCardDescription>
                       The card is anchored to the <strong>{s}</strong> of its
                       trigger and flips to the opposite side when the viewport
                       runs out of room. Body copy wraps freely, so a card can
                       carry several lines without changing its anchor.
-                    </p>
-                    <Separator />
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <CalendarIcon className="size-3.5" />
-                      <span>Preview · updated moments ago</span>
-                    </div>
+                    </HoverCardDescription>
+                  </HoverCardHeader>
+                  <Separator />
+                  <div className="flex items-center gap-(--space-xs) text-xs text-muted-foreground">
+                    <CalendarIcon className="size-4" />
+                    <span>Preview · updated moments ago</span>
                   </div>
                 </HoverCardContent>
               </HoverCard>
@@ -1178,7 +1245,6 @@ export const overlaysDemos: ComponentEntry[] = [
             <CoachmarkDescription>
               Guests can now open a read-only link without an account.
             </CoachmarkDescription>
-            <CoachmarkClose />
           </CoachmarkHeader>
           <CoachmarkFooter>
             <CoachmarkDismiss>Not now</CoachmarkDismiss>
@@ -1197,7 +1263,6 @@ export const overlaysDemos: ComponentEntry[] = [
       <CoachmarkDescription>
         Guests can now open a read-only link without an account.
       </CoachmarkDescription>
-      <CoachmarkClose />
     </CoachmarkHeader>
     <CoachmarkFooter>
       <CoachmarkDismiss>Not now</CoachmarkDismiss>
@@ -1211,7 +1276,7 @@ export const overlaysDemos: ComponentEntry[] = [
         description:
           "A pulsing dot that both anchors the tip and invites the click.",
         Demo: () => (
-          <div className="flex items-center gap-2 rounded-lg border p-2">
+          <div className="flex items-center gap-(--space-xs) rounded-xl border p-(--space-xs)">
             <Button variant="ghost" size="default">
               <PencilIcon data-icon="inline-start" />
               Compose
@@ -1257,8 +1322,8 @@ export const overlaysDemos: ComponentEntry[] = [
             </CoachmarkTrigger>
             <CoachmarkContent size="lg">
               <CoachmarkMedia>
-                <div className="flex size-full items-center justify-center">
-                  <SparklesIcon className="size-8 text-muted-foreground" />
+                <div className="flex size-full items-center justify-center text-foreground">
+                  <SparklesIcon className="size-8 text-foreground" />
                 </div>
               </CoachmarkMedia>
               <CoachmarkHeader>
@@ -1268,7 +1333,6 @@ export const overlaysDemos: ComponentEntry[] = [
                   Catch up on a long conversation in a few lines, then jump
                   straight to the decisions.
                 </CoachmarkDescription>
-                <CoachmarkClose />
               </CoachmarkHeader>
               <CoachmarkFooter>
                 <CoachmarkDismiss>Maybe later</CoachmarkDismiss>
@@ -1299,7 +1363,6 @@ export const overlaysDemos: ComponentEntry[] = [
                     <CoachmarkDescription>
                       Every part inside picks up the tone automatically.
                     </CoachmarkDescription>
-                    <CoachmarkClose />
                   </CoachmarkHeader>
                   <CoachmarkFooter>
                     <CoachmarkAction>Got it</CoachmarkAction>
@@ -1352,7 +1415,7 @@ export const overlaysDemos: ComponentEntry[] = [
               onOpenChange={setOpen}
             >
               <div className="flex flex-col items-center gap-6">
-                <div className="flex items-center gap-2 rounded-lg border p-2">
+                <div className="flex items-center gap-(--space-xs) rounded-xl border p-(--space-xs)">
                   {steps.map((item, index) => (
                     <CoachmarkStep key={item.label} index={index}>
                       <CoachmarkAnchor asChild>
@@ -1367,7 +1430,6 @@ export const overlaysDemos: ComponentEntry[] = [
                           <CoachmarkDescription>
                             {item.description}
                           </CoachmarkDescription>
-                          <CoachmarkClose />
                         </CoachmarkHeader>
                         <CoachmarkFooter>
                           <CoachmarkProgress />
@@ -1406,31 +1468,62 @@ export const overlaysDemos: ComponentEntry[] = [
     name: "Dropdown Menu",
     description: "Displays a menu of actions triggered by a button.",
     category: "Overlays",
-    Demo: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary">Open menu</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="start">
-          <DropdownMenuLabel>My account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    Demo: function DropdownMenuDemo() {
+      const [activityVisible, setActivityVisible] = useState(true)
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary">Open menu</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent grouped className="w-64" align="start">
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <UserIcon /> Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CreditCardIcon /> Billing
+                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem disabled>
+                <KeyboardIcon /> Keyboard shortcuts
+              </DropdownMenuItem>
+              <DropdownMenuCheckboxItem
+                checked={activityVisible}
+                onCheckedChange={setActivityVisible}
+              >
+                <SettingsIcon /> Activity
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuGroup>
+            <DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <KeyboardIcon /> More tools
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem>Keyboard shortcuts</DropdownMenuItem>
+                  <DropdownMenuItem>Preferences</DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
     code: `<DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="secondary">Open menu</Button>
   </DropdownMenuTrigger>
-  <DropdownMenuContent className="w-56" align="start">
-    <DropdownMenuLabel>My account</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>
+  <DropdownMenuContent grouped className="w-64" align="start">
+    <DropdownMenuGroup>
+      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem>Billing</DropdownMenuItem>
+      <DropdownMenuItem disabled>Keyboard shortcuts</DropdownMenuItem>
+      <DropdownMenuCheckboxItem checked>Activity</DropdownMenuCheckboxItem>
+    </DropdownMenuGroup>
+    <DropdownMenuGroup>
+      <DropdownMenuItem>More tools</DropdownMenuItem>
+    </DropdownMenuGroup>
   </DropdownMenuContent>
 </DropdownMenu>`,
     examples: [
@@ -1443,27 +1536,29 @@ export const overlaysDemos: ComponentEntry[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">Submenu</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuItem>New file</DropdownMenuItem>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent>
-                    <DropdownMenuItem>
-                      <MailIcon /> Email
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <MessageSquareIcon /> Message
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <PlusCircleIcon /> More...
-                    </DropdownMenuItem>
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuContent grouped className="w-64" align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>New file</DropdownMenuItem>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      <DropdownMenuItem>
+                        <MailIcon /> Email
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <MessageSquareIcon /> Message
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <PlusCircleIcon /> More...
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+              </DropdownMenuGroup>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         ),
@@ -1476,17 +1571,20 @@ export const overlaysDemos: ComponentEntry[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">Shortcuts</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuItem>
-                New tab <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                New window <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Print <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
-              </DropdownMenuItem>
+            <DropdownMenuContent grouped className="w-64" align="start">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  New tab <DropdownMenuShortcut>⌘T</DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  New window <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  Print <DropdownMenuShortcut>⌘P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         ),
@@ -1499,7 +1597,7 @@ export const overlaysDemos: ComponentEntry[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="secondary">Icons</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
+            <DropdownMenuContent grouped className="w-64" align="start">
               <DropdownMenuGroup>
                 <DropdownMenuItem>
                   <UserIcon /> Profile
@@ -1514,10 +1612,11 @@ export const overlaysDemos: ComponentEntry[] = [
                   <KeyboardIcon /> Keyboard shortcuts
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOutIcon /> Log out
-              </DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <LogOutIcon /> Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         ),
@@ -1533,24 +1632,25 @@ export const overlaysDemos: ComponentEntry[] = [
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary">Checkboxes</Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>Appearance</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={showStatus}
-                  onCheckedChange={setShowStatus}
-                >
-                  Status bar
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={showActivity}
-                  onCheckedChange={setShowActivity}
-                >
-                  Activity bar
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem disabled>
-                  Panel (disabled)
-                </DropdownMenuCheckboxItem>
+              <DropdownMenuContent grouped className="w-64" align="start">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+                  <DropdownMenuCheckboxItem
+                    checked={showStatus}
+                    onCheckedChange={setShowStatus}
+                  >
+                    Status bar
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={showActivity}
+                    onCheckedChange={setShowActivity}
+                  >
+                    Activity bar
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem disabled>
+                    Panel (disabled)
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )
@@ -1568,27 +1668,28 @@ export const overlaysDemos: ComponentEntry[] = [
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary">Checkbox icons</Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>Formatting</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={bold}
-                  onCheckedChange={setBold}
-                >
-                  <BoldIcon /> Bold
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={italic}
-                  onCheckedChange={setItalic}
-                >
-                  <ItalicIcon /> Italic
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={underline}
-                  onCheckedChange={setUnderline}
-                >
-                  <UnderlineIcon /> Underline
-                </DropdownMenuCheckboxItem>
+              <DropdownMenuContent grouped className="w-64" align="start">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel inset>Formatting</DropdownMenuLabel>
+                  <DropdownMenuCheckboxItem
+                    checked={bold}
+                    onCheckedChange={setBold}
+                  >
+                    <BoldIcon /> Bold
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={italic}
+                    onCheckedChange={setItalic}
+                  >
+                    <ItalicIcon /> Italic
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={underline}
+                    onCheckedChange={setUnderline}
+                  >
+                    <UnderlineIcon /> Underline
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )
@@ -1604,23 +1705,24 @@ export const overlaysDemos: ComponentEntry[] = [
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary">Radio group</Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>Panel position</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup
-                  value={value}
-                  onValueChange={setValue}
-                >
-                  <DropdownMenuRadioItem value="top">
-                    Top
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="bottom">
-                    Bottom
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="right">
-                    Right
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+              <DropdownMenuContent grouped className="w-64" align="start">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>Panel position</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup
+                    value={value}
+                    onValueChange={setValue}
+                  >
+                    <DropdownMenuRadioItem value="top">
+                      Top
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="bottom">
+                      Bottom
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="right">
+                      Right
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )
@@ -1636,23 +1738,24 @@ export const overlaysDemos: ComponentEntry[] = [
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary">Radio icons</Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>Alignment</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup
-                  value={align}
-                  onValueChange={setAlign}
-                >
-                  <DropdownMenuRadioItem value="left">
-                    <AlignLeftIcon /> Left
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="center">
-                    <AlignCenterIcon /> Center
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="right">
-                    <AlignRightIcon /> Right
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
+              <DropdownMenuContent grouped className="w-64" align="start">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel inset>Alignment</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup
+                    value={align}
+                    onValueChange={setAlign}
+                  >
+                    <DropdownMenuRadioItem value="left">
+                      <AlignLeftIcon /> Left
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="center">
+                      <AlignCenterIcon /> Center
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="right">
+                      <AlignRightIcon /> Right
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )
@@ -1669,20 +1772,23 @@ export const overlaysDemos: ComponentEntry[] = [
                 <DropdownMenuTrigger asChild>
                   <Button variant="secondary">Destructive</Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="start">
-                  <DropdownMenuItem>
-                    <PencilIcon /> Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CopyIcon /> Duplicate
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={() => setStatus("Deleted (simulated)")}
-                  >
-                    <Trash2Icon /> Delete
-                  </DropdownMenuItem>
+                <DropdownMenuContent grouped className="w-64" align="start">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <PencilIcon /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <CopyIcon /> Duplicate
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onClick={() => setStatus("Deleted (simulated)")}
+                    >
+                      <Trash2Icon /> Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
               {status && (
@@ -1709,19 +1815,18 @@ export const overlaysDemos: ComponentEntry[] = [
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end">
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm font-medium leading-none">
-                    {persona.name}
-                  </p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {persona.email}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
+            <DropdownMenuContent grouped className="w-64" align="end">
               <DropdownMenuGroup>
+                <DropdownMenuLabel className="py-(--space-sm)! font-normal">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm font-medium leading-none">
+                      {persona.name}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {persona.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
                 <DropdownMenuItem>
                   <UserIcon /> Profile
                 </DropdownMenuItem>
@@ -1729,10 +1834,11 @@ export const overlaysDemos: ComponentEntry[] = [
                   <SettingsIcon /> Settings
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOutIcon /> Log out
-              </DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <LogOutIcon /> Log out
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         ),
@@ -1751,10 +1857,9 @@ export const overlaysDemos: ComponentEntry[] = [
               <DropdownMenuTrigger asChild>
                 <Button variant="secondary">Complex menu</Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>My account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+              <DropdownMenuContent grouped className="w-64" align="start">
                 <DropdownMenuGroup>
+                  <DropdownMenuLabel inset>My account</DropdownMenuLabel>
                   <DropdownMenuItem>
                     <UserIcon /> Profile
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
@@ -1767,9 +1872,7 @@ export const overlaysDemos: ComponentEntry[] = [
                     <SettingsIcon /> Settings
                     <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <UserPlusIcon /> Invite users
                   </DropdownMenuItem>
@@ -1785,52 +1888,52 @@ export const overlaysDemos: ComponentEntry[] = [
                         <DropdownMenuItem>
                           <MessageSquareIcon /> Message
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem>
                           <PlusCircleIcon /> More...
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                   </DropdownMenuSub>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={bookmarks}
+                    onCheckedChange={setBookmarks}
+                  >
+                    <BookmarkIcon /> Show bookmarks
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={urls}
+                    onCheckedChange={setUrls}
+                  >
+                    <LinkIcon /> Show full URLs
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel inset>Team member</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup
+                    value={person}
+                    onValueChange={setPerson}
+                  >
+                    <DropdownMenuRadioItem value={persona.handle}>
+                      <UserIcon /> {persona.firstName}
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value={persona.manager.handle}>
+                      <UsersIcon /> {persona.manager.firstName}
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <LifeBuoyIcon /> Support
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled>
+                    <CloudIcon /> API (coming soon)
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={bookmarks}
-                  onCheckedChange={setBookmarks}
-                >
-                  Show bookmarks
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={urls}
-                  onCheckedChange={setUrls}
-                >
-                  Show full URLs
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel>Team member</DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={person}
-                  onValueChange={setPerson}
-                >
-                  <DropdownMenuRadioItem value={persona.handle}>
-                    {persona.firstName}
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value={persona.manager.handle}>
-                    {persona.manager.firstName}
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LifeBuoyIcon /> Support
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled>
-                  <CloudIcon /> API (coming soon)
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  <LogOutIcon /> Log out
-                  <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                </DropdownMenuItem>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem variant="destructive">
+                    <LogOutIcon /> Log out
+                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           )
@@ -1852,12 +1955,15 @@ export const overlaysDemos: ComponentEntry[] = [
         <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
           Right click here
         </ContextMenuTrigger>
-        <ContextMenuContent className="w-52">
-          <ContextMenuItem>Back</ContextMenuItem>
-          <ContextMenuItem>Forward</ContextMenuItem>
-          <ContextMenuItem>Reload</ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem>Save as...</ContextMenuItem>
+        <ContextMenuContent grouped className="w-52">
+          <ContextMenuGroup>
+            <ContextMenuItem>Back</ContextMenuItem>
+            <ContextMenuItem>Forward</ContextMenuItem>
+            <ContextMenuItem>Reload</ContextMenuItem>
+          </ContextMenuGroup>
+          <ContextMenuGroup>
+            <ContextMenuItem>Save as...</ContextMenuItem>
+          </ContextMenuGroup>
         </ContextMenuContent>
       </ContextMenu>
     ),
@@ -1865,11 +1971,14 @@ export const overlaysDemos: ComponentEntry[] = [
   <ContextMenuTrigger className="flex h-36 items-center justify-center rounded-md border border-dashed text-sm">
     Right click here
   </ContextMenuTrigger>
-  <ContextMenuContent className="w-52">
-    <ContextMenuItem>Back</ContextMenuItem>
-    <ContextMenuItem>Reload</ContextMenuItem>
-    <ContextMenuSeparator />
-    <ContextMenuItem>Save as...</ContextMenuItem>
+  <ContextMenuContent grouped className="w-52">
+    <ContextMenuGroup>
+      <ContextMenuItem>Back</ContextMenuItem>
+      <ContextMenuItem>Reload</ContextMenuItem>
+    </ContextMenuGroup>
+    <ContextMenuGroup>
+      <ContextMenuItem>Save as...</ContextMenuItem>
+    </ContextMenuGroup>
   </ContextMenuContent>
 </ContextMenu>`,
     examples: [
@@ -1882,20 +1991,22 @@ export const overlaysDemos: ComponentEntry[] = [
             <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
               Right click — submenu
             </ContextMenuTrigger>
-            <ContextMenuContent className="w-52">
-              <ContextMenuItem>Back</ContextMenuItem>
-              <ContextMenuSub>
-                <ContextMenuSubTrigger>More tools</ContextMenuSubTrigger>
-                <ContextMenuPortal>
-                  <ContextMenuSubContent className="w-48">
-                    <ContextMenuItem>Save page as...</ContextMenuItem>
-                    <ContextMenuItem>Create shortcut...</ContextMenuItem>
-                    <ContextMenuItem>Developer tools</ContextMenuItem>
-                  </ContextMenuSubContent>
-                </ContextMenuPortal>
-              </ContextMenuSub>
-              <ContextMenuSeparator />
-              <ContextMenuItem>Reload</ContextMenuItem>
+            <ContextMenuContent grouped className="w-52">
+              <ContextMenuGroup>
+                <ContextMenuItem>Back</ContextMenuItem>
+                <ContextMenuSub>
+                  <ContextMenuSubTrigger>More tools</ContextMenuSubTrigger>
+                  <ContextMenuPortal>
+                    <ContextMenuSubContent className="w-48">
+                      <ContextMenuItem>Save page as...</ContextMenuItem>
+                      <ContextMenuItem>Create shortcut...</ContextMenuItem>
+                      <ContextMenuItem>Developer tools</ContextMenuItem>
+                    </ContextMenuSubContent>
+                  </ContextMenuPortal>
+                </ContextMenuSub>
+                <ContextMenuSeparator />
+                <ContextMenuItem>Reload</ContextMenuItem>
+              </ContextMenuGroup>
             </ContextMenuContent>
           </ContextMenu>
         ),
@@ -1908,16 +2019,18 @@ export const overlaysDemos: ComponentEntry[] = [
             <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
               Right click — shortcuts
             </ContextMenuTrigger>
-            <ContextMenuContent className="w-52">
-              <ContextMenuItem>
-                Back <ContextMenuShortcut>⌘[</ContextMenuShortcut>
-              </ContextMenuItem>
-              <ContextMenuItem>
-                Forward <ContextMenuShortcut>⌘]</ContextMenuShortcut>
-              </ContextMenuItem>
-              <ContextMenuItem>
-                Reload <ContextMenuShortcut>⌘R</ContextMenuShortcut>
-              </ContextMenuItem>
+            <ContextMenuContent grouped className="w-52">
+              <ContextMenuGroup>
+                <ContextMenuItem>
+                  Back <ContextMenuShortcut>⌘[</ContextMenuShortcut>
+                </ContextMenuItem>
+                <ContextMenuItem>
+                  Forward <ContextMenuShortcut>⌘]</ContextMenuShortcut>
+                </ContextMenuItem>
+                <ContextMenuItem>
+                  Reload <ContextMenuShortcut>⌘R</ContextMenuShortcut>
+                </ContextMenuItem>
+              </ContextMenuGroup>
             </ContextMenuContent>
           </ContextMenu>
         ),
@@ -1930,15 +2043,14 @@ export const overlaysDemos: ComponentEntry[] = [
             <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
               Right click — groups
             </ContextMenuTrigger>
-            <ContextMenuContent className="w-52">
-              <ContextMenuLabel>Navigation</ContextMenuLabel>
+            <ContextMenuContent grouped className="w-52">
               <ContextMenuGroup>
+                <ContextMenuLabel>Navigation</ContextMenuLabel>
                 <ContextMenuItem>Back</ContextMenuItem>
                 <ContextMenuItem>Forward</ContextMenuItem>
               </ContextMenuGroup>
-              <ContextMenuSeparator />
-              <ContextMenuLabel>Actions</ContextMenuLabel>
               <ContextMenuGroup>
+                <ContextMenuLabel>Actions</ContextMenuLabel>
                 <ContextMenuItem>Reload</ContextMenuItem>
                 <ContextMenuItem>Save as...</ContextMenuItem>
               </ContextMenuGroup>
@@ -1954,23 +2066,26 @@ export const overlaysDemos: ComponentEntry[] = [
             <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
               Right click — icons
             </ContextMenuTrigger>
-            <ContextMenuContent className="w-56">
-              <ContextMenuItem>
-                <UndoIcon /> Undo
-              </ContextMenuItem>
-              <ContextMenuItem>
-                <RedoIcon /> Redo
-              </ContextMenuItem>
-              <ContextMenuSeparator />
-              <ContextMenuItem>
-                <ScissorsIcon /> Cut
-              </ContextMenuItem>
-              <ContextMenuItem>
-                <CopyIcon /> Copy
-              </ContextMenuItem>
-              <ContextMenuItem>
-                <ClipboardIcon /> Paste
-              </ContextMenuItem>
+            <ContextMenuContent grouped className="w-56">
+              <ContextMenuGroup>
+                <ContextMenuItem>
+                  <UndoIcon /> Undo
+                </ContextMenuItem>
+                <ContextMenuItem>
+                  <RedoIcon /> Redo
+                </ContextMenuItem>
+              </ContextMenuGroup>
+              <ContextMenuGroup>
+                <ContextMenuItem>
+                  <ScissorsIcon /> Cut
+                </ContextMenuItem>
+                <ContextMenuItem>
+                  <CopyIcon /> Copy
+                </ContextMenuItem>
+                <ContextMenuItem>
+                  <ClipboardIcon /> Paste
+                </ContextMenuItem>
+              </ContextMenuGroup>
             </ContextMenuContent>
           </ContextMenu>
         ),
@@ -1986,19 +2101,21 @@ export const overlaysDemos: ComponentEntry[] = [
               <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
                 Right click — checkboxes
               </ContextMenuTrigger>
-              <ContextMenuContent className="w-56">
-                <ContextMenuCheckboxItem
-                  checked={showBookmarks}
-                  onCheckedChange={setShowBookmarks}
-                >
-                  Show bookmarks bar
-                </ContextMenuCheckboxItem>
-                <ContextMenuCheckboxItem
-                  checked={showUrls}
-                  onCheckedChange={setShowUrls}
-                >
-                  Show full URLs
-                </ContextMenuCheckboxItem>
+              <ContextMenuContent grouped className="w-56">
+                <ContextMenuGroup>
+                  <ContextMenuCheckboxItem
+                    checked={showBookmarks}
+                    onCheckedChange={setShowBookmarks}
+                  >
+                    Show bookmarks bar
+                  </ContextMenuCheckboxItem>
+                  <ContextMenuCheckboxItem
+                    checked={showUrls}
+                    onCheckedChange={setShowUrls}
+                  >
+                    Show full URLs
+                  </ContextMenuCheckboxItem>
+                </ContextMenuGroup>
               </ContextMenuContent>
             </ContextMenu>
           )
@@ -2014,20 +2131,21 @@ export const overlaysDemos: ComponentEntry[] = [
               <ContextMenuTrigger className="flex h-36 w-full max-w-sm items-center justify-center rounded-md border border-dashed text-sm">
                 Right click — radio
               </ContextMenuTrigger>
-              <ContextMenuContent className="w-52">
-                <ContextMenuLabel>People</ContextMenuLabel>
-                <ContextMenuSeparator />
-                <ContextMenuRadioGroup
-                  value={person}
-                  onValueChange={setPerson}
-                >
-                  <ContextMenuRadioItem value={persona.handle}>
-                    {persona.name}
-                  </ContextMenuRadioItem>
-                  <ContextMenuRadioItem value={persona.manager.handle}>
-                    {persona.manager.name}
-                  </ContextMenuRadioItem>
-                </ContextMenuRadioGroup>
+              <ContextMenuContent grouped className="w-52">
+                <ContextMenuGroup>
+                  <ContextMenuLabel>People</ContextMenuLabel>
+                  <ContextMenuRadioGroup
+                    value={person}
+                    onValueChange={setPerson}
+                  >
+                    <ContextMenuRadioItem value={persona.handle}>
+                      {persona.name}
+                    </ContextMenuRadioItem>
+                    <ContextMenuRadioItem value={persona.manager.handle}>
+                      {persona.manager.name}
+                    </ContextMenuRadioItem>
+                  </ContextMenuRadioGroup>
+                </ContextMenuGroup>
               </ContextMenuContent>
             </ContextMenu>
           )
@@ -2044,17 +2162,20 @@ export const overlaysDemos: ComponentEntry[] = [
                 <ContextMenuTrigger className="flex h-36 w-full items-center justify-center rounded-md border border-dashed text-sm">
                   Right click — destructive
                 </ContextMenuTrigger>
-                <ContextMenuContent className="w-52">
-                  <ContextMenuItem>
-                    <CopyIcon /> Duplicate
-                  </ContextMenuItem>
-                  <ContextMenuSeparator />
-                  <ContextMenuItem
-                    variant="destructive"
-                    onClick={() => setStatus("Deleted (simulated)")}
-                  >
-                    <Trash2Icon /> Delete
-                  </ContextMenuItem>
+                <ContextMenuContent grouped className="w-52">
+                  <ContextMenuGroup>
+                    <ContextMenuItem>
+                      <CopyIcon /> Duplicate
+                    </ContextMenuItem>
+                  </ContextMenuGroup>
+                  <ContextMenuGroup>
+                    <ContextMenuItem
+                      variant="destructive"
+                      onClick={() => setStatus("Deleted (simulated)")}
+                    >
+                      <Trash2Icon /> Delete
+                    </ContextMenuItem>
+                  </ContextMenuGroup>
                 </ContextMenuContent>
               </ContextMenu>
               {status && (
@@ -2079,20 +2200,25 @@ export const overlaysDemos: ComponentEntry[] = [
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>File</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>
-              New tab <MenubarShortcut>⌘T</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>New window</MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem>Print</MenubarItem>
+          <MenubarContent grouped>
+            <MenubarGroup>
+              <MenubarItem>
+                New tab <MenubarShortcut>⌘T</MenubarShortcut>
+              </MenubarItem>
+              <MenubarItem>New window</MenubarItem>
+            </MenubarGroup>
+            <MenubarGroup>
+              <MenubarItem>Print</MenubarItem>
+            </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger>Edit</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>Undo</MenubarItem>
-            <MenubarItem>Redo</MenubarItem>
+          <MenubarContent grouped>
+            <MenubarGroup>
+              <MenubarItem>Undo</MenubarItem>
+              <MenubarItem>Redo</MenubarItem>
+            </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
@@ -2100,12 +2226,16 @@ export const overlaysDemos: ComponentEntry[] = [
     code: `<Menubar>
   <MenubarMenu>
     <MenubarTrigger>File</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>
-        New tab <MenubarShortcut>⌘T</MenubarShortcut>
-      </MenubarItem>
-      <MenubarSeparator />
-      <MenubarItem>Print</MenubarItem>
+    <MenubarContent grouped>
+      <MenubarGroup>
+        <MenubarItem>
+          New tab <MenubarShortcut>⌘T</MenubarShortcut>
+        </MenubarItem>
+        <MenubarItem>New window</MenubarItem>
+      </MenubarGroup>
+      <MenubarGroup>
+        <MenubarItem>Print</MenubarItem>
+      </MenubarGroup>
     </MenubarContent>
   </MenubarMenu>
 </Menubar>`,
@@ -2121,22 +2251,24 @@ export const overlaysDemos: ComponentEntry[] = [
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger>View</MenubarTrigger>
-                <MenubarContent>
-                  <MenubarCheckboxItem
-                    checked={statusBar}
-                    onCheckedChange={setStatusBar}
-                  >
-                    Status bar
-                  </MenubarCheckboxItem>
-                  <MenubarCheckboxItem
-                    checked={activityBar}
-                    onCheckedChange={setActivityBar}
-                  >
-                    Activity bar
-                  </MenubarCheckboxItem>
-                  <MenubarCheckboxItem disabled>
-                    Panel (disabled)
-                  </MenubarCheckboxItem>
+                <MenubarContent grouped>
+                  <MenubarGroup>
+                    <MenubarCheckboxItem
+                      checked={statusBar}
+                      onCheckedChange={setStatusBar}
+                    >
+                      Status bar
+                    </MenubarCheckboxItem>
+                    <MenubarCheckboxItem
+                      checked={activityBar}
+                      onCheckedChange={setActivityBar}
+                    >
+                      Activity bar
+                    </MenubarCheckboxItem>
+                    <MenubarCheckboxItem disabled>
+                      Panel (disabled)
+                    </MenubarCheckboxItem>
+                  </MenubarGroup>
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
@@ -2153,17 +2285,19 @@ export const overlaysDemos: ComponentEntry[] = [
             <Menubar>
               <MenubarMenu>
                 <MenubarTrigger>Profiles</MenubarTrigger>
-                <MenubarContent>
-                  <MenubarRadioGroup
-                    value={profile}
-                    onValueChange={setProfile}
-                  >
-                    <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
-                    <MenubarRadioItem value="benoit">
-                      Benoit
-                    </MenubarRadioItem>
-                    <MenubarRadioItem value="luis">Luis</MenubarRadioItem>
-                  </MenubarRadioGroup>
+                <MenubarContent grouped>
+                  <MenubarGroup>
+                    <MenubarRadioGroup
+                      value={profile}
+                      onValueChange={setProfile}
+                    >
+                      <MenubarRadioItem value="andy">Andy</MenubarRadioItem>
+                      <MenubarRadioItem value="benoit">
+                        Benoit
+                      </MenubarRadioItem>
+                      <MenubarRadioItem value="luis">Luis</MenubarRadioItem>
+                    </MenubarRadioGroup>
+                  </MenubarGroup>
                 </MenubarContent>
               </MenubarMenu>
             </Menubar>
@@ -2178,21 +2312,23 @@ export const overlaysDemos: ComponentEntry[] = [
           <Menubar>
             <MenubarMenu>
               <MenubarTrigger>File</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>New file</MenubarItem>
-                <MenubarSub>
-                  <MenubarSubTrigger>Share</MenubarSubTrigger>
-                  <MenubarSubContent>
-                    <MenubarItem>Email link</MenubarItem>
-                    <MenubarItem>Copy link</MenubarItem>
-                    <MenubarSeparator />
-                    <MenubarItem>Notifications</MenubarItem>
-                  </MenubarSubContent>
-                </MenubarSub>
-                <MenubarSeparator />
-                <MenubarItem>
-                  Print <MenubarShortcut>⌘P</MenubarShortcut>
-                </MenubarItem>
+              <MenubarContent grouped>
+                <MenubarGroup>
+                  <MenubarItem>New file</MenubarItem>
+                  <MenubarSub>
+                    <MenubarSubTrigger>Share</MenubarSubTrigger>
+                    <MenubarSubContent>
+                      <MenubarItem>Email link</MenubarItem>
+                      <MenubarItem>Copy link</MenubarItem>
+                      <MenubarSeparator />
+                      <MenubarItem>Notifications</MenubarItem>
+                    </MenubarSubContent>
+                  </MenubarSub>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    Print <MenubarShortcut>⌘P</MenubarShortcut>
+                  </MenubarItem>
+                </MenubarGroup>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>
@@ -2206,28 +2342,31 @@ export const overlaysDemos: ComponentEntry[] = [
           <Menubar>
             <MenubarMenu>
               <MenubarTrigger>Edit</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>
-                  <UndoIcon /> Undo
-                  <MenubarShortcut>⌘Z</MenubarShortcut>
-                </MenubarItem>
-                <MenubarItem>
-                  <RedoIcon /> Redo
-                  <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>
-                  <ScissorsIcon /> Cut
-                  <MenubarShortcut>⌘X</MenubarShortcut>
-                </MenubarItem>
-                <MenubarItem>
-                  <CopyIcon /> Copy
-                  <MenubarShortcut>⌘C</MenubarShortcut>
-                </MenubarItem>
-                <MenubarItem>
-                  <ClipboardIcon /> Paste
-                  <MenubarShortcut>⌘V</MenubarShortcut>
-                </MenubarItem>
+              <MenubarContent grouped>
+                <MenubarGroup>
+                  <MenubarItem>
+                    <UndoIcon /> Undo
+                    <MenubarShortcut>⌘Z</MenubarShortcut>
+                  </MenubarItem>
+                  <MenubarItem>
+                    <RedoIcon /> Redo
+                    <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                  </MenubarItem>
+                </MenubarGroup>
+                <MenubarGroup>
+                  <MenubarItem>
+                    <ScissorsIcon /> Cut
+                    <MenubarShortcut>⌘X</MenubarShortcut>
+                  </MenubarItem>
+                  <MenubarItem>
+                    <CopyIcon /> Copy
+                    <MenubarShortcut>⌘C</MenubarShortcut>
+                  </MenubarItem>
+                  <MenubarItem>
+                    <ClipboardIcon /> Paste
+                    <MenubarShortcut>⌘V</MenubarShortcut>
+                  </MenubarItem>
+                </MenubarGroup>
               </MenubarContent>
             </MenubarMenu>
           </Menubar>

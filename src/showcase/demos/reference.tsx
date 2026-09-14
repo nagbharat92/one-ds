@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { IconLabel } from "@/components/ui/icon-label"
 import { EdgeText } from "@/components/ui/edge-text"
 import { Button } from "@/components/ui/button"
-import { MailIcon, ArrowRightIcon, BellIcon } from "@/components/ui/icons"
+import { MailIcon, ArrowRightIcon, BellIcon, ChevronLeftIcon } from "@/components/ui/icons"
 import { Favicon } from "@/components/ui/favicon"
 import { Spinner } from "@/components/ui/spinner"
 import { Section, SectionHeader, SectionTitle } from "@/components/ui/section"
@@ -43,22 +43,22 @@ export const referenceDemos: ComponentEntry[] = [
       <Stack gap="lg" className="w-full max-w-sm">
         <Stack gap="xs">
           <Text variant="label">Without correction</Text>
-          <div className="flex items-center justify-between gap-2 rounded-full border p-1">
+          <div className="flex items-center justify-between gap-2 rounded-full border p-3">
             <span className="min-w-0 text-sm font-medium">Notifications</span>
             <Button variant="ghost" size="icon" aria-label="Open notifications"><BellIcon /></Button>
           </div>
         </Stack>
         <Stack gap="xs">
           <Text variant="label">With EdgeText</Text>
-          <div data-optical-edges className="flex items-center justify-between gap-2 rounded-full border p-1">
+          <div data-optical-edges className="flex items-center justify-between gap-2 rounded-full border p-3">
             <EdgeText className="text-sm font-medium">Notifications</EdgeText>
             <Button variant="ghost" size="icon" aria-label="Open notifications"><BellIcon /></Button>
           </div>
         </Stack>
         <Stack gap="xs">
           <Text variant="label">Trailing edge text</Text>
-          <div data-optical-edges className="flex items-center justify-between gap-2 rounded-full border p-1">
-            <Button variant="ghost" size="icon" aria-label="Previous"><ArrowRightIcon /></Button>
+          <div data-optical-edges className="flex items-center justify-between gap-2 rounded-full border p-3">
+            <Button variant="ghost" size="icon" aria-label="Previous"><ChevronLeftIcon /></Button>
             <EdgeText className="text-sm font-medium">Page 3 of 12</EdgeText>
           </div>
         </Stack>

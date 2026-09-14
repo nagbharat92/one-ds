@@ -87,13 +87,13 @@ function DrawerContent({
         data-slot="drawer-content"
         data-close-button={showCloseButton}
         className={cn(
-          "group/drawer-content fixed z-50 flex h-auto flex-col bg-popover text-sm text-popover-foreground shadow-(--elevation-floating)",
-          "data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-xl data-[vaul-drawer-direction=top]:border-b",
-          "data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-xl data-[vaul-drawer-direction=bottom]:border-t",
+          "group/drawer-content fixed z-50 flex h-auto flex-col gap-(--drawer-gap) p-(--drawer-padding) bg-popover text-sm text-popover-foreground shadow-(--elevation-floating)",
+          "data-[vaul-drawer-direction=top]:inset-x-0 data-[vaul-drawer-direction=top]:top-0 data-[vaul-drawer-direction=top]:mb-24 data-[vaul-drawer-direction=top]:max-h-[80vh] data-[vaul-drawer-direction=top]:rounded-b-(--drawer-radius) data-[vaul-drawer-direction=top]:border-b",
+          "data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-(--drawer-radius) data-[vaul-drawer-direction=bottom]:border-t",
           // Side drawers float inset from the viewport edges, so they round on
           // every corner and hide vaul's edge-bleed pseudo element.
-          "data-[vaul-drawer-direction=left]:inset-y-(--drawer-inset) data-[vaul-drawer-direction=left]:left-(--drawer-inset) data-[vaul-drawer-direction=left]:w-(--drawer-width) data-[vaul-drawer-direction=left]:rounded-xl data-[vaul-drawer-direction=left]:border data-[vaul-drawer-direction=left]:[--initial-transform:calc(100%+var(--drawer-inset))] data-[vaul-drawer-direction=left]:after:hidden data-[vaul-drawer-direction=left]:sm:max-w-sm",
-          "data-[vaul-drawer-direction=right]:inset-y-(--drawer-inset) data-[vaul-drawer-direction=right]:right-(--drawer-inset) data-[vaul-drawer-direction=right]:w-(--drawer-width) data-[vaul-drawer-direction=right]:rounded-xl data-[vaul-drawer-direction=right]:border data-[vaul-drawer-direction=right]:[--initial-transform:calc(100%+var(--drawer-inset))] data-[vaul-drawer-direction=right]:after:hidden data-[vaul-drawer-direction=right]:sm:max-w-sm",
+          "data-[vaul-drawer-direction=left]:inset-y-(--drawer-inset) data-[vaul-drawer-direction=left]:left-(--drawer-inset) data-[vaul-drawer-direction=left]:w-(--drawer-width) data-[vaul-drawer-direction=left]:rounded-(--drawer-radius) data-[vaul-drawer-direction=left]:border data-[vaul-drawer-direction=left]:[--initial-transform:calc(100%+var(--drawer-inset))] data-[vaul-drawer-direction=left]:after:hidden data-[vaul-drawer-direction=left]:sm:max-w-sm",
+          "data-[vaul-drawer-direction=right]:inset-y-(--drawer-inset) data-[vaul-drawer-direction=right]:right-(--drawer-inset) data-[vaul-drawer-direction=right]:w-(--drawer-width) data-[vaul-drawer-direction=right]:rounded-(--drawer-radius) data-[vaul-drawer-direction=right]:border data-[vaul-drawer-direction=right]:[--initial-transform:calc(100%+var(--drawer-inset))] data-[vaul-drawer-direction=right]:after:hidden data-[vaul-drawer-direction=right]:sm:max-w-sm",
           className
         )}
         {...props}
@@ -120,7 +120,7 @@ function DrawerContent({
           <DrawerPrimitive.Close data-slot="drawer-close" asChild>
             <Button
               variant="ghost"
-              className="absolute top-4 right-4"
+              className="absolute top-(--drawer-close-inset) right-(--drawer-close-inset) rounded-(--drawer-inner-radius)"
               size="icon"
             >
               <XIcon />
@@ -138,7 +138,7 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="drawer-header"
       className={cn(
-        "flex flex-col gap-(--space-xs) p-(--space-md) group-data-[close-button=true]/drawer-content:pe-(--drawer-close-clearance)",
+        "flex flex-col gap-(--space-xs) group-data-[close-button=true]/drawer-content:pe-(--drawer-close-clearance)",
         className
       )}
       {...props}
@@ -150,7 +150,10 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="drawer-footer"
-      className={cn("mt-auto flex flex-col gap-(--space-xs) p-(--space-md)", className)}
+      className={cn(
+        "mt-auto flex flex-col gap-(--space-xs) **:data-[slot=button]:rounded-(--drawer-inner-radius)",
+        className
+      )}
       {...props}
     />
   )

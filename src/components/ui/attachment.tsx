@@ -7,19 +7,23 @@ import { useScrollerRef } from "@/hooks/use-scroller"
 import { Button } from "@/components/ui/button"
 
 const attachmentVariants = cva(
-  "group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-xl border bg-card bg-clip-padding text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/50 has-[>a,>button]:hover:bg-(--state-layer-hover) data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed",
+  "group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-(--attachment-radius) border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border text-card-foreground shadow-(--elevation-flat) transition-all duration-(--speed-swift) ease-(--ease-glide) focus-within:ring-2 focus-within:ring-ring/50 has-[>a,>button,[data-slot=attachment-trigger]]:hover:bg-(--state-layer-hover) has-[>a,>button,[data-slot=attachment-trigger]]:hover:shadow-(--elevation-raised) data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed",
   {
     variants: {
       size: {
         default:
-          "gap-(--space-xs) text-sm has-data-[slot=attachment-content]:px-(--space-sm) has-data-[slot=attachment-content]:py-(--space-xs) has-data-[slot=attachment-media]:p-(--space-xs)",
-        sm: "gap-(--space-sm) text-xs has-data-[slot=attachment-content]:px-(--space-xs) has-data-[slot=attachment-content]:py-(--space-xs) has-data-[slot=attachment-media]:p-(--space-xs)",
-        xs: "gap-(--space-xs) rounded-lg text-xs has-data-[slot=attachment-content]:px-(--space-xs) has-data-[slot=attachment-content]:py-(--space-2xs) has-data-[slot=attachment-media]:p-(--space-2xs)",
+          "gap-(--attachment-gap) p-(--attachment-padding) text-sm",
+        sm: "gap-(--attachment-gap) p-(--attachment-padding) text-xs",
+        xs: "gap-(--space-2xs) p-(--space-2xs) rounded-(--radius-lg) text-xs",
       },
       orientation: {
-        horizontal: "min-w-40 items-center",
-        vertical: "w-24 flex-col has-data-[slot=attachment-content]:w-30",
+        horizontal: "min-w-44 items-center",
+        vertical: "w-28 flex-col has-data-[slot=attachment-content]:w-32",
       },
+    },
+    defaultVariants: {
+      size: "default",
+      orientation: "horizontal",
     },
   }
 )
@@ -47,13 +51,13 @@ function Attachment({
 }
 
 const attachmentMediaVariants = cva(
-  "relative flex aspect-(--aspect-ratio-square) w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted text-foreground group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 group-data-[size=xs]/attachment:rounded-md group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5",
+  "relative flex aspect-(--aspect-ratio-square) size-(--attachment-media-size) shrink-0 items-center justify-center overflow-hidden rounded-(--attachment-inner-radius) bg-(--surface-container) text-foreground transition-all duration-(--speed-swift) ease-(--ease-glide) group-data-[orientation=vertical]/attachment:w-full group-data-[orientation=vertical]/attachment:h-auto group-data-[size=sm]/attachment:size-(--attachment-media-size-sm) group-data-[size=xs]/attachment:size-(--attachment-media-size-xs) group-data-[size=xs]/attachment:rounded-sm group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5 group-data-[size=sm]/attachment:[&_svg:not([class*='size-'])]:size-4 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6",
   {
     variants: {
       variant: {
         icon: "",
         image:
-          "opacity-60 group-data-[state=done]/attachment:opacity-100 group-data-[state=idle]/attachment:opacity-100 *:[img]:aspect-(--aspect-ratio-square) *:[img]:w-full *:[img]:object-cover",
+          "opacity-80 group-data-[state=done]/attachment:opacity-100 group-data-[state=idle]/attachment:opacity-100 *:[img]:aspect-(--aspect-ratio-square) *:[img]:size-full *:[img]:object-cover",
       },
     },
     defaultVariants: {
@@ -153,7 +157,7 @@ function AttachmentAction({
       data-slot="attachment-action"
       variant={variant ?? "ghost"}
       size={size}
-      className={cn(className)}
+      className={cn("size-7 rounded-full cursor-pointer", className)}
       {...props}
     />
   )
@@ -173,7 +177,7 @@ function AttachmentTrigger({
     <Comp
       data-slot="attachment-trigger"
       type={asChild ? undefined : (type ?? "button")}
-      className={cn("absolute inset-0 z-10 outline-none", className)}
+      className={cn("absolute inset-0 z-10 cursor-pointer outline-none", className)}
       {...props}
     />
   )

@@ -61,7 +61,7 @@ function DialogContent({
         data-slot="dialog-content"
         data-close-button={showCloseButton}
         className={cn(
-          "group/dialog-content fixed top-1/2 left-1/2 z-50 flex max-h-(--dialog-max-height) w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col gap-(--space-lg) overflow-hidden rounded-3xl bg-popover p-(--space-lg) text-sm text-popover-foreground ring-1 ring-(--elevation-stroke) shadow-(--elevation-floating) duration-(--speed-swift) outline-none has-data-[slot=dialog-body]:gap-(--space-md) sm:max-w-md data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "group/dialog-content fixed top-1/2 left-1/2 z-50 flex max-h-(--dialog-max-height) w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 flex-col gap-(--dialog-region-gap) overflow-hidden rounded-(--dialog-radius) bg-popover p-(--dialog-spacing) text-sm text-popover-foreground ring-1 ring-(--dialog-stroke) shadow-(--elevation-floating) duration-(--speed-swift) outline-none has-data-[slot=dialog-body]:gap-(--space-md) sm:max-w-(--dialog-width) data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className
         )}
         {...props}
@@ -71,7 +71,7 @@ function DialogContent({
           <DialogPrimitive.Close data-slot="dialog-close" asChild>
             <Button
               variant="ghost"
-              className="absolute top-6 right-6"
+              className="absolute top-(--dialog-spacing) right-(--dialog-spacing)"
               size="icon"
             >
               <XIcon
@@ -90,7 +90,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="dialog-header"
       className={cn(
-        "flex flex-col gap-(--space-xs) group-data-[close-button=true]/dialog-content:pe-(--dialog-close-clearance)",
+        "flex flex-col gap-(--dialog-header-gap) group-data-[close-button=true]/dialog-content:pe-(--dialog-close-clearance)",
         className
       )}
       {...props}
@@ -107,7 +107,7 @@ function DialogBody({ className, ...props }: React.ComponentProps<typeof Scrolle
       fade="end"
       fadeSize="sm"
       className={cn(
-        "-mx-6 flex-1 space-y-(--space-sm) border-t px-(--space-lg) pt-(--space-md)",
+        "-mx-(--dialog-spacing) flex-1 space-y-(--dialog-content-group-gap) border-t border-(--dialog-stroke) px-(--dialog-spacing) pt-(--dialog-region-gap)",
         className
       )}
       {...props}
@@ -127,7 +127,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-6 -mb-6 flex flex-col-reverse gap-(--space-xs) rounded-b-3xl border-t bg-muted/50 bg-clip-padding px-(--space-lg) py-(--space-md) sm:flex-row sm:justify-end",
+        "flex flex-col gap-(--dialog-footer-gap) pt-(--dialog-footer-padding-block-start) sm:flex-row sm:justify-end",
         className
       )}
       {...props}

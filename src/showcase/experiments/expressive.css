@@ -43,7 +43,7 @@
     line-height: var(--expressive-body-leading);
     font-weight: var(--font-weight-medium);
   }
-  [data-expression="expressive"] :is([data-slot="badge"], [data-slot="field-description"], [data-slot="field-error"], [data-slot="card-eyebrow"], [data-slot="message-header"], [data-slot="sidebar-group-label"], .expression-lab__next-step, .expression-lab__session-label, .expression-lab__slider-labels, .expression-lab__progress-copy, .expression-lab__chat-description) {
+  [data-expression="expressive"] :is([data-slot="badge"], [data-slot="avatar-fallback"], [data-slot="field-description"], [data-slot="field-error"], [data-slot="card-eyebrow"], [data-slot="message-header"], [data-slot="sidebar-group-label"], .expression-lab__next-step, .expression-lab__session-label, .expression-lab__slider-labels, .expression-lab__progress-copy, .expression-lab__chat-description) {
     font-size: var(--expressive-caption-size);
     line-height: var(--expressive-caption-leading);
   }
@@ -133,10 +133,10 @@
   [data-expression="expressive"] [data-slot="message"] { gap: var(--expressive-space-related); }
   [data-expression="expressive"] [data-slot="message-avatar"] { min-inline-size: var(--expressive-avatar-size); }
   [data-expression="expressive"] [data-slot="message-content"] { min-inline-size: 0; }
-  [data-expression="expressive"] [data-slot="ai-composer"] { border-radius: var(--expressive-field-radius); padding: var(--expressive-space-related); }
+  [data-expression="expressive"] [data-slot="ai-composer"] { --ai-composer-padding: var(--expressive-space-related); }
   [data-expression="expressive"] [data-slot="ai-composer-input"] { font-size: var(--expressive-body-size); line-height: var(--expressive-body-leading); }
   [data-expression="expressive"] [data-slot="ai-composer-footer"] { flex-wrap: wrap; gap: var(--expressive-space-related); }
-  [data-expression="expressive"] :is([data-slot="ai-composer-action"], [data-slot="ai-composer-submit"], [data-slot="sidebar-trigger"]) {
+  [data-expression="expressive"] :is([data-slot="ai-composer-action"], [data-slot="ai-composer-submit"], [data-slot="ai-composer"] [data-slot="dropdown-menu-trigger"], [data-slot="sidebar-trigger"]) {
     inline-size: var(--expressive-field-height);
     block-size: var(--expressive-field-height);
     min-block-size: var(--expressive-field-height);
@@ -144,7 +144,7 @@
     border-radius: var(--expressive-control-radius);
     flex: none;
   }
-  [data-expression="expressive"] :is([data-slot="ai-composer-action"], [data-slot="ai-composer-submit"], [data-slot="sidebar-trigger"]) svg { inline-size: var(--expressive-icon-size); block-size: var(--expressive-icon-size); }
+  [data-expression="expressive"] :is([data-slot="ai-composer-action"], [data-slot="ai-composer-submit"], [data-slot="ai-composer"] [data-slot="dropdown-menu-trigger"], [data-slot="sidebar-trigger"]) svg { inline-size: var(--expressive-icon-size); block-size: var(--expressive-icon-size); }
   [data-expression="expressive"] [data-slot="ai-composer-tool"] { font-size: var(--expressive-caption-size); line-height: var(--expressive-caption-leading); }
   [data-expression="expressive"] [data-slot="ai-composer-input"] { padding: var(--expressive-space-pair); }
 

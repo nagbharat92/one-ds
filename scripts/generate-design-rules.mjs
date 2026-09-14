@@ -1,6 +1,14 @@
 import fs from "node:fs"
+import path from "node:path"
 
 const source = JSON.parse(fs.readFileSync(new URL("../src/design-system/rules.json", import.meta.url), "utf8"))
+const check = process.argv.includes("--check")
+
+/* ---------------------------------------------------------------------------
+ * 1. Full reference (unchanged). Humans and the #/rules page audit trail:
+ *    every field, including why, evidence and enforcement detail.
+ * ------------------------------------------------------------------------- */
+
 const lines = [
   `# OneDS ${source.title}`,
   "",
@@ -37,14 +45,141 @@ for (const status of ["approved", "candidate"]) {
   }
 }
 
-const output = `${lines.join("\n").trimEnd()}\n`
-const target = new URL("../public/design-rules.md", import.meta.url)
-if (process.argv.includes("--check")) {
-  if (!fs.existsSync(target) || fs.readFileSync(target, "utf8") !== output) {
-    console.error("Design rules Markdown is stale. Run npm run rules:generate.")
+const fullOutput = `${lines.join("\n").trimEnd()}\n`
+
+/* ---------------------------------------------------------------------------
+ * 2. Agent slices. An agent complies with a rule using its text, its
+ *    exceptions, its tokens and its files. why / evidence / enforcement detail
+ *    are provenance for a human auditor and change nothing an agent writes,
+ *    so they stay out of the slices: that alone removes ~1/3 of the corpus.
+ *
+ *    Routing: cross-cutting rules go in _always.md. Every other rule is
+ *    emitted into one slice per file it governs, so an agent reads the rules
+ *    for the file in hand instead of all of them. Slug is mechanical:
+ *    path separators become dashes, extension dropped.
+ * ------------------------------------------------------------------------- */
+
+// Sections whose rules bind regardless of which file is being edited.
+const ALWAYS_SECTIONS = new Set(["Foundations", "Typography", "Motion", "Accessibility"])
+
+// Cross-cutting rules that live in a scoped section. Kept as an explicit list
+// rather than inferred from file count: a rule naming twelve menu files is
+// specific to menus, not global, so counting files routes it wrongly.
+const ALWAYS_IDS = new Set([
+  "geometry.control-grid",      // 4px grid governs all authored spacing
+  "geometry.concentric-corners", // governs any nested rounded surfaces
+  "color.surface-accent",       // neutral surface roles apply globally
+  "color.accent-restraint",     // primary/secondary opt-in is a global policy
+])
+
+const isAlways = rule => ALWAYS_SECTIONS.has(rule.section) || ALWAYS_IDS.has(rule.id)
+
+// index.css carries the tokens for 30 of 42 rules, so it identifies nothing.
+// Test specs are verification, not authoring surfaces.
+const routable = file => file !== "src/index.css" && !file.startsWith("tests/")
+
+const slugFor = file => file.replace(/\.[^./]+$/, "").replace(/[/.]/g, "-")
+
+const ruleBlock = rule => [
+  `### ${rule.title}`,
+  "",
+  `${rule.id} | ${rule.level} | ${rule.status} | enforcement: ${rule.enforcement.kind}`,
+  "",
+  rule.rule,
+  "",
+  `Exceptions: ${rule.exceptions}`,
+  "",
+  ...(rule.tokens.length ? [`Tokens: ${rule.tokens.map(t => `\`${t}\``).join(", ")}`, ""] : []),
+  `Files: ${rule.implementation.join(", ")}`,
+  "",
+]
+
+const artifacts = new Map()
+
+const alwaysRules = source.rules.filter(isAlways)
+const scopedRules = source.rules.filter(rule => !isAlways(rule))
+
+artifacts.set("_always.md", `${[
+  "# Rules that always apply",
+  "",
+  "Generated from src/design-system/rules.json. Do not edit directly.",
+  "",
+  `${alwaysRules.length} cross-cutting rules. Read this for every UI change, then read the`,
+  "slice for the file you are editing. Full rationale, decision history and",
+  "enforcement detail live in ../design-rules.md; you do not need them to comply.",
+  "",
+  ...alwaysRules.flatMap(ruleBlock),
+].join("\n").trimEnd()}\n`)
+
+const byFile = new Map()
+for (const rule of scopedRules) {
+  for (const file of rule.implementation.filter(routable)) {
+    if (!byFile.has(file)) byFile.set(file, [])
+    byFile.get(file).push(rule)
+  }
+}
+
+for (const [file, rules] of byFile) {
+  artifacts.set(`${slugFor(file)}.md`, `${[
+    `# Rules for ${file}`,
+    "",
+    "Generated from src/design-system/rules.json. Do not edit directly.",
+    "",
+    `${rules.length} scoped rule${rules.length === 1 ? "" : "s"}. Read _always.md as well.`,
+    "",
+    ...rules.flatMap(ruleBlock),
+  ].join("\n").trimEnd()}\n`)
+}
+
+// Router. Only needed when a slug is ambiguous or an agent wants the map;
+// the slug is derivable from the path without reading this.
+artifacts.set("index.md", `${[
+  "# Rule router",
+  "",
+  "Generated from src/design-system/rules.json. Do not edit directly.",
+  "",
+  "Editing a file: read `_always.md`, then `<path with / and . as ->.md` from this",
+  "directory. A missing slice means no scoped rule governs that file.",
+  "",
+  "| File | Slice | Scoped rules |",
+  "| --- | --- | --- |",
+  ...[...byFile.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([file, rules]) => `| ${file} | \`${slugFor(file)}.md\` | ${rules.length} |`),
+  "",
+  `Always-apply rules (${alwaysRules.length}): ${alwaysRules.map(r => r.id).join(", ")}`,
+  "",
+].join("\n").trimEnd()}\n`)
+
+/* ------------------------------------------------------------------------- */
+
+const fullTarget = new URL("../public/design-rules.md", import.meta.url)
+const sliceDir = new URL("../public/rules/", import.meta.url)
+
+const stale = []
+if (!fs.existsSync(fullTarget) || fs.readFileSync(fullTarget, "utf8") !== fullOutput) {
+  stale.push("public/design-rules.md")
+}
+const existing = fs.existsSync(sliceDir) ? fs.readdirSync(sliceDir).filter(f => f.endsWith(".md")) : []
+for (const [name, body] of artifacts) {
+  const file = new URL(name, sliceDir)
+  if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== body) stale.push(`public/rules/${name}`)
+}
+for (const name of existing) {
+  if (!artifacts.has(name)) stale.push(`public/rules/${name} (orphaned)`)
+}
+
+if (check) {
+  if (stale.length) {
+    console.error(`Design rule artifacts are stale. Run npm run rules:generate.\n  ${stale.slice(0, 8).join("\n  ")}${stale.length > 8 ? `\n  ...and ${stale.length - 8} more` : ""}`)
     process.exitCode = 1
   }
 } else {
-  fs.writeFileSync(target, output)
-  console.log(`Generated ${source.rules.length} design rules.`)
+  fs.writeFileSync(fullTarget, fullOutput)
+  fs.mkdirSync(sliceDir, { recursive: true })
+  for (const name of existing) {
+    if (!artifacts.has(name)) fs.rmSync(new URL(name, sliceDir))
+  }
+  for (const [name, body] of artifacts) fs.writeFileSync(new URL(name, sliceDir), body)
+  console.log(`Generated ${source.rules.length} design rules: 1 full reference, ${artifacts.size} agent slices.`)
 }

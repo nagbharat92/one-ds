@@ -28,9 +28,17 @@ import {
   ChevronsRightIcon,
   ColumnsIcon,
   MoreHorizontalIcon,
-  SearchIcon,
 } from "@/components/ui/icons"
-import { format, isValid } from "date-fns"
+import type { DateRange } from "react-day-picker"
+import {
+  addDays,
+  addMonths,
+  format,
+  isValid,
+  isSameDay,
+  setHours,
+  setMinutes,
+} from "date-fns"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { team } from "@/lib/persona"
@@ -41,9 +49,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableSortButton,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Input, SearchInput } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Text } from "@/components/ui/text"
@@ -130,9 +139,9 @@ function StatusBadge({ status }: { status: Payment["status"] }) {
 }
 
 function SortIcon({ direction }: { direction: false | SortDirection }) {
-  if (direction === "asc") return <ArrowUpIcon className="ml-2 size-4" />
-  if (direction === "desc") return <ArrowDownIcon className="ml-2 size-4" />
-  return <ArrowUpDownIcon className="ml-2 size-4" />
+  if (direction === "asc") return <ArrowUpIcon />
+  if (direction === "desc") return <ArrowDownIcon />
+  return <ArrowUpDownIcon />
 }
 
 function formatCurrency(value: number) {
@@ -393,24 +402,24 @@ function SortingDemo() {
     columnHelper.accessor("id", { header: "Invoice" }),
     columnHelper.accessor("status", {
       header: ({ column }) => (
-        <Button variant="ghost" className="-ml-4" onClick={() => column.toggleSorting()}>
+        <TableSortButton onClick={() => column.toggleSorting()}>
           Status <SortIcon direction={column.getIsSorted()} />
-        </Button>
+        </TableSortButton>
       ),
       cell: (info) => <StatusBadge status={info.getValue()} />,
     }),
     columnHelper.accessor("email", {
       header: ({ column }) => (
-        <Button variant="ghost" className="-ml-4" onClick={() => column.toggleSorting()}>
+        <TableSortButton onClick={() => column.toggleSorting()}>
           Email <SortIcon direction={column.getIsSorted()} />
-        </Button>
+        </TableSortButton>
       ),
     }),
     columnHelper.accessor("amount", {
       header: ({ column }) => (
-        <Button variant="ghost" className="-ml-4" onClick={() => column.toggleSorting()}>
+        <TableSortButton onClick={() => column.toggleSorting()}>
           Amount <SortIcon direction={column.getIsSorted()} />
-        </Button>
+        </TableSortButton>
       ),
       cell: (info) => <span className="font-medium tabular-nums">{formatCurrency(info.getValue())}</span>,
     }),
@@ -468,16 +477,14 @@ function FilteringDemo() {
   )
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <SearchIcon className="size-4 text-muted-foreground" />
-        <Input
-          placeholder="Filter payments..."
-          value={globalFilter}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
-      </div>
+    <div className="w-full space-y-4">
+      <SearchInput
+        aria-label="Filter payments"
+        className="mx-auto max-w-(--table-filter-search-max-width)"
+        placeholder="Filter payments..."
+        value={globalFilter}
+        onValueChange={setGlobalFilter}
+      />
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((hg) => (
@@ -526,25 +533,31 @@ function VisibilityDemo() {
   )
 
   return (
-    <div className="space-y-4">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="default">
-            <ColumnsIcon className="mr-2 size-4" /> Columns
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {table.getAllColumns().filter((col) => col.getCanHide()).map((col) => (
-            <DropdownMenuCheckboxItem
-              key={col.id}
-              checked={col.getIsVisible()}
-              onCheckedChange={(value) => col.toggleVisibility(!!value)}
+    <div className="w-full space-y-4">
+      <div className="flex justify-center">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="secondary"
+              size="default"
+              className="w-(--table-visibility-control-width) max-w-full rounded-(--button-round-radius)"
             >
-              {typeof col.columnDef.header === "string" ? col.columnDef.header : col.id}
-            </DropdownMenuCheckboxItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+              <ColumnsIcon /> Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table.getAllColumns().filter((col) => col.getCanHide()).map((col) => (
+              <DropdownMenuCheckboxItem
+                key={col.id}
+                checked={col.getIsVisible()}
+                onCheckedChange={(value) => col.toggleVisibility(!!value)}
+              >
+                {typeof col.columnDef.header === "string" ? col.columnDef.header : col.id}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((hg) => (
@@ -645,26 +658,26 @@ function ColumnHeaderDemo() {
   const headerCols = columnHelper.columns([
     columnHelper.accessor("email", {
       header: ({ column }) => (
-        <Button variant="ghost" className="-ml-4" onClick={() => column.toggleSorting()}>
+        <TableSortButton onClick={() => column.toggleSorting()}>
           Email <SortIcon direction={column.getIsSorted()} />
-        </Button>
+        </TableSortButton>
       ),
     }),
     columnHelper.accessor("amount", {
       header: ({ column }) => (
         <div className="text-right">
-          <Button variant="ghost" onClick={() => column.toggleSorting()}>
+          <TableSortButton onClick={() => column.toggleSorting()}>
             Amount <SortIcon direction={column.getIsSorted()} />
-          </Button>
+          </TableSortButton>
         </div>
       ),
       cell: (info) => <span className="text-right font-medium tabular-nums">{formatCurrency(info.getValue())}</span>,
     }),
     columnHelper.accessor("status", {
       header: ({ column }) => (
-        <Button variant="ghost" className="-ml-4" onClick={() => column.toggleSorting()}>
+        <TableSortButton onClick={() => column.toggleSorting()}>
           Status <SortIcon direction={column.getIsSorted()} />
-        </Button>
+        </TableSortButton>
       ),
       cell: (info) => <StatusBadge status={info.getValue()} />,
     }),
@@ -783,8 +796,8 @@ function ColumnToggleDemo() {
   const toggleable = table.getAllColumns().filter((col) => col.getCanHide())
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="w-full space-y-4">
+      <div className="flex flex-wrap justify-center gap-2">
         {toggleable.map((col) => (
           <Button
             key={col.id}
@@ -836,16 +849,25 @@ function BasicDatePicker() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
-          <CalendarIcon className="mr-2 size-4" />
+        <Button
+          variant="tertiary"
+          className={cn(
+            "w-60 justify-start text-left font-normal",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="size-4" />
           {date ? format(date, "PPP") : "Pick a date"}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="center">
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(day) => { setDate(day); setOpen(false) }}
+          onSelect={(day) => {
+            setDate(day)
+            setOpen(false)
+          }}
         />
       </PopoverContent>
     </Popover>
@@ -853,75 +875,105 @@ function BasicDatePicker() {
 }
 
 function RangePickerDemo() {
-  const [range, setRange] = useState<{ from?: Date; to?: Date }>({})
+  const [range, setRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: addDays(new Date(), 6),
+  })
   const [open, setOpen] = useState(false)
 
-  const label = range.from
+  const label = range?.from
     ? range.to
-      ? `${format(range.from, "LLL dd")} - ${format(range.to, "LLL dd, y")}`
+      ? `${format(range.from, "LLL dd, y")} – ${format(range.to, "LLL dd, y")}`
       : format(range.from, "LLL dd, y")
     : "Pick a range"
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className={cn("w-72 justify-start text-left font-normal", !range.from && "text-muted-foreground")}>
-          <CalendarIcon className="mr-2 size-4" />
+        <Button
+          variant="tertiary"
+          className={cn(
+            "w-72 justify-start text-left font-normal",
+            !range?.from && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="size-4" />
           {label}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="center">
         <Calendar
           mode="range"
-          selected={range.from ? { from: range.from, to: range.to } : undefined}
-          onSelect={(val) => {
-            if (val) setRange({ from: val.from, to: val.to })
-          }}
+          selected={range}
+          onSelect={setRange}
+          resetOnSelect
           numberOfMonths={2}
+          showOutsideDays={false}
         />
       </PopoverContent>
     </Popover>
   )
 }
 
+const DATE_PICKER_PRESETS: { label: string; value: () => Date }[] = [
+  { label: "Today", value: () => new Date() },
+  { label: "Tomorrow", value: () => addDays(new Date(), 1) },
+  { label: "In 3 days", value: () => addDays(new Date(), 3) },
+  { label: "In a week", value: () => addDays(new Date(), 7) },
+  { label: "In a month", value: () => addMonths(new Date(), 1) },
+]
+
 function PresetsDemo() {
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [open, setOpen] = useState(false)
 
-  const [presets] = useState(() => {
-    const today = new Date()
-    const day = 24 * 60 * 60 * 1000
-    return [
-      { label: "Today", value: today },
-      { label: "Tomorrow", value: new Date(today.getTime() + day) },
-      { label: "In a week", value: new Date(today.getTime() + 7 * day) },
-      { label: "In a month", value: new Date(today.getTime() + 30 * day) },
-    ]
-  })
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
-          <CalendarIcon className="mr-2 size-4" />
+        <Button
+          variant="tertiary"
+          className={cn(
+            "w-60 justify-start text-left font-normal",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="size-4" />
           {date ? format(date, "PPP") : "Pick a date"}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="flex w-auto gap-2 p-2" align="start">
-        <div className="flex flex-col gap-1">
-          {presets.map((preset) => (
-            <Button
-              key={preset.label}
-              variant="ghost"
-              size="default"
-              className="justify-start"
-              onClick={() => { setDate(preset.value); setOpen(false) }}
-            >
-              {preset.label}
-            </Button>
-          ))}
+      <PopoverContent
+        className="flex w-auto flex-col gap-(--space-sm) p-(--calendar-padding) sm:flex-row"
+        align="center"
+      >
+        <div className="flex flex-col gap-(--space-2xs)">
+          {DATE_PICKER_PRESETS.map((preset) => {
+            const val = preset.value()
+            const isSelected = Boolean(date && isSameDay(date, val))
+            return (
+              <Button
+                key={preset.label}
+                variant="tertiary"
+                selected={isSelected}
+                size="default"
+                className="justify-start"
+                onClick={() => {
+                  setDate(val)
+                  setOpen(false)
+                }}
+              >
+                {preset.label}
+              </Button>
+            )
+          })}
         </div>
-        <Calendar mode="single" selected={date} onSelect={(day) => { setDate(day); setOpen(false) }} />
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={(day) => {
+            setDate(day)
+            setOpen(false)
+          }}
+        />
       </PopoverContent>
     </Popover>
   )
@@ -934,16 +986,25 @@ function DateOfBirthDemo() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="secondary" className={cn("w-60 justify-start text-left font-normal", !date && "text-muted-foreground")}>
-          <CalendarIcon className="mr-2 size-4" />
+        <Button
+          variant="tertiary"
+          className={cn(
+            "w-60 justify-start text-left font-normal",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="size-4" />
           {date ? format(date, "PPP") : "Date of birth"}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="center">
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(day) => { setDate(day); setOpen(false) }}
+          onSelect={(day) => {
+            setDate(day)
+            setOpen(false)
+          }}
           captionLayout="dropdown"
           startMonth={new Date(1920, 0)}
           endMonth={new Date()}
@@ -974,85 +1035,146 @@ function DateInputDemo() {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Input
-        className="w-40"
-        placeholder="yyyy-mm-dd"
-        value={inputValue}
-        onChange={handleInputChange}
-      />
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="secondary" size="icon" aria-label="Open calendar">
-            <CalendarIcon className="size-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar mode="single" selected={date} onSelect={handleCalendarSelect} />
-        </PopoverContent>
-      </Popover>
+    <div className="grid gap-(--space-sm)">
+      <div className="flex items-center gap-(--space-xs)">
+        <Input
+          className="w-40"
+          placeholder="yyyy-mm-dd"
+          value={inputValue}
+          onChange={handleInputChange}
+        />
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="tertiary" size="icon" aria-label="Open calendar">
+              <CalendarIcon className="size-4" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="center">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={handleCalendarSelect}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       {date && isValid(date) && (
-        <p className="text-sm text-muted-foreground">Selected: {format(date, "PPP")}</p>
+        <p className="text-sm text-muted-foreground">
+          Selected: {format(date, "PPP")}
+        </p>
       )}
     </div>
   )
 }
 
 function TimePickerDemo() {
-  const [date, setDate] = useState<Date | undefined>(undefined)
-  const [time, setTime] = useState({
-    hour: "12",
-    minute: "00",
-    period: "pm",
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [time, setTime] = useState(() => {
+    const now = new Date()
+    return {
+      hour: String(now.getHours() % 12 || 12).padStart(2, "0"),
+      minute: String(now.getMinutes()).padStart(2, "0"),
+      period: now.getHours() < 12 ? "am" : "pm",
+    }
   })
   const [open, setOpen] = useState(false)
 
   const combined = useMemo(() => {
     if (!date) return null
-    const hours = Number(time.hour) % 12 + (time.period === "pm" ? 12 : 0)
-    const result = new Date(date)
-    result.setHours(hours, Number(time.minute), 0, 0)
-    return result
+    const hours = (Number(time.hour) % 12) + (time.period === "pm" ? 12 : 0)
+    return setMinutes(setHours(new Date(date), hours), Number(time.minute))
   }, [date, time])
 
+  function handleDateSelect(day: Date | undefined) {
+    setDate(day)
+    setOpen(false)
+  }
+
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2">
+    <div className="grid gap-(--space-sm)">
+      <div className="flex flex-wrap items-center gap-(--space-xs)">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button variant="secondary" className={cn("w-48 justify-start text-left font-normal", !date && "text-muted-foreground")}>
-              <CalendarIcon className="mr-2 size-4" />
+            <Button
+              variant="tertiary"
+              className={cn(
+                "w-48 justify-start text-left font-normal",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="size-4" />
               {date ? format(date, "PPP") : "Pick a date"}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar mode="single" selected={date} onSelect={(day) => { setDate(day); setOpen(false) }} />
+          <PopoverContent className="w-auto p-0" align="center">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={handleDateSelect}
+            />
           </PopoverContent>
         </Popover>
-        <div className="flex items-center gap-1.5">
-          <Select value={time.hour} onValueChange={(hour) => setTime((current) => ({ ...current, hour }))}>
-            <SelectTrigger aria-label="Hour" className="w-16">
+        <div className="flex items-center gap-(--space-2xs)">
+          <Select
+            value={time.hour}
+            onValueChange={(hour) =>
+              setTime((current) => ({ ...current, hour }))
+            }
+          >
+            <SelectTrigger
+              aria-label="Hour"
+              variant="tertiary"
+              className="w-(--date-picker-time-select-width)"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((hour) => (
-                <SelectItem key={hour} value={hour}>{hour}</SelectItem>
+              {Array.from({ length: 12 }, (_, index) =>
+                String(index + 1).padStart(2, "0")
+              ).map((hour) => (
+                <SelectItem key={hour} value={hour}>
+                  {hour}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <span aria-hidden="true" className="text-muted-foreground">:</span>
-          <Select value={time.minute} onValueChange={(minute) => setTime((current) => ({ ...current, minute }))}>
-            <SelectTrigger aria-label="Minute" className="w-16">
+          <span aria-hidden="true" className="text-muted-foreground">
+            :
+          </span>
+          <Select
+            value={time.minute}
+            onValueChange={(minute) =>
+              setTime((current) => ({ ...current, minute }))
+            }
+          >
+            <SelectTrigger
+              aria-label="Minute"
+              variant="tertiary"
+              className="w-(--date-picker-time-select-width)"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Array.from({ length: 60 }, (_, minute) => String(minute).padStart(2, "0")).map((minute) => (
-                <SelectItem key={minute} value={minute}>{minute}</SelectItem>
+              {Array.from({ length: 60 }, (_, minute) =>
+                String(minute).padStart(2, "0")
+              ).map((minute) => (
+                <SelectItem key={minute} value={minute}>
+                  {minute}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <Select value={time.period} onValueChange={(period) => setTime((current) => ({ ...current, period }))}>
-            <SelectTrigger aria-label="Period" className="w-16">
+          <Select
+            value={time.period}
+            onValueChange={(period) =>
+              setTime((current) => ({ ...current, period }))
+            }
+          >
+            <SelectTrigger
+              aria-label="Period"
+              variant="tertiary"
+              className="w-(--date-picker-time-select-width)"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -1064,7 +1186,8 @@ function TimePickerDemo() {
       </div>
       {combined && (
         <p className="text-sm text-muted-foreground">
-          Combined: {format(combined, "PPP 'at' h:mm")} {format(combined, "a").toLowerCase()}
+          Combined: {format(combined, "PPP 'at' h:mm")}{" "}
+          {format(combined, "a").toLowerCase()}
         </p>
       )}
     </div>
@@ -1096,39 +1219,67 @@ function NaturalLanguagePickerDemo() {
   }
 
   return (
-    <div>
-      <div className="flex items-center gap-2">
+    <div className="grid gap-(--space-sm)">
+      <div className="flex items-center gap-(--space-xs)">
         <Input
           className="w-64"
           placeholder='e.g. "next friday" or "in 3 days"'
           value={text}
           onChange={(event) => setText(event.target.value)}
-          onKeyDown={(event) => { if (event.key === "Enter") handleParse() }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") handleParse()
+          }}
         />
-        <Button onClick={handleParse} size="default">Parse</Button>
+        <Button onClick={handleParse} size="default">
+          Parse
+        </Button>
         {date && (
-          <Button variant="ghost" size="default" onClick={() => { setDate(undefined); setText(""); setFeedback("") }}>
+          <Button
+            variant="ghost"
+            size="default"
+            onClick={() => {
+              setDate(undefined)
+              setText("")
+              setFeedback("")
+            }}
+          >
             Clear
           </Button>
         )}
       </div>
       <Collapsible open={Boolean(feedback)}>
-        <CollapsibleContent className="pt-3">
+        <CollapsibleContent className="pt-(--space-xs)">
           <p className="text-sm text-muted-foreground">{displayFeedback}</p>
         </CollapsibleContent>
       </Collapsible>
       <Collapsible open={Boolean(date)}>
-        <CollapsibleContent className="pt-3">
+        <CollapsibleContent className="pt-(--space-xs)">
           {displayDate && (
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
-                <Button variant="secondary" className="w-60 justify-start text-left font-normal">
-                  <CalendarIcon className="mr-2 size-4" />
+                <Button
+                  variant="tertiary"
+                  className="w-60 justify-start text-left font-normal"
+                >
+                  <CalendarIcon className="size-4" />
                   {format(displayDate, "PPP")}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" selected={displayDate} onSelect={(day) => { setDate(day); if (day) { setDisplayDate(day); const message = `Selected: ${format(day, "PPP")}`; setFeedback(message); setDisplayFeedback(message) }; setOpen(false) }} />
+              <PopoverContent className="w-auto p-0" align="center">
+                <Calendar
+                  mode="single"
+                  selected={displayDate}
+                  onSelect={(day) => {
+                    setDate(day)
+                    if (day) {
+                      setDisplayDate(day)
+                      const message = `Selected: ${format(day, "PPP")}`
+                      setFeedback(message)
+                      setDisplayFeedback(message)
+                    }
+                    setOpen(false)
+                  }}
+                />
               </PopoverContent>
             </Popover>
           )}
@@ -1259,12 +1410,12 @@ const table = useTable({ features, data, columns, rowModelFns: {} })`,
     Demo: BasicDatePicker,
     code: `<Popover>
   <PopoverTrigger asChild>
-    <Button variant="secondary">
-      <CalendarIcon className="mr-2 size-4" />
+    <Button variant="tertiary">
+      <CalendarIcon className="size-4" />
       {date ? format(date, "PPP") : "Pick a date"}
     </Button>
   </PopoverTrigger>
-  <PopoverContent className="w-auto p-0">
+  <PopoverContent className="w-auto p-0" align="center">
     <Calendar mode="single" selected={date} onSelect={setDate} />
   </PopoverContent>
 </Popover>`,

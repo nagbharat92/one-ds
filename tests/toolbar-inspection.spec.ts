@@ -39,7 +39,7 @@ test("expression lab applies coordinated expressive roles without changing Origi
   await expect(list).toHaveAttribute('data-expression', 'expressive')
   await expect(list.getByRole('option').first()).toHaveCSS('min-height', '48px')
   await list.getByRole('option', { name: 'Motion', exact: true }).click()
-  await expect(category).toHaveText('Motion')
+  await expect(category.locator('[data-slot="select-value"]')).toHaveText('Motion')
   await lab.getByRole('button', { name: 'Quick actions', exact: true }).click()
   const menu = page.getByRole('menu')
   await expect(menu).toHaveAttribute('data-expression', 'expressive')
@@ -918,13 +918,65 @@ for (const example of examples) {
 test("preview controls and specimen share the toolbar title token", async ({ page }) => {
   await page.goto("/#/toolbar")
   const titles = page.locator('[data-slot="toolbar-title"]')
-  await expect(titles).toHaveCount(6)
+  await expect(titles.first()).toBeVisible()
+  await expect(titles).toHaveCount(8)
   const padding = () => titles.evaluateAll(elements => elements.map(element => getComputedStyle(element).paddingLeft))
-  await expect.poll(padding).toEqual(Array(6).fill("8px"))
+  await expect.poll(padding).toEqual(Array(8).fill("8px"))
   await page.evaluate(() => document.documentElement.style.setProperty("--toolbar-title-padding-start", "calc(var(--spacing) * 4)"))
-  await expect.poll(padding).toEqual(Array(6).fill("16px"))
+  await expect.poll(padding).toEqual(Array(8).fill("16px"))
   await page.evaluate(() => document.documentElement.style.removeProperty("--toolbar-title-padding-start"))
-  await expect.poll(padding).toEqual(Array(6).fill("8px"))
+  await expect.poll(padding).toEqual(Array(8).fill("8px"))
+})
+
+test("toolbar expressive scale and floating variant provide soft hardware geometry and interaction", async ({ page }) => {
+  await page.goto("/#/toolbar")
+  const expressiveSection = page.locator("#toolbar-expressive")
+  const expressiveToolbar = expressiveSection.locator('[data-slot="toolbar"]').last()
+  await expect(expressiveToolbar).toHaveAttribute("data-size", "expressive")
+  await expect(expressiveToolbar).toHaveCSS("border-radius", "37px")
+  await expect(expressiveToolbar).toHaveCSS("padding", "8px")
+
+  const expressiveButton = expressiveToolbar.locator('[data-slot="button"]').first()
+  await expect(expressiveButton).toHaveCSS("height", "56px")
+  await expect(expressiveButton).toHaveCSS("width", "56px")
+  await expect(expressiveButton).toHaveCSS("border-radius", "28px")
+
+  const floatingSection = page.locator("#toolbar-floating-island")
+  const floatingToolbars = floatingSection.locator('[data-slot="toolbar"][data-elevation="floating"]')
+  await expect(floatingToolbars).toHaveCount(2)
+  for (const tb of await floatingToolbars.all()) {
+    await expect(tb).toHaveAttribute("data-elevation", "floating")
+    await expect(tb).toHaveAttribute("data-shape", "pill")
+    await expect(tb).toHaveCSS("border-radius", "37px")
+  }
+
+  // Verify concentric rule on the floating island: outer radius (37px) - padding (8px) - border (1px) = inner button radius (28px)
+  const concentricMetrics = await floatingToolbars.first().evaluate(tb => {
+    const tbCs = getComputedStyle(tb);
+    const firstBtn = tb.querySelector('[data-slot="button"]')!;
+    const lastBtn = tb.querySelectorAll('[data-slot="button"]')[tb.querySelectorAll('[data-slot="button"]').length - 1];
+    const firstCs = getComputedStyle(firstBtn);
+    const lastCs = getComputedStyle(lastBtn);
+    return {
+      tbRadius: parseFloat(tbCs.borderRadius),
+      tbPad: parseFloat(tbCs.paddingTop),
+      tbBorder: parseFloat(tbCs.borderTopWidth),
+      firstRadius: parseFloat(firstCs.borderRadius),
+      lastRadius: parseFloat(lastCs.borderRadius),
+    };
+  });
+  expect(concentricMetrics.tbRadius - concentricMetrics.tbPad - concentricMetrics.tbBorder).toBe(concentricMetrics.firstRadius);
+  expect(concentricMetrics.firstRadius).toBe(28);
+  expect(concentricMetrics.lastRadius).toBe(28);
+
+  // Test interactive selection on text formatting
+  const formatSection = page.locator("#toolbar-text-formatting")
+  const boldButton = formatSection.getByRole("button", { name: "Bold", exact: true })
+  await expect(boldButton).toHaveAttribute("aria-pressed", "true")
+  await boldButton.click()
+  await expect(boldButton).toHaveAttribute("aria-pressed", "false")
+  await boldButton.click()
+  await expect(boldButton).toHaveAttribute("aria-pressed", "true")
 })
 
 test("special preview pages explicitly opt into the requested defaults", async ({ page }) => {

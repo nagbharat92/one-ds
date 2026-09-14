@@ -1,11 +1,10 @@
 import fs from "node:fs"
 import path from "node:path"
 import ts from "typescript"
+import { pathToFileURL } from "node:url"
 import { completeDemoSource } from "./showcase-code-source.mjs"
 
 const root = process.cwd()
-const sourceDirectories = ["demos", "experiments"].map(directory => path.join(root, "src", "showcase", directory))
-const outputPath = path.join(root, "src", "showcase", "generated-example-code.ts")
 
 function propertyName(property) {
   if (!property.name) return null
@@ -85,94 +84,109 @@ function demoSource(expression, declarations, sourceFile) {
   return demo.getText(sourceFile)
 }
 
-const files = sourceDirectories
-  .flatMap(directory => fs.readdirSync(directory).filter(file => file.endsWith(".tsx")).map(file => path.join(directory, file)))
-  .sort()
+export function collectShowcaseCode(collectRoot = root) {
+  const directories = ["demos", "experiments"].map((directory) => path.join(collectRoot, "src", "showcase", directory))
+  const files = directories
+    .flatMap(directory => fs.readdirSync(directory).filter(file => file.endsWith(".tsx")).map(file => path.join(directory, file)))
+    .sort()
 
-const generated = new Map()
-const program = ts.createProgram(files, {
-  jsx: ts.JsxEmit.ReactJSX,
-  target: ts.ScriptTarget.Latest,
-  noResolve: true,
-  noLib: true,
-})
-const checker = program.getTypeChecker()
+  const generated = new Map()
+  const program = ts.createProgram(files, {
+    jsx: ts.JsxEmit.ReactJSX,
+    target: ts.ScriptTarget.Latest,
+    noResolve: true,
+    noLib: true,
+  })
+  const checker = program.getTypeChecker()
 
-for (const file of files) {
-  const filePath = file
-  const sourceFile = program.getSourceFile(filePath)
-  const declarations = new Map()
+  for (const file of files) {
+    const filePath = file
+    const sourceFile = program.getSourceFile(filePath)
+    const declarations = new Map()
 
-  function collectDeclarations(node) {
-    if (ts.isFunctionDeclaration(node) && node.name) {
-      declarations.set(node.name.text, node)
-    }
-    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-      declarations.set(node.name.text, node)
-    }
-    ts.forEachChild(node, collectDeclarations)
-  }
-  collectDeclarations(sourceFile)
-
-  function collectComponents(node) {
-    if (ts.isObjectLiteralExpression(node)) {
-      const slug = stringValue(findProperty(node, "slug"))
-      const examplesProperty = findProperty(node, "examples")
-      const complete = stringValue(findProperty(node, "category")) === "Preview Tools" || stringValue(findProperty(node, "codeSource")) === "complete"
-      if (slug && complete) {
-        const demoProperty = findProperty(node, "Demo")
-        if (!demoProperty || !ts.isPropertyAssignment(demoProperty)) throw new Error(`${file}: ${slug} needs an explicit Demo`)
-        const key = `${slug}:${stringValue(findProperty(node, "defaultExampleName")) ?? "Default"}`
-        if (generated.has(key)) throw new Error(`Duplicate showcase example key: ${key}`)
-        generated.set(key, completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, root))
+    function collectDeclarations(node) {
+      if (ts.isFunctionDeclaration(node) && node.name) {
+        declarations.set(node.name.text, node)
       }
+      if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
+        declarations.set(node.name.text, node)
+      }
+      ts.forEachChild(node, collectDeclarations)
+    }
+    collectDeclarations(sourceFile)
 
-      if (
-        slug &&
-        examplesProperty &&
-        ts.isPropertyAssignment(examplesProperty)
-      ) {
-        const examples = unwrap(examplesProperty.initializer)
-        if (!ts.isArrayLiteralExpression(examples)) {
-          throw new Error(`${file}: ${slug} examples must be an array literal`)
+    function collectComponents(node) {
+      if (ts.isObjectLiteralExpression(node)) {
+        const slug = stringValue(findProperty(node, "slug"))
+        const examplesProperty = findProperty(node, "examples")
+        const complete = stringValue(findProperty(node, "category")) === "Preview Tools" || stringValue(findProperty(node, "codeSource")) === "complete"
+        if (slug && complete) {
+          const demoProperty = findProperty(node, "Demo")
+          if (!demoProperty || !ts.isPropertyAssignment(demoProperty)) throw new Error(`${file}: ${slug} needs an explicit Demo`)
+          const key = `${slug}:${stringValue(findProperty(node, "defaultExampleName")) ?? "Default"}`
+          if (generated.has(key)) throw new Error(`Duplicate showcase example key: ${key}`)
+          generated.set(key, completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, collectRoot))
         }
 
-        for (const element of examples.elements) {
-          const example = unwrap(element)
-          if (!ts.isObjectLiteralExpression(example)) continue
-
-          const name = stringValue(findProperty(example, "name"))
-          const demoProperty = findProperty(example, "Demo")
-          if (!name || !demoProperty || !ts.isPropertyAssignment(demoProperty)) {
-            throw new Error(`${file}: ${slug} has an example without name or Demo`)
+        if (
+          slug &&
+          examplesProperty &&
+          ts.isPropertyAssignment(examplesProperty)
+        ) {
+          const examples = unwrap(examplesProperty.initializer)
+          if (!ts.isArrayLiteralExpression(examples)) {
+            throw new Error(`${file}: ${slug} examples must be an array literal`)
           }
 
-          const key = `${slug}:${name}`
-          if (generated.has(key)) {
-            throw new Error(`Duplicate showcase example key: ${key}`)
-          }
+          for (const element of examples.elements) {
+            const example = unwrap(element)
+            if (!ts.isObjectLiteralExpression(example)) continue
 
-          const code = complete
-            ? completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, root)
-            : demoSource(demoProperty.initializer, declarations, sourceFile)
-          if (!code?.trim()) {
-            throw new Error(`Could not extract showcase code for ${key}`)
+            const name = stringValue(findProperty(example, "name"))
+            const demoProperty = findProperty(example, "Demo")
+            if (!name || !demoProperty || !ts.isPropertyAssignment(demoProperty)) {
+              throw new Error(`${file}: ${slug} has an example without name or Demo`)
+            }
+
+            const key = `${slug}:${name}`
+            if (generated.has(key)) {
+              throw new Error(`Duplicate showcase example key: ${key}`)
+            }
+
+            const code = complete
+              ? completeDemoSource(unwrap(demoProperty.initializer), sourceFile, checker, collectRoot)
+              : demoSource(demoProperty.initializer, declarations, sourceFile)
+            if (!code?.trim()) {
+              throw new Error(`Could not extract showcase code for ${key}`)
+            }
+            generated.set(key, code)
           }
-          generated.set(key, code)
         }
       }
+      ts.forEachChild(node, collectComponents)
     }
-    ts.forEachChild(node, collectComponents)
+    collectComponents(sourceFile)
   }
-  collectComponents(sourceFile)
+
+  return generated
 }
 
-const entries = [...generated.entries()]
-  .sort(([left], [right]) => left.localeCompare(right))
-  .map(([key, code]) => `  ${JSON.stringify(key)}: ${JSON.stringify(code)},`)
-  .join("\n")
+export function renderShowcaseModule(generated) {
+  const entries = [...generated.entries()]
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, code]) => `  ${JSON.stringify(key)}: ${JSON.stringify(code)},`)
+    .join("\n")
 
-const output = `// Generated by scripts/generate-showcase-code.mjs. Do not edit.\nexport const generatedExampleCode: Readonly<Record<string, string>> = {\n${entries}\n}\n`
+  return `// Generated by scripts/generate-showcase-code.mjs. Do not edit.\nexport const generatedExampleCode: Readonly<Record<string, string>> = {\n${entries}\n}\n`
+}
 
-fs.writeFileSync(outputPath, output)
-console.log(`Generated source for ${generated.size} showcase variants.`)
+export function writeShowcaseCode(writeRoot = root) {
+  const generated = collectShowcaseCode(writeRoot)
+  fs.writeFileSync(path.join(writeRoot, "src", "showcase", "generated-example-code.ts"), renderShowcaseModule(generated))
+  return generated.size
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+  const size = writeShowcaseCode(root)
+  console.log(`Generated source for ${size} showcase variants.`)
+}

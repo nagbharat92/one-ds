@@ -105,7 +105,7 @@ function ButtonGroupChoiceItem({
   ...props
 }: Omit<React.ComponentProps<typeof ToggleGroupPrimitive.Item>, "asChild"> & {
   size?: React.ComponentProps<typeof Button>["size"]
-  variant?: "default" | "secondary" | "tertiary"
+  variant?: "default" | "secondary" | "tertiary" | "ghost"
   tooltip?: React.ComponentProps<typeof Button>["tooltip"]
 }) {
   const selectedValue = React.useContext(ButtonGroupChoiceContext)

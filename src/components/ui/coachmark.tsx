@@ -193,7 +193,7 @@ function CoachmarkBeacon({
 }
 
 const coachmarkContentVariants = cva(
-  "group/coachmark relative z-50 flex origin-top flex-col gap-(--coachmark-gap) rounded-(--coachmark-radius) px-(--coachmark-padding-inline) pt-(--coachmark-padding-block-start) pb-(--coachmark-padding-block-end) text-sm shadow-(--elevation-floating) outline-hidden data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+  "group/coachmark relative z-50 flex origin-top flex-col gap-(--coachmark-gap) rounded-(--coachmark-radius) p-(--coachmark-padding) text-sm shadow-(--elevation-floating) outline-hidden data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
   {
     variants: {
       tone: {
@@ -217,7 +217,7 @@ const coachmarkContentVariants = cva(
 // Padding must clear --coachmark-radius, or an end-aligned beak lands on the rounded corner.
 const COACHMARK_ARROW_WIDTH = 14
 const COACHMARK_ARROW_HEIGHT = 7
-const COACHMARK_ARROW_PADDING = 24
+const COACHMARK_ARROW_PADDING = 36
 const COACHMARK_ARROW_TIP = 2.4
 
 // Triangle whose tip is pulled back along both edges and closed with a curve.
@@ -330,7 +330,7 @@ function CoachmarkMedia({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="coachmark-media"
       ratio="landscape"
       className={cn(
-        "mx-(--coachmark-media-inset-inline) mt-(--coachmark-media-inset-block-start) overflow-hidden rounded-t-(--coachmark-radius) bg-muted [&>img]:size-full [&>img]:object-cover",
+        "w-(--coachmark-media-width)! mx-(--coachmark-media-inset-inline) mt-(--coachmark-media-inset-block-start) overflow-hidden rounded-(--coachmark-radius) bg-muted [&>img]:size-full [&>img]:object-cover",
         className
       )}
       {...props}
@@ -343,7 +343,7 @@ function CoachmarkHeader({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="coachmark-header"
       className={cn(
-        "grid gap-(--space-2xs) has-data-[slot=coachmark-close]:grid-cols-[minmax(0,1fr)_auto] has-data-[slot=coachmark-close]:gap-x-(--space-xs)",
+        "grid gap-(--space-2xs) has-data-[slot=coachmark-close]:pe-(--coachmark-close-clearance)",
         className
       )}
       {...props}
@@ -376,7 +376,7 @@ function CoachmarkTitle({ className, ...props }: React.ComponentProps<"h3">) {
     <h3
       id={titleId}
       data-slot="coachmark-title"
-      className={cn("col-start-1 font-heading text-sm font-semibold", className)}
+      className={cn("col-start-1 font-heading text-base font-semibold leading-snug", className)}
       {...props}
     />
   )
@@ -399,7 +399,7 @@ function CoachmarkDescription({
       id={descriptionId}
       data-slot="coachmark-description"
       className={cn(
-        "col-span-full text-sm text-muted-foreground group-data-[tone=inverted]/coachmark:text-background/70",
+        "col-span-full text-sm text-muted-foreground group-data-[tone=inverted]/coachmark:text-background/80 leading-normal",
         className
       )}
       {...props}
@@ -430,7 +430,7 @@ function CoachmarkClose({
       }}
       className={cn(
         coachmarkQuietAction,
-        "col-start-2 row-start-1 -my-1 -mr-1.5 opacity-70 hover:opacity-100",
+        "absolute top-(--coachmark-padding) right-(--coachmark-padding) rounded-(--coachmark-inner-radius) opacity-70 hover:opacity-100",
         className
       )}
       {...props}
@@ -454,10 +454,10 @@ function CoachmarkFooter({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 const coachmarkPrimaryAction =
-  "rounded-full px-(--space-md) group-data-[tone=inverted]/coachmark:bg-control group-data-[tone=inverted]/coachmark:text-foreground group-data-[tone=inverted]/coachmark:hover:bg-control/90"
+  "rounded-(--coachmark-inner-radius) px-(--space-md) group-data-[tone=inverted]/coachmark:bg-control group-data-[tone=inverted]/coachmark:text-foreground group-data-[tone=inverted]/coachmark:hover:bg-control/90"
 
 const coachmarkQuietAction =
-  "rounded-full group-data-[tone=inverted]/coachmark:text-background group-data-[tone=inverted]/coachmark:hover:bg-background/10 group-data-[tone=inverted]/coachmark:hover:text-background"
+  "rounded-(--coachmark-inner-radius) group-data-[tone=inverted]/coachmark:text-background group-data-[tone=inverted]/coachmark:hover:bg-background/10 group-data-[tone=inverted]/coachmark:hover:text-background"
 
 const coachmarkSecondaryAction = cn(coachmarkQuietAction, "px-(--space-md)")
 

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { ToastShapeIcon } from "@/components/ui/sonner"
 import {
   AlertCircleIcon,
   InfoIcon,
@@ -492,7 +493,12 @@ export function SpinnerDemo() {
         variant="secondary"
         onClick={() =>
           toast("Event has been created", {
-            description: "Sunday, December 03, 2023 at 9:00 AM",
+            description: "Sunday, December 03, 2026 at 9:00 AM",
+            icon: (
+              <ToastShapeIcon>
+                <InfoIcon />
+              </ToastShapeIcon>
+            ),
             action: { label: "Undo", onClick: () => {} },
           })
         }
@@ -502,6 +508,8 @@ export function SpinnerDemo() {
     ),
     code: `import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
+import { ToastShapeIcon } from "@/components/ui/sonner"
+import { InfoIcon } from "@/components/ui/icons"
 
 // Render <Toaster /> once near the root of your app.
 export function SonnerDemo() {
@@ -510,7 +518,12 @@ export function SonnerDemo() {
       variant="secondary"
       onClick={() =>
         toast("Event has been created", {
-          description: "Sunday, December 03, 2023 at 9:00 AM",
+          description: "Sunday, December 03, 2026 at 9:00 AM",
+          icon: (
+            <ToastShapeIcon>
+              <InfoIcon />
+            </ToastShapeIcon>
+          ),
           action: { label: "Undo", onClick: () => {} },
         })
       }
@@ -522,12 +535,22 @@ export function SonnerDemo() {
     examples: [
       {
         name: "Types",
+        description:
+          "Trigger status toasts with expressive icons, descriptions, and promise states.",
         Demo: () => (
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-(--space-xs)">
             <Button
               size="default"
               variant="secondary"
-              onClick={() => toast("Default notification")}
+              onClick={() =>
+                toast("Default notification", {
+                  icon: (
+                    <ToastShapeIcon>
+                      <InfoIcon />
+                    </ToastShapeIcon>
+                  ),
+                })
+              }
             >
               Default
             </Button>
@@ -582,6 +605,8 @@ export function SonnerDemo() {
       },
       {
         name: "Positions",
+        description:
+          "Anchor toasts to any viewport corner or center alignment.",
         Demo: () => {
           const positions = [
             "top-left",
@@ -592,7 +617,7 @@ export function SonnerDemo() {
             "bottom-right",
           ] as const
           return (
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-(--space-xs)">
               {positions.map((pos) => (
                 <Button
                   key={pos}

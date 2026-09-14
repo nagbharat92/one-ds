@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils"
 import { Toolbar } from "@/components/ui/toolbar"
 
 type CanvasLayout = "center" | "start" | "wide" | "viewport" | "application"
-type CanvasBackground = "grid" | "plain"
+type CanvasBackground = "grid" | "plain" | "split"
+type CanvasSplitSurface = "card" | "sidebar"
 
 function Canvas({
   className,
@@ -49,7 +50,10 @@ function CanvasToolbar({ className, ...props }: React.ComponentProps<typeof Tool
   return (
     <Toolbar
       data-annotate-avoid
-      className={cn("canvas-toolbar", className)}
+      className={cn(
+        "canvas-toolbar border-(--elevation-stroke) bg-popover text-popover-foreground",
+        className
+      )}
       {...props}
     />
   )
@@ -60,6 +64,21 @@ function CanvasContent({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="canvas-content"
       className={cn("canvas-content", className)}
+      {...props}
+    />
+  )
+}
+
+function CanvasSplitPane({
+  className,
+  surface,
+  ...props
+}: React.ComponentProps<"div"> & { surface: CanvasSplitSurface }) {
+  return (
+    <div
+      data-slot="canvas-split-pane"
+      data-surface={surface}
+      className={cn("canvas-split-pane min-w-0", className)}
       {...props}
     />
   )
@@ -76,5 +95,5 @@ function CanvasFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export { Canvas, CanvasWorkbench, CanvasToolbar, CanvasContent, CanvasFooter }
-export type { CanvasLayout, CanvasBackground }
+export { Canvas, CanvasWorkbench, CanvasToolbar, CanvasContent, CanvasSplitPane, CanvasFooter }
+export type { CanvasLayout, CanvasBackground, CanvasSplitSurface }

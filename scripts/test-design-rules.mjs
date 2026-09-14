@@ -49,6 +49,21 @@ test("Button has no outline variant or stale outline markup in published example
   assert.equal(rules.rules.find(rule => rule.id === "controls.supporting-actions").status, "approved")
 })
 
+test("Primary Button keeps purple by default and exposes an explicit pink color", () => {
+  const button = fs.readFileSync("src/components/ui/button.tsx", "utf8")
+  const css = fs.readFileSync("src/index.css", "utf8")
+  const showcase = fs.readFileSync("src/showcase/demos/forms.tsx", "utf8")
+  assert.match(button, /type ButtonPrimaryColor = "purple" \| "pink"/)
+  assert.match(button, /primaryColor = "purple"/)
+  assert.match(button, /data-primary-color=\{variant === "primary" \? primaryColor : undefined\}/)
+  for (const token of ["--button-primary-pink-fill", "--button-primary-pink-ink"]) assert.ok(css.includes(`${token}:`), token)
+  assert.match(css, /data-primary-color="pink"/)
+  assert.match(showcase, /primaryColor="pink">Primary pink/)
+  const rule = rules.rules.find(rule => rule.id === "controls.button-colors")
+  assert.equal(rule.status, "approved")
+  assert.match(rule.rule, /primaryColor purple or pink/)
+})
+
 test("showcase exposes two surface tiers with compact ordinary previews", () => {
   const source = fs.readFileSync("src/showcase/types.ts", "utf8")
   assert.match(source, /surface\?: "default" \| "application"/)
@@ -64,7 +79,7 @@ test("showcase exposes two surface tiers with compact ordinary previews", () => 
   assert.equal(rule.status, "approved")
 })
 
-test("List Item owns full and compact geometry without a legacy size axis", () => {
+test("List Item owns full and compact geometry plus the shared list state ladder", () => {
   const item = fs.readFileSync("src/components/ui/item.tsx", "utf8")
   assert.match(item, /compact\?: boolean/)
   assert.match(item, /data-compact=\{compact \? "" : undefined\}/)
@@ -86,11 +101,25 @@ test("List Item owns full and compact geometry without a legacy size axis", () =
   assert.deepEqual(legacySizeConsumers, [])
 
   const css = fs.readFileSync("src/index.css", "utf8")
-  for (const token of ["--item-radius", "--item-padding", "--item-inner-radius", "--item-host-surface", "--item-compact-height", "--item-compact-radius", "--item-media-host-size", "--item-image-size"]) {
+  for (const token of ["--item-radius", "--item-padding", "--item-inner-radius", "--item-host-surface", "--item-compact-height", "--item-compact-radius", "--item-media-host-size", "--item-image-size", "--state-layer-color", "--state-layer-hover-opacity", "--state-layer-focus-opacity", "--state-layer-pressed-opacity"]) {
     assert.ok(css.includes(`${token}:`), token)
   }
+  assert.match(css, /--item-default-hover-surface: color-mix\(/)
+  assert.match(css, /--item-muted-hover-surface: color-mix\(/)
+  assert.match(css, /--item-default-hover-surface: color-mix\([\s\S]*?var\(--state-layer-color\) var\(--state-layer-hover-opacity\)/)
+  assert.match(css, /--item-default-focus-surface: color-mix\([\s\S]*?var\(--state-layer-color\) var\(--state-layer-focus-opacity\)/)
+  assert.match(css, /--item-default-pressed-surface: color-mix\([\s\S]*?var\(--state-layer-color\) var\(--state-layer-pressed-opacity\)/)
+  assert.match(css, /--item-muted-surface: var\(--button-secondary-fill\)/)
+  assert.match(css, /--item-muted-ink: var\(--button-secondary-ink\)/)
+  assert.doesNotMatch(css, /--list-row-(?:state-ink|hover-opacity|focus-opacity|pressed-opacity)/)
   assert.match(css, /@layer item/)
   assert.doesNotMatch(css, /data-showcase-slug="list-item"|--list-item-|list-item-(?:compact|media|action|select)/)
+  const sidebar = fs.readFileSync("src/components/ui/sidebar.tsx", "utf8")
+  assert.match(sidebar, /hover:bg-\(--item-default-hover-surface\)/)
+  assert.match(sidebar, /active:bg-\(--item-default-pressed-surface\)/)
+  const app = fs.readFileSync("src/App.tsx", "utf8")
+  assert.match(app, /<Item\s+compact\s+asChild/)
+  assert.match(app, /<ItemContent>[\s\S]*<ItemTitle>\{component\.name\}<\/ItemTitle>/)
   assert.equal(rules.rules.find(rule => rule.id === "composition.list-item").status, "approved")
 })
 

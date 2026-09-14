@@ -1086,7 +1086,7 @@ export function ComboboxDemo() {
                 <ComboboxValue placeholder="Select country" />
               </ComboboxTrigger>
               <ComboboxContent>
-                <ComboboxInput placeholder="Search country..." showTrigger={false} />
+                <ComboboxInput placeholder="Search country..." focusRing={false} showTrigger={false} />
                 <ComboboxEmpty>No country found.</ComboboxEmpty>
                 <ComboboxList>
                   {(item: string) => (

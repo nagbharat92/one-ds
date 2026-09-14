@@ -63,7 +63,7 @@ function ChartContainer({
         data-slot="chart"
         data-chart={chartId}
         className={cn(
-          "flex aspect-(--aspect-ratio-landscape) justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          "flex aspect-(--aspect-ratio-landscape) justify-center text-xs [--chart-bar-corner-radius:var(--chart-bar-radius)] [&_.recharts-cartesian-axis-tick_text]:fill-(--chart-axis-ink) [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-(--chart-grid-stroke) [&_.recharts-curve.recharts-tooltip-cursor]:stroke-(--chart-cursor-stroke) [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-(--chart-grid-stroke) [&_.recharts-radial-bar-background-sector]:fill-(--surface-interaction) [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-(--chart-cursor-fill) [&_.recharts-reference-line_[stroke='#ccc']]:stroke-(--chart-grid-stroke) [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
           className
         )}
         {...props}
@@ -189,7 +189,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-            "grid min-w-32 items-start gap-(--space-xs) rounded-lg border border-border/50 bg-popover bg-clip-padding px-(--space-sm) py-(--space-xs) text-xs shadow-(--elevation-floating)",
+        "grid min-w-32 items-start gap-(--chart-tooltip-gap) rounded-(--chart-tooltip-radius) border border-(--elevation-stroke) bg-popover bg-clip-padding px-(--chart-tooltip-padding-inline) py-(--chart-tooltip-padding-block) text-xs shadow-(--elevation-floating)",
         className
       )}
     >
@@ -220,9 +220,9 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 rounded-(--chart-indicator-radius) border-(--color-border) bg-(--color-bg)",
                             {
-                              "h-2.5 w-2.5": indicator === "dot",
+                              "size-(--chart-indicator-size)": indicator === "dot",
                               "w-1": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
@@ -311,7 +311,7 @@ function ChartLegendContent({
                 <itemConfig.icon />
               ) : (
                 <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  className="size-(--chart-indicator-size) shrink-0 rounded-(--chart-indicator-radius)"
                   style={{
                     backgroundColor: item.color,
                   }}

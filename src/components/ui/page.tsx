@@ -5,6 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { Scroller } from "@/components/ui/scroller"
+import { resolveHang, type HangOffset } from "@/lib/hang"
 
 function Page({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -43,7 +44,7 @@ function PageScroll({
 }
 
 const pageContentVariants = cva(
-  "page-content mx-auto flex w-full flex-col px-(--space-lg) sm:px-(--space-xl) lg:px-10",
+  "page-content mx-auto flex w-full flex-col px-(--page-gutter-sm) sm:px-(--page-gutter-md) lg:px-(--page-gutter-lg)",
   {
     variants: {
       variant: {
@@ -73,18 +74,57 @@ function PageContent({
   return (
     <div
       data-slot="page-content"
+      data-variant={variant ?? "app"}
       className={cn(pageContentVariants({ variant, animate }), className)}
       {...props}
     />
   )
 }
 
-// Breaks a child out of the PageContent gutters to span the full page width.
-function PageBleed({ className, ...props }: React.ComponentProps<"div">) {
+const pageBleedVariants = cva("", {
+  variants: {
+    extent: {
+      gutter:
+        "-mx-(--page-gutter-sm) sm:-mx-(--page-gutter-md) lg:-mx-(--page-gutter-lg)",
+      surface: "page-bleed--surface",
+    },
+  },
+  defaultVariants: {
+    extent: "gutter",
+  },
+})
+
+// Breaks a child out of the PageContent gutters:
+// - extent="gutter" (default): breaks out across page gutters to the page boundary
+// - extent="surface": breaks out by the surface padding so child text aligns with page text
+// - hang: custom hanging offset (e.g. "8px", "16px", "24px", "xs", "sm", "md", "lg", "xl", or boolean)
+function PageBleed({
+  className,
+  extent,
+  hang,
+  style,
+  ...props
+}: React.ComponentProps<"div"> &
+  VariantProps<typeof pageBleedVariants> & {
+    hang?: HangOffset
+  }) {
+  const isSurface =
+    extent === "surface" || (hang !== undefined && hang !== false && hang !== "none")
+  const { dataHang, hangStyle, isHanging } = resolveHang(
+    hang ?? (extent === "surface" ? true : undefined)
+  )
+
   return (
     <div
       data-slot="page-bleed"
-      className={cn("-mx-6 sm:-mx-8 lg:-mx-10", className)}
+      data-extent={extent ?? (isSurface ? "surface" : "gutter")}
+      data-hang={isSurface ? dataHang : undefined}
+      style={isSurface && hangStyle ? { ...hangStyle, ...style } : style}
+      className={cn(
+        pageBleedVariants({ extent: isSurface ? "surface" : "gutter" }),
+        isHanging && "page-bleed--surface",
+        className
+      )}
       {...props}
     />
   )
@@ -96,4 +136,5 @@ export {
   PageContent,
   PageBleed,
   pageContentVariants,
+  pageBleedVariants,
 }

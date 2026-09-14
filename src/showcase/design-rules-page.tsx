@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SearchInput } from "@/components/ui/input"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
-import { PageHeader, PageHeaderContent, PageHeaderTitle, PageHeaderDescription } from "@/components/ui/page-header"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Stack } from "@/components/ui/stack"
 import { Cluster } from "@/components/ui/cluster"
@@ -18,6 +17,11 @@ import { Text } from "@/components/ui/text"
 import { TableOfContents, TableOfContentsLayout, TableOfContentsContent } from "@/components/ui/table-of-contents"
 
 type DesignRule = (typeof rulesDocument.rules)[number]
+
+const designRulesPageHeader = {
+  title: "Design Rules",
+  description: rulesDocument.description,
+} as const
 
 const sections = ["Foundations", "Geometry and Spacing", "Typography", "Controls", "Composition", "Motion", "Accessibility"]
 const sectionId = (section: string, status: string) => `rules-${status}-${section.toLowerCase().replaceAll(" ", "-")}`
@@ -148,12 +152,6 @@ export function DesignRulesPage() {
 
   return (
     <>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageHeaderTitle>Design Rules</PageHeaderTitle>
-          <PageHeaderDescription>{rulesDocument.description}</PageHeaderDescription>
-        </PageHeaderContent>
-      </PageHeader>
       <Stack>
       <Cluster gap="md">
         <Stack className="min-w-0 flex-1"><SearchInput value={query} onValueChange={setQuery} aria-label="Search design rules" placeholder="Search rules, tokens, or decisions" /></Stack>
@@ -203,3 +201,5 @@ export function DesignRulesPage() {
     </>
   )
 }
+
+export { designRulesPageHeader }

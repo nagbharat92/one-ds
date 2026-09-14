@@ -37,6 +37,11 @@ do not recreate it in page markup. Semantic content and product data may remain 
 The Rules page composes Section, Stack, Cluster, Accordion, Empty, Alert, and the
 existing controls. It contains no locally styled native elements or raw disclosures.
 
+For agent-focused retrieval, open `#/catalog` from the sidebar's Reference section.
+It lists Button, Card, and Response with their source file, primary props, and the
+examples to inspect first. The same data is exported as [public/agent-catalog.json](public/agent-catalog.json) and regenerated with `npm run catalog:generate`.
+Use `npm run catalog:list`, `npm run catalog:show -- <slug>`, `npm run catalog:example -- <slug>`, and `npm run catalog:check` for plain-Node retrieval and freshness checks.
+
 [Text](src/components/ui/text.tsx) owns body, label, metadata, and code roles through
 `--text-body-*`, `--text-label-*`, `--text-metadata-*`, and `--text-code-*` tokens.
 Its initial body scale preserves the existing 14px reading size for a separate
@@ -77,15 +82,16 @@ interaction fills. Tune the pink theme pair, shared button color tokens, and `--
 
 ### Material color roles
 
-**Button colors** have three types: accent-purple `primary`, light-purple
-`secondary`, and warm-neutral `tertiary`. General buttons default to Tertiary;
-`default` is a compatibility alias for Tertiary. Choose Primary or Secondary
-explicitly when emphasis is needed. Tune the `--button-primary-*`,
+**Button colors** have three emphasis types: `primary`, light-purple `secondary`,
+and warm-neutral `tertiary`. Primary defaults to purple and supports explicit pink
+with `primaryColor="pink"`. General buttons default to Tertiary; `default` is a
+compatibility alias for Tertiary. Choose Primary or Secondary explicitly when
+emphasis is needed. Tune the `--button-primary-*`,
 `--button-secondary-*`, `--button-tertiary-*`, and `--button-link-ink` tokens in
 [src/index.css](src/index.css). Filled hover/pressed states use their paired
 foregrounds at 8%/10%. Tertiary uses Surface container highest/On surface variant;
-its name describes emphasis, not Material's tertiary accent palette. Pink is reserved
-for Primary FABs, not the default Button treatment.
+its name describes emphasis, not Material's tertiary accent palette. Primary pink
+reuses that pink role pair only when explicitly requested.
 Generic selection colors, ghost/destructive treatments, and Button geometry
 and motion are unchanged. See [Button color tuning](src/design-system/material-foundation.md#button-color-tuning).
 
@@ -115,7 +121,7 @@ round selected corners, following Material's square-start configuration. The
 Selected showcase demonstrates Tertiary, Secondary, icon-only, and disabled
 buttons at both sizes. Tertiary selects from neutral to light purple; Secondary
 selects from light purple to dark gray-purple, with their paired foregrounds.
-Primary is reserved for prominent calls to action and ignores `selected`;
+Both Primary colors are reserved for prominent calls to action and ignore `selected`;
 choice-group items accept only Secondary, Tertiary, or its `default` alias.
 
 ### Icon Adapter

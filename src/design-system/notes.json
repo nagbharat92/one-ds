@@ -1,0 +1,110 @@
+{
+  "title": "Notes & Tasks",
+  "description": "Thoughts, captured tasks, reminders, and future architectural improvements for the OneDS library.",
+  "notice": "Items captured here track architectural decisions, ergonomics notes, and backlog items deferred until core design tokens and component primitives are finalized.",
+  "sections": ["Architecture & API", "Ergonomics", "Tasks & Todos"],
+  "notes": [
+    {
+      "id": "note-boolean-props-ergonomics",
+      "title": "Plug-and-play boolean props across components",
+      "category": "Architecture & API",
+      "status": "planned",
+      "priority": "High",
+      "summary": "Remind me we need to componentize things in a way where we can have simple booleans for everything like don't have focus ring, don't have icon, etc etc.",
+      "context": "We will do it once we have everything finalized.",
+      "details": "When building composable views and app-level interfaces, consuming developers and agents should have intuitive, zero-friction toggle props for common visual and interactive capabilities (e.g. focusRing={false}, showIcon={false}, showClear={false}, hasBorder={false}). Instead of requiring consumers to dig into compound sub-parts or pass custom CSS override classes, the primary component entry points should support ergonomic first-class boolean toggles.",
+      "reasoning": "Standardizing these boolean props ensures that common use-cases remain declarative, predictable, and single-line. Doing this systematically across the entire library once all primitives, tokens, and core compound anatomy are finalized prevents churn and ensures clean, uniform prop naming conventions across all component families.",
+      "tags": ["ergonomics", "props", "api-design", "post-finalization"],
+      "actionItems": [
+        "Audit all form, button, input, and data display primitives for frequent override patterns",
+        "Establish standardized prop naming conventions (focusRing, showIcon, clearable, showTrigger, etc.)",
+        "Implement and verify systematically across the library once core component anatomy and tokens are fully finalized"
+      ]
+    },
+    {
+      "id": "note-ruler-annotation-line-measurement",
+      "title": "Ruler annotation for straight-line callouts",
+      "category": "Ergonomics",
+      "status": "planned",
+      "priority": "High",
+      "summary": "Let the annotation system call out a straight line with a leader that extends from the component and then fades away so the measurement reads cleanly without crowding the canvas.",
+      "context": "The current annotation patterns are strong for boxes and spacing, but they do not yet have a purpose-built way to show a single linear measurement or directional cue along a line.",
+      "details": "A ruler-style annotation should allow a user to select or pin a straight line, then attach a label or value that sits just outside the measured element. The leader should begin as a crisp guide at the component edge, extend out with a visible but light stroke, and then taper or fade into transparency so it feels like it belongs to the measurement rather than a hard callout box. This would be ideal for showing a distance, a visual offset, or a directional cue without disrupting the component geometry.",
+      "reasoning": "Linear annotations are often more readable than boxed labels when the thing being explained is a single dimension or axis. If the leader line can extend cleanly from the host element and fade out softly, the viewer gets clear visual hierarchy without the label competing with the component itself. The pattern should feel precise and architectural, not like a generic tooltip or a noisy overlay.",
+      "tags": ["annotations", "ruler", "measurement", "line-callout", "fade"],
+      "actionItems": [
+        "Define a reusable straight-line annotation primitive for measure and callout use-cases",
+        "Experiment with a leader line that extends outward, then softens via opacity or gradient fade",
+        "Verify the label placement against both horizontal and vertical line measurements so the callout remains readable"
+      ]
+    },
+    {
+      "id": "note-centered-drawer-titles-real-examples",
+      "title": "Centered titles for top and bottom drawers",
+      "category": "Ergonomics",
+      "status": "planned",
+      "priority": "Medium",
+      "summary": "Drawer titles in both top and bottom placements should be centered and grounded in real product examples, not just theoretical layout preferences.",
+      "context": "The top and bottom drawer variants need a consistent title treatment that reads as intentional and balanced while remaining practical across real-world apps.",
+      "details": "For a drawer anchored at the top or bottom, the header title should sit in the center of the sheet rather than leaning toward a side or action cluster. That keeps the composition visually stable even when there are action buttons on the left or right, and it matches how many mobile and contextual surfaces handle their primary heading. We should use the centered title as the default pattern for these orientations and make sure the drawer still preserves clear action affordances around it.",
+      "reasoning": "Centered titles feel calmer and more anchored when a sheet is modal or task-focused, especially for compact bottom drawers where the title should not fight the action row. The layout becomes easier to scan, supports more natural asymmetry in actions, and reduces the visual pull of a side-aligned label. That said, the style should be validated against real examples rather than a single synthetic mock, so we can confirm it behaves well in common product patterns and longer titles.",
+      "tags": ["drawers", "header", "titles", "real-examples", "mobile"],
+      "actionItems": [
+        "Review real top and bottom drawer examples from product surfaces and compare title alignment patterns",
+        "Standardize the centered-title behavior for drawer variants in both orientations",
+        "Test the pattern with long titles, helper text, and side actions so the composition stays balanced in real use"
+      ]
+    },
+    {
+      "id": "note-notes-and-rules-page-formatting",
+      "title": "Formatting polish for the notes and design rules pages",
+      "category": "Ergonomics",
+      "status": "planned",
+      "priority": "Medium",
+      "summary": "The notes page and the design rules page should share a cleaner editorial rhythm so long-form content feels deliberate, readable, and consistently structured across both surfaces.",
+      "context": "Both pages are currently functional, but they deserve a stronger shared formatting system so that dense content reads more like a guided reference than a plain list of records.",
+      "details": "We should aim for a cohesive reading experience: concise summary blocks, steady hierarchy between headings and metadata, generous spacing between sections, and more deliberate use of muted labels, separators, and callouts. The idea is not to make these pages overly decorative, but to give them a calmer editorial cadence so people can scan quickly and still understand the intent of each item. The same treatment should apply to notes, rules, and any other long-form reference pages in the library.",
+      "reasoning": "A good formatting system is what turns reference content from merely usable into something trustworthy and pleasant to browse. When both the notes and design-rules surfaces share the same rhythm, their different purposes feel connected and intentional rather than separate page patterns built ad hoc. This is especially important for dense, knowledge-heavy documents where legibility is a product feature in its own right.",
+      "tags": ["formatting", "notes-page", "design-rules", "editorial", "readability"],
+      "actionItems": [
+        "Define a shared editorial layout pattern for long-form reference pages",
+        "Tighten heading, summary, and metadata hierarchy across notes and rules",
+        "Apply the same spacing, rhythm, and accent treatment to both views before finalizing the styling system"
+      ]
+    },
+    {
+      "id": "note-fab-filled-icons-root-component",
+      "title": "FABs should use filled icons at the root component",
+      "category": "Ergonomics",
+      "status": "planned",
+      "priority": "High",
+      "summary": "The shared FAB component should default to filled icons so every floating action reads as a deliberate primary action without each consumer re-adding icon tweaks.",
+      "context": "The root FAB component is the right place to enforce the icon treatment, because all variants and placements inherit from it and it keeps consumer code simpler.",
+      "details": "Floating action buttons should consistently use the filled version of the icon family so the visual weight matches the intent of the component. This should be handled centrally in the FAB root component rather than by patching individual call sites, which tends to drift over time and creates mismatched icon treatments across the library. The default can still allow overrides when a special case genuinely needs outline or a different emphasis, but the shared baseline should be filled.",
+      "reasoning": "A single, component-owned icon treatment helps the FAB feel disciplined and recognizable across surfaces. It improves consistency, reduces visual noise, and keeps the component system aligned with the intent of a primary action. Fixing this at the root means the pattern is enforced once and remains stable as new FAB uses get added.",
+      "tags": ["fab", "icons", "filled", "root-component", "consistency"],
+      "actionItems": [
+        "Enforce filled icon defaults in the shared FAB root component",
+        "Review any existing FAB examples that still rely on outline or mixed icon treatment",
+        "Keep overrides explicit and rare so the baseline remains consistent across the library"
+      ]
+    },
+    {
+      "id": "note-themeing-and-color-spectrum-page",
+      "title": "Theming and color spectrum page",
+      "category": "Ergonomics",
+      "status": "planned",
+      "priority": "High",
+      "summary": "We should have a dedicated theming and color spectrum page to show how the system moves across tones, accent intensity, and theme states in one clear reference.",
+      "context": "The library already has color-system logic and multiple themed surfaces, but there is no single, deliberate page that explains the full spectrum and how it behaves across light and dark modes.",
+      "details": "A dedicated theming and color spectrum page should act as a living reference for the design system. It should show the main neutral spectrum, accent range, surface roles, and a few realistic theme uses side by side so the relationships between tokens are easier to understand. This page should help developers and designers see how colors are intended to shift across states and surfaces, not just how individual components look in isolation.",
+      "reasoning": "Color systems become easier to trust when the whole range is visible in one place. A single spectrum page makes it much clearer how a theme is built, which values are intentionally paired, and where a given color belongs in the hierarchy. That reduces accidental drift and gives the library a stronger conceptual anchor for future token work.",
+      "tags": ["theming", "color", "spectrum", "reference", "design-system"],
+      "actionItems": [
+        "Create a dedicated theming and color spectrum reference page",
+        "Show both neutral and accent ranges, including light and dark variants",
+        "Tie the page to live token relationships so it stays useful as the theme evolves"
+      ]
+    }
+  ]
+}

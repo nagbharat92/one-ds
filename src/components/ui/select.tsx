@@ -7,6 +7,11 @@ import { cn } from "@/lib/utils"
 import { useOpenOnMouseUp } from "@/hooks/use-open-on-mouse-up"
 import { useScrollerRef } from "@/hooks/use-scroller"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "@/components/ui/icons"
+import {
+  menuListboxItemClassName,
+  menuListboxLabelClassName,
+  menuListboxSeparatorClassName,
+} from "@/components/ui/menu"
 
 function Select({
   ...props
@@ -21,7 +26,7 @@ function SelectGroup({
   return (
     <SelectPrimitive.Group
       data-slot="select-group"
-      className={cn("scroll-my-1", className)}
+      className={cn("flex flex-col scroll-my-1", className)}
       {...props}
     />
   )
@@ -36,12 +41,16 @@ function SelectValue({
 function SelectTrigger({
   className,
   size = "default",
+  variant = "field",
+  focusRing = true,
   children,
   onPointerDown,
   onPointerUp,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
   size?: "sm" | "default"
+  variant?: "field" | "secondary" | "tertiary"
+  focusRing?: boolean
 }) {
   const mouseUpHandlers = useOpenOnMouseUp<HTMLButtonElement>(
     onPointerDown,
@@ -51,8 +60,19 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
+      data-variant={variant}
+      data-focus-ring={focusRing ? "true" : "false"}
       className={cn(
-        "flex w-fit cursor-pointer items-center justify-between gap-(--field-gap) rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-(--field-padding-inline) text-sm font-medium text-(--field-ink) whitespace-nowrap transition-colors outline-none select-none hover:bg-(--field-hover-fill) active:bg-(--field-pressed-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) focus-visible:ring-3 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 aria-invalid:ring-destructive data-placeholder:font-normal data-placeholder:text-(--field-ink)/60 data-[size=default]:h-(--field-height) data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-(--space-xs) [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-fit cursor-pointer items-center justify-between gap-(--field-gap) rounded-(--field-radius) border border-transparent bg-clip-border px-(--field-padding-inline) text-sm font-medium whitespace-nowrap transition-colors outline-none select-none disabled:cursor-not-allowed disabled:opacity-50 data-placeholder:font-normal data-[size=default]:h-(--field-height) data-[size=sm]:h-7 data-[size=sm]:rounded-md *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-(--space-xs) [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        variant !== "field" && "button-motion",
+        variant === "tertiary"
+          ? "bg-(--button-tertiary-fill) text-(--button-tertiary-ink) hover:bg-(--button-tertiary-hover) active:bg-(--button-tertiary-pressed) focus-visible:bg-(--button-tertiary-fill) focus-visible:text-(--button-tertiary-ink) data-placeholder:text-(--button-tertiary-ink)/60"
+          : variant === "secondary"
+            ? "bg-(--button-secondary-fill) text-(--button-secondary-ink) hover:bg-(--button-secondary-hover) active:bg-(--button-secondary-pressed) focus-visible:bg-(--button-secondary-fill) focus-visible:text-(--button-secondary-ink) data-placeholder:text-(--button-secondary-ink)/60"
+            : "bg-(--field-fill) text-(--field-ink) hover:bg-(--field-hover-fill) active:bg-(--field-pressed-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) data-placeholder:text-(--field-ink)/60",
+        focusRing
+          ? "focus-visible:ring-3 focus-visible:ring-ring aria-invalid:ring-3 aria-invalid:ring-destructive"
+          : "focus-visible:ring-0 focus-visible:outline-none aria-invalid:ring-0",
         className
       )}
       {...mouseUpHandlers}
@@ -60,7 +80,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="pointer-events-none size-4 text-(--field-ink)/70" />
+        <ChevronDownIcon className="pointer-events-none size-4 text-current opacity-70" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
@@ -81,7 +101,7 @@ function SelectContent({
       <SelectPrimitive.Content
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
-        className={cn("relative z-50 max-h-(--radix-select-content-available-height) min-w-36 origin-top overflow-hidden rounded-lg bg-popover text-popover-foreground shadow-(--elevation-floating) ring-1 ring-(--elevation-stroke) duration-(--speed-swift) data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95", position ==="popper"&&"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className )}
+        className={cn("relative z-50 max-h-(--radix-select-content-available-height) min-w-36 origin-top overflow-hidden rounded-(--menu-chunk-radius) bg-popover text-popover-foreground shadow-(--elevation-floating) ring-1 ring-(--elevation-stroke) duration-(--speed-swift) data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95", position ==="popper"&&"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className )}
         position={position}
         align={align}
         {...props}
@@ -91,7 +111,7 @@ function SelectContent({
           ref={setViewportRef}
           data-position={position}
           className={cn(
-            "scroll-fade-y scroll-fade-6 max-h-[inherit] p-(--space-2xs) data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)",
+            "select-viewport scroll-fade-y scroll-fade-6 p-(--menu-chunk-padding) data-[position=popper]:h-(--radix-select-trigger-height) data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)",
             position === "popper" && ""
           )}
         >
@@ -110,7 +130,7 @@ function SelectLabel({
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
-      className={cn("px-(--space-xs) py-(--space-2xs) text-xs text-muted-foreground", className)}
+      className={cn(menuListboxLabelClassName, className)}
       {...props}
     />
   )
@@ -125,7 +145,8 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "relative flex w-full cursor-default items-center gap-(--space-xs) rounded-md py-(--space-2xs) pr-(--space-xl) pl-(--space-xs) text-sm outline-hidden select-none focus:bg-(--state-layer-focus) focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-(--space-xs)",
+        "relative flex w-full cursor-default items-center gap-(--space-xs) pr-(--space-xl) text-sm outline-hidden select-none focus:bg-(--menu-item-focus-fill) focus:text-popover-foreground active:bg-(--menu-item-pressed-fill) not-data-[variant=destructive]:focus:**:text-popover-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-(--space-xs)",
+        menuListboxItemClassName,
         className
       )}
       {...props}
@@ -147,7 +168,7 @@ function SelectSeparator({
   return (
     <SelectPrimitive.Separator
       data-slot="select-separator"
-      className={cn("pointer-events-none -mx-1 my-1 h-px bg-border", className)}
+      className={cn("pointer-events-none", menuListboxSeparatorClassName, className)}
       {...props}
     />
   )

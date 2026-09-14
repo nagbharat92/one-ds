@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import {
   ArrowUpRightIcon,
@@ -35,6 +35,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Favicon } from "@/components/ui/favicon"
+import { Text } from "@/components/ui/text"
 import {
   Card,
   CardAction,
@@ -51,6 +52,7 @@ import {
 import { Input, SearchInput } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
+import { CanvasSplitPane } from "@/components/ui/canvas"
 import { CanvasPreview } from "@/components/ui/canvas-preview"
 import { Scroller } from "@/components/ui/scroller"
 import { Spinner } from "@/components/ui/spinner"
@@ -171,41 +173,60 @@ const chartTotals = chartData.reduce(
   { desktop: 0, mobile: 0 },
 )
 
+function useChartTokenLength(name: string) {
+  const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    const probe = document.createElement("div")
+    probe.style.cssText = `position:absolute;visibility:hidden;width:var(${name})`
+    document.body.appendChild(probe)
+    setValue(probe.getBoundingClientRect().width)
+    probe.remove()
+  }, [name])
+
+  return value
+}
+
 function ChartInteractiveDemo() {
   const [activeSeries, setActiveSeries] = useState<ChartSeries>("desktop")
+  const barRadius = useChartTokenLength("--chart-bar-radius")
 
   return (
-    <Card className="@container/chart-card w-full max-w-3xl gap-0 py-0">
+    <Card size="expressive" className="@container/chart-card w-full max-w-3xl gap-0 py-0">
       <div className="grid border-b @xl/chart-card:flex">
-        <CardHeader className="justify-center py-6 @xl/chart-card:flex-1">
+        <CardHeader className="justify-center @xl/chart-card:flex-1">
           <CardTitle>Visitors by device</CardTitle>
           <CardDescription>
             Daily visitors during the last 30 days
           </CardDescription>
         </CardHeader>
-        <div className="grid grid-cols-2 border-t @xl/chart-card:border-t-0 @xl/chart-card:border-s">
+        <div className="grid grid-cols-2 gap-(--space-xs) border-t p-(--card-group-gap) @xl/chart-card:border-t-0 @xl/chart-card:border-s">
           {(Object.keys(chartConfig) as ChartSeries[]).map((series) => (
-            <button
+            <Button
               key={series}
               type="button"
+              variant="tertiary"
+              selected={activeSeries === series}
               aria-pressed={activeSeries === series}
-              className="min-w-36 border-e px-6 py-5 text-start transition-colors outline-none last:border-e-0 hover:bg-muted/50 focus-visible:ring-3 focus-visible:ring-ring/50 aria-pressed:bg-muted/50"
+              className="h-auto min-w-36 justify-start rounded-xl px-(--card-group-gap) py-(--space-md) text-start"
               onClick={() => setActiveSeries(series)}
             >
-              <span className="block text-sm text-muted-foreground">
-                {chartConfig[series].label}
+              <span className="grid gap-(--space-2xs)">
+                <span className="text-sm opacity-70">
+                  {chartConfig[series].label}
+                </span>
+                <span className="text-3xl font-semibold tabular-nums">
+                  {chartTotals[series].toLocaleString()}
+                </span>
               </span>
-              <span className="block text-3xl font-semibold tracking-tight tabular-nums">
-                {chartTotals[series].toLocaleString()}
-              </span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
-      <CardContent className="px-2 pt-6 pb-4 sm:px-6 sm:pt-8">
+      <CardContent className="px-(--card-spacing) pt-(--card-region-gap) pb-(--card-spacing)">
         <ChartContainer config={chartConfig} className="min-h-64 w-full">
           <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} strokeDasharray="var(--chart-grid-dash)" />
             <XAxis
               dataKey="date"
               tickLine={false}
@@ -219,6 +240,7 @@ function ChartInteractiveDemo() {
             <Bar
               dataKey={activeSeries}
               fill={"var(--color-" + activeSeries + ")"}
+              radius={[barRadius, barRadius, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
@@ -455,6 +477,71 @@ function CardImageDemo() {
         <Button className="w-full">View Event</Button>
       </CardFooter>
     </Card>
+  )
+}
+
+export function ListItemStatesDemo() {
+  const compactConversation = "OneDS navigation review"
+  const [selected, setSelected] = useState(compactConversation)
+  const surfaces = [
+    { surface: "card" as const, label: "Card surface states" },
+    { surface: "sidebar" as const, label: "Sidebar surface states" },
+  ]
+  return (
+    <div className="grid w-full grid-cols-2">
+      {surfaces.map(({ surface, label }) => (
+        <CanvasSplitPane key={surface} surface={surface} className="flex justify-center px-(--space-md)">
+          <ItemGroup aria-label={label} className="w-full max-w-md gap-2">
+            {["Design", "Engineering", "Marketing"].map((team) => (
+              <Item key={team} asChild variant={selected === team ? "muted" : "default"}>
+                <button type="button" aria-pressed={selected === team} onClick={() => setSelected(team)}>
+                  <ItemContent>
+                    <ItemTitle>{team}</ItemTitle>
+                    <ItemDescription>Team workspace</ItemDescription>
+                  </ItemContent>
+                  {selected === team ? <Badge>Selected</Badge> : null}
+                </button>
+              </Item>
+            ))}
+            <Item
+              variant={selected === compactConversation ? "muted" : "default"}
+              compact
+              className="flex-nowrap"
+            >
+              <ItemPrimaryAction
+                aria-pressed={selected === compactConversation}
+                onClick={() => setSelected(compactConversation)}
+              >
+                <ItemContent>
+                  <ItemTitle>{compactConversation}</ItemTitle>
+                </ItemContent>
+              </ItemPrimaryAction>
+              <ItemActions hosted>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" aria-label="Conversation actions">
+                      <MoreHorizontalIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent grouped align="end">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>Rename</DropdownMenuItem>
+                      <DropdownMenuItem>Archive</DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ItemActions>
+            </Item>
+            <Item aria-disabled="true">
+              <ItemContent>
+                <ItemTitle>Archived workspace</ItemTitle>
+                <ItemDescription>Unavailable to this account.</ItemDescription>
+              </ItemContent>
+            </Item>
+          </ItemGroup>
+        </CanvasSplitPane>
+      ))}
+    </div>
   )
 }
 
@@ -797,11 +884,12 @@ export function CardDemo() {
       {
         name: "Code",
         description:
-          "A themed card for readable code with line numbers and a copy action.",
+          "Themed cards for readable code with line numbers, copy action, single-line commands, and horizontal scrolling.",
         Demo: () => (
-          <CodeBlock
-            className="h-64 w-full max-w-md"
-            code={`import { Card, CardContent } from "@/components/ui/card"
+          <div className="flex w-full max-w-md flex-col gap-(--space-lg)">
+            <CodeBlock
+              className="h-64 w-full"
+              code={`import { Card, CardContent } from "@/components/ui/card"
 
 export function Example() {
   return (
@@ -810,13 +898,61 @@ export function Example() {
     </Card>
   )
 }`}
-          />
+            />
+            <CodeBlock
+              className="w-full"
+              showLineNumbers={false}
+              code={`npm install @oneds/ui`}
+            />
+            <CodeBlock
+              className="w-full"
+              showLineNumbers={false}
+              code={`npx @oneds/cli create my-expressive-project --template=react-vite-tailwind --typescript`}
+            />
+          </div>
         ),
       },
       {
         name: "Image",
         description: "Add an image before the card header.",
         Demo: CardImageDemo,
+      },
+      {
+        name: "Hanging Alignment",
+        description:
+          "With hang, the card container stretches outward into the margins by a fixed offset (16px default across the site, 8px, 24px, or custom) or by its own padding so internal text aligns directly with surrounding page text.",
+        Demo: () => (
+          <div className="flex w-full max-w-lg flex-col gap-(--space-lg) p-(--space-lg)">
+            <div className="flex flex-col gap-(--space-xs)">
+              <Text variant="heading">Hanging card alignment</Text>
+              <Text variant="body" tone="muted">
+                Cards can hang by fixed offsets (e.g. 16px default, 8px) or adapt to card padding.
+              </Text>
+            </div>
+            <Card hang="16px">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>16px fixed hang (Site default)</CardTitle>
+                  <Badge variant="secondary">hang=&quot;16px&quot;</Badge>
+                </div>
+                <CardDescription>
+                  This card hangs by 16px into the gutter, matching the site-wide default offset.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+            <Card hang="8px">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>8px subtle hang</CardTitle>
+                  <Badge variant="tertiary">hang=&quot;8px&quot;</Badge>
+                </div>
+                <CardDescription>
+                  A tighter 8px offset for compact views or nested cards.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        ),
       },
     ],
   },
@@ -1031,6 +1167,7 @@ export function TableDemo() {
   {
     slug: "list-item",
     name: "List Item",
+    codeSource: "complete",
     description:
       "A composable row for text, media, metadata, selection and trailing actions.",
     category: "Data Display",
@@ -1161,60 +1298,10 @@ export function ItemDemo() {
       },
       {
         name: "States",
-        description: "Rest, selected and disabled rows for selectable collections.",
+        description: "Rest, selected and disabled rows mirrored across card and sidebar surfaces.",
         layout: "wide" as const,
-        Demo: function ListItemStatesDemo() {
-          const compactConversation = "OneDS navigation review"
-          const [selected, setSelected] = useState(compactConversation)
-          return (
-            <ItemGroup className="w-full max-w-md gap-2">
-              {["Design", "Engineering", "Marketing"].map((team) => (
-                <Item key={team} asChild variant={selected === team ? "muted" : "default"}>
-                  <button type="button" aria-pressed={selected === team} onClick={() => setSelected(team)}>
-                    <ItemContent>
-                      <ItemTitle>{team}</ItemTitle>
-                      <ItemDescription>Team workspace</ItemDescription>
-                    </ItemContent>
-                    {selected === team ? <Badge>Selected</Badge> : null}
-                  </button>
-                </Item>
-              ))}
-              <Item
-                variant={selected === compactConversation ? "muted" : "default"}
-                compact
-                className="flex-nowrap"
-              >
-                <ItemPrimaryAction
-                  aria-pressed={selected === compactConversation}
-                  onClick={() => setSelected(compactConversation)}
-                >
-                  <ItemContent>
-                    <ItemTitle>{compactConversation}</ItemTitle>
-                  </ItemContent>
-                </ItemPrimaryAction>
-                <ItemActions hosted>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" aria-label="Conversation actions">
-                        <MoreHorizontalIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Rename</DropdownMenuItem>
-                      <DropdownMenuItem>Archive</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </ItemActions>
-              </Item>
-              <Item aria-disabled="true">
-                <ItemContent>
-                  <ItemTitle>Archived workspace</ItemTitle>
-                  <ItemDescription>Unavailable to this account.</ItemDescription>
-                </ItemContent>
-              </Item>
-            </ItemGroup>
-          )
-        },
+        background: "split" as const,
+        Demo: ListItemStatesDemo,
       },
       {
         name: "Hosted Action",
@@ -1233,11 +1320,13 @@ export function ItemDemo() {
                       <MoreHorizontalIcon />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Rename</DropdownMenuItem>
-                    <DropdownMenuItem>Archive</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                  <DropdownMenuContent grouped align="end">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>Rename</DropdownMenuItem>
+                      <DropdownMenuItem>Archive</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </ItemActions>
@@ -1253,11 +1342,13 @@ export function ItemDemo() {
                       <MoreHorizontalIcon />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>Rename</DropdownMenuItem>
-                    <DropdownMenuItem>Archive</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                  <DropdownMenuContent grouped align="end">
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>Rename</DropdownMenuItem>
+                      <DropdownMenuItem>Archive</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </ItemActions>
@@ -1580,7 +1671,8 @@ export function CarouselDemo() {
     category: "Data Display",
     Demo: ChartInteractiveDemo,
     code: `import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import { useState } from "react"
+  import { useEffect, useState } from "react"
+  import { Button } from "@/components/ui/button"
 import {
   ChartContainer,
   ChartTooltip,
@@ -1596,41 +1688,61 @@ import {
 } from "@/components/ui/card"
 
 const chartConfig = {
-  desktop: { label: "Desktop", color: "var(--chart-2)" },
-  mobile: { label: "Mobile", color: "var(--chart-4)" },
+  desktop: { label: "Desktop", color: "var(--chart-1)" },
+  mobile: { label: "Mobile", color: "var(--chart-2)" },
 } satisfies ChartConfig
+
+function useChartTokenLength(name: string) {
+  const [value, setValue] = useState(0)
+
+  useEffect(() => {
+    const probe = document.createElement("div")
+    probe.style.cssText = \`position:absolute;visibility:hidden;width:var(\${name})\`
+    document.body.appendChild(probe)
+    setValue(probe.getBoundingClientRect().width)
+    probe.remove()
+  }, [name])
+
+  return value
+}
 
 export function ChartDemo() {
   const [activeSeries, setActiveSeries] = useState<"desktop" | "mobile">("desktop")
+  const barRadius = useChartTokenLength("--chart-bar-radius")
 
   return (
-    <Card className="@container/chart-card w-full max-w-3xl gap-0 py-0">
+    <Card size="expressive" className="@container/chart-card w-full max-w-3xl gap-0 py-0">
       <div className="grid border-b @xl/chart-card:flex">
-        <CardHeader className="justify-center py-6 @xl/chart-card:flex-1">
+        <CardHeader className="justify-center @xl/chart-card:flex-1">
           <CardTitle>Visitors by device</CardTitle>
           <CardDescription>Daily visitors during the last 30 days</CardDescription>
         </CardHeader>
-        <div className="grid grid-cols-2 border-t @xl/chart-card:border-t-0 @xl/chart-card:border-s">
+        <div className="grid grid-cols-2 gap-(--space-xs) border-t p-(--card-group-gap) @xl/chart-card:border-t-0 @xl/chart-card:border-s">
           {(["desktop", "mobile"] as const).map((series) => (
-            <button
+            <Button
               key={series}
               type="button"
+              variant="tertiary"
+              selected={activeSeries === series}
               aria-pressed={activeSeries === series}
+              className="h-auto min-w-36 justify-start rounded-xl px-(--card-group-gap) py-(--space-md) text-start"
               onClick={() => setActiveSeries(series)}
             >
-              <span>{chartConfig[series].label}</span>
-              <strong>{chartTotals[series].toLocaleString()}</strong>
-            </button>
+              <span className="grid gap-(--space-2xs)">
+                <span className="text-sm opacity-70">{chartConfig[series].label}</span>
+                <span className="text-3xl font-semibold tabular-nums">{chartTotals[series].toLocaleString()}</span>
+              </span>
+            </Button>
           ))}
         </div>
       </div>
-      <CardContent className="px-2 pt-6 pb-4 sm:px-6 sm:pt-8">
+      <CardContent className="px-(--card-spacing) pt-(--card-region-gap) pb-(--card-spacing)">
         <ChartContainer config={chartConfig} className="min-h-64 w-full">
           <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} strokeDasharray="var(--chart-grid-dash)" />
             <XAxis dataKey="date" tickLine={false} axisLine={false} />
             <ChartTooltip content={<ChartTooltipContent hideIndicator />} />
-            <Bar dataKey={activeSeries} fill={"var(--color-" + activeSeries + ")"} />
+            <Bar dataKey={activeSeries} fill={"var(--color-" + activeSeries + ")"} radius={[barRadius, barRadius, 0, 0]} />
           </BarChart>
         </ChartContainer>
       </CardContent>

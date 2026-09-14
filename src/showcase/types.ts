@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import type { CanvasLayout, CanvasBackground } from "@/components/ui/canvas"
+import type { HangOffset } from "@/lib/hang"
 
 export type ComponentExample = {
   name: string
@@ -9,6 +10,7 @@ export type ComponentExample = {
   layout?: CanvasLayout
   background?: CanvasBackground
   ownsCanvas?: boolean
+  hang?: HangOffset
 } & (
   | { header?: "standard" }
   | { header: "inline"; description: string }
@@ -28,6 +30,7 @@ export type ComponentEntry = {
   defaultExampleName?: string
   ownsCanvas?: boolean
   surface?: "default" | "application"
+  hang?: HangOffset
 }
 
 export const CATEGORY_ORDER = [

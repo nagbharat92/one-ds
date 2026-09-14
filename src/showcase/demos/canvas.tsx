@@ -47,6 +47,19 @@ function CanvasWorkbenchDemo() {
   )
 }
 
+function CanvasSplitSurfacesDemo() {
+  return (
+    <div className="grid w-full grid-cols-2 items-center">
+      <div className="flex justify-center">
+        <Button variant="tertiary">Open details</Button>
+      </div>
+      <div className="flex justify-center">
+        <Button variant="tertiary">Open details</Button>
+      </div>
+    </div>
+  )
+}
+
 export const canvasDemos: ComponentEntry[] = [
   {
     slug: "canvas",
@@ -63,6 +76,14 @@ export const canvasDemos: ComponentEntry[] = [
     },
     Demo: CanvasWorkbenchDemo,
     code: generatedExampleCode["canvas:Default"],
+    examples: [
+      {
+        name: "Split surfaces",
+        description: "The same control shown on the card and sidebar fills, separated at the canvas midpoint.",
+        background: "split",
+        Demo: CanvasSplitSurfacesDemo,
+      },
+    ],
   },
 ]
 

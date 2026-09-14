@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
+import { cn } from "@/lib/utils"
 import { persona } from "@/lib/persona"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Input, SearchInput } from "@/components/ui/input"
 import {
   SiteHeader,
   SiteHeaderActions,
@@ -102,6 +103,7 @@ import {
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
@@ -238,7 +240,7 @@ function PaginationIconsOnlyDemo() {
 
 const sidebarNavItems = [
   { label: "Home", icon: HomeIcon },
-  { label: "Inbox", icon: InboxIcon },
+  { label: "Inbox", icon: InboxIcon, badge: "12" },
   { label: "Calendar", icon: CalendarIcon },
   { label: "Settings", icon: SettingsIcon },
 ]
@@ -256,7 +258,7 @@ function SidebarDemoNav({
         <SidebarGroupLabel>Application</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            {sidebarNavItems.map(({ label, icon: Icon }) => (
+            {sidebarNavItems.map(({ label, icon: Icon, badge }) => (
               <SidebarMenuItem key={label}>
                 <SidebarMenuButton
                   isActive={active === label}
@@ -269,6 +271,7 @@ function SidebarDemoNav({
                   <Icon />
                   <span>{label}</span>
                 </SidebarMenuButton>
+                {badge && <SidebarMenuBadge>{badge}</SidebarMenuBadge>}
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
@@ -546,16 +549,23 @@ function SidebarEdgeDemo() {
 
 function SidebarPlacementDemo() {
   const [activeItem, setActiveItem] = useState("Home")
+  const [placement, setPlacement] = useState<"inset" | "floating" | "docked">("inset")
   return (
     // rounded-3xl: the inset card's 14px radius plus its 8px margin, so the two curves stay concentric.
-    <div className="showcase-contained-viewport h-80 w-full overflow-hidden rounded-3xl border">
+    <div
+      id="sidebar-placement"
+      className={cn(
+        "showcase-contained-viewport h-80 w-full overflow-hidden border",
+        placement === "inset" ? "rounded-3xl" : "rounded-lg"
+      )}
+    >
       <SidebarProvider
         id="showcase-sidebar-inset"
         persist={false}
         shortcut={false}
         className="min-h-full"
       >
-        <Sidebar placement="inset" collapsible="bar">
+        <Sidebar placement={placement} collapsible="bar">
           <SidebarDemoBrand />
           <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
           <SidebarDemoAccount />
@@ -563,12 +573,21 @@ function SidebarPlacementDemo() {
         </Sidebar>
         <SidebarInset className="min-h-full">
           <SidebarDemoTopBar>{activeItem}</SidebarDemoTopBar>
-          <div className="text-muted-foreground p-4 text-sm">
-            <code className="font-mono">placement=&quot;inset&quot;</code> pulls
-            the content into a rounded card. Use{" "}
-            <code className="font-mono">&quot;floating&quot;</code> to float the
-            panel instead, or <code className="font-mono">&quot;docked&quot;</code>{" "}
-            for a flush edge.
+          <div className="flex flex-col gap-3 p-4">
+            <div className="flex flex-wrap gap-2">
+              {(["inset", "floating", "docked"] as const).map((option) => (
+                <Button
+                  key={option}
+                  size="default"
+                  variant="tertiary"
+                  selected={placement === option}
+                  onClick={() => setPlacement(option)}
+                >
+                  {option}
+                </Button>
+              ))}
+            </div>
+            <SidebarStateReadout />
           </div>
         </SidebarInset>
       </SidebarProvider>
@@ -603,10 +622,10 @@ function SiteHeaderDemo() {
             ))}
           </SiteHeaderNav>
           <SiteHeaderActions>
+            <div className="relative hidden sm:block">
+              <SearchInput placeholder="Search..." className="w-44" />
+            </div>
             <SiteHeaderSeparator />
-            <Button variant="ghost" size="icon" aria-label="Search">
-              <SearchIcon />
-            </Button>
             <Button variant="ghost" size="icon" aria-label="Notifications">
               <BellIcon />
             </Button>
@@ -801,7 +820,15 @@ function SiteFooterDemo() {
     },
   ]
   return (
-    <div className="showcase-contained-viewport w-full overflow-hidden rounded-lg border">
+    <div className="showcase-contained-viewport flex w-full flex-col justify-between overflow-hidden rounded-lg border bg-background">
+      <div className="flex flex-col gap-(--space-sm) px-(--space-2xl) pt-(--space-3xl) pb-(--space-3xl)">
+        <h3 className="text-xl font-bold tracking-tight text-foreground">
+          Platform overview
+        </h3>
+        <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+          The page content transitions naturally into the footer with an expressive sine wave separator.
+        </p>
+      </div>
       <SiteFooter>
         <SiteFooterContainer>
           <SiteFooterTop>
@@ -834,16 +861,16 @@ function SiteFooterDemo() {
                 </SiteFooterNewsletterForm>
               </SiteFooterNewsletter>
               <SiteFooterSocial>
-                <SiteFooterSocialLink href="#" aria-label="X">
+                <SiteFooterSocialLink href="#" aria-label="X" onClick={(e) => e.preventDefault()}>
                   <Favicon domain="x.com" alt="" />
                 </SiteFooterSocialLink>
-                <SiteFooterSocialLink href="#" aria-label="LinkedIn">
+                <SiteFooterSocialLink href="#" aria-label="LinkedIn" onClick={(e) => e.preventDefault()}>
                   <Favicon domain="linkedin.com" alt="" />
                 </SiteFooterSocialLink>
-                <SiteFooterSocialLink href="#" aria-label="YouTube">
+                <SiteFooterSocialLink href="#" aria-label="YouTube" onClick={(e) => e.preventDefault()}>
                   <Favicon domain="youtube.com" alt="" />
                 </SiteFooterSocialLink>
-                <SiteFooterSocialLink href="#" aria-label="GitHub">
+                <SiteFooterSocialLink href="#" aria-label="GitHub" onClick={(e) => e.preventDefault()}>
                   <Favicon domain="github.com" alt="" />
                 </SiteFooterSocialLink>
               </SiteFooterSocial>
@@ -854,7 +881,7 @@ function SiteFooterDemo() {
                   <SiteFooterColumnTitle>{column.title}</SiteFooterColumnTitle>
                   <SiteFooterNav>
                     {column.links.map((link) => (
-                      <SiteFooterLink key={link} href="#">
+                      <SiteFooterLink key={link} href="#" onClick={(e) => e.preventDefault()}>
                         {link}
                       </SiteFooterLink>
                     ))}
@@ -869,9 +896,182 @@ function SiteFooterDemo() {
               © 2026 Acme, Inc. All rights reserved.
             </SiteFooterCopyright>
             <SiteFooterLegal>
-              <SiteFooterLink href="#">Privacy Policy</SiteFooterLink>
-              <SiteFooterLink href="#">Terms of Service</SiteFooterLink>
-              <SiteFooterLink href="#">Sitemap</SiteFooterLink>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</SiteFooterLink>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>Terms of Service</SiteFooterLink>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>Sitemap</SiteFooterLink>
+            </SiteFooterLegal>
+          </SiteFooterBottom>
+        </SiteFooterContainer>
+      </SiteFooter>
+    </div>
+  )
+}
+
+function SiteFooterFloatingDemo() {
+  const columns = [
+    {
+      title: "Product",
+      links: ["Overview", "Features", "Pricing", "Integrations"],
+    },
+    {
+      title: "Resources",
+      links: ["Docs", "Guides", "Help center", "Community"],
+    },
+    {
+      title: "Company",
+      links: ["About", "Careers", "Blog", "Contact"],
+    },
+  ]
+  return (
+    <div className="showcase-contained-viewport flex w-full flex-col justify-between overflow-hidden rounded-lg border bg-background p-(--space-md)">
+      <div className="flex flex-col gap-(--space-sm) px-(--space-2xl) pt-(--space-3xl) pb-(--space-2xl)">
+        <h3 className="text-xl font-bold tracking-tight text-foreground">
+          Platform overview
+        </h3>
+        <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+          Floating card island elevated above the page with rounded corners.
+        </p>
+      </div>
+      <SiteFooter variant="floating">
+        <SiteFooterContainer>
+          <SiteFooterTop>
+            <SiteFooterIntro>
+              <SiteFooterBrand href="#" onClick={(e) => e.preventDefault()}>
+                <BoxIcon />
+                <span>Acme</span>
+              </SiteFooterBrand>
+              <SiteFooterDescription>
+                Build, ship, and scale your product with a single design system.
+              </SiteFooterDescription>
+              <SiteFooterSocial>
+                <SiteFooterSocialLink href="#" aria-label="X" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="x.com" alt="" />
+                </SiteFooterSocialLink>
+                <SiteFooterSocialLink href="#" aria-label="LinkedIn" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="linkedin.com" alt="" />
+                </SiteFooterSocialLink>
+                <SiteFooterSocialLink href="#" aria-label="GitHub" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="github.com" alt="" />
+                </SiteFooterSocialLink>
+              </SiteFooterSocial>
+            </SiteFooterIntro>
+            <SiteFooterColumns>
+              {columns.map((column) => (
+                <SiteFooterColumn key={column.title}>
+                  <SiteFooterColumnTitle>{column.title}</SiteFooterColumnTitle>
+                  <SiteFooterNav>
+                    {column.links.map((link) => (
+                      <SiteFooterLink key={link} href="#" onClick={(e) => e.preventDefault()}>
+                        {link}
+                      </SiteFooterLink>
+                    ))}
+                  </SiteFooterNav>
+                </SiteFooterColumn>
+              ))}
+            </SiteFooterColumns>
+          </SiteFooterTop>
+          <SiteFooterSeparator />
+          <SiteFooterBottom>
+            <SiteFooterCopyright>
+              © 2026 Acme, Inc. All rights reserved.
+            </SiteFooterCopyright>
+            <SiteFooterLegal>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>
+                Privacy Policy
+              </SiteFooterLink>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>
+                Terms of Service
+              </SiteFooterLink>
+            </SiteFooterLegal>
+          </SiteFooterBottom>
+        </SiteFooterContainer>
+      </SiteFooter>
+    </div>
+  )
+}
+
+function SiteFooterInvertedDemo() {
+  const columns = [
+    {
+      title: "Product",
+      links: ["Overview", "Features", "Pricing", "Integrations"],
+    },
+    {
+      title: "Resources",
+      links: ["Docs", "Guides", "API status", "Community"],
+    },
+    {
+      title: "Company",
+      links: ["About", "Careers", "Press", "Contact"],
+    },
+    {
+      title: "Legal",
+      links: ["Privacy", "Terms", "Security"],
+    },
+  ]
+  return (
+    <div className="showcase-contained-viewport flex w-full flex-col justify-between overflow-hidden rounded-lg border bg-background">
+      <div className="flex flex-col gap-(--space-sm) px-(--space-2xl) pt-(--space-3xl) pb-(--space-3xl)">
+        <h3 className="text-xl font-bold tracking-tight text-foreground">
+          Platform overview
+        </h3>
+        <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+          High-contrast dark footer anchored with the medium squiggly sine wave divider.
+        </p>
+      </div>
+      <SiteFooter variant="inverted">
+        <SiteFooterContainer>
+          <SiteFooterTop>
+            <SiteFooterIntro>
+              <SiteFooterBrand href="#" onClick={(e) => e.preventDefault()}>
+                <BoxIcon />
+                <span>Acme</span>
+              </SiteFooterBrand>
+              <SiteFooterDescription>
+                Build, ship, and scale your product with a single design system.
+              </SiteFooterDescription>
+              <SiteFooterSocial>
+                <SiteFooterSocialLink href="#" aria-label="X" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="x.com" alt="" />
+                </SiteFooterSocialLink>
+                <SiteFooterSocialLink href="#" aria-label="LinkedIn" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="linkedin.com" alt="" />
+                </SiteFooterSocialLink>
+                <SiteFooterSocialLink href="#" aria-label="YouTube" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="youtube.com" alt="" />
+                </SiteFooterSocialLink>
+                <SiteFooterSocialLink href="#" aria-label="GitHub" onClick={(e) => e.preventDefault()}>
+                  <Favicon domain="github.com" alt="" />
+                </SiteFooterSocialLink>
+              </SiteFooterSocial>
+            </SiteFooterIntro>
+            <SiteFooterColumns>
+              {columns.map((column) => (
+                <SiteFooterColumn key={column.title}>
+                  <SiteFooterColumnTitle>{column.title}</SiteFooterColumnTitle>
+                  <SiteFooterNav>
+                    {column.links.map((link) => (
+                      <SiteFooterLink key={link} href="#" onClick={(e) => e.preventDefault()}>
+                        {link}
+                      </SiteFooterLink>
+                    ))}
+                  </SiteFooterNav>
+                </SiteFooterColumn>
+              ))}
+            </SiteFooterColumns>
+          </SiteFooterTop>
+          <SiteFooterSeparator />
+          <SiteFooterBottom>
+            <SiteFooterCopyright>
+              © 2026 Acme, Inc. All rights reserved.
+            </SiteFooterCopyright>
+            <SiteFooterLegal>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>
+                Privacy Policy
+              </SiteFooterLink>
+              <SiteFooterLink href="#" onClick={(e) => e.preventDefault()}>
+                Terms of Service
+              </SiteFooterLink>
             </SiteFooterLegal>
           </SiteFooterBottom>
         </SiteFooterContainer>
@@ -1604,12 +1804,7 @@ export function SiteHeaderDemo() {
         </SiteHeaderNav>
         <SiteHeaderActions>
           <div className="relative hidden sm:block">
-            <SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search"
-              className="h-8 w-40 pl-8"
-            />
+            <SearchInput placeholder="Search..." className="w-44" />
           </div>
           <Button variant="ghost" size="icon" aria-label="Notifications">
             <BellIcon />
@@ -1625,9 +1820,25 @@ export function SiteHeaderDemo() {
     slug: "site-footer",
     name: "Site Footer",
     description:
-      "A comprehensive themed footer with link columns, a newsletter, social links, and legal.",
+      "A comprehensive themed footer as docked, floating island, or high-contrast inverted surfaces.",
     category: "Navigation",
     Demo: SiteFooterDemo,
+    examples: [
+      {
+        name: "Floating island",
+        description:
+          "An expressive rounded card footer elevated above the page with soft depth, concentric geometry, and tactile social knobs.",
+        Demo: SiteFooterFloatingDemo,
+        layout: "wide",
+      },
+      {
+        name: "Inverted",
+        description:
+          "A high-contrast dark footer surface providing an authoritative, grounded anchor at the bottom of the page.",
+        Demo: SiteFooterInvertedDemo,
+        layout: "wide",
+      },
+    ],
     code: `import { ArrowRightIcon, BoxIcon } from "@/components/ui/icons"
 
 // Brand marks (X, LinkedIn, YouTube, GitHub) are your own inline SVG components.

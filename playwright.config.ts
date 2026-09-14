@@ -4,7 +4,7 @@ const externalURL = process.env.PREVIEW_TEST_BASE_URL
 
 export default defineConfig({
   testDir: "./tests",
-  testMatch: ["toolbar-inspection.spec.ts", "design-rules.spec.ts", "button-motion.spec.ts", "color-theme.spec.ts", "pointer.spec.ts", "shapes.spec.ts", "material-icons.spec.ts", "list-item.spec.ts"],
+  testMatch: ["ai-composer.spec.ts", "toolbar-inspection.spec.ts", "design-rules.spec.ts", "button-motion.spec.ts", "color-theme.spec.ts", "pointer.spec.ts", "shapes.spec.ts", "material-icons.spec.ts", "list-item.spec.ts", "menu.spec.ts", "table.spec.ts", "site-header-footer.spec.ts"],
   fullyParallel: false,
   workers: 1,
   reporter: "list",

@@ -57,7 +57,7 @@ test("List Item full and compact geometry stays concentric", async ({ page }) =>
     })
   }
 
-  const selected = page.locator('#list-item-states [data-slot="item"][data-compact]')
+  const selected = page.locator('#list-item-states [data-slot="item"][data-compact]').first()
   const primary = selected.locator(':scope > [data-slot="item-primary-action"]')
   const menu = selected.locator(':scope > .item-actions--hosted [data-slot="dropdown-menu-trigger"]')
   await expect(selected).toHaveCSS("height", "40px")
@@ -82,14 +82,64 @@ test("List Item full and compact geometry stays concentric", async ({ page }) =>
 test("List Item selection, hosted actions, and consumers use the shared contract", async ({ page }, testInfo) => {
   await page.goto("/#/list-item")
 
-  const compact = page.locator('#list-item-states [data-slot="item"][data-compact]')
+  const states = page.locator("#list-item-states")
+  const panes = states.locator('[data-slot="canvas-split-pane"]')
+  await expect(panes).toHaveCount(2)
+  await expect(states.locator('[data-slot="item-group"]')).toHaveCount(2)
+  await expect(states.locator('[data-slot="item"]')).toHaveCount(10)
+  const paneSurfaces = await panes.evaluateAll(elements => elements.map(element => {
+    const pane = element as HTMLElement
+    const item = pane.querySelector('[data-slot="item"]')!
+    const surface = pane.dataset.surface
+    const itemStyle = getComputedStyle(item)
+    const paneStyle = getComputedStyle(pane)
+    return {
+      surface,
+      host: itemStyle.getPropertyValue("--item-host-surface").trim(),
+      expected: paneStyle.getPropertyValue(`--canvas-split-${surface}-background`).trim(),
+      hover: itemStyle.getPropertyValue("--item-default-hover-surface").trim(),
+    }
+  }))
+  expect(paneSurfaces.map(({ surface, host, expected }) => ({ surface, matches: host === expected }))).toEqual([
+    { surface: "card", matches: true },
+    { surface: "sidebar", matches: true },
+  ])
+  expect(paneSurfaces[0].host).not.toBe(paneSurfaces[1].host)
+  expect(paneSurfaces[0].hover).not.toBe(paneSurfaces[1].hover)
+
+  const compactItems = states.locator('[data-slot="item"][data-compact]')
+  await expect(compactItems).toHaveCount(2)
+  for (const item of await compactItems.all()) {
+    expect(await item.evaluate(element => {
+      const resolve = (property: "backgroundColor" | "color", token: string) => {
+        const probe = document.createElement("span")
+        probe.style[property] = `var(${token})`
+        element.append(probe)
+        const value = getComputedStyle(probe)[property]
+        probe.remove()
+        return value
+      }
+      const style = getComputedStyle(element)
+      return {
+        fillMatches: style.backgroundColor === resolve("backgroundColor", "--button-secondary-fill"),
+        inkMatches: style.color === resolve("color", "--button-secondary-ink"),
+      }
+    })).toEqual({ fillMatches: true, inkMatches: true })
+  }
+  const compact = compactItems.first()
   const primary = compact.locator(':scope > [data-slot="item-primary-action"]')
   const trigger = compact.locator(':scope > .item-actions--hosted [data-slot="dropdown-menu-trigger"]')
-  await expect(primary).toHaveAttribute("aria-pressed", "true")
-  await page.locator('#list-item-states button[data-slot="item"]').filter({ hasText: "Engineering" }).click()
-  await expect(primary).toHaveAttribute("aria-pressed", "false")
+  for (const item of await compactItems.all()) {
+    await expect(item.locator(':scope > [data-slot="item-primary-action"]')).toHaveAttribute("aria-pressed", "true")
+  }
+  await states.locator('button[data-slot="item"]').filter({ hasText: "Engineering" }).first().click()
+  for (const item of await compactItems.all()) {
+    await expect(item.locator(':scope > [data-slot="item-primary-action"]')).toHaveAttribute("aria-pressed", "false")
+  }
   await primary.click()
-  await expect(primary).toHaveAttribute("aria-pressed", "true")
+  for (const item of await compactItems.all()) {
+    await expect(item.locator(':scope > [data-slot="item-primary-action"]')).toHaveAttribute("aria-pressed", "true")
+  }
   await trigger.click()
   await expect(trigger).toHaveAttribute("aria-expanded", "true")
   await expect(primary).toHaveAttribute("aria-pressed", "true")
@@ -97,17 +147,52 @@ test("List Item selection, hosted actions, and consumers use the shared contract
   await page.keyboard.press("Escape")
 
   if (testInfo.project.name === "desktop") {
-    const rest = await compact.evaluate(element => getComputedStyle(element).backgroundColor)
+    const expected = await compact.evaluate(element => {
+      const paint = (color: string) => {
+        const canvas = document.createElement("canvas")
+        const context = canvas.getContext("2d")!
+        context.fillStyle = color
+        context.fillRect(0, 0, 1, 1)
+        return Array.from(context.getImageData(0, 0, 1, 1).data)
+      }
+      const resolve = (token: string) => {
+        const probe = document.createElement("span")
+        probe.style.backgroundColor = `var(${token})`
+        element.append(probe)
+        const color = paint(getComputedStyle(probe).backgroundColor)
+        probe.remove()
+        return color
+      }
+      return {
+        rest: resolve("--item-muted-surface"),
+        hover: resolve("--item-muted-hover-surface"),
+        pressed: resolve("--item-muted-pressed-surface"),
+      }
+    })
+    const readColor = () => compact.evaluate(element => {
+      const canvas = document.createElement("canvas")
+      const context = canvas.getContext("2d")!
+      context.fillStyle = getComputedStyle(element).backgroundColor
+      context.fillRect(0, 0, 1, 1)
+      return Array.from(context.getImageData(0, 0, 1, 1).data)
+    })
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur())
+    await page.mouse.move(0, 0)
+    await expect.poll(readColor).toEqual(expected.rest)
+    const rest = await readColor()
     await primary.hover()
-    const hover = await compact.evaluate(element => getComputedStyle(element).backgroundColor)
+    await expect.poll(readColor).toEqual(expected.hover)
+    const hover = await readColor()
     const bounds = await primary.boundingBox()
     expect(bounds).not.toBeNull()
     await page.mouse.move(bounds!.x + bounds!.width / 2, bounds!.y + bounds!.height / 2)
     await page.mouse.down()
-    const pressed = await compact.evaluate(element => getComputedStyle(element).backgroundColor)
+    await expect.poll(readColor).toEqual(expected.pressed)
+    const pressed = await readColor()
     await page.mouse.up()
-    expect(hover).not.toBe(rest)
-    expect(pressed).not.toBe(hover)
+    expect(hover).not.toEqual(rest)
+    expect(hover).toEqual(expected.hover)
+    expect(pressed).toEqual(expected.pressed)
   }
 
   await page.goto("/#/elevation")
@@ -153,4 +238,147 @@ test("List Item selection, hosted actions, and consumers use the shared contract
     await expect(rename).toHaveCSS("height", "32px")
     await expect(rename).toHaveCSS("border-radius", "16px")
   }
+})
+
+test("Sidebar navigation uses the compact Item contract without shifting its rail icons", async ({ page }, testInfo) => {
+  await page.goto("/#/calendar")
+  if (testInfo.project.use.isMobile) {
+    await page.getByRole("button", { name: "Open sidebar", exact: true }).click()
+  }
+
+  const siteNavigation = page.locator('[data-theme-scope="showcase-navigation"]')
+  const siteRow = siteNavigation.locator('[data-slot="item"]').first()
+  await expect(siteRow).toHaveCSS("height", "40px")
+  await expect(siteRow).toHaveCSS("padding", "6px")
+  await expect(siteRow).toHaveCSS("border-radius", "20px")
+  await expect(siteRow.locator(':scope > [data-slot="item-content"] [data-slot="item-title-text"]')).toHaveCount(1)
+  expect(await siteRow.evaluate(row => {
+    const rowRect = row.getBoundingClientRect()
+    const textRect = row.querySelector('[data-slot="item-title-text"]')!.getBoundingClientRect()
+    return textRect.left - rowRect.left
+  })).toBe(16)
+  const siteStates = await siteRow.evaluate(row => {
+    const paint = (color: string) => {
+      const canvas = document.createElement("canvas")
+      const context = canvas.getContext("2d")!
+      context.fillStyle = color
+      context.fillRect(0, 0, 1, 1)
+      return Array.from(context.getImageData(0, 0, 1, 1).data)
+    }
+    const style = getComputedStyle(row)
+    const sidebarStyle = getComputedStyle(row.closest('[data-slot="sidebar"]')!)
+    return {
+      host: paint(style.getPropertyValue("--item-host-surface")),
+      sidebar: paint(sidebarStyle.getPropertyValue("--sidebar")),
+      hover: paint(style.getPropertyValue("--item-default-hover-surface")),
+      pressed: paint(style.getPropertyValue("--item-default-pressed-surface")),
+    }
+  })
+  expect(siteStates.host).toEqual(siteStates.sidebar)
+  expect(siteStates.hover).not.toEqual(siteStates.host)
+  expect(siteStates.pressed).not.toEqual(siteStates.hover)
+
+  if (testInfo.project.use.isMobile) return
+
+  await page.goto("/#/sidebar")
+  const preview = page.locator("#sidebar-collapse-states")
+  const sidebar = preview.locator('[data-slot="sidebar"]').first()
+  const group = sidebar.locator('[data-slot="sidebar-group"]').first()
+  const row = group.locator('[data-slot="sidebar-menu-button"]').first()
+  const icon = row.locator(":scope > svg")
+  const label = row.locator(':scope > [data-slot="icon-label"]')
+
+  await expect(row).toHaveCSS("height", "40px")
+  await expect(row).toHaveCSS("padding-top", "6px")
+  await expect(row).toHaveCSS("padding-bottom", "6px")
+  await expect(row).toHaveCSS("padding-left", "12px")
+  await expect(row).toHaveCSS("padding-right", "12px")
+  await expect(row).toHaveCSS("border-radius", "20px")
+  await expect(group).toHaveCSS("padding-left", "16px")
+  const activeIcon = row.locator(".material-glyph text")
+  await expect(activeIcon).toHaveCSS("font-variation-settings", /"FILL" 1(?:,|$)/)
+  expect(await sidebar.evaluate((root) => {
+    const rowIcon = root.querySelector('[data-slot="sidebar-menu-button"] > svg')!
+    const rootRect = root.getBoundingClientRect()
+    const iconRect = rowIcon.getBoundingClientRect()
+    return iconRect.left + iconRect.width / 2 - rootRect.left
+  })).toBeCloseTo(36, 1)
+
+  const idleRow = group.locator('[data-slot="sidebar-menu-button"]').nth(1)
+  const expectedStates = await idleRow.evaluate(element => {
+    const resolve = (token: string) => {
+      const probe = document.createElement("span")
+      probe.style.backgroundColor = `var(${token})`
+      element.append(probe)
+      const color = getComputedStyle(probe).backgroundColor
+      probe.remove()
+      return color
+    }
+    return {
+      hover: resolve("--item-default-hover-surface"),
+      pressed: resolve("--item-default-pressed-surface"),
+    }
+  })
+  const rest = await idleRow.evaluate(element => getComputedStyle(element).backgroundColor)
+  await expect(idleRow.locator(".material-glyph text")).toHaveCSS("font-variation-settings", /"FILL" 0(?:,|$)/)
+  await idleRow.hover()
+  const hover = await idleRow.evaluate(element => getComputedStyle(element).backgroundColor)
+  const bounds = await idleRow.boundingBox()
+  expect(bounds).not.toBeNull()
+  await page.mouse.move(bounds!.x + bounds!.width / 2, bounds!.y + bounds!.height / 2)
+  await page.mouse.down()
+  const pressed = await idleRow.evaluate(element => getComputedStyle(element).backgroundColor)
+  await page.mouse.up()
+  expect(hover).not.toBe(rest)
+  expect(hover).toBe(expectedStates.hover)
+  expect(pressed).toBe(expectedStates.pressed)
+  await expect(idleRow.locator(".material-glyph text")).toHaveCSS("font-variation-settings", /"FILL" 1(?:,|$)/)
+
+  await preview.getByRole("button", { name: "bar", exact: true }).evaluate(button => button.click())
+  await expect(sidebar).toHaveAttribute("data-collapse", "bar")
+  await expect(row).toHaveCSS("width", "40px")
+  await expect(row).toHaveCSS("height", "40px")
+  await expect(row).toHaveCSS("padding", "12px")
+  await expect(row).toHaveCSS("border-radius", "20px")
+  await expect(group).toHaveCSS("padding-left", "4px")
+  await expect(label).toHaveCSS("opacity", "0")
+  expect(await sidebar.evaluate((root) => {
+    const rowIcon = root.querySelector('[data-slot="sidebar-menu-button"] > svg')!
+    const rootRect = root.getBoundingClientRect()
+    const iconRect = rowIcon.getBoundingClientRect()
+    return iconRect.left + iconRect.width / 2 - rootRect.left
+  })).toBeCloseTo(24, 1)
+
+  // Verify the header brand mark and trigger button are centered on the 24px rail with zero clipping
+  const headerMetrics = await sidebar.evaluate((root) => {
+    const rootRect = root.getBoundingClientRect()
+    const brandMark = root.querySelector('[data-slot="sidebar-brand-mark"]')!
+    const trigger = root.querySelector('[data-slot="sidebar-trigger"]')!
+    const bmRect = brandMark.getBoundingClientRect()
+    const trRect = trigger.getBoundingClientRect()
+    return {
+      markCenterX: bmRect.left + bmRect.width / 2 - rootRect.left,
+      triggerCenterX: trRect.left + trRect.width / 2 - rootRect.left,
+      triggerLeft: trRect.left - rootRect.left,
+      triggerRight: rootRect.right - trRect.right,
+      triggerWidth: trRect.width,
+    }
+  })
+  expect(headerMetrics.markCenterX).toBeCloseTo(24, 1)
+  expect(headerMetrics.triggerCenterX).toBeCloseTo(24, 1)
+  expect(headerMetrics.triggerLeft).toBeGreaterThanOrEqual(3)
+  expect(headerMetrics.triggerRight).toBeGreaterThanOrEqual(3)
+  expect(headerMetrics.triggerWidth).toBe(40)
+
+  const placementSection = page.locator("#sidebar-placement")
+  await placementSection.getByRole("button", { name: "floating", exact: true }).evaluate(button => button.click())
+  const floatingPanel = placementSection.locator('[data-slot="sidebar-inner"]')
+  await expect(floatingPanel).toHaveCSS("border-radius", "28px")
+
+  // Inset collapsed panel must have full 48px rail width without squishing or clipping
+  await placementSection.getByRole("button", { name: "inset", exact: true }).evaluate(button => button.click())
+  const insetTrigger = placementSection.locator('[data-slot="sidebar-trigger"]').first()
+  await insetTrigger.evaluate(button => button.click())
+  const insetPanel = placementSection.locator('[data-slot="sidebar-inner"]')
+  await expect(insetPanel).toHaveCSS("width", "48px")
 })

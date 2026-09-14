@@ -46,6 +46,7 @@ const buttonVariants = cva(
 
 const ICON_ONLY_SIZES = new Set(["icon", "icon-expressive"])
 const ButtonAutoTooltipContext = React.createContext(true)
+type ButtonPrimaryColor = "purple" | "pink"
 
 function ButtonTooltipSuppression({ children }: React.PropsWithChildren) {
   return (
@@ -59,6 +60,7 @@ function Button({
   className,
   children,
   variant = "tertiary",
+  primaryColor = "purple",
   size = "default",
   selected,
   asChild = false,
@@ -68,6 +70,7 @@ function Button({
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
+    primaryColor?: ButtonPrimaryColor
     selected?: boolean
     asChild?: boolean
     tooltip?: React.ReactNode
@@ -93,6 +96,7 @@ function Button({
       data-slot="button"
       data-icon-label-host
       data-variant={variant}
+      data-primary-color={variant === "primary" ? primaryColor : undefined}
       data-selected={selection}
       aria-pressed={selection}
       data-size={size}
@@ -153,3 +157,4 @@ function ButtonSelectionIcon({ className, ...props }: React.ComponentProps<typeo
 }
 
 export { Button, ButtonSelectionIcon, ButtonTooltipSuppression, FieldActionButton, buttonVariants }
+export type { ButtonPrimaryColor }

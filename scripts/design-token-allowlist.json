@@ -1,0 +1,25 @@
+{
+  "src/components/ui/tabs.tsx": {
+    "ring-[3px]": { "count": 1, "reason": "Focus ring width. Shared system value copied across five components; extract as --focus-ring-width and remove all six entries together." }
+  },
+  "src/components/ui/item.tsx": {
+    "ring-[3px]": { "count": 1, "reason": "Focus ring width. See tabs.tsx; extract as --focus-ring-width." }
+  },
+  "src/components/ui/badge.tsx": {
+    "ring-[3px]": { "count": 2, "reason": "Focus ring width. See tabs.tsx; extract as --focus-ring-width." }
+  },
+  "src/components/ui/toggle.tsx": {
+    "ring-[3px]": { "count": 2, "reason": "Focus ring width. See tabs.tsx; extract as --focus-ring-width." }
+  },
+  "src/components/ui/drawer.tsx": {
+    "max-h-[80vh]": { "count": 2, "reason": "Drawer maximum height, duplicated across the top and bottom directions. Extract as --drawer-max-height." }
+  },
+  "src/components/ui/calendar.tsx": {
+    "text-[0.8rem]": { "count": 1, "reason": "Weekday label at 12.8px, on no owned scale. Resolve with the typography role decision rather than by rounding to 12px." }
+  },
+  "src/components/ui/chart.tsx": {
+    "border-[1.5px]": { "count": 1, "reason": "Dashed reference-line width. Candidate for a shared hairline token alongside the elevation hairline work." },
+    "#ccc": { "count": 3, "reason": "Overrides Recharts built-in axis and grid stroke defaults. Needs a chart neutral token; Recharts does not read CSS variables for these." },
+    "#fff": { "count": 2, "reason": "Overrides Recharts built-in defaults. See #ccc above." }
+  }
+}

@@ -1281,7 +1281,7 @@ function AIChatBlockContent({
               {turns.length > 0 ? (
                 <>
                   <MessageScrollerItem id="today" className="ai-chat-block__turn">
-                    <Marker variant="separator">
+                    <Marker variant="pill">
                       <MarkerContent>Today</MarkerContent>
                     </Marker>
                   </MessageScrollerItem>
@@ -1497,8 +1497,8 @@ function AIChatBlockContent({
                     </AIComposerAction>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" align="start">
-                    <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
                     <DropdownMenuGroup>
+                      <DropdownMenuLabel>Add to prompt</DropdownMenuLabel>
                       <DropdownMenuItem
                         onSelect={() => fileInputRef.current?.click()}
                       >
@@ -1506,16 +1506,18 @@ function AIChatBlockContent({
                         Add files
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem
-                      checked={webSearch}
-                      onCheckedChange={(checked) =>
-                        setWebSearch(checked === true)
-                      }
-                    >
-                      <GlobeIcon />
-                      Search web
-                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Tools</DropdownMenuLabel>
+                      <DropdownMenuCheckboxItem
+                        checked={webSearch}
+                        onCheckedChange={(checked) =>
+                          setWebSearch(checked === true)
+                        }
+                      >
+                        <GlobeIcon />
+                        Search web
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 {webSearch ? (

@@ -9,14 +9,17 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Chip, type ChipProps } from "@/components/ui/chip"
 import { Spinner } from "@/components/ui/spinner"
 import { Textarea } from "@/components/ui/textarea"
 
 type AIComposerStatus = "ready" | "submitted" | "streaming" | "error"
+type AIComposerSize = "default" | "mini"
 
 type AIComposerContextValue = {
   hasPrompt: boolean
   setHasPrompt: React.Dispatch<React.SetStateAction<boolean>>
+  size: AIComposerSize
 }
 
 const AIComposerContext = React.createContext<AIComposerContextValue | null>(
@@ -26,12 +29,16 @@ const AIComposerContext = React.createContext<AIComposerContextValue | null>(
 function AIComposer({
   className,
   status = "ready",
+  size = "default",
   ...props
-}: React.ComponentProps<"form"> & { status?: AIComposerStatus }) {
+}: React.ComponentProps<"form"> & {
+  status?: AIComposerStatus
+  size?: AIComposerSize
+}) {
   const [hasPrompt, setHasPrompt] = React.useState(false)
   const context = React.useMemo(
-    () => ({ hasPrompt, setHasPrompt }),
-    [hasPrompt]
+    () => ({ hasPrompt, setHasPrompt, size }),
+    [hasPrompt, size]
   )
 
   return (
@@ -39,9 +46,10 @@ function AIComposer({
       <form
         data-slot="ai-composer"
         data-status={status}
+        data-size={size}
         aria-busy={status === "submitted" || status === "streaming"}
         className={cn(
-          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-transparent bg-(--field-fill) bg-clip-border p-(--ai-composer-padding) text-(--field-ink) shadow-(--ai-composer-shadow) transition-[background-color,border-color,box-shadow] duration-(--speed-swift) focus-within:bg-(--field-focus-fill) focus-within:text-(--field-focus-ink) focus-within:ring-3 focus-within:ring-ring data-[status=error]:ring-3 data-[status=error]:ring-destructive",
+          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border p-(--ai-composer-padding) text-foreground shadow-(--elevation-flat) transition-[background-color,border-color,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-floating) focus-within:shadow-(--elevation-floating) data-[status=error]:shadow-(--elevation-floating) data-[status=error]:border-destructive/40",
           className
         )}
         {...props}
@@ -109,8 +117,14 @@ function AIComposerInput({
       }}
       data-slot="ai-composer-input"
       rows={1}
+      focusRing={false}
       className={cn(
-        "max-h-(--ai-composer-input-max-height) min-h-(--ai-composer-input-min-height) resize-none rounded-none border-0 bg-transparent px-(--ai-composer-input-padding-inline) py-(--ai-composer-input-padding-block) shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent dark:bg-transparent dark:disabled:bg-transparent",
+        "max-h-(--ai-composer-input-max-height) min-h-(--ai-composer-input-min-height) resize-none rounded-none border-0",
+        "bg-transparent hover:bg-transparent focus:bg-transparent focus-visible:bg-transparent active:bg-transparent",
+        "dark:bg-transparent dark:hover:bg-transparent dark:focus:bg-transparent dark:focus-visible:bg-transparent",
+        "px-(--ai-composer-input-padding-inline) py-(--ai-composer-input-padding-block) shadow-none ring-0 focus-visible:ring-0",
+        "align-middle leading-(--ai-composer-input-line-height)",
+        "disabled:bg-transparent dark:disabled:bg-transparent",
         className
       )}
       onInput={(event) => {
@@ -198,10 +212,7 @@ function AIComposerAction({
       type={type}
       variant={variant}
       size={size}
-      className={cn(
-        "size-(--ai-composer-control-size) rounded-full",
-        className
-      )}
+      className={cn("rounded-full", className)}
       {...props}
     />
   )
@@ -211,22 +222,36 @@ function AIComposerTool({
   className,
   children,
   dismissible = true,
-  variant = "ghost",
-  type = "button",
+  onDismiss,
+  variant,
+  size,
+  onClick,
   ...props
-}: React.ComponentProps<typeof Button> & { dismissible?: boolean }) {
+}: ChipProps) {
+  const composer = React.useContext(AIComposerContext)
+  const isMini = composer?.size === "mini"
+  const chipSize = size ?? (isMini ? "sm" : "default")
+  const isPressed = props["aria-pressed"] === true
+  const chipVariant = variant ?? (isPressed ? "secondary" : "ghost")
+
   const toolChildren = React.Children.toArray(children)
   const leading = toolChildren[0]
   const content = toolChildren.slice(1)
 
   return (
-    <Button
+    <Chip
       data-slot="ai-composer-tool"
-      data-dismissible={dismissible}
-      type={type}
-      variant={variant}
+      size={chipSize}
+      variant={chipVariant}
+      dismissible={dismissible}
+      iconSwapOnHover={dismissible}
+      onDismiss={onDismiss}
+      onClick={onClick}
       className={cn(
-        "h-(--ai-composer-control-size) rounded-full px-(--ai-composer-tool-padding-inline)",
+        "cursor-pointer select-none transition-all duration-(--ai-composer-speed)",
+        isPressed
+          ? "bg-(--button-secondary-fill) text-(--button-secondary-ink) shadow-xs"
+          : "hover:bg-(--state-layer-hover) active:bg-(--state-layer-pressed)",
         className
       )}
       {...props}
@@ -235,20 +260,32 @@ function AIComposerTool({
         <span
           data-slot="ai-composer-tool-icon"
           aria-hidden="true"
-          className="relative grid size-(--ai-composer-tool-icon-size) shrink-0 place-items-center [&>span]:absolute [&>span]:inset-0 [&>span]:grid [&>span]:place-items-center [&_svg]:size-(--ai-composer-tool-icon-size)"
+          className="relative inline-flex size-(--ai-composer-tool-icon-size) shrink-0 items-center justify-center [&_svg]:size-(--ai-composer-tool-icon-size)!"
         >
-          <span className="scale-100 opacity-100 transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-hover/button:scale-75 group-hover/button:opacity-0 group-focus-visible/button:scale-75 group-focus-visible/button:opacity-0">
-            {leading}
+          <span className="flex size-full items-center justify-center scale-100 opacity-100 transition-[opacity,scale] duration-(--speed-swift) ease-(--ease-glide) group-hover/chip:scale-75 group-hover/chip:opacity-0 group-focus-visible/chip:scale-75 group-focus-visible/chip:opacity-0">
+            {React.isValidElement(leading)
+              ? React.cloneElement(leading as React.ReactElement<{ filled?: boolean }>, { filled: true })
+              : leading}
           </span>
-          <span className="scale-75 opacity-0 transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-hover/button:scale-100 group-hover/button:opacity-100 group-focus-visible/button:scale-100 group-focus-visible/button:opacity-100">
-            <XIcon />
+          <span className="absolute inset-0 flex size-full items-center justify-center scale-75 opacity-0 transition-[opacity,scale] duration-(--speed-swift) ease-(--ease-glide) group-hover/chip:scale-100 group-hover/chip:opacity-100 group-focus-visible/chip:scale-100 group-focus-visible/chip:opacity-100">
+            <XIcon filled />
           </span>
         </span>
-      ) : (
-        leading
-      )}
-      {content}
-    </Button>
+      ) : leading ? (
+        <span
+          data-slot="ai-composer-tool-icon"
+          aria-hidden="true"
+          className="inline-flex size-(--ai-composer-tool-icon-size) shrink-0 items-center justify-center [&_svg]:size-(--ai-composer-tool-icon-size)!"
+        >
+          {React.isValidElement(leading)
+            ? React.cloneElement(leading as React.ReactElement<{ filled?: boolean }>, { filled: true })
+            : leading}
+        </span>
+      ) : null}
+      <span className="inline-flex items-center leading-none truncate">
+        {content}
+      </span>
+    </Chip>
   )
 }
 
@@ -278,14 +315,15 @@ function AIComposerSubmit({
     <Button
       data-slot="ai-composer-submit"
       data-status={status}
-      data-mode={isVoice ? "voice" : "send"}
+      data-mode={isVoice ? "voice" : status === "streaming" ? "stop" : "send"}
       type={type ?? (isVoice || status === "streaming" ? "button" : "submit")}
       size="icon"
       variant={status === "error" ? "destructive" : "primary"}
+      primaryColor="pink"
       aria-label={props["aria-label"] ?? label}
       disabled={disabled || status === "submitted"}
       className={cn(
-        "relative size-(--ai-composer-control-size) rounded-full",
+        "relative rounded-full shadow-(--elevation-flat) transition-[width,transform,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-raised) focus-visible:shadow-(--elevation-raised) focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
         className
       )}
       {...props}
@@ -294,16 +332,16 @@ function AIComposerSubmit({
         (status === "ready" ? (
           <>
             <span className="absolute grid place-items-center transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-data-[mode=send]/button:scale-75 group-data-[mode=send]/button:opacity-0">
-              <MicIcon aria-hidden />
+              <MicIcon aria-hidden filled />
             </span>
             <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-data-[mode=send]/button:scale-100 group-data-[mode=send]/button:opacity-100">
-              <ArrowUpIcon aria-hidden />
+              <ArrowUpIcon aria-hidden filled />
             </span>
           </>
         ) : status === "submitted" ? (
           <Spinner aria-label={label} />
         ) : status === "streaming" ? (
-          <SquareIcon aria-hidden />
+          <SquareIcon aria-hidden filled />
         ) : status === "error" ? (
           <RefreshCwIcon aria-hidden />
         ) : null)}
@@ -322,4 +360,5 @@ export {
   AIComposerTool,
   AIComposerTools,
   type AIComposerStatus,
+  type AIComposerSize,
 }

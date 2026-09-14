@@ -70,7 +70,10 @@
 .button-motion[aria-pressed="true"] .oneds-icon,
 .button-motion[aria-checked="true"] .oneds-icon,
 .button-motion[data-state="on"] .oneds-icon,
-.oneds-icon[data-selected="true"] {
+.oneds-icon[data-selected="true"],
+[data-slot="sidebar-menu-button"][data-active="true"] .oneds-icon,
+[data-slot="sidebar-menu-sub-button"][data-active="true"] .oneds-icon,
+[data-slot="site-header-link"][data-active="true"] .oneds-icon {
   --icon-fill: var(--material-icon-fill-selected);
 }
 .oneds-icon[data-filled="true"],
@@ -279,9 +282,11 @@
 .shape-browser .shape-gallery__label {
   padding-inline: calc(var(--spacing) * 2);
 }
+[data-slot="toolbar"][data-orientation="horizontal"] > [data-slot="toolbar-title"]:first-child,
 [data-slot="toolbar"][data-orientation="horizontal"] > [data-slot="toolbar-group"]:first-child > [data-slot="toolbar-title"]:first-child {
   padding-inline-start: var(--toolbar-title-padding-start);
 }
+[data-slot="toolbar"][data-orientation="horizontal"] > [data-slot="toolbar-title"]:last-child,
 [data-slot="toolbar"][data-orientation="horizontal"] > [data-slot="toolbar-group"]:last-child > [data-slot="toolbar-title"]:last-child {
   padding-inline-end: var(--toolbar-title-padding-end);
 }
@@ -491,11 +496,11 @@
     --presence-away: oklch(0.75 0.15 75);
     --presence-offline: var(--muted-foreground);
 
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.488 0.243 264.376);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
+    --chart-1: var(--chart-primary);
+    --chart-2: var(--chart-secondary);
+    --chart-3: var(--chart-tertiary);
+    --chart-4: var(--chart-quaternary);
+    --chart-5: var(--chart-danger);
     --radius: 0.625rem;
 
     /* Reusable spacing scale. One named ladder every component consumes for gaps,
@@ -536,14 +541,21 @@
     --radio-group-column-gap: var(--space-none);
     --radio-group-label-gap: var(--space-xs);
     --radio-group-text-padding-right: var(--space-sm);
+    --separator-thickness: 1px;
+    --separator-stroke-subtle: var(--card-stroke);
+    --separator-stroke-neutral: color-mix(in oklab, oklch(from var(--foreground) l 0 h) 14%, transparent);
+    --separator-stroke: var(--separator-stroke-subtle);
+    --separator-wavy-height: var(--space-xs);
     --card-spacing-small: var(--space-sm);
     --card-spacing-default: var(--space-lg);
     --card-spacing-expressive: var(--space-lg);
+    --card-spacing: var(--card-spacing-default);
     --card-region-gap-small: var(--space-sm);
     --card-region-gap-default: var(--space-lg);
     --card-region-gap-expressive: var(--space-lg);
     --card-radius: var(--radius-4xl);
     --card-stroke: var(--elevation-stroke);
+    --scroll-area-radius: var(--card-radius);
     --card-header-gap: var(--space-xs);
     --card-header-eyebrow-gap: var(--space-xs);
     --card-header-aside-gap: var(--space-lg);
@@ -554,7 +566,32 @@
     --card-content-group-gap-default: var(--space-md);
     --card-content-group-gap-expressive: var(--space-lg);
     --card-footer-gap: var(--space-xs);
+    --dialog-width: calc(var(--spacing) * 140);
+    --dialog-spacing: var(--card-spacing-expressive);
+    --dialog-region-gap: var(--card-region-gap-expressive);
+    --dialog-header-gap: var(--card-header-gap);
+    --dialog-content-group-gap: var(--card-content-group-gap-default);
+    --dialog-footer-gap: var(--card-footer-gap);
+    --dialog-footer-padding-block-start: var(--space-xs);
+    --dialog-radius: var(--card-radius);
+    --dialog-stroke: var(--card-stroke);
     --empty-surface: var(--card);
+    --alert-dialog-width: var(--dialog-width);
+    --alert-dialog-width-sm: calc(var(--spacing) * 96);
+    --alert-dialog-spacing: var(--dialog-spacing);
+    --alert-dialog-region-gap: var(--space-sm);
+    --alert-dialog-header-gap: var(--dialog-header-gap);
+    --alert-dialog-title-description-gap: var(--space-2xs);
+    --alert-dialog-header-padding-block-start: var(--space-xs);
+    --alert-dialog-footer-gap: var(--dialog-footer-gap);
+    --alert-dialog-footer-padding-block-start: var(--dialog-footer-padding-block-start);
+    --alert-dialog-radius: var(--dialog-radius);
+    --alert-dialog-stroke: var(--dialog-stroke);
+    --alert-dialog-media-size: var(--button-height-expressive);
+    --alert-dialog-media-icon-size: var(--button-icon-expressive);
+    --alert-dialog-media-fill: var(--button-secondary-fill);
+    --alert-dialog-media-ink: var(--button-secondary-ink);
+    --alert-dialog-media-radius: calc(var(--alert-dialog-radius) - var(--alert-dialog-spacing));
     --empty-tonal-surface: var(--surface-low);
     --empty-stroke: var(--elevation-stroke);
     --empty-radius: var(--card-radius);
@@ -628,6 +665,8 @@
     --ease-glide: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-settle: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    /* gentle spring: a soft overshoot that settles back into place. */
+    --ease-spring: cubic-bezier(0.34, 1.42, 0.5, 1);
     --collapsible-collapse-height-speed: var(--sidebar-speed);
     --collapsible-collapse-fade-speed: calc(
       var(--collapsible-collapse-height-speed) / 2
@@ -640,13 +679,9 @@
        control, the surrounding inset and the shell stroke. It therefore reads
        as a pill at rest without turning into a stadium as the prompt grows. */
     --ai-composer-max-width: calc(var(--spacing) * 192);
-    --ai-composer-control-size: calc(var(--spacing) * 8);
+     --ai-composer-control-size: var(--button-height-default);
     --ai-composer-padding: var(--space-xs);
     --ai-composer-border-width: 1px;
-    --ai-composer-radius: calc(
-      var(--ai-composer-control-size) / 2 + var(--ai-composer-padding) +
-        var(--ai-composer-border-width)
-    );
     --ai-composer-gap: var(--space-xs);
     --ai-composer-tool-gap: var(--space-2xs);
     --ai-composer-tool-padding-inline: var(--space-sm);
@@ -655,24 +690,48 @@
     --ai-composer-input-max-height: calc(var(--spacing) * 40);
     --ai-composer-input-padding-inline: var(--space-sm);
     --ai-composer-input-padding-block: var(--space-xs);
-    --ai-composer-input-line-height: calc(var(--spacing) * 5);
-    --ai-composer-compact-size: calc(
-      var(--ai-composer-control-size) + var(--ai-composer-padding) * 2 +
-        var(--ai-composer-border-width) * 2
-    );
-    --ai-composer-compact-input-inset: calc(
-      var(--ai-composer-control-size) + var(--ai-composer-gap)
-    );
-    --ai-composer-expanded-padding-block-end: calc(
-      var(--ai-composer-padding) + var(--ai-composer-control-size) +
-        var(--ai-composer-gap)
-    );
+    --ai-composer-input-line-height: calc(var(--spacing) * 6);
     --ai-composer-speed: var(--speed-gentle);
     --ai-composer-ease: var(--ease-glide);
     --ai-composer-shadow: var(--elevation-raised);
 
     /* How much of the transcript column a directed message may occupy. */
     --bubble-max-width: 80%;
+    --bubble-radius: var(--radius-2xl);
+    --bubble-padding-inline: var(--space-md);
+    --bubble-padding-block: calc(var(--spacing) * 2.5);
+    --bubble-gap: var(--space-xs);
+    --bubble-reaction-height: calc(var(--spacing) * 6);
+    --bubble-reaction-radius: calc(var(--bubble-reaction-height) / 2);
+    --bubble-reaction-padding-inline: var(--space-xs);
+    --bubble-reaction-gap: var(--space-2xs);
+
+    /* Message rows and parts. */
+    --message-gap: var(--space-xs);
+    --message-avatar-size: calc(var(--spacing) * 8);
+    --message-header-gap: var(--space-xs);
+    --message-footer-gap: var(--space-xs);
+    --message-actions-gap: var(--space-2xs);
+
+    /* Message scroller and edge controls. */
+    --message-scroller-gap: var(--space-lg);
+    --message-scroller-button-size: calc(var(--spacing) * 10);
+    --message-scroller-button-radius: calc(var(--message-scroller-button-size) / 2);
+
+    /* File attachments. Concentric math: inner radius = outer radius - padding (14px - 8px = 6px). */
+    --attachment-radius: var(--radius-xl);
+    --attachment-padding: var(--space-xs);
+    --attachment-inner-radius: calc(var(--attachment-radius) - var(--attachment-padding));
+    --attachment-gap: var(--space-xs);
+    --attachment-media-size: calc(var(--spacing) * 10);
+    --attachment-media-size-sm: calc(var(--spacing) * 8);
+    --attachment-media-size-xs: calc(var(--spacing) * 7);
+
+    /* Timeline and event markers. */
+    --marker-gap: var(--space-xs);
+    --marker-pill-height: calc(var(--spacing) * 6);
+    --marker-pill-radius: calc(var(--marker-pill-height) / 2);
+    --marker-pill-padding-inline: var(--space-sm);
 
     /* Assistant response. The surface owns block rhythm and the streaming
        caret; richer content keeps the metrics of its own component. */
@@ -701,18 +760,19 @@
     /* Rich content flows in normal block order, so each relationship owns its
        rhythm: a generous lead before a heading, a tight gap to the content it
        introduces, and a calmer gap between everything else. */
-    --response-heading-gap: var(--space-lg);
-    --response-heading-gap-tight: var(--space-xs);
-    --response-list-gap: calc(var(--spacing) * 1.5);
-    /* Heading ladder, scaled for the 14px answer body. */
-    --response-h1-size: var(--text-xl);
-    --response-h1-line-height: var(--text-xl--line-height);
-    --response-h2-size: var(--text-lg);
-    --response-h2-line-height: var(--text-lg--line-height);
-    --response-h3-size: var(--text-base);
-    --response-h3-line-height: var(--text-base--line-height);
-    --response-h4-size: var(--text-sm);
-    --response-h4-line-height: var(--text-sm--line-height);
+    --response-gap: var(--space-md);
+    --response-heading-gap: var(--space-xl);
+    --response-heading-gap-tight: var(--space-sm);
+    --response-list-gap: var(--space-xs);
+    /* Heading ladder, scaled for the 16px expressive answer body. */
+    --response-h1-size: var(--text-2xl);
+    --response-h1-line-height: var(--text-2xl--line-height);
+    --response-h2-size: var(--text-xl);
+    --response-h2-line-height: var(--text-xl--line-height);
+    --response-h3-size: var(--text-lg);
+    --response-h3-line-height: var(--text-lg--line-height);
+    --response-h4-size: var(--text-base);
+    --response-h4-line-height: var(--text-base--line-height);
     /* Element roles, so the whole surface re-themes from one place. */
     --response-heading-color: var(--foreground);
     --response-strong-color: var(--foreground);
@@ -722,7 +782,7 @@
     --response-quote-color: var(--muted-foreground);
     --response-quote-border-color: var(--border);
     --response-quote-border-width: 2px;
-    --response-quote-padding-inline: var(--space-sm);
+    --response-quote-padding-inline: var(--space-md);
     --response-code-color: var(--foreground);
     --response-code-bg: var(--muted);
     --response-code-padding-inline: calc(var(--spacing) * 1.5);
@@ -735,10 +795,19 @@
     --response-table-radius: var(--radius-md);
     --table-surface-radius: var(--radius-md);
     --table-stroke: var(--card-stroke);
-    --table-row-radius: var(--table-surface-radius);
-    --response-task-size: 1em;
-    --response-task-gap: var(--space-xs);
-    --response-image-radius: var(--radius-md);
+    --table-header-height: calc(var(--spacing) * 14);
+    --table-row-radius: var(--table-header-height);
+    --table-header-padding-inline: var(--space-xs);
+    --table-edge-optical-padding: var(--space-md);
+    --table-edge-cell-padding: calc(
+      var(--table-header-padding-inline) +
+        var(--table-edge-optical-padding)
+    );
+    --table-filter-search-max-width: calc(var(--spacing) * 180);
+    --table-visibility-control-width: calc(var(--spacing) * 40);
+    --response-task-size: 1.25em;
+    --response-task-gap: var(--space-sm);
+    --response-image-radius: var(--radius-3xl);
     --response-image-border-color: var(--border);
     --response-caption-color: var(--muted-foreground);
     --response-caption-gap: var(--space-xs);
@@ -748,7 +817,6 @@
     --response-citation-padding-inline: var(--space-2xs);
     --response-citation-gap: var(--space-hairline);
     --response-sources-label-gap: var(--space-xs);
-    --message-actions-gap: var(--space-2xs);
 
     /* AI chat block. The block only owns composition-level geometry; every
        control and message keeps the metrics of its source component. */
@@ -913,12 +981,114 @@
       var(--state-layer-color) var(--state-layer-dragged-opacity),
       transparent
     );
+    /* Expressive grouped menus (Dropdown, Context, Menubar). Chunk and item
+       radii stay concentric across the shared 4px inset. */
+    --menu-chunk-gap: var(--space-2xs);
+    --menu-chunk-padding: var(--space-2xs);
+    --menu-item-height: var(--item-compact-height);
+    --menu-item-edge-radius: var(--item-compact-radius);
+    --menu-chunk-radius: calc(
+      var(--menu-item-edge-radius) +
+        var(--menu-chunk-padding)
+    );
+    --menu-item-inner-radius: var(--radius-xl);
+    --menu-item-padding-inline: var(--space-sm);
+    --menu-divider-margin-inline: var(--menu-item-padding-inline);
+    --menu-label-icon-padding-start: var(--menu-item-padding-inline);
+    --menu-item-hover-fill: color-mix(
+      in srgb,
+      var(--popover),
+      var(--state-layer-color) var(--state-layer-hover-opacity)
+    );
+    --menu-item-focus-fill: color-mix(
+      in srgb,
+      var(--popover),
+      var(--state-layer-color) var(--state-layer-focus-opacity)
+    );
+    --menu-item-pressed-fill: color-mix(
+      in srgb,
+      var(--popover),
+      var(--state-layer-color) var(--state-layer-dragged-opacity)
+    );
+    --combobox-list-max-height: min(
+      calc(var(--spacing) * 72 - var(--spacing) * 9),
+      calc(var(--available-height) - var(--spacing) * 9)
+    );
+    --combobox-chip-height: calc(var(--spacing) * 5.25);
+    --navigation-menu-indicator-arrow-shift: 60%;
 
     --dialog-max-height: calc(100svh - var(--spacing) * 16);
     --drawer-inset: var(--space-xs);
     --drawer-width: 75%;
+    --drawer-padding: var(--space-lg);
+    --drawer-inner-radius: var(--radius-lg);
+    --drawer-radius: calc(
+      var(--drawer-padding) + var(--drawer-inner-radius)
+    );
+    --drawer-gap: var(--space-lg);
+    --drawer-close-inset: var(--drawer-padding);
+    --drawer-close-clearance: calc(
+      var(--button-height-default) + var(--button-gap)
+    );
 
-    /* Sidebar geometry and motion. */
+    /* Popover geometry. Expressive floating surface following the concentric rule. */
+    --popover-padding: var(--space-lg);
+    --popover-inner-radius: var(--radius-lg);
+    --popover-radius: calc(
+      var(--popover-padding) + var(--popover-inner-radius)
+    );
+    --popover-gap: var(--space-md);
+    --popover-header-gap: var(--space-xs);
+    --popover-width: calc(var(--spacing) * 80);
+    --popover-close-clearance: calc(
+      var(--button-height-default) + var(--button-gap)
+    );
+
+    /* Hover Card geometry. Expressive floating surface following the concentric rule. */
+    --hover-card-padding: var(--space-lg);
+    --hover-card-inner-radius: var(--radius-lg);
+    --hover-card-radius: calc(
+      var(--hover-card-padding) + var(--hover-card-inner-radius)
+    );
+    --hover-card-gap: var(--space-md);
+    --hover-card-header-gap: var(--space-xs);
+    --hover-card-width: calc(var(--spacing) * 80);
+
+    /* Toast / Sonner geometry. Expressive floating overlay following the concentric rule. */
+    --toast-padding: var(--space-lg);
+    --toast-inner-radius: var(--radius-lg);
+    --toast-radius: calc(
+      var(--toast-padding) + var(--toast-inner-radius)
+    );
+    --toast-gap: var(--space-2xs);
+    --toast-content-gap: calc(var(--space-lg) - var(--space-2xs));
+    --toast-icon-gap: calc(var(--space-md) - var(--space-2xs));
+    --toast-text-edge-padding: var(--space-md);
+    --toast-width: calc(var(--spacing) * 135);
+
+    /* Sidebar geometry and motion. Expressive floating / overlay panel following the concentric rule. */
+    --sidebar-floating-padding: var(--space-md);
+    --sidebar-radius: calc(
+      var(--item-compact-radius) + var(--sidebar-floating-padding)
+    );
+    --sidebar-inset-radius: var(--radius-xl);
+    --sidebar-inset-margin: var(--space-xs);
+    --sidebar-menu-badge-height: calc(var(--spacing) * 5);
+    --sidebar-menu-badge-radius: calc(var(--sidebar-menu-badge-height) / 2);
+    --sidebar-menu-badge-padding-inline: var(--space-2xs);
+    --sidebar-selected-fill: var(--button-secondary-fill);
+    --sidebar-selected-ink: var(--button-secondary-ink);
+    --sidebar-selected-hover: color-mix(
+      in srgb,
+      var(--button-secondary-fill),
+      var(--button-secondary-ink) var(--state-layer-hover-opacity)
+    );
+    --sidebar-selected-pressed: color-mix(
+      in srgb,
+      var(--button-secondary-fill),
+      var(--button-secondary-ink) var(--state-layer-pressed-opacity)
+    );
+
     --sidebar-primary: oklch(0.205 0 0);
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-ring: oklch(0.708 0 0);
@@ -927,6 +1097,28 @@
     /* The collapsed float pads the bar, so gap and container share one value. */
     --sidebar-width-icon-floating: calc(
       var(--sidebar-width-icon) + var(--spacing) * 4
+    );
+    /* Sidebar navigation reuses compact Item geometry while keeping its icon
+       centered on the 48px rail in expanded and collapsed states. */
+    --sidebar-menu-group-inset: var(--sidebar-padding);
+    --sidebar-menu-group-inset-collapsed: calc(
+      (var(--sidebar-width-icon) - var(--item-compact-height)) / 2
+    );
+    --sidebar-menu-button-collapsed-padding: calc(
+      (var(--item-compact-height) - var(--item-compact-media-graphic-size)) / 2
+    );
+    /* Outer vertical breathing room for the header and footer edges. */
+    --sidebar-padding: var(--space-md);
+    /* Horizontal padding for menu buttons; also anchors the badge inset. */
+    --sidebar-menu-button-padding-inline: var(--space-sm);
+    /* Keep a menu label clear of a trailing badge: edge inset + badge + gap. */
+    --sidebar-menu-badge-reserved-space: calc(
+      var(--sidebar-menu-button-padding-inline) +
+        var(--sidebar-menu-badge-height) + var(--space-xs)
+    );
+    --sidebar-menu-action-reserved-space: calc(
+      var(--item-compact-inset) + var(--item-compact-media-host-size) +
+        var(--graphic-label-gap)
     );
     --sidebar-width-mobile: calc(var(--spacing) * 72);
     --sidebar-width-min: calc(var(--spacing) * 44);
@@ -973,6 +1165,15 @@
     --drag-handle-proximity-size: calc(var(--spacing) * 6);
     --drag-handle-speed: var(--speed-brisk);
     --drag-handle-ease: var(--ease-glide);
+
+    /* Resizable separator & handle. Expressive proximity threshold, line illumination, and grip affordance. */
+    --resizable-handle-thickness: 1px;
+    --resizable-handle-proximity-size: calc(var(--spacing) * 6);
+    --resizable-handle-line-rest: var(--border);
+    --resizable-handle-line-hover: color-mix(in oklab, var(--ring) 50%, transparent);
+    --resizable-handle-line-active: var(--ring);
+    --resizable-handle-speed: var(--speed-brisk);
+    --resizable-handle-ease: var(--ease-glide);
 
     /* Floating action button. One per screen, the primary constructive action. */
     --fab-size-md: calc(var(--spacing) * 14);
@@ -1037,12 +1238,16 @@
     --site-header-shadow: var(--elevation-floating);
     --site-header-speed: var(--speed-swift);
 
-    /* Docked scale. Items sit in a square, full-bleed bar, so they stay small
-       and only lightly rounded. */
-    --site-header-flat-item-height: calc(var(--spacing) * 8);
-    --site-header-flat-item-radius: var(--radius-md);
-    --site-header-flat-item-padding-inline: var(--space-sm);
+    /* Docked scale. Standard 40px interactive height and 20px pill radius matching Button
+       and compact Item, centered in the 56px header with 8px vertical margin. */
+    --site-header-flat-item-height: calc(var(--spacing) * 10);
+    --site-header-flat-item-radius: calc(var(--spacing) * 5);
+    --site-header-flat-item-padding-inline: var(--space-md);
     --site-header-flat-menu-padding: var(--space-2xs);
+
+    /* Active indicator surface: uses the shared Secondary container purple pair. */
+    --site-header-indicator-fill: var(--button-secondary-fill);
+    --site-header-indicator-ink: var(--button-secondary-ink);
 
     /* The overflow menu is a vertical slice of the bar it belongs to: a row is
        shaped exactly like a bar item, and the sheet is that row plus its pad.
@@ -1059,6 +1264,21 @@
        nav moves at the same speed as a jump to its neighbour. */
     --site-header-pivot-speed: var(--speed-instant);
     --site-header-ease: var(--ease-glide);
+
+    /* Site footer — tokenized geometry, spacing, and surfaces */
+    --site-footer-padding-block: var(--space-3xl);
+    --site-footer-padding-inline: var(--space-xl);
+    --site-footer-gap: var(--space-2xl);
+    --site-footer-column-gap: var(--space-xl);
+    --site-footer-item-gap: var(--space-sm);
+    --site-footer-title-gap: var(--space-sm);
+    --site-footer-social-size: var(--button-height-default);
+    --site-footer-social-radius: var(--button-round-radius);
+    --site-footer-floating-radius: var(--radius-3xl);
+    --site-footer-floating-inset: var(--space-lg);
+    --site-footer-floating-shadow: var(--elevation-raised);
+    --site-footer-surface: var(--sidebar);
+    --site-footer-surface-floating: var(--surface-lowest);
     --showcase-header-height: calc(var(--spacing) * 14);
     --showcase-copy-width: calc(var(--spacing) * 192);
     --canvas-min-height: calc(var(--spacing) * 72);
@@ -1219,6 +1439,11 @@
     --canvas-background: var(--page-fill);
     --canvas-border-color: var(--border);
     --canvas-border-width: 1px;
+    --canvas-split-position: 50%;
+    --canvas-split-card-background: var(--card);
+    --canvas-split-sidebar-background: var(--sidebar);
+    --canvas-split-divider-color: var(--canvas-border-color);
+    --canvas-split-divider-width: var(--canvas-border-width);
     --canvas-grid-size: calc(var(--spacing) * 6);
     --canvas-grid-dot: 1px;
     --canvas-grid-color: color-mix(in oklab, var(--border) 70%, transparent);
@@ -1319,12 +1544,24 @@
     --showcase-header-row-height: calc(
       var(--site-header-height) + var(--site-header-inset) * 2
     );
+    --showcase-sidebar-trigger-inset: calc(
+      var(--sidebar-floating-padding) +
+        (var(--showcase-header-row-height) - var(--sidebar-floating-trigger-size)) / 2
+    );
     --showcase-shell-content-inset: calc(var(--spacing) * 4);
     --showcase-shell-divider-size: 1px;
     --showcase-content-start: var(--showcase-shell-content-inset);
-    --showcase-section-gap: calc(var(--spacing) * 16);
+    --showcase-section-gap: calc(var(--spacing) * 30);
     --showcase-example-gap: calc(var(--spacing) * 5);
-    --showcase-sidebar-width: calc(var(--spacing) * 64);
+    /* Floating placement eats 2x --sidebar-floating-padding into the panel's
+       visible width, so this is padded up to keep the panel at least as wide
+       as the pre-floating 256px column. */
+    --showcase-sidebar-width: calc(var(--spacing) * 76);
+    --showcase-sidebar-wip-badge-height: calc(var(--spacing) * 5);
+    --showcase-sidebar-wip-badge-radius: calc(var(--showcase-sidebar-wip-badge-height) / 2);
+    --showcase-sidebar-wip-badge-padding-inline: var(--space-2xs);
+    --showcase-sidebar-wip-badge-inset: calc(var(--item-compact-radius) - var(--showcase-sidebar-wip-badge-radius));
+    --showcase-sidebar-wip-badge-edge-offset: calc(var(--showcase-sidebar-wip-badge-inset) - var(--item-compact-inset));
 
     --button-height-default: calc(var(--spacing) * 10);
     --button-height-expressive: calc(var(--spacing) * 14);
@@ -1334,6 +1571,16 @@
     --button-padding-expressive: var(--space-lg);
     --graphic-label-gap: var(--space-xs);
     --button-gap: var(--graphic-label-gap);
+    --chip-height: calc(var(--spacing) * 8);
+    --chip-height-sm: calc(var(--spacing) * 7);
+    --chip-height-xs: calc(var(--spacing) * 6);
+    --chip-padding-inline: var(--space-sm);
+    --chip-padding-inline-sm: var(--space-xs);
+    --chip-gap: var(--space-xs);
+    --chip-gap-sm: calc(var(--spacing) * 1.5);
+    --chip-icon-size: var(--icon-size-16);
+    --chip-icon-size-sm: var(--icon-size-14);
+    --chip-remove-size: var(--icon-size-16);
     --badge-height: calc(var(--spacing) * 7);
     --badge-radius: calc(var(--badge-height) / 2);
     --badge-padding-inline: calc(var(--badge-radius) - var(--space-2xs));
@@ -1382,6 +1629,25 @@
     --control-hover-outline-shadow: inset 0 0 0 var(--control-outline-width) var(--control-hover-outline);
     --control-outline-clear-shadow: inset 0 0 0 var(--control-outline-width) transparent;
     --control-checked-hover-fill: color-mix(in srgb, var(--button-selected-secondary-fill), var(--button-selected-secondary-ink) var(--state-layer-hover-opacity));
+    --calendar-padding: var(--space-xs);
+    --calendar-gap: var(--space-md);
+    --calendar-cell-size: var(--button-height-default);
+    --calendar-cell-radius: calc(var(--calendar-cell-size) / 2);
+    --calendar-selected-scale: 1;
+    --calendar-selected-radius: var(--calendar-cell-radius);
+    --calendar-surface-radius: calc(var(--calendar-cell-radius) + var(--calendar-padding));
+    --calendar-surface: var(--popover);
+    --calendar-outline: var(--elevation-stroke);
+    --calendar-shadow: var(--elevation-raised);
+    --calendar-range-fill: var(--button-secondary-fill);
+    --calendar-range-ink: var(--button-secondary-ink);
+    --calendar-selected-fill: var(--theme-website-tertiary-container-light);
+    --calendar-selected-ink: var(--theme-website-on-tertiary-container-light);
+    --calendar-selected-hover-fill: color-mix(in srgb, var(--calendar-selected-fill), var(--calendar-selected-ink) var(--state-layer-hover-opacity));
+    --calendar-selected-pressed-fill: color-mix(in srgb, var(--calendar-selected-fill), var(--calendar-selected-ink) var(--state-layer-pressed-opacity));
+    --calendar-selected-stroke-width: var(--space-hairline);
+    --calendar-selected-stroke-color: var(--calendar-surface);
+    --date-picker-time-select-width: calc(var(--field-height) * 2);
     /* Alert anatomy and semantic extensions. Material supplies Neutral, Secondary,
        and Error; Success and Warning extend the existing OneDS status sources. */
     --alert-padding-inline: var(--space-md);
@@ -1415,7 +1681,8 @@
     --alert-error-fill: color-mix(in oklab, var(--alert-error-source) var(--button-destructive-fill-opacity), var(--alert-container-base));
     --alert-error-ink: var(--alert-error-source);
     --dialog-close-clearance: calc(var(--button-height-default) + var(--button-gap));
-    --drawer-close-clearance: calc(var(--button-height-default) + var(--button-gap) + var(--spacing) * 4);
+    --drawer-close-clearance: calc(var(--button-height-default) + var(--button-gap));
+    --popover-close-clearance: calc(var(--button-height-default) + var(--button-gap));
     --text-title-size: var(--text-3xl);
     --text-title-leading: var(--text-3xl--line-height);
     --text-heading-size: var(--text-2xl);
@@ -1511,6 +1778,19 @@
     --scrollbar-radius: var(--radius-lg);
     --scrollbar-thumb: color-mix(in oklab, var(--foreground) 25%, transparent);
     --scrollbar-track: transparent;
+
+    /* ScrollArea. Expressive custom scrollbar track and tactile expanding thumb. */
+    --scroll-area-track-size: calc(var(--spacing) * 2.5);
+    --scroll-area-track-padding: var(--space-hairline);
+    --scroll-area-track-active-padding: 1px;
+    --scroll-area-thumb-radius: var(--radius-full);
+    --scroll-area-thumb-rest: color-mix(in oklab, var(--foreground) 25%, transparent);
+    --scroll-area-thumb-hover: color-mix(in oklab, var(--foreground) 45%, transparent);
+    --scroll-area-thumb-active: color-mix(in oklab, var(--foreground) 70%, transparent);
+    --scroll-area-track-hover: color-mix(in oklab, var(--foreground) 4%, transparent);
+    --scroll-area-speed: var(--speed-swift);
+    --scroll-area-ease: var(--ease-glide);
+
     --page-fill: var(--md-sys-color-surface);
     --page-scroll-offset: 0px;
     --page-pad-block-start: calc(var(--spacing) * 20);
@@ -1520,17 +1800,74 @@
     --page-enter-stagger: 60ms;
     --page-enter-distance: calc(var(--spacing) * 4);
     --page-enter-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --page-gutter-sm: var(--space-lg);
+    --page-gutter-md: var(--space-xl);
+    --page-gutter-lg: calc(var(--spacing) * 10);
+    --page-preview-height: calc(var(--spacing) * 130);
+    --page-banner-radius: calc(var(--spacing) * 8);
+    --page-banner-padding-block: calc(var(--spacing) * 20);
+    --page-banner-padding-inline: var(--space-xl);
+    --page-banner-gap: var(--space-md);
+    --showcase-page-header-max-width: calc(
+      var(--container-max-width-lg) - var(--page-gutter-lg) * 2
+    );
+    --showcase-page-header-compact-width: calc(var(--spacing) * 128);
+    --showcase-page-header-speed: var(--speed-gentle);
+    --showcase-page-header-enter-move-ease: var(--ease-spring);
+    --showcase-page-header-exit-move-ease: cubic-bezier(0.5, 0, 0.66, -0.42);
+    --showcase-page-header-enter-size-ease: var(--ease-glide);
+    --showcase-page-header-exit-size-ease: cubic-bezier(1, 0, 0.68, 0.28);
+    --showcase-page-header-enter-fade-ease: ease;
+    --showcase-page-header-exit-fade-ease: cubic-bezier(0.75, 0, 0.75, 0.9);
+    --showcase-page-header-bar-height: calc(
+      var(--button-height-default) + var(--space-sm) * 2 +
+        var(--separator-thickness) * 2
+    );
+    --showcase-page-header-sticky-inset: calc(
+      var(--showcase-sidebar-trigger-inset) +
+        (var(--sidebar-floating-trigger-size) - var(--showcase-page-header-bar-height)) / 2
+    );
+    --page-header-gap: var(--space-md);
+    --page-header-content-gap: var(--space-xs);
+    --page-header-eyebrow-gap: var(--space-xs);
+    --page-header-actions-gap: var(--space-xs);
+    --page-header-hero-gap: var(--space-lg);
+    --page-header-hero-padding-block: var(--space-xl);
+    --text-display-size: var(--text-4xl);
+    --text-display-leading: var(--text-4xl--line-height);
+    --section-scroll-margin: calc(var(--spacing) * 20);
+    --section-header-gap: var(--space-xs);
+    --section-header-gap-sm: var(--space-md);
+    --section-heading-gap: var(--space-xs);
+    --section-eyebrow-gap: var(--space-xs);
+    --section-actions-gap: var(--space-xs);
+    --container-max-width-prose: 48rem;
+    --container-max-width-sm: 48rem;
+    --container-max-width-md: 64rem;
+    --container-max-width-lg: 72rem;
+    --container-max-width-xl: 80rem;
+    --container-gutter-sm: var(--space-md);
+    --container-gutter-md: var(--space-lg);
+    --container-gutter-lg: var(--space-xl);
     --coachmark-width: calc(var(--spacing) * 80);
     --coachmark-width-sm: calc(var(--spacing) * 64);
     --coachmark-width-lg: calc(var(--spacing) * 96);
-    --coachmark-padding-inline: var(--space-md);
-    --coachmark-padding-block-start: var(--space-md);
-    --coachmark-padding-block-end: var(--space-md);
+    --coachmark-padding: var(--space-lg);
+    --coachmark-padding-inline: var(--coachmark-padding);
+    --coachmark-padding-block-start: var(--coachmark-padding);
+    --coachmark-padding-block-end: var(--coachmark-padding);
+    --coachmark-inner-radius: var(--radius-lg);
+    --coachmark-radius: calc(
+      var(--coachmark-padding) + var(--coachmark-inner-radius)
+    );
     --coachmark-gap: var(--space-lg);
-    --coachmark-radius: var(--radius-3xl);
-    --coachmark-media-inset-inline: calc(var(--coachmark-padding-inline) * -1);
+    --coachmark-media-width: calc(100% + var(--coachmark-padding) * 2);
+    --coachmark-media-inset-inline: calc(var(--coachmark-padding) * -1);
     --coachmark-media-inset-block-start: calc(
-        var(--coachmark-padding-block-start) * -1
+      var(--coachmark-padding) * -1
+    );
+    --coachmark-close-clearance: calc(
+      var(--button-height-default) + var(--button-gap)
     );
     --coachmark-beacon-size: calc(var(--spacing) * 3);
     --coachmark-beacon-scale: 2.5;
@@ -1556,11 +1893,11 @@
     --presence-available: oklch(0.72 0.17 149);
     --presence-away: oklch(0.81 0.15 75);
     --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.72 0.19 41.116);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.68 0.2 264.376);
-    --chart-4: oklch(0.72 0.2 303.9);
-    --chart-5: oklch(0.72 0.19 16.439);
+    --chart-1: var(--chart-primary);
+    --chart-2: var(--chart-secondary);
+    --chart-3: var(--chart-tertiary);
+    --chart-4: var(--chart-quaternary);
+    --chart-5: var(--chart-danger);
     /* A shadow has to be far denser on a dark canvas to register at all. */
     --elevation-ambient: oklch(0 0 0 / 0.3);
     --elevation-key: oklch(0 0 0 / 0.55);
@@ -1736,6 +2073,24 @@
   --button-selected-secondary-ink: var(--purple-deep-ink);
   --ring: var(--purple-strong);
   --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
+
+  --chart-primary: var(--purple-strong);
+  --chart-secondary: var(--theme-website-tertiary-light);
+  --chart-tertiary: var(--theme-website-primary-light);
+  --chart-quaternary: var(--theme-website-secondary-light);
+  --chart-danger: var(--button-material-error);
+  --chart-axis-ink: var(--surface-muted-ink);
+  --chart-grid-stroke: color-mix(in srgb, var(--surface-outline) 56%, transparent);
+  --chart-grid-dash: 3 6;
+  --chart-cursor-fill: color-mix(in srgb, var(--button-secondary-fill) 52%, transparent);
+  --chart-cursor-stroke: color-mix(in srgb, var(--button-selected-secondary-fill) 42%, transparent);
+  --chart-bar-radius: var(--radius-xl);
+  --chart-indicator-size: var(--space-xs);
+  --chart-indicator-radius: var(--radius-xs);
+  --chart-tooltip-radius: var(--menu-chunk-radius);
+  --chart-tooltip-padding-inline: var(--menu-chunk-radius);
+  --chart-tooltip-padding-block: var(--space-sm);
+  --chart-tooltip-gap: var(--space-xs);
 }
 
 .dark {
@@ -1758,8 +2113,16 @@
   --button-link-ink: var(--purple-strong);
   --button-selected-secondary-fill: var(--purple-deep);
   --button-selected-secondary-ink: var(--purple-deep-ink);
+  --calendar-selected-fill: var(--theme-website-tertiary-container-dark);
+  --calendar-selected-ink: var(--theme-website-on-tertiary-container-dark);
   --ring: var(--purple-strong);
   --favicon-monochrome-on-primary-filter: brightness(0);
+
+  --chart-primary: var(--purple-strong);
+  --chart-secondary: var(--theme-website-tertiary-dark);
+  --chart-tertiary: var(--theme-website-primary-dark);
+  --chart-quaternary: var(--theme-website-secondary-dark);
+  --chart-danger: var(--button-material-error);
 }
 
 /* The Tertiary pair is the system's neutral default, so it lives at the root for every
@@ -1965,6 +2328,20 @@
   --theme-highlight-fill: var(--md-sys-color-tertiary-container);
   --theme-highlight-ink: var(--md-sys-color-on-tertiary-container);
 }
+
+.dark .showcase-page-header__code {
+  color-scheme: light;
+  --md-sys-color-surface: var(--theme-website-surface-light);
+  --md-sys-color-on-surface: var(--theme-website-on-surface-light);
+  --md-sys-color-surface-container: var(--theme-website-surface-container-light);
+  --md-sys-color-surface-container-lowest: var(--theme-website-surface-container-lowest-light);
+  --md-sys-color-on-surface-variant: var(--theme-website-on-surface-variant-light);
+  --purple-soft: var(--theme-website-secondary-container-light);
+  --purple-soft-ink: var(--theme-website-on-secondary-container-light);
+  --button-secondary-fill: var(--purple-soft);
+  --button-secondary-ink: var(--purple-soft-ink);
+}
+
 .material-role-swatch {
   display: block;
   inline-size: var(--theme-swatch-size);
@@ -2023,6 +2400,9 @@
 [data-slot="alert-icon"] > .alert-icon__shape {
   fill: var(--alert-accent-fill);
 }
+[data-slot="alert-dialog-media"] > .alert-dialog-media__shape {
+  fill: var(--alert-dialog-media-fill);
+}
 /* Declared at the root, not on a data-slot list: asChild wrappers such as FormControl
    rewrite data-slot, which would drop the control out of a slot-scoped selector and
    leave its fill resolving to nothing. */
@@ -2044,14 +2424,26 @@
   --field-hover-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-hover-opacity));
   --field-pressed-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-pressed-opacity));
 }
-[data-slot="sidebar-menu-button"][data-active="true"] {
+[data-slot="sidebar-menu-button"][data-active="true"],
+[data-slot="sidebar-menu-sub-button"][data-active="true"] {
   background-color: var(--sidebar-selected-fill, var(--sidebar-accent));
   color: var(--sidebar-selected-ink, var(--sidebar-accent-foreground));
 }
-[data-slot="sidebar-menu-button"][data-active="true"]:hover {
+[data-slot="sidebar"][data-collapsible="icon"] [data-slot="sidebar-group"] {
+  padding-inline: var(--sidebar-menu-group-inset-collapsed);
+}
+[data-slot="sidebar"][data-collapsible="icon"] [data-slot="sidebar-menu-button"] {
+  inline-size: var(--item-compact-height);
+  block-size: var(--item-compact-height);
+  padding: var(--sidebar-menu-button-collapsed-padding);
+  border-radius: var(--item-compact-radius);
+}
+[data-slot="sidebar-menu-button"][data-active="true"]:hover,
+[data-slot="sidebar-menu-sub-button"][data-active="true"]:hover {
   background-color: var(--sidebar-selected-hover, var(--sidebar-accent));
 }
-[data-slot="sidebar-menu-button"][data-active="true"]:active {
+[data-slot="sidebar-menu-button"][data-active="true"]:active,
+[data-slot="sidebar-menu-sub-button"][data-active="true"]:active {
   background-color: var(--sidebar-selected-pressed, var(--sidebar-accent));
 }
 
@@ -2118,6 +2510,22 @@
    multiline prompt promote it to the stacked composition without changing
    any of its component metrics. */
 [data-slot="ai-composer"] {
+  --ai-composer-radius: calc(
+    var(--ai-composer-control-size) / 2 + var(--ai-composer-padding) +
+      var(--ai-composer-border-width)
+  );
+  --ai-composer-compact-size: calc(
+    var(--ai-composer-control-size) + var(--ai-composer-padding) * 2 +
+      var(--ai-composer-border-width) * 2
+  );
+  --ai-composer-submit-width: var(--ai-composer-control-size);
+  --ai-composer-submit-wide-width: calc(var(--ai-composer-control-size) * 2);
+  --ai-composer-compact-input-inset-start: calc(
+    var(--ai-composer-control-size) + var(--ai-composer-gap)
+  );
+  --ai-composer-compact-input-inset-end: calc(
+    var(--ai-composer-submit-width) + var(--ai-composer-gap)
+  );
   position: relative;
   grid-template-columns: minmax(0, 1fr);
   block-size: var(--ai-composer-compact-size);
@@ -2128,50 +2536,102 @@
   transition-timing-function: var(--ai-composer-ease);
 }
 
-[data-slot="ai-composer"] > [data-slot="ai-composer-input"] {
+[data-slot="ai-composer"][data-size="mini"] {
+  --ai-composer-padding: var(--space-md);
+}
+
+[data-slot="ai-composer"]:is(
+  :has([data-slot="ai-composer-submit"][data-mode="voice"]),
+  :has([data-slot="ai-composer-submit"][data-mode="stop"])
+) {
+  --ai-composer-submit-width: var(--ai-composer-submit-wide-width);
+}
+
+:is(
+  [data-slot="ai-composer"] > [data-slot="ai-composer-input"],
+  [data-slot="ai-composer"] > fieldset > [data-slot="ai-composer-input"]
+) {
   block-size: var(--ai-composer-control-size);
   min-block-size: var(--ai-composer-control-size);
   max-block-size: var(--ai-composer-control-size);
   padding-block: calc(
     (var(--ai-composer-control-size) - var(--ai-composer-input-line-height)) / 2
   );
-  padding-inline: var(--ai-composer-compact-input-inset);
+  padding-inline-start: var(--ai-composer-compact-input-inset-start);
+  padding-inline-end: var(--ai-composer-compact-input-inset-end);
   line-height: var(--ai-composer-input-line-height);
   transition-property: block-size, min-block-size, max-block-size, padding;
   transition-duration: var(--ai-composer-speed);
   transition-timing-function: var(--ai-composer-ease);
 }
 
-[data-slot="ai-composer"] > [data-slot="ai-composer-footer"] {
+:is(
+  [data-slot="ai-composer"] > [data-slot="ai-composer-footer"],
+  [data-slot="ai-composer"] > fieldset > [data-slot="ai-composer-footer"]
+) {
   position: absolute;
   inset-inline: var(--ai-composer-padding);
   inset-block-end: var(--ai-composer-padding);
   pointer-events: none;
 }
 
-[data-slot="ai-composer"] > [data-slot="ai-composer-footer"] button {
+:is(
+  [data-slot="ai-composer"] > [data-slot="ai-composer-footer"],
+  [data-slot="ai-composer"] > fieldset > [data-slot="ai-composer-footer"]
+) button {
   pointer-events: auto;
 }
 
-[data-slot="ai-composer"]:is(
-  :has(> [data-slot="ai-composer-header"]:not(:empty)),
-  :has([data-slot="ai-composer-tool"]),
-  :has(> [data-slot="ai-composer-input"][data-multiline="true"])
+[data-slot="ai-composer"] :is(
+  [data-slot="ai-composer-action"],
+  [data-slot="ai-composer-submit"],
+  [data-slot="dropdown-menu-trigger"]
 ) {
-  block-size: auto;
-  padding-block-end: var(--ai-composer-expanded-padding-block-end);
+  --button-round-radius: calc(var(--ai-composer-control-size) / 2);
+}
+
+[data-slot="ai-composer"] [data-slot="ai-composer-submit"] {
+  inline-size: var(--ai-composer-submit-width);
 }
 
 [data-slot="ai-composer"]:is(
-  :has(> [data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-header"]:not(:empty)),
   :has([data-slot="ai-composer-tool"]),
-  :has(> [data-slot="ai-composer-input"][data-multiline="true"])
-) > [data-slot="ai-composer-input"] {
+  :has([data-slot="ai-composer-input"][data-multiline="true"])
+) {
+  block-size: auto;
+}
+
+[data-slot="ai-composer"]:is(
+  :has([data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-tool"]),
+  :has([data-slot="ai-composer-input"][data-multiline="true"])
+) > [data-slot="ai-composer-input"],
+[data-slot="ai-composer"]:is(
+  :has([data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-tool"]),
+  :has([data-slot="ai-composer-input"][data-multiline="true"])
+) > fieldset > [data-slot="ai-composer-input"] {
   block-size: auto;
   min-block-size: var(--ai-composer-input-min-height);
   max-block-size: var(--ai-composer-input-max-height);
   padding-block: var(--ai-composer-input-padding-block);
   padding-inline: var(--ai-composer-input-padding-inline);
+}
+
+[data-slot="ai-composer"]:is(
+  :has([data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-tool"]),
+  :has([data-slot="ai-composer-input"][data-multiline="true"])
+) > [data-slot="ai-composer-footer"],
+[data-slot="ai-composer"]:is(
+  :has([data-slot="ai-composer-header"]:not(:empty)),
+  :has([data-slot="ai-composer-tool"]),
+  :has([data-slot="ai-composer-input"][data-multiline="true"])
+) > fieldset > [data-slot="ai-composer-footer"] {
+  position: static;
+  inset: auto;
+  pointer-events: auto;
 }
 
 @keyframes ai-chat-message-enter {
@@ -2715,39 +3175,12 @@
     border-radius: var(--response-code-radius);
   }
 
-  [data-slot="response"] table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--text-sm);
-    line-height: var(--text-sm--line-height);
-  }
-
-  [data-slot="response"] :is(th, td) {
-    padding-inline: var(--response-table-padding-inline);
-    padding-block: var(--response-table-padding-block);
-    border: var(--response-rule-width) solid var(--response-table-border-color);
-    text-align: start;
-  }
-
-  [data-slot="response"] th {
-    background: var(--response-table-header-bg);
-    color: var(--response-heading-color);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  /* A wrapped table owns its horizontal scroll inside a narrow bubble; the
-     wrapper draws the rounded outer edge so the collapsed cell borders stay
-     as clean interior gridlines. */
-  [data-slot="response"] .response-table {
-    overflow-x: auto;
-    border: var(--response-rule-width) solid var(--response-table-border-color);
-    border-radius: var(--response-table-radius);
-  }
-
-  [data-slot="response"] .response-table > table {
-    width: max-content;
-    min-width: 100%;
-    border-style: hidden;
+  /* A fenced CodeBlock renders <code> inside a Scroller (not a <pre>), so the
+     inline-code pill above would leak onto it; the component owns its surface. */
+  [data-slot="response"] [data-slot="card"][data-variant="code"] code {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
   }
 
   /* Task lists (GFM) drop the marker and sit a checkbox against the text. */
@@ -2825,8 +3258,22 @@
     font-weight: var(--font-weight-semibold);
   }
 
-  [data-slot="response"] [data-footnotes] :is(p, li) {
-    color: var(--response-muted-color);
+  /* Sources render as linked Badge pills laid out in a wrapping row. */
+  [data-slot="response"] [data-footnotes] ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  [data-slot="response"] [data-footnotes] li {
+    margin-block-start: 0;
+  }
+
+  /* Source badges are links; drop the response underline for a clean pill. */
+  [data-slot="response"] [data-footnotes] [data-slot="badge"] {
+    text-decoration: none;
   }
 
   /* The ↩ backref jump is dead (react-markdown drops the ids) and the popover
@@ -3443,8 +3890,99 @@
 }
 
 @layer components {
+  [data-slot="calendar"] .rdp-week > [data-selected="true"]:first-child > [data-day],
+  [data-slot="calendar"] .rdp-week > [data-hidden="true"] + [data-selected="true"] > [data-day] {
+    border-top-left-radius: var(--calendar-selected-radius) !important;
+    border-bottom-left-radius: var(--calendar-selected-radius) !important;
+  }
+
+  [data-slot="calendar"] .rdp-week > [data-selected="true"]:last-child > [data-day],
+  [data-slot="calendar"] .rdp-week > [data-selected="true"]:has(+ [data-hidden="true"]) > [data-day] {
+    border-top-right-radius: var(--calendar-selected-radius) !important;
+    border-bottom-right-radius: var(--calendar-selected-radius) !important;
+  }
+
+  /* An endpoint's connector only bridges toward a same-row day that is actually part of the range;
+     otherwise it stays hidden so a lone endpoint at a row/column edge renders as a plain circle. */
+  [data-slot="calendar"] .rdp-week > .rdp-range_start:has(+ :is(.rdp-range_middle, .rdp-range_end))::after {
+    display: block !important;
+  }
+
+  [data-slot="calendar"] .rdp-week > :is(.rdp-range_middle, .rdp-range_start) + .rdp-range_end::after {
+    display: block !important;
+  }
+
+  :is([data-slot="separator"], [data-slot="dropdown-menu-separator"])[data-tone="neutral"] {
+    --separator-stroke: var(--separator-stroke-neutral);
+  }
+
   .icon-label {
     padding-inline: 0;
+  }
+
+  [data-slot="select-content"] > .select-viewport,
+  :is(
+    [data-slot="dropdown-menu-content"],
+    [data-slot="dropdown-menu-sub-content"],
+    [data-slot="context-menu-content"],
+    [data-slot="context-menu-sub-content"],
+    [data-slot="menubar-content"],
+    [data-slot="menubar-sub-content"]
+  ) > [data-slot="scroller"],
+  :is(
+    [data-slot="dropdown-menu-content"][data-grouped="true"],
+    [data-slot="context-menu-content"][data-grouped="true"],
+    [data-slot="menubar-content"][data-grouped="true"]
+  )
+    > [data-slot="scroller"]
+    > :is(
+      [data-slot="menu-group"],
+      [data-slot="dropdown-menu-group"],
+      [data-slot="context-menu-group"],
+      [data-slot="menubar-group"]
+    ) {
+    max-height: inherit;
+  }
+
+    :is(
+      [data-slot="dropdown-menu-content"][data-grouped="true"],
+      [data-slot="dropdown-menu-sub-content"][data-grouped="true"],
+      [data-slot="context-menu-content"][data-grouped="true"],
+      [data-slot="context-menu-sub-content"][data-grouped="true"],
+      [data-slot="menubar-content"][data-grouped="true"],
+      [data-slot="menubar-sub-content"][data-grouped="true"]
+    )
+      :is(
+        [data-slot="dropdown-menu-label"] + [data-slot="dropdown-menu-separator"],
+        [data-slot="context-menu-label"] + [data-slot="context-menu-separator"],
+        [data-slot="menubar-label"] + [data-slot="menubar-separator"]
+      ) {
+      display: none;
+    }
+
+  :is(
+    [data-slot="dropdown-menu-content"][data-grouped="true"],
+    [data-slot="dropdown-menu-sub-content"][data-grouped="true"],
+    [data-slot="context-menu-content"][data-grouped="true"],
+    [data-slot="context-menu-sub-content"][data-grouped="true"],
+    [data-slot="menubar-content"][data-grouped="true"],
+    [data-slot="menubar-sub-content"][data-grouped="true"]
+  )
+    :is(
+      [data-slot="dropdown-menu-item"],
+      [data-slot="dropdown-menu-checkbox-item"],
+      [data-slot="dropdown-menu-radio-item"],
+      [data-slot="dropdown-menu-sub-trigger"],
+      [data-slot="context-menu-item"],
+      [data-slot="context-menu-checkbox-item"],
+      [data-slot="context-menu-radio-item"],
+      [data-slot="context-menu-sub-trigger"],
+      [data-slot="menubar-item"],
+      [data-slot="menubar-checkbox-item"],
+      [data-slot="menubar-radio-item"],
+      [data-slot="menubar-sub-trigger"]
+    ):not([data-disabled]):is(:active, [data-pressed="true"]) {
+    background-color: var(--menu-item-pressed-fill);
   }
 
   :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label {
@@ -3476,11 +4014,58 @@
 @layer components {
   /* Text at a control row's edge is inset to match the optical padding of the
      controls beside it. Opt in on the container; interior text is untouched. */
-  [data-optical-edges] > .edge-text:first-child {
+  [data-slot="table-row"] {
+    --optical-edge-text-padding: var(--table-edge-optical-padding);
+  }
+  [data-slot="toolbar"] {
+    --optical-edge-text-padding: var(--toolbar-title-padding-start);
+  }
+
+  /* Concentric buttons inside toolbars: button radius strictly matches the toolbar's
+     inner radius (--tb-inner), ensuring uniform geometry and perfect concentric arcs. */
+  [data-slot="toolbar"] [data-slot="button"] {
+    border-radius: var(--tb-inner);
+  }
+
+  /* Badge at the end of a toolbar: match the right padding to the vertical
+     clearance so top, bottom, and right padding are identical. Does not apply
+     to ghost toolbars since they have no visible container boundary. */
+  [data-slot="toolbar"]:not([data-variant="ghost"]) > [data-slot="badge"]:last-child,
+  [data-slot="toolbar"]:not([data-variant="ghost"]) > [data-slot="toolbar-group"]:last-child > [data-slot="badge"]:last-child {
+    margin-inline-end: calc((var(--button-height-default) - var(--badge-height, 28px)) / 2);
+  }
+  [data-slot="toolbar"][data-size="expressive"]:not([data-variant="ghost"]) > [data-slot="badge"]:last-child,
+  [data-slot="toolbar"][data-size="expressive"]:not([data-variant="ghost"]) > [data-slot="toolbar-group"]:last-child > [data-slot="badge"]:last-child {
+    margin-inline-end: calc((var(--button-height-expressive) - var(--badge-height, 28px)) / 2);
+  }
+
+  /* Centered separators along the toolbar's cross axis */
+  [data-slot="toolbar-separator"][data-orientation="vertical"] {
+    align-self: center;
+  }
+  [data-slot="toolbar-separator"][data-orientation="horizontal"] {
+    align-self: center;
+  }
+
+  [data-optical-edges] > .edge-text:first-child,
+  [data-optical-edges]
+    > :is([data-slot="table-head"], [data-slot="table-cell"]):first-child
+    > .edge-text:first-child {
     padding-inline-start: var(--optical-edge-text-padding);
   }
-  [data-optical-edges] > .edge-text:last-child {
+  [data-optical-edges] > .edge-text:last-child,
+  [data-optical-edges]
+    > :is([data-slot="table-head"], [data-slot="table-cell"]):last-child
+    > .edge-text:last-child {
     padding-inline-end: var(--optical-edge-text-padding);
+  }
+
+  /* Toast / Sonner optical edge adjustments:
+     When a toast has no leading icon, the text starts at the outer curve and receives
+     an optical leading inset to clear the corner radius. When an icon is present,
+     the text padding resets so the icon-to-text gap remains balanced. */
+  [data-sonner-toast]:not(:has([data-icon])) [data-content] {
+    padding-inline-start: var(--toast-text-edge-padding);
   }
 }
 
@@ -3566,15 +4151,21 @@
   border-radius: var(--button-round-radius);
 }
 
-.button-motion[data-selected] {
+.button-motion[data-selected]:not(.rounded-full):not([data-slot="toolbar"] *) {
   --button-selection-square-radius: var(--button-selection-square-radius-default);
   border-radius: var(--button-selection-square-radius);
 }
-.button-motion-expressive[data-selected] {
+.button-motion-expressive[data-selected]:not(.rounded-full):not([data-slot="toolbar"] *) {
   --button-selection-square-radius: var(--button-selection-square-radius-expressive);
 }
-.button-motion[data-selected="true"] {
+.button-motion[data-selected="true"]:not(.rounded-full):not([data-slot="toolbar"] *) {
   border-radius: var(--button-round-radius);
+}
+[data-slot="toolbar"] .button-motion {
+  border-radius: var(--tb-inner);
+}
+[data-slot="toolbar"] .button-motion[data-selected] {
+  border-radius: var(--tb-inner);
 }
 .button-motion[data-selected="true"]:is([data-variant="tertiary"], [data-variant="default"]) {
   --button-tertiary-fill: var(--button-secondary-fill);
@@ -3669,7 +4260,7 @@
 .button-group > .button-motion[data-selected="true"] {
   border-radius: var(--button-round-radius);
 }
-.button-motion[data-selected="false"]:not(:disabled):not([aria-disabled="true"]):active {
+.button-motion[data-selected="false"]:not(:disabled):not([aria-disabled="true"]):not([data-slot="button-group"] *):active {
   border-radius: var(--button-round-radius);
 }
 .button-group > .button-group-separator {
@@ -3779,14 +4370,19 @@
   }
 
   .showcase-app {
+    --sidebar-floating-trigger-inset: var(--showcase-sidebar-trigger-inset);
     height: 100svh;
     overflow: hidden;
-    background: var(--background);
+    background: var(--page-fill);
   }
 
   .showcase-page-content {
     --page-pad-block-start: var(--showcase-content-start);
     --page-content-gap: var(--showcase-section-gap);
+  }
+
+  [data-slot="page"] {
+    --page-pad-block-start: var(--space-2xl);
   }
 
   .page-scroll {
@@ -3799,11 +4395,25 @@
     row-gap: var(--page-content-gap);
   }
 
+  .page-content[data-variant="centered"] {
+    padding-block: var(--space-2xl);
+  }
+
   [data-slot="sidebar-inset"]:has(> [data-slot="sidebar-trigger"][data-placement="floating"])
     > [data-slot="page"] > [data-slot="page-scroll"] > [data-slot="page-content"] {
     padding-block-start: calc(
       var(--page-pad-block-start) + var(--sidebar-floating-trigger-clearance)
     );
+  }
+
+  [data-slot="sidebar-inset"]:has(> [data-slot="sidebar-trigger"][data-placement="floating"])
+    > [data-slot="page"] > [data-slot="page-scroll"]:has(> [data-showcase-page-header-shell])
+    > [data-slot="page-content"] {
+    padding-block-start: var(--showcase-content-start);
+  }
+
+  [data-slot="page-scroll"] > [data-showcase-page-header-shell] {
+    margin-block-start: var(--sidebar-floating-padding);
   }
 
   @keyframes page-enter {
@@ -3929,32 +4539,6 @@
     inline-size: 100%;
     max-inline-size: var(--showcase-copy-width);
     margin-inline: auto;
-  }
-
-  .showcase-component__header {
-    inline-size: 100%;
-    gap: calc(var(--spacing) * 3);
-  }
-
-  .showcase-component__title {
-    margin: 0;
-    font-size: var(--text-4xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--text-4xl--line-height);
-    letter-spacing: 0;
-  }
-
-  .showcase-component__description {
-    max-inline-size: var(--showcase-copy-width);
-    margin: 0;
-    color: var(--muted-foreground);
-    font-size: var(--text-lg);
-    line-height: var(--text-lg--line-height);
-  }
-
-  .showcase-component__command {
-    inline-size: 100%;
-    max-inline-size: 100%;
   }
 
   .showcase-component__examples {
@@ -4130,8 +4714,30 @@
   }
 
   .canvas[data-background="plain"],
-  .canvas:has(> [data-slot="canvas-grid"]) {
+  .canvas:not([data-background="split"]):has(> [data-slot="canvas-grid"]) {
     background-image: none;
+  }
+
+  .canvas[data-background="split"] {
+    background-color: var(--canvas-split-card-background);
+    background-image:
+      linear-gradient(var(--canvas-split-divider-color), var(--canvas-split-divider-color)),
+      linear-gradient(
+        to right,
+        var(--canvas-split-card-background) var(--canvas-split-position),
+        var(--canvas-split-sidebar-background) var(--canvas-split-position)
+      );
+    background-position: var(--canvas-split-position) center, center;
+    background-repeat: no-repeat;
+    background-size: var(--canvas-split-divider-width) 100%, 100% 100%;
+  }
+
+  .canvas-split-pane[data-surface="card"] {
+    --item-host-surface: var(--canvas-split-card-background);
+  }
+
+  .canvas-split-pane[data-surface="sidebar"] {
+    --item-host-surface: var(--canvas-split-sidebar-background);
   }
 
   .canvas:has(> [data-slot="canvas-grid"]) {
@@ -4319,6 +4925,87 @@
     transform: translateZ(0);
   }
 
+  .centered-header-scroll {
+    block-size: 100%;
+    overflow-y: auto;
+    background: var(--surface-container);
+  }
+
+  .centered-header-scroll__inner {
+    position: relative;
+    padding: var(--space-lg);
+  }
+
+  .showcase-page-header__barwrap {
+    position: sticky;
+    inset-block-start: var(--showcase-page-header-sticky-inset);
+    z-index: 10;
+    block-size: 0;
+    pointer-events: none;
+  }
+
+  .showcase-page-header__bar {
+    inline-size: 100%;
+    max-inline-size: var(--showcase-page-header-max-width);
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding-block: var(--space-sm);
+    padding-inline: var(--space-md);
+    border-radius: calc(infinity * 1px);
+    background: var(--popover);
+    border: 1px solid color-mix(in srgb, var(--border) 92%, transparent);
+    box-shadow: var(--elevation-floating);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(calc(-100% - var(--space-xl)));
+    transition:
+      transform var(--showcase-page-header-speed) var(--showcase-page-header-exit-move-ease),
+      inline-size var(--showcase-page-header-speed) var(--showcase-page-header-exit-size-ease),
+      opacity var(--showcase-page-header-speed) var(--showcase-page-header-exit-fade-ease);
+  }
+
+  .showcase-page-header__barwrap[data-collapsed="true"]
+    .showcase-page-header__bar {
+    inline-size: min(100%, var(--showcase-page-header-compact-width));
+    opacity: 1;
+    transform: translateY(0);
+    transition-timing-function:
+      var(--showcase-page-header-enter-move-ease),
+      var(--showcase-page-header-enter-size-ease),
+      var(--showcase-page-header-enter-fade-ease);
+    pointer-events: auto;
+  }
+
+  .showcase-page-header__bar[data-has-command="false"] {
+    justify-content: center;
+  }
+
+  .showcase-page-header__bar-title {
+    margin: 0;
+    padding-inline-start: var(--optical-edge-text-padding);
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--text-lg--line-height);
+    color: var(--foreground);
+  }
+
+  .showcase-page-header__code {
+    inline-size: min(100%, calc(var(--spacing) * 128));
+    margin-inline: auto;
+  }
+
+  .centered-header-scroll__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-block-start: var(--space-lg);
+    padding-block-end: calc(var(--page-preview-height) * 0.6);
+  }
+
   .showcase-typography-list {
     margin-block: calc(var(--spacing) * 6);
     margin-inline: calc(var(--spacing) * 6);
@@ -4355,51 +5042,6 @@
       transparent
     );
     --item-host-surface: var(--background);
-    --item-default-hover-surface: color-mix(
-      in srgb,
-      var(--item-host-surface),
-      var(--state-layer-color) var(--state-layer-hover-opacity)
-    );
-    --item-default-focus-surface: color-mix(
-      in srgb,
-      var(--item-host-surface),
-      var(--state-layer-color) var(--state-layer-focus-opacity)
-    );
-    --item-default-pressed-surface: color-mix(
-      in srgb,
-      var(--item-host-surface),
-      var(--state-layer-color) var(--state-layer-pressed-opacity)
-    );
-    --item-outline-hover-surface: color-mix(
-      in srgb,
-      var(--item-surface),
-      var(--state-layer-color) var(--state-layer-hover-opacity)
-    );
-    --item-outline-pressed-surface: color-mix(
-      in srgb,
-      var(--item-surface),
-      var(--state-layer-color) var(--state-layer-pressed-opacity)
-    );
-    --item-muted-surface: color-mix(
-      in oklab,
-      var(--muted) 50%,
-      var(--item-host-surface)
-    );
-    --item-muted-hover-surface: color-mix(
-      in srgb,
-      var(--item-muted-surface),
-      var(--state-layer-color) var(--state-layer-hover-opacity)
-    );
-    --item-muted-focus-surface: color-mix(
-      in srgb,
-      var(--item-muted-surface),
-      var(--state-layer-color) var(--state-layer-focus-opacity)
-    );
-    --item-muted-pressed-surface: color-mix(
-      in srgb,
-      var(--item-muted-surface),
-      var(--state-layer-color) var(--state-layer-pressed-opacity)
-    );
     --item-media-host-size: var(--button-height-default);
     --item-media-host-radius: calc(
       var(--item-media-host-size) / 2
@@ -4444,6 +5086,57 @@
     --item-host-surface: var(--sidebar);
   }
 
+  :is(
+    [data-slot="item"],
+    [data-slot="sidebar-menu-button"],
+    [data-slot="sidebar-menu-sub-button"]
+  ) {
+    /* Resolve Ghost Button's translucent state layers into opaque surfaces for
+       hosted action masks and Sidebar rows while preserving the local rest fill. */
+    --item-default-hover-surface: color-mix(
+      in srgb,
+      var(--item-host-surface),
+      var(--state-layer-color) var(--state-layer-hover-opacity)
+    );
+    --item-default-focus-surface: color-mix(
+      in srgb,
+      var(--item-host-surface),
+      var(--state-layer-color) var(--state-layer-focus-opacity)
+    );
+    --item-default-pressed-surface: color-mix(
+      in srgb,
+      var(--item-host-surface),
+      var(--state-layer-color) var(--state-layer-pressed-opacity)
+    );
+    --item-outline-hover-surface: color-mix(
+      in srgb,
+      var(--item-surface),
+      var(--state-layer-color) var(--state-layer-hover-opacity)
+    );
+    --item-outline-pressed-surface: color-mix(
+      in srgb,
+      var(--item-surface),
+      var(--state-layer-color) var(--state-layer-pressed-opacity)
+    );
+    --item-muted-surface: var(--button-secondary-fill);
+    --item-muted-ink: var(--button-secondary-ink);
+    --item-muted-hover-surface: color-mix(
+      in srgb,
+      var(--item-muted-surface),
+      var(--state-layer-color) var(--state-layer-hover-opacity)
+    );
+    --item-muted-focus-surface: color-mix(
+      in srgb,
+      var(--item-muted-surface),
+      var(--state-layer-color) var(--state-layer-focus-opacity)
+    );
+    --item-muted-pressed-surface: color-mix(
+      in srgb,
+      var(--item-muted-surface),
+      var(--state-layer-color) var(--state-layer-pressed-opacity)
+    );
+  }
+
    [data-slot="item"] {
     min-block-size: var(--item-min-height);
     padding: var(--item-padding);
@@ -4459,6 +5152,7 @@
 
     [data-slot="item"][data-variant="muted"] {
     background-color: var(--item-muted-surface);
+    color: var(--item-muted-ink);
   }
 
 
@@ -4738,7 +5432,7 @@
       > .item-actions--hosted
         [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
     ) {
-    --item-hosted-surface: var(--item-default-hover-surface);
+      --item-hosted-surface: var(--item-default-hover-surface);
     background-color: var(--item-default-hover-surface);
   }
 

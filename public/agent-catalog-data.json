@@ -1,0 +1,90 @@
+[
+  {
+    "slug": "button",
+    "name": "Button",
+    "category": "Forms",
+    "description": "Tertiary is the neutral default for general actions. Choose Primary purple, Primary pink, or Secondary explicitly for tonal emphasis. Selected buttons retain their square-to-round selection behavior.",
+    "sourceFile": "src/components/ui/button.tsx",
+    "sourceLink": "https://github.com/bhna_microsoft/oneds/blob/main/src/components/ui/button.tsx",
+    "route": "#/button",
+    "readFirst": "Use size=\"icon\" for a standard icon-only button and size=\"icon-expressive\" for the expressive tier. Default, Selected, Motion, and Icon Only are the quickest examples to inspect before editing a button call site.",
+    "props": [
+      "variant",
+      "size",
+      "selected",
+      "primaryColor",
+      "asChild"
+    ],
+    "exampleNames": [
+      "Default",
+      "Selected",
+      "Sizes",
+      "Motion",
+      "Icon Only",
+      "With Icon",
+      "Optical Spacing",
+      "Favicon",
+      "Favicon Sizes",
+      "Rounded",
+      "Loading",
+      "Icon Tools",
+      "Mixed Tools",
+      "As Child"
+    ],
+    "defaultExampleName": "Default",
+    "code": "import { useState } from \"react\";\n\nimport { BookmarkIcon } from \"@/components/ui/icons\";\n\nimport { Button, ButtonSelectionIcon } from \"@/components/ui/button\";\n\nfunction SelectedButtonDemo({ size = \"default\", variant = \"tertiary\", disabled = false }: {\n    size?: \"default\" | \"expressive\" | \"icon\" | \"icon-expressive\";\n    variant?: \"secondary\" | \"tertiary\";\n    disabled?: boolean;\n}) {\n    const [selected, setSelected] = useState(true);\n    const iconOnly = size === \"icon\" || size === \"icon-expressive\";\n    return (<Button size={size} variant={variant} selected={selected} disabled={disabled} aria-label={iconOnly ? \"Bookmark item\" : undefined} onClick={() => setSelected(current => !current)}>\n      <ButtonSelectionIcon><BookmarkIcon /></ButtonSelectionIcon>\n      {iconOnly ? null : \"Selected\"}\n    </Button>);\n}\n\nexport const Demo = () => (<div className=\"flex flex-col gap-6\">\n        {([\"default\", \"expressive\"] as const).map((size) => (<div key={size} className=\"flex flex-wrap items-center gap-3\">\n            <Button size={size} variant=\"primary\">Primary purple</Button>\n            <Button size={size} variant=\"primary\" primaryColor=\"pink\">Primary pink</Button>\n            <Button size={size} variant=\"secondary\">Secondary</Button>\n            <Button size={size}>Tertiary</Button>\n            <Button size={size} variant=\"destructive\">Destructive</Button>\n            <SelectedButtonDemo size={size}/>\n            <Button size={size} variant=\"ghost\">Ghost</Button>\n            <Button size={size} variant=\"link\">Link</Button>\n          </div>))}\n      </div>);"
+  },
+  {
+    "slug": "card",
+    "name": "Card",
+    "category": "Data Display",
+    "description": "Displays a card with header, content, and footer.",
+    "sourceFile": "src/components/ui/card.tsx",
+    "sourceLink": "https://github.com/bhna_microsoft/oneds/blob/main/src/components/ui/card.tsx",
+    "route": "#/card",
+    "readFirst": "Rich Content, Edge to Edge, and Footer Actions cover the main card anatomy and the layout knobs that usually matter first.",
+    "props": [
+      "size",
+      "hang",
+      "grouped",
+      "divider",
+      "edgeToEdge"
+    ],
+    "exampleNames": [
+      "Rich Content",
+      "Footer Actions",
+      "Edge to Edge",
+      "Code",
+      "Image",
+      "Hanging Alignment"
+    ],
+    "defaultExampleName": "Rich Content",
+    "code": "function CardRichContentDemo() {\n  return (\n    <CanvasPreview\n      name=\"Rich Content\"\n      annotationsAvailable\n      contentClassName=\"max-w-md\"\n      footnote={({ annotations }) => annotations\n        ? <AnnotationLegend kinds={[\"padding\", \"gap\"]} />\n        : undefined}\n    >\n      {({ annotations }) => <>\n    <Card data-measure=\"rich-card\" size=\"expressive\" className=\"w-full max-w-md\">\n      <CardHeader>\n        <CardHeaderContent>\n          <CardEyebrow>\n            <Badge variant=\"secondary\">Adoption</Badge>\n            <Badge variant=\"tertiary\">In review</Badge>\n          </CardEyebrow>\n          <CardTitle>Design system rollout</CardTitle>\n          <CardDescription>\n            Track how teams are adopting shared components, which guidance\n            remains under review, and what needs attention before the next\n            release.\n          </CardDescription>\n        </CardHeaderContent>\n        <CardHeaderAside>\n          <strong className=\"font-heading text-3xl leading-none font-semibold tabular-nums\">\n            68%\n          </strong>\n          <span className=\"text-sm text-muted-foreground\">Adopted</span>\n        </CardHeaderAside>\n      </CardHeader>\n      <CardContent grouped>\n        <div className=\"grid gap-(--card-group-gap)\">\n          <div className=\"flex items-center justify-between gap-(--card-group-gap) text-sm\">\n            <span className=\"font-medium\">17 of 25 components</span>\n            <span className=\"text-muted-foreground\">Q3 target</span>\n          </div>\n          <Progress value={68} aria-label=\"Component adoption\" />\n        </div>\n        <div className=\"flex flex-wrap items-center justify-between gap-(--card-group-gap)\">\n          <div className=\"flex flex-wrap items-center gap-(--card-group-gap)\">\n            <AvatarGroup>\n              <Avatar size=\"sm\" aria-label={persona.name}>\n                <AvatarImage src={persona.avatar} alt=\"\" />\n                <AvatarFallback>{persona.initials}</AvatarFallback>\n              </Avatar>\n              <Avatar size=\"sm\" aria-label={persona.teammates[0].name}>\n                <AvatarFallback>\n                  {persona.teammates[0].initials}\n                </AvatarFallback>\n              </Avatar>\n              <Avatar size=\"sm\" aria-label={persona.teammates[1].name}>\n                <AvatarFallback>\n                  {persona.teammates[1].initials}\n                </AvatarFallback>\n              </Avatar>\n              <AvatarGroupCount>+3</AvatarGroupCount>\n            </AvatarGroup>\n            <span className=\"text-sm text-muted-foreground\">\n              Sophia and 5 teammates\n            </span>\n          </div>\n          <Badge variant=\"tertiary\">Updated today</Badge>\n        </div>\n      </CardContent>\n      <CardFooter layout=\"responsive\">\n        <Button className=\"h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs) sm:h-(--button-height-default) sm:w-auto sm:whitespace-nowrap sm:py-(--space-none)\">View report</Button>\n        <Button variant=\"secondary\" className=\"h-auto min-h-(--button-height-default) w-full whitespace-normal py-(--space-xs) sm:h-(--button-height-default) sm:w-auto sm:whitespace-nowrap sm:py-(--space-none)\">\n          Continue review\n          <ArrowRightIcon className=\"hidden sm:block\" data-icon=\"inline-end\" />\n        </Button>\n      </CardFooter>\n    </Card>\n    <AnnotationMeasurements active={annotations} targets={cardRichContentMeasurements} />\n      </>}\n    </CanvasPreview>\n  )\n}"
+  },
+  {
+    "slug": "response",
+    "name": "Response",
+    "category": "Chat",
+    "description": "The assistant's answer surface: streaming text, rich content, and the actions a reader takes on it.",
+    "sourceFile": "src/components/ui/response.tsx",
+    "sourceLink": "https://github.com/bhna_microsoft/oneds/blob/main/src/components/ui/response.tsx",
+    "route": "#/response",
+    "readFirst": "Streaming and From Markdown are the two fastest routes to the answer surface and its text rendering behavior.",
+    "props": [
+      "streaming"
+    ],
+    "exampleNames": [
+      "Streaming",
+      "From Markdown",
+      "Streaming Markdown",
+      "Rich Content",
+      "Math",
+      "Actions",
+      "Sources",
+      "Citations",
+      "Error and Retry"
+    ],
+    "defaultExampleName": "Streaming",
+    "code": "function ResponseStreamingDemo() {\n  const [text, setText] = useState(responseAnswers[0])\n  const [streaming, setStreaming] = useState(false)\n  const timerRef = useRef<number | null>(null)\n\n  const clear = useCallback(() => {\n    if (timerRef.current === null) return\n    window.clearInterval(timerRef.current)\n    timerRef.current = null\n  }, [])\n\n  useEffect(() => clear, [clear])\n\n  function start() {\n    clear()\n    const words = responseAnswers[0].split(\" \")\n    let shown = 0\n    setText(\"\")\n    setStreaming(true)\n    timerRef.current = window.setInterval(() => {\n      shown += 1\n      setText(words.slice(0, shown).join(\" \"))\n      if (shown < words.length) return\n      clear()\n      setStreaming(false)\n    }, responseStreamStepMs)\n  }\n\n  function stop() {\n    clear()\n    setStreaming(false)\n  }\n\n  return (\n    <div className=\"flex w-full max-w-(--response-max-width) flex-col gap-4\">\n      <Message align=\"start\">\n        <MessageContent>\n          <MessageHeader>\n            {streaming ? \"Responding\" : \"Assistant\"}\n          </MessageHeader>\n          <Bubble variant=\"ghost\">\n            <BubbleContent>\n              <Response>\n                <ResponseStream text={text} streaming={streaming} />\n              </Response>\n            </BubbleContent>\n          </Bubble>\n        </MessageContent>\n      </Message>\n      <div className=\"flex gap-2\">\n        <Button\n          variant=\"secondary\"\n          size=\"default\"\n          onClick={start}\n          disabled={streaming}\n        >\n          Stream response\n        </Button>\n        <Button\n          variant=\"secondary\"\n          size=\"default\"\n          onClick={stop}\n          disabled={!streaming}\n        >\n          Stop\n        </Button>\n      </div>\n    </div>\n  )\n}"
+  }
+]
