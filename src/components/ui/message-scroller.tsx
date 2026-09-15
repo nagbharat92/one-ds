@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils"
 import { useScrollerRef } from "@/hooks/use-scroller"
 import { Button } from "@/components/ui/button"
+import { fabVariants, type FabVariant, type FabSize } from "@/components/ui/fab"
 import { ArrowDownIcon } from "@/components/ui/icons"
 
 function MessageScrollerProvider(
@@ -102,27 +103,29 @@ function MessageScrollerButton({
   className,
   children,
   render,
-  variant = "secondary",
-  size = "icon",
+  variant = "white",
+  size = "md",
   ...props
-}: React.ComponentProps<typeof MessageScrollerPrimitive.Button> &
-  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
+}: React.ComponentProps<typeof MessageScrollerPrimitive.Button> & {
+  variant?: FabVariant
+  size?: FabSize
+}) {
   return (
     <MessageScrollerPrimitive.Button
       data-slot="message-scroller-button"
       data-direction={direction}
       data-variant={variant}
-      data-size={size}
       behavior={behavior}
       direction={direction}
       className={cn(
-        "absolute inset-s-1/2 z-10 -translate-x-1/2 size-(--message-scroller-button-size) rounded-full border border-(--elevation-stroke) bg-(--surface-lowest) text-foreground shadow-(--elevation-floating) cursor-pointer select-none transition-all duration-(--speed-brisk) hover:bg-(--state-layer-hover) active:bg-(--state-layer-pressed) hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring",
+        fabVariants({ variant, size }),
+        "absolute inset-s-1/2 z-10 -translate-x-1/2 transition-all duration-(--speed-brisk)",
         "data-[active=false]:pointer-events-none data-[active=false]:scale-95 data-[active=false]:opacity-0 data-[active=false]:duration-(--speed-gentle) data-[active=false]:ease-(--ease-exit)",
         "data-[active=true]:translate-y-0 data-[active=true]:scale-100 data-[active=true]:opacity-100 data-[active=true]:ease-(--ease-glide)",
         "data-[direction=end]:bottom-4 data-[direction=end]:data-[active=false]:translate-y-full data-[direction=start]:top-4 data-[direction=start]:data-[active=false]:-translate-y-full rtl:translate-x-1/2 data-[direction=start]:[&_svg]:rotate-180",
         className
       )}
-      render={render ?? <Button variant={variant} size={size} />}
+      render={render ?? <Button variant="ghost" size="icon" />}
       {...props}
     >
       {children ?? (

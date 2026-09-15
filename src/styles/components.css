@@ -356,6 +356,22 @@
     margin-block-start: 0;
   }
 
+  /* Each markdown heading renders with its own leading wavy Separator (see
+     response.tsx); the squiggle carries equal space above and below itself,
+     so the heading right after it needs no extra lead of its own. */
+  [data-slot="response"] > [data-slot="separator"][data-variant="wavy"] {
+    margin-block: var(--space-xl);
+  }
+
+  [data-slot="response"] > [data-slot="separator"][data-variant="wavy"] + :is(h1, h2, h3, h4, h5, h6) {
+    margin-block-start: 0;
+  }
+
+  /* No divider floats above the very first block in a response. */
+  [data-slot="response"] > [data-slot="separator"][data-variant="wavy"]:first-child {
+    display: none;
+  }
+
   [data-slot="response"] :is(h1, h2, h3, h4, h5, h6) {
     color: var(--response-heading-color);
     font-weight: var(--font-weight-semibold);
@@ -452,12 +468,6 @@
     margin-block-start: var(--response-gap);
   }
 
-  [data-slot="response"] hr {
-    border: 0;
-    border-block-start: var(--response-rule-width) solid
-      var(--response-rule-color);
-  }
-
   /* Inline code only; a fenced block is a CodeBlock, not a bare <pre>. */
   [data-slot="response"] :not(pre) > code {
     font-family: var(--font-mono);
@@ -536,11 +546,14 @@
   }
 
   [data-slot="response"] [data-footnotes] {
-    border-block-start: var(--response-rule-width) solid
-      var(--response-rule-color);
-    padding-block-start: var(--response-gap);
     font-size: var(--text-sm);
     line-height: var(--text-sm--line-height);
+  }
+
+  /* remark-gfm always opens the footnotes section with its own <hr>; Sources
+     and the answer above it are one group, so that divider stays hidden. */
+  [data-slot="response"] [data-footnotes] > [data-slot="separator"]:first-child {
+    display: none;
   }
 
   /* The GFM footnote label is sr-only; name the section for readers instead. */
@@ -621,6 +634,10 @@
 
   .ai-chat-block__composer-region > [data-slot="ai-composer"] {
     margin-inline: auto;
+  }
+
+  [data-slot="ai-composer"] {
+    overflow: visible;
   }
 
   .expression-lab {

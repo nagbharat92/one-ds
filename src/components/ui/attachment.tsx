@@ -7,14 +7,14 @@ import { useScrollerRef } from "@/hooks/use-scroller"
 import { Button } from "@/components/ui/button"
 
 const attachmentVariants = cva(
-  "group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-(--attachment-radius) border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border text-card-foreground shadow-(--elevation-flat) transition-all duration-(--speed-swift) ease-(--ease-glide) focus-within:ring-2 focus-within:ring-ring/50 has-[>a,>button,[data-slot=attachment-trigger]]:hover:bg-(--state-layer-hover) has-[>a,>button,[data-slot=attachment-trigger]]:hover:shadow-(--elevation-raised) data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed",
+  "group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-full border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border text-card-foreground shadow-(--elevation-flat) transition-all duration-(--speed-swift) ease-(--ease-glide) focus-within:ring-2 focus-within:ring-ring/50 has-[>a,>button,[data-slot=attachment-trigger]]:hover:bg-(--state-layer-hover) has-[>a,>button,[data-slot=attachment-trigger]]:hover:shadow-(--elevation-raised) data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed",
   {
     variants: {
       size: {
         default:
           "gap-(--attachment-gap) p-(--attachment-padding) text-sm",
         sm: "gap-(--attachment-gap) p-(--attachment-padding) text-xs",
-        xs: "gap-(--space-2xs) p-(--space-2xs) rounded-(--radius-lg) text-xs",
+        xs: "gap-(--space-2xs) p-(--space-2xs) text-xs",
       },
       orientation: {
         horizontal: "min-w-44 items-center",
@@ -51,7 +51,7 @@ function Attachment({
 }
 
 const attachmentMediaVariants = cva(
-  "relative flex aspect-(--aspect-ratio-square) size-(--attachment-media-size) shrink-0 items-center justify-center overflow-hidden rounded-(--attachment-inner-radius) bg-(--surface-container) text-foreground transition-all duration-(--speed-swift) ease-(--ease-glide) group-data-[orientation=vertical]/attachment:w-full group-data-[orientation=vertical]/attachment:h-auto group-data-[size=sm]/attachment:size-(--attachment-media-size-sm) group-data-[size=xs]/attachment:size-(--attachment-media-size-xs) group-data-[size=xs]/attachment:rounded-sm group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5 group-data-[size=sm]/attachment:[&_svg:not([class*='size-'])]:size-4 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6",
+  "relative flex aspect-(--aspect-ratio-square) size-(--attachment-media-size) shrink-0 items-center justify-center overflow-hidden rounded-full bg-(--surface-container) text-foreground transition-all duration-(--speed-swift) ease-(--ease-glide) group-data-[orientation=vertical]/attachment:w-full group-data-[orientation=vertical]/attachment:h-auto group-data-[size=sm]/attachment:size-(--attachment-media-size-sm) group-data-[size=xs]/attachment:size-(--attachment-media-size-xs) group-data-[state=error]/attachment:bg-destructive/10 group-data-[state=error]/attachment:text-destructive group-data-[orientation=vertical]/attachment:*:data-[slot=spinner]:size-6! [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-5 group-data-[size=sm]/attachment:[&_svg:not([class*='size-'])]:size-4 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6",
   {
     variants: {
       variant: {

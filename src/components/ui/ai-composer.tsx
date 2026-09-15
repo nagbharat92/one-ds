@@ -49,12 +49,28 @@ function AIComposer({
         data-size={size}
         aria-busy={status === "submitted" || status === "streaming"}
         className={cn(
-          "grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) rounded-(--ai-composer-radius) border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border p-(--ai-composer-padding) text-foreground shadow-(--elevation-flat) transition-[background-color,border-color,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-floating) focus-within:shadow-(--elevation-floating) data-[status=error]:shadow-(--elevation-floating) data-[status=error]:border-destructive/40",
+          "relative grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) overflow-visible rounded-(--ai-composer-radius) border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border p-(--ai-composer-padding) text-foreground shadow-(--elevation-flat) transition-[background-color,border-color,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-floating) focus-within:shadow-(--elevation-floating) data-[status=error]:shadow-(--elevation-floating) data-[status=error]:border-destructive/40",
           className
         )}
         {...props}
       />
     </AIComposerContext.Provider>
+  )
+}
+
+function AIComposerContextIndicator({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="ai-composer-context-indicator"
+      className={cn(
+        "absolute -top-(--space-xs) inset-s-(--ai-composer-context-indicator-inset-inline-start) -translate-y-full z-10 flex items-center justify-start",
+        className
+      )}
+      {...props}
+    />
   )
 }
 
@@ -353,6 +369,7 @@ export {
   AIComposer,
   AIComposerAction,
   AIComposerActions,
+  AIComposerContextIndicator,
   AIComposerFooter,
   AIComposerHeader,
   AIComposerInput,

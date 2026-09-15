@@ -23,6 +23,7 @@ const fabVariants = cva(
         secondary: "",
         tertiary: "",
         surface: "",
+        white: "ring-1 ring-(--elevation-stroke) shadow-(--elevation-flat)",
         expressive: "relative bg-transparent hover:bg-transparent active:bg-transparent aria-expanded:bg-transparent",
       },
       size: {
@@ -114,3 +115,5 @@ function Fab({
 }
 
 export { Fab, fabVariants }
+export type FabVariant = NonNullable<VariantProps<typeof fabVariants>["variant"]>
+export type FabSize = NonNullable<VariantProps<typeof fabVariants>["size"]>

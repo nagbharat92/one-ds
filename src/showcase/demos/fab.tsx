@@ -55,7 +55,7 @@ function FabSizesDemo() {
 function FabVariantsDemo() {
   return (
     <div className="flex items-end gap-6">
-      {(["primary", "secondary", "tertiary"] as const).map((variant) => (
+      {(["primary", "secondary", "tertiary", "white"] as const).map((variant) => (
         <div key={variant} className="flex flex-col items-center gap-2">
           <Fab variant={variant} aria-label={`Compose, ${variant}`}>
             <PencilIcon />
@@ -184,7 +184,7 @@ export function FabDefaultDemo() {
       {
         name: "Variants",
         description:
-          "Primary uses the pink palette for a prominent CTA. Secondary uses light purple; Tertiary is the warm-neutral default. FABs have softer corners and no shadows.",
+          "Primary uses the pink palette for a prominent CTA. Secondary uses light purple; Tertiary is the warm-neutral default. FABs have softer corners and no shadows, except White, which adds a ring and flat shadow so it reads over arbitrary content instead of the page background.",
         Demo: FabVariantsDemo,
       },
       {

@@ -12,7 +12,6 @@ import {
   CodeIcon,
   EyeIcon,
   SortIcon,
-  PaletteIcon,
   RotateCcwIcon,
 } from "@/components/ui/icons"
 
@@ -32,7 +31,10 @@ import {
 } from "@/showcase/design-rules-page"
 import {
   AgentCatalogPage,
+  AgentCatalogToolbar,
+  DownloadManifestButton,
   agentCatalogPageHeader,
+  filterAgentCatalogEntries,
 } from "@/showcase/agent-catalog-page"
 import { NotesPage, notesPageHeader } from "@/showcase/notes-page"
 import { ShowcasePageHeader } from "@/showcase/showcase-page-header"
@@ -72,6 +74,7 @@ import {
   SidebarBrandLabel,
   SidebarBrandMark,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -451,9 +454,9 @@ function ComponentNavigation({
       <SidebarHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
         <SidebarBrand>
           <SidebarBrandMark>
-            <PaletteIcon className="size-5" />
+            <img src="/favicon.svg" alt="" className="size-5" />
           </SidebarBrandMark>
-          <SidebarBrandLabel className="text-base font-semibold">
+          <SidebarBrandLabel className="text-lg font-semibold">
             OneDS
           </SidebarBrandLabel>
         </SidebarBrand>
@@ -461,15 +464,6 @@ function ComponentNavigation({
           role="toolbar"
           aria-label="Site controls"
         >
-          <Button asChild variant="ghost" size="icon" aria-label="GitHub">
-            <a
-              href="https://github.com/bhna_microsoft/oneds"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Favicon domain="github.com" alt="" />
-            </a>
-          </Button>
           <ModeToggle />
           <SidebarTrigger />
         </SidebarHeaderActions>
@@ -516,31 +510,19 @@ function ComponentNavigation({
         </div>
         {/* Bottom padding matches the scroll fade, so the final item stays clear. */}
         <SidebarContent
-          className="gap-7 pt-4 pb-6"
+          className="gap-5 pt-4 pb-6"
           role="navigation"
           aria-label="OneDS library"
         >
-          {matches("Design Rules") && (
+          {(matches("Design Rules") || matches("Agent Catalog") || matches("Notes")) && (
             <SidebarGroup>
               <SidebarGroupLabel>Reference</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>{renderItem({ slug: "rules", name: "Design Rules" })}</SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          )}
-          {matches("Agent Catalog") && (
-            <SidebarGroup>
-              <SidebarGroupLabel>Reference</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>{renderItem({ slug: "catalog", name: "Agent Catalog" })}</SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          )}
-          {matches("Notes") && (
-            <SidebarGroup>
-              <SidebarGroupLabel>Notes</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>{renderItem({ slug: "notes", name: "Notes" })}</SidebarMenu>
+                <SidebarMenu>
+                  {matches("Design Rules") && renderItem({ slug: "rules", name: "Design Rules" })}
+                  {matches("Agent Catalog") && renderItem({ slug: "catalog", name: "Agent Catalog" })}
+                  {matches("Notes") && renderItem({ slug: "notes", name: "Notes" })}
+                </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
           )}
@@ -606,6 +588,18 @@ function ComponentNavigation({
           )}
         </SidebarContent>
       </div>
+      <SidebarFooter>
+        <Button asChild variant="ghost" className="w-full justify-start rounded-(--item-compact-radius)">
+          <a
+            href="https://github.com/bhna_microsoft/oneds"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Favicon domain="github.com" alt="" />
+            GitHub
+          </a>
+        </Button>
+      </SidebarFooter>
     </>
   )
 }
@@ -645,6 +639,7 @@ function ComponentPage({ entry }: { entry: ComponentEntry }) {
 
 function App() {
   const [slug, navigate] = useHashRoute()
+  const [catalogQuery, setCatalogQuery] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
   const isRulesPage = slug === "rules"
   const isCatalogPage = slug === "catalog"
@@ -671,6 +666,9 @@ function App() {
         ? "experiment"
         : "component"
   const pageVariant = isCustomPage ? "app" : PAGE_VARIANT_BY_SURFACE[surfaceTier(activeEntry)]
+  const catalogVisibleCount = isCatalogPage
+    ? filterAgentCatalogEntries(catalogQuery).length
+    : 0
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: "auto" })
@@ -700,7 +698,16 @@ function App() {
               title={activePageHeader.title}
               description={activePageHeader.description}
               command={activeInstallCommand}
-            />
+              compactContent={isCatalogPage ? <DownloadManifestButton compact /> : null}
+            >
+              {isCatalogPage ? (
+                <AgentCatalogToolbar
+                  query={catalogQuery}
+                  onQueryChange={setCatalogQuery}
+                  visibleCount={catalogVisibleCount}
+                />
+              ) : null}
+            </ShowcasePageHeader>
             <PageContent
               variant={pageVariant}
               key={slug}
@@ -711,7 +718,10 @@ function App() {
               {isRulesPage ? (
                 <DesignRulesPage />
               ) : isCatalogPage ? (
-                <AgentCatalogPage />
+                <AgentCatalogPage
+                  query={catalogQuery}
+                  onQueryChange={setCatalogQuery}
+                />
               ) : isNotesPage ? (
                 <NotesPage />
               ) : (

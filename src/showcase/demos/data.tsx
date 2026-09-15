@@ -712,6 +712,7 @@ export function AvatarDemo() {
         <Badge variant="tertiary">Tertiary</Badge>
         <Badge variant="secondary">Secondary</Badge>
         <Badge variant="destructive">Destructive</Badge>
+        <Badge variant="white">White</Badge>
       </div>
     ),
     code: `import { Badge } from "@/components/ui/badge"
@@ -723,10 +724,35 @@ export function BadgeDemo() {
       <Badge variant="tertiary">Tertiary</Badge>
       <Badge variant="secondary">Secondary</Badge>
       <Badge variant="destructive">Destructive</Badge>
+      <Badge variant="white">White</Badge>
     </div>
   )
 }`,
     examples: [
+      {
+        name: "Interactive states",
+        description:
+          "asChild links and onClick badges pick up the same hover/pressed tokens Button uses; plain status badges stay static.",
+        Demo: () => (
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge asChild variant="primary">
+              <a href="#badge-primary" onClick={(e) => e.preventDefault()}>Primary</a>
+            </Badge>
+            <Badge asChild variant="tertiary">
+              <a href="#badge-tertiary" onClick={(e) => e.preventDefault()}>Tertiary</a>
+            </Badge>
+            <Badge asChild variant="secondary">
+              <a href="#badge-secondary" onClick={(e) => e.preventDefault()}>Secondary</a>
+            </Badge>
+            <Badge asChild variant="destructive">
+              <a href="#badge-destructive" onClick={(e) => e.preventDefault()}>Destructive</a>
+            </Badge>
+            <Badge asChild variant="white">
+              <a href="#badge-white" onClick={(e) => e.preventDefault()}>White</a>
+            </Badge>
+          </div>
+        ),
+      },
       {
         name: "With Icon",
         description: "Badges with an icon at either inline edge.",
@@ -764,6 +790,29 @@ export function BadgeDemo() {
         description: "Linked source badges pair a favicon with a readable label.",
         Demo: () => (
           <div className="flex flex-wrap items-center gap-3">
+            <Badge asChild variant="tertiary">
+              <a
+                href="https://github.com/microsoft/fluentui"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <span
+                  data-icon="inline-start"
+                  className="flex -space-x-(--space-xs) items-center"
+                >
+                  <span className="relative flex size-(--icon-size-20) shrink-0 items-center justify-center rounded-full bg-(--tertiary-fill) ring-1 ring-(--tertiary-fill)">
+                    <Favicon domain="github.com" alt="" className="size-(--icon-size-16) rounded-full" />
+                  </span>
+                  <span className="relative flex size-(--icon-size-20) shrink-0 items-center justify-center rounded-full bg-(--tertiary-fill) ring-1 ring-(--tertiary-fill)">
+                    <Favicon domain="microsoft.com" alt="" className="size-(--icon-size-16) rounded-full" />
+                  </span>
+                  <span className="relative flex size-(--icon-size-20) shrink-0 items-center justify-center rounded-full bg-(--tertiary-fill) ring-1 ring-(--tertiary-fill)">
+                    <Favicon domain="react.dev" alt="" className="size-(--icon-size-16) rounded-full" />
+                  </span>
+                </span>
+                3 sources
+              </a>
+            </Badge>
             <Badge asChild variant="tertiary">
               <a
                 href="https://github.com/microsoft/fluentui"

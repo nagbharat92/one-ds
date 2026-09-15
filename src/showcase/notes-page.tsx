@@ -1,6 +1,7 @@
 import { useState } from "react"
 import {
   CheckCircleIcon,
+  InfoIcon,
   SearchIcon,
 } from "@/components/ui/icons"
 
@@ -36,7 +37,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { Alert, AlertContent, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Text } from "@/components/ui/text"
 import {
@@ -77,11 +78,11 @@ function NoteEntry({ note }: { note: NoteItem }) {
         </SectionHeader>
         <SectionContent>
           <Stack>
-            <Alert role="note" className="border-border/60 bg-accent/30">
+            <Alert role="note">
+              <AlertIcon><InfoIcon /></AlertIcon>
               <AlertContent>
-                <AlertDescription className="font-medium text-foreground">
-                  “{note.summary}”
-                </AlertDescription>
+                <AlertTitle>Summary</AlertTitle>
+                <AlertDescription>“{note.summary}”</AlertDescription>
               </AlertContent>
             </Alert>
 
@@ -228,7 +229,9 @@ export function NotesPage() {
           {visibleNotes.filter((note) => note.status === "planned").length} planned
         </Text>
         <Alert role="note">
+          <AlertIcon><InfoIcon /></AlertIcon>
           <AlertContent>
+            <AlertTitle>About these notes</AlertTitle>
             <AlertDescription>{notesDocument.notice}</AlertDescription>
           </AlertContent>
         </Alert>

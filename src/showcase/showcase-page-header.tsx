@@ -15,10 +15,14 @@ function ShowcasePageHeader({
   title,
   description,
   command,
+  children,
+  compactContent,
 }: {
   title: ReactNode
   description: ReactNode
   command?: string | null
+  children?: ReactNode
+  compactContent?: ReactNode
 }) {
   const sentinelRef = useRef<HTMLDivElement>(null)
   const [collapsed, setCollapsed] = useState(false)
@@ -62,7 +66,7 @@ function ShowcasePageHeader({
       >
         <div
           className="showcase-page-header__bar"
-          data-has-command={command ? "true" : "false"}
+          data-has-command={command || compactContent ? "true" : "false"}
         >
           <span className="showcase-page-header__bar-title">{title}</span>
           {command ? (
@@ -80,6 +84,7 @@ function ShowcasePageHeader({
               {copied ? "Copied" : "Copy command"}
             </Button>
           ) : null}
+          {compactContent}
         </div>
       </div>
 
@@ -92,11 +97,12 @@ function ShowcasePageHeader({
           data-showcase-page-header
           className="showcase-page-header relative mx-auto w-full max-w-(--showcase-page-header-max-width) bg-transparent ring-0 shadow-(--elevation-flat)"
         >
-          <PageHeaderContent className="gap-(--space-xl)">
+          <PageHeaderContent className="gap-(--space-3xl)">
             <div className="flex flex-col gap-(--space-2xs)">
               <PageHeaderTitle>{title}</PageHeaderTitle>
               <PageHeaderDescription>{description}</PageHeaderDescription>
             </div>
+            {children}
             {command ? (
               <div className="flex w-full flex-col gap-(--space-3xl)">
                 <div className="dark showcase-page-header__code">

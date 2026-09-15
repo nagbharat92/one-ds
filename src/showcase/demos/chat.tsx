@@ -74,8 +74,18 @@ import {
 } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Chip } from "@/components/ui/chip"
 import { CodeBlock } from "@/components/code-block"
 import { Favicon } from "@/components/ui/favicon"
+import { Separator } from "@/components/ui/separator"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import {
   Tooltip,
   TooltipContent,
@@ -98,6 +108,7 @@ import {
   AIComposer,
   AIComposerAction,
   AIComposerActions,
+  AIComposerContextIndicator,
   AIComposerFooter,
   AIComposerHeader,
   AIComposerInput,
@@ -585,6 +596,57 @@ function AIComposerMiniDemo() {
   )
 }
 
+function AIComposerContextIndicatorDemo() {
+  const [prompt, setPrompt] = useState("")
+  const [status, setStatus] = useState<AIComposerStatus>("ready")
+
+  return (
+    <AIComposer
+      status={status}
+      onSubmit={(event) => {
+        event.preventDefault()
+        if (!prompt.trim()) return
+        setStatus("streaming")
+      }}
+    >
+      <AIComposerContextIndicator className="gap-(--space-2xs)">
+        <Badge asChild variant="white">
+          <a
+            href="https://github.com/microsoft/fluentui"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <Favicon domain="github.com" alt="" data-icon="inline-start" />
+            microsoft/fluentui
+          </a>
+        </Badge>
+        <Chip variant="outline" size="sm">
+          add more
+        </Chip>
+      </AIComposerContextIndicator>
+      <AIComposerInput
+        aria-label="Message with context"
+        placeholder="Ask anything about this repository…"
+        value={prompt}
+        onChange={(event) => setPrompt(event.target.value)}
+      />
+      <AIComposerFooter>
+        <AIComposerTools>
+          <AIComposerAddMenu />
+        </AIComposerTools>
+        <AIComposerActions>
+          <AIComposerSubmit
+            status={status}
+            onClick={
+              status === "streaming" ? () => setStatus("ready") : undefined
+            }
+          />
+        </AIComposerActions>
+      </AIComposerFooter>
+    </AIComposer>
+  )
+}
+
 function AIComposerStatesDemo() {
   const states: Array<{
     status: AIComposerStatus
@@ -930,6 +992,7 @@ function ResponseRichContentDemo() {
                   <a href="#/message">message parts</a> stay responsible for the
                   turn around it.
                 </p>
+                <Separator variant="wavy" wavySize="small" />
                 <h2>What changed</h2>
                 <p>Hierarchy now comes from tokens, not guesswork:</p>
                 <ul>
@@ -946,6 +1009,7 @@ function ResponseRichContentDemo() {
                     clearly.
                   </li>
                 </ul>
+                <Separator variant="wavy" wavySize="small" />
                 <h3>Order of operations</h3>
                 <ol>
                   <li>Style the elements from tokens.</li>
@@ -962,32 +1026,30 @@ function ResponseRichContentDemo() {
                   />
                   <figcaption>Figures and captions are tokenized too.</figcaption>
                 </figure>
-                <hr />
+                <Separator variant="wavy" wavySize="small" />
                 <h3>Coverage</h3>
-                <div className="response-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Element</th>
-                        <th>Source</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Code block</td>
-                        <td>CodeBlock</td>
-                      </tr>
-                      <tr>
-                        <td>Divider</td>
-                        <td>Separator tokens</td>
-                      </tr>
-                      <tr>
-                        <td>Callout</td>
-                        <td>Alert</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Element</TableHead>
+                      <TableHead>Source</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Code block</TableCell>
+                      <TableCell>CodeBlock</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Divider</TableCell>
+                      <TableCell>Separator tokens</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Callout</TableCell>
+                      <TableCell>Alert</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
                 <CodeBlock
                   language="tsx"
                   code={
@@ -1182,7 +1244,7 @@ function ResponseErrorDemo() {
               </AlertContent>
               <AlertAction>
                 <Button
-                  variant="primary"
+                  variant="destructive"
                   size="expressive"
                   onClick={() => setFailed(false)}
                 >
@@ -1286,6 +1348,13 @@ export function AIComposerDemo() {
   )
 }`,
     examples: [
+      {
+        name: "Context indicator",
+        description:
+          "A floating favicon badge centered above the composer indicating active source or repository context.",
+        layout: "center",
+        Demo: AIComposerContextIndicatorDemo,
+      },
       {
         name: "Attachments",
         description:

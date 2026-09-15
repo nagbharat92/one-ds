@@ -381,6 +381,8 @@
   --button-destructive-fill: color-mix(in oklab, var(--button-destructive-color) var(--button-destructive-fill-opacity), transparent);
   --button-destructive-hover: color-mix(in oklab, var(--button-destructive-color) var(--button-destructive-hover-opacity), transparent);
   --button-destructive-pressed: color-mix(in oklab, var(--button-destructive-color) var(--button-destructive-pressed-opacity), transparent);
+  --badge-white-hover: color-mix(in srgb, var(--badge-white-fill), var(--badge-white-ink) var(--state-layer-hover-opacity));
+  --badge-white-pressed: color-mix(in srgb, var(--badge-white-fill), var(--badge-white-ink) var(--state-layer-pressed-opacity));
 }
 
 
@@ -765,7 +767,7 @@
   position: relative;
   grid-template-columns: minmax(0, 1fr);
   block-size: var(--ai-composer-compact-size);
-  overflow: clip;
+  overflow: visible;
   interpolate-size: allow-keywords;
   transition-property: block-size, padding-block-end, border-color, box-shadow;
   transition-duration: var(--ai-composer-speed);
@@ -1143,6 +1145,10 @@
 .fab[data-variant="secondary"] {
   --fab-fill: var(--button-secondary-fill);
   --fab-ink: var(--button-secondary-ink);
+}
+.fab[data-variant="white"] {
+  --fab-fill: var(--fab-white-fill);
+  --fab-ink: var(--fab-white-ink);
 }
 
 .fab[data-variant="expressive"] > .fab__shape {

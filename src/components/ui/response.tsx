@@ -464,7 +464,31 @@ function SourceBadge({ label }: { label: string }) {
   )
 }
 
+type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+
+function headingWithDivider(Tag: HeadingTag) {
+  return function Heading({
+    children,
+    ...props
+  }: React.ComponentProps<HeadingTag>) {
+    return (
+      <>
+        <Separator variant="wavy" wavySize="small" />
+        <Tag {...props}>{children}</Tag>
+      </>
+    )
+  }
+}
+
 const markdownComponents = {
+  // Each section break gets its own small squiggly divider instead of pure
+  // whitespace; the CSS above owns the surrounding margin rhythm.
+  h1: headingWithDivider("h1"),
+  h2: headingWithDivider("h2"),
+  h3: headingWithDivider("h3"),
+  h4: headingWithDivider("h4"),
+  h5: headingWithDivider("h5"),
+  h6: headingWithDivider("h6"),
   pre: ({ children }: { children?: React.ReactNode }) => {
     const codeEl = React.Children.toArray(children)[0]
     const codeProps = React.isValidElement(codeEl)
@@ -517,9 +541,7 @@ const markdownComponents = {
   td: ({ children }: { children?: React.ReactNode }) => (
     <TableCell>{children}</TableCell>
   ),
-  hr: () => (
-    <Separator tone="subtle" className="my-(--response-gap)" />
-  ),
+  hr: () => <Separator variant="wavy" wavySize="small" />,
   input: (props: React.ComponentProps<"input">) => {
     if (props.type === "checkbox") {
       return (

@@ -1,6 +1,4 @@
-import { useState } from "react"
-
-import { ArrowUpRightIcon, SearchIcon } from "@/components/ui/icons"
+import { ArrowUpRightIcon, DownloadIcon, InfoIcon, SearchIcon } from "@/components/ui/icons"
 
 import { agentCatalogEntries, type AgentCatalogEntry } from "@/showcase/agent-catalog"
 import { Badge } from "@/components/ui/badge"
@@ -17,7 +15,7 @@ import {
   SectionTitle,
 } from "@/components/ui/section"
 import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
-import { Alert, AlertContent, AlertDescription } from "@/components/ui/alert"
+import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Text } from "@/components/ui/text"
 import {
@@ -58,11 +56,11 @@ function AgentCatalogEntry({ entry }: { entry: AgentCatalogEntry }) {
           <Stack gap="lg">
             <Text>{entry.description}</Text>
 
-            <Alert role="note" className="border-border/60 bg-accent/30">
+            <Alert role="note">
+              <AlertIcon><InfoIcon /></AlertIcon>
               <AlertContent>
-                <AlertDescription className="font-medium text-foreground">
-                  {entry.readFirst}
-                </AlertDescription>
+                <AlertTitle>Read first</AlertTitle>
+                <AlertDescription>{entry.readFirst}</AlertDescription>
               </AlertContent>
             </Alert>
 
@@ -141,11 +139,10 @@ function AgentCatalogEntry({ entry }: { entry: AgentCatalogEntry }) {
   )
 }
 
-export function AgentCatalogPage() {
-  const [query, setQuery] = useState("")
+export function filterAgentCatalogEntries(query: string) {
   const normalizedQuery = query.trim().toLowerCase()
 
-  const visibleEntries = agentCatalogEntries.filter((entry) =>
+  return agentCatalogEntries.filter((entry) =>
     [
       entry.name,
       entry.category,
@@ -159,37 +156,59 @@ export function AgentCatalogPage() {
       .toLowerCase()
       .includes(normalizedQuery),
   )
+}
+
+function AgentCatalogToolbar({
+  query,
+  onQueryChange,
+  visibleCount,
+}: {
+  query: string
+  onQueryChange: (value: string) => void
+  visibleCount: number
+}) {
+  return (
+    <Stack>
+      <Cluster gap="md">
+        <Stack className="min-w-0 flex-1">
+          <SearchInput
+            value={query}
+            onValueChange={onQueryChange}
+            aria-label="Search the agent catalog"
+            placeholder="Search Button, Card, Response, props, or examples"
+          />
+        </Stack>
+        <DownloadManifestButton />
+      </Cluster>
+      <Text variant="metadata" tone="muted" role="status">
+        {visibleCount} {visibleCount === 1 ? "entry" : "entries"} · {agentCatalogEntries.length} tracked components in the pilot
+      </Text>
+    </Stack>
+  )
+}
+
+function DownloadManifestButton({ compact = false }: { compact?: boolean }) {
+  return (
+    <Button asChild variant="secondary" className={compact ? "rounded-full" : undefined}>
+      <a href={`${import.meta.env.BASE_URL}agent-catalog.json`} download>
+        <DownloadIcon />
+        Download manifest
+      </a>
+    </Button>
+  )
+}
+
+export function AgentCatalogPage({
+  query,
+  onQueryChange,
+}: {
+  query: string
+  onQueryChange: (value: string) => void
+}) {
+  const visibleEntries = filterAgentCatalogEntries(query)
 
   return (
     <>
-      <Stack>
-        <Cluster gap="md">
-          <Stack className="min-w-0 flex-1">
-            <SearchInput
-              value={query}
-              onValueChange={setQuery}
-              aria-label="Search the agent catalog"
-              placeholder="Search Button, Card, Response, props, or examples"
-            />
-          </Stack>
-          <Button asChild variant="secondary">
-            <a href="#/button">
-              <SearchIcon />
-              Open the component shelf
-            </a>
-          </Button>
-          <Button asChild variant="ghost">
-            <a href={`${import.meta.env.BASE_URL}agent-catalog.json`} download>
-              <SearchIcon />
-              Download manifest
-            </a>
-          </Button>
-        </Cluster>
-        <Text variant="metadata" tone="muted" role="status">
-          {visibleEntries.length} {visibleEntries.length === 1 ? "entry" : "entries"} · {agentCatalogEntries.length} tracked components in the pilot
-        </Text>
-      </Stack>
-
       {visibleEntries.length === 0 ? (
         <Empty>
           <EmptyHeader>
@@ -201,7 +220,7 @@ export function AgentCatalogPage() {
             </EmptyTitle>
           </EmptyHeader>
           <EmptyContent>
-            <Button variant="link" onClick={() => setQuery("")}>Clear search</Button>
+            <Button variant="link" onClick={() => onQueryChange("")}>Clear search</Button>
           </EmptyContent>
         </Empty>
       ) : (
@@ -224,3 +243,4 @@ export function AgentCatalogPage() {
 }
 
 export { agentCatalogPageHeader }
+export { AgentCatalogToolbar, DownloadManifestButton }

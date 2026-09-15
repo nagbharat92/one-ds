@@ -320,6 +320,7 @@
     --ai-composer-speed: var(--speed-gentle);
     --ai-composer-ease: var(--ease-glide);
     --ai-composer-shadow: var(--elevation-raised);
+    --ai-composer-context-indicator-inset-inline-start: calc(var(--ai-composer-padding) + var(--ai-composer-border-width));
 
     /* How much of the transcript column a directed message may occupy. */
     --bubble-max-width: 80%;
@@ -341,13 +342,11 @@
 
     /* Message scroller and edge controls. */
     --message-scroller-gap: var(--space-lg);
-    --message-scroller-button-size: calc(var(--spacing) * 10);
-    --message-scroller-button-radius: calc(var(--message-scroller-button-size) / 2);
 
-    /* File attachments. Concentric math: inner radius = outer radius - padding (14px - 8px = 6px). */
-    --attachment-radius: var(--radius-xl);
+    /* File attachments. Fully rounded: the media circle and the pill container
+       clamp border-radius to half their own box size, so outer = inner + padding
+       holds automatically at every size, with no separate radius tokens. */
     --attachment-padding: var(--space-xs);
-    --attachment-inner-radius: calc(var(--attachment-radius) - var(--attachment-padding));
     --attachment-gap: var(--space-xs);
     --attachment-media-size: calc(var(--spacing) * 10);
     --attachment-media-size-sm: calc(var(--spacing) * 8);
@@ -368,7 +367,6 @@
       var(--ai-composer-max-width) - 2 *
         (var(--ai-composer-padding) + var(--ai-composer-input-padding-inline))
     );
-    --response-gap: var(--space-sm);
     --response-list-indent: calc(var(--spacing) * 5);
     --response-caret-width: 1px;
     --response-caret-height: var(--text-sm);
@@ -386,8 +384,8 @@
     /* Rich content flows in normal block order, so each relationship owns its
        rhythm: a generous lead before a heading, a tight gap to the content it
        introduces, and a calmer gap between everything else. */
-    --response-gap: var(--space-md);
-    --response-heading-gap: var(--space-xl);
+    --response-gap: var(--space-lg);
+    --response-heading-gap: var(--space-2xl);
     --response-heading-gap-tight: var(--space-sm);
     --response-list-gap: var(--space-xs);
     /* Heading ladder, scaled for the 16px expressive answer body. */
@@ -403,7 +401,6 @@
     --response-heading-color: var(--foreground);
     --response-strong-color: var(--foreground);
     --response-muted-color: var(--muted-foreground);
-    --response-rule-color: var(--border);
     --response-rule-width: 1px;
     --response-quote-color: var(--muted-foreground);
     --response-quote-border-color: var(--border);
@@ -414,11 +411,6 @@
     --response-code-padding-inline: calc(var(--spacing) * 1.5);
     --response-code-padding-block: var(--space-hairline);
     --response-code-radius: var(--radius-sm);
-    --response-table-border-color: var(--border);
-    --response-table-header-bg: var(--muted);
-    --response-table-padding-inline: var(--space-sm);
-    --response-table-padding-block: var(--space-xs);
-    --response-table-radius: var(--radius-md);
     --table-surface-radius: var(--radius-md);
     --table-stroke: var(--card-stroke);
     --table-header-height: calc(var(--spacing) * 14);
@@ -818,6 +810,10 @@
     --fab-elevation-hover: var(--elevation-floating);
     --fab-speed: var(--speed-swift);
     --fab-ease: var(--ease-settle);
+    /* White matches a white host surface exactly, for a FAB that floats over
+       arbitrary/colored content rather than the page background. */
+    --fab-white-fill: var(--surface-lowest);
+    --fab-white-ink: var(--foreground);
 
     /* Tabs. The pill crosses one pivot per --tabs-pivot-speed, so a two-tab
        jump takes twice as long instead of travelling twice as fast. */
@@ -1279,7 +1275,7 @@
     --alert-padding-inline: var(--space-md);
     --alert-padding-block: var(--space-md);
     --alert-content-gap: var(--space-2xs);
-    --alert-graphic-gap: var(--space-md);
+    --alert-graphic-gap: var(--space-sm);
     --alert-graphic-gap-offset: calc(var(--alert-graphic-gap) - var(--graphic-label-gap));
     --alert-action-gap: var(--space-md);
     --alert-accent-size: var(--button-height-expressive);
@@ -1756,5 +1752,12 @@
 :root {
   --tertiary-fill: var(--md-sys-color-surface-container-highest);
   --tertiary-ink: var(--md-sys-color-on-surface-variant);
+}
+
+/* White is a distinct neutral surface (the composer/card white, not the tertiary
+   tonal fill), for a badge that must match a white host surface exactly. */
+:root {
+  --badge-white-fill: var(--surface-lowest);
+  --badge-white-ink: var(--foreground);
 }
 

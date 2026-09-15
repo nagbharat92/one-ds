@@ -53,24 +53,15 @@ export const feedbackDemos: ComponentEntry[] = [
     description: "Displays a callout for user attention.",
     category: "Feedback",
     Demo: () => (
-      <div className="grid w-full max-w-md gap-4">
-        <Alert>
-          <AlertIcon><InfoIcon /></AlertIcon>
-          <AlertContent>
-            <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription>
-              You can add components to your app using the CLI.
-            </AlertDescription>
-          </AlertContent>
-        </Alert>
-        <Alert variant="error">
-          <AlertIcon><AlertCircleIcon /></AlertIcon>
-          <AlertContent>
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
-          </AlertContent>
-        </Alert>
-      </div>
+      <Alert>
+        <AlertIcon><InfoIcon /></AlertIcon>
+        <AlertContent>
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            You can add components to your app using the CLI.
+          </AlertDescription>
+        </AlertContent>
+      </Alert>
     ),
     code: `import { InfoIcon } from "@/components/ui/icons"
 import { Alert, AlertContent, AlertDescription, AlertIcon, AlertTitle } from "@/components/ui/alert"
@@ -92,20 +83,36 @@ export function AlertDemo() {
       {
         name: "Action",
         Demo: () => (
-          <Alert variant="info" className="w-full max-w-md">
-            <AlertIcon><InfoIcon /></AlertIcon>
-            <AlertContent>
-              <AlertTitle>New update available</AlertTitle>
-              <AlertDescription>
-                A new version is ready to install. Restart to apply changes.
-              </AlertDescription>
-            </AlertContent>
-            <AlertAction>
-              <Button size="expressive" variant="primary">
-                Dismiss
-              </Button>
-            </AlertAction>
-          </Alert>
+          <div className="grid w-full max-w-md gap-4">
+            <Alert variant="info">
+              <AlertIcon><InfoIcon /></AlertIcon>
+              <AlertContent>
+                <AlertTitle>New update available</AlertTitle>
+                <AlertDescription>
+                  A new version is ready to install. Restart to apply changes.
+                </AlertDescription>
+              </AlertContent>
+              <AlertAction>
+                <Button size="expressive" variant="primary">
+                  Dismiss
+                </Button>
+              </AlertAction>
+            </Alert>
+            <Alert variant="error">
+              <AlertIcon><AlertCircleIcon /></AlertIcon>
+              <AlertContent>
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  Your session has expired. Please log in again.
+                </AlertDescription>
+              </AlertContent>
+              <AlertAction>
+                <Button size="expressive" variant="destructive">
+                  Log in
+                </Button>
+              </AlertAction>
+            </Alert>
+          </div>
         ),
       },
       {
