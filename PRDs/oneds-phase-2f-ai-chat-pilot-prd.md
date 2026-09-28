@@ -56,6 +56,13 @@ The complete block can carry strong expression, but only a few elements should c
 
 The block can introduce the signature harmony, a memorable mark, and a small set of spacious suggestion tiles. This is the most expressive resting state because there is little content competing for attention.
 
+The composer's own vertical position is already implemented, not just a
+hypothesis: it rests at the visual center of the page beneath the greeting
+while empty, then docks under the transcript once a turn exists, driven by one
+`data-empty` switch and a shared layout-property transition (grid row size,
+flex-grow, block padding) rather than a measured transform. See "AI Chat
+composer travel" in the [Motion character brief](oneds-phase-2d-motion-character-prd.md) for the mechanism.
+
 ### Exploring
 
 Hovering or selecting a suggestion should reveal hierarchy through shape, tonal change, and tactile response. The remaining suggestions stay quieter.

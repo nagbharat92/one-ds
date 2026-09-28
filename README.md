@@ -20,11 +20,266 @@ npm run build    # type-check + production build
 npm run preview  # preview the production build
 ```
 
+## Core consumer pilot
+
+The independent `../oneds-consumer-lab` app installs Button, Text, PageHeader,
+Card, Item, Badge, Empty, Field, Input, Textarea, Label, Select, AlertDialog, Progress,
+Tabs, Toast, Dialog, Drawer, DropdownMenu, Collapsible, Separator, Tooltip, Popover,
+RadioGroup, Checkbox, Switch, InputGroup, Scroller, Alert, MaterialTheme,
+and Material icons
+as a local package. It does not import OneDS
+source or depend on OneDS's `@/` alias. After editing OneDS, refresh the
+lab's installed artifact with one command:
+
+```bash
+npm run lab:refresh-core
+cd ../oneds-consumer-lab
+npm test
+npm run build
+```
+
+The refresh rebuilds OneDS, packs its current core pilot, reinstalls it, and
+compares the installed JS, declarations, and CSS to the build. Reload the lab
+page after a refresh; published consumer projects should instead take deliberate
+versioned upgrades.
+
+The lab imports `@oneds/core-pilot`, `@oneds/core-pilot/styles.css`, and the
+optional `@oneds/core-pilot/material-theme.css` for MaterialTheme scopes.
+To try the private pilot in another local React 19 app, build and pack it from
+this repository with `npm run build:core-pilot` and
+`npm pack ./consumer-package --pack-destination ./consumer-package`, then
+install the resulting `oneds-core-pilot-0.0.1.tgz` by local path in that app.
+Import the component API from `@oneds/core-pilot` and the two CSS entry points
+above; MaterialTheme needs a `next-themes` ThemeProvider at the app root. The
+CSS subpaths have TypeScript declarations as well as runtime exports.
+Both client-only Vite entry points mark next-themes' inline bootstrap script
+as inert: React's createRoot cannot execute it, and the provider's client
+effect still applies stored themes and native color schemes. Server-rendered
+hydration probes keep the default executable bootstrap for flash prevention.
+The separate `../oneds-consumer-lab/next-probe` runs Next.js App Router against
+the same installed tarball. Use `npm run next:build` and
+`npm run test:next:production` from the lab to check the production build,
+server HTML, hydrated controls, theme switching, and portaled theme scope.
+The package is private and versioned only for this pilot; it is not published.
+Keep the current `0.0.1` version for local refreshes. When deliberately changing
+the pilot version, update `consumer-package/package.json` and the lab's
+tarball dependency and lockfile together before refreshing; the refresh fails
+if the lab points at the wrong filename. Its consumer CSS
+imports shared foundation and component styles without showcase selectors;
+Google Sans Flex and Material Symbols are separate font assets instead of
+inlined CSS. The local refresh can reinstall a changed tarball without bumping
+its version. Showcase-only theme-preview, annotation, and pointer tokens live
+outside the pilot stylesheet. Keep unapproved expressive treatments opt-in.
+The core CSS size gate is 250 KB rather than 248 KB to accommodate the shared
+forced-colors focus, control-state, and floating-surface treatments; it remains
+a bounded package check, not a suppressed build warning.
+NavigationMenu is the recommended next family to evaluate for the consumer
+pilot: the showcase now exercises both popup modes, its visual roles use the
+shared menu tokens, and Radix is already a pilot dependency. It is not yet
+exported by `@oneds/core-pilot`; promote it only after a consumer need, package
+size, and its keyboard/touch behavior are reviewed together.
+Forced-colors mode uses a shared two-pixel system Highlight outline on
+keyboard focus, since its shadow-based focus rings are suppressed by the
+browser. This fallback applies across OneDS controls without changing their
+ordinary light/dark focus treatments.
+Switch uses system track and knob colors in forced colors so its on/off state
+remains visible when authored fills are replaced.
+Progress likewise uses a Canvas track with a CanvasText edge and Highlight
+fill, preserving a visible completed fraction instead of two identical fills.
+InputGroup and SearchInput retain a CanvasText boundary in forced colors.
+Their keyboard focus outline surrounds the whole group, not only the inner
+text control; the ordinary theme focus ring remains unchanged.
+Resting Input, Textarea, and Select fields also keep a CanvasText edge; native
+date Input uses an inset outline so its 40px border box stays unchanged.
+Floating AlertDialog, Dialog/Drawer, Select, Popover, DropdownMenu, and
+Tooltip surfaces retain a CanvasText boundary in forced colors so they remain
+distinct when browser high-contrast mode suppresses shadows.
+Grouped DropdownMenu, ContextMenu, and Menubar surfaces instead keep their
+outer shells transparent and outline each chunk and grouped submenu in
+CanvasText, preserving separation without changing menu geometry.
+Combobox, Hover Card, and both Coachmark tones use an inset CanvasText outline
+in forced colors so their floating edges remain visible without changing
+their dimensions; the Coachmark arrow uses the matching system fill and a
+CanvasText tip edge. Keyboard focus retains its separate Highlight outline.
+The Coachmark beacon remains a visible CanvasText dot with Highlight focus.
+NavigationMenu's viewport and direct popup get inset CanvasText edges; its
+indicator keeps a visible system-color arrow. Floating Message actions move
+below the bubble on non-hover devices so touch users can see and use them.
+Floating Toolbar and Chart tooltip borders and Message action edges use
+CanvasText in forced colors rather than translucent theme hairlines.
+Inline Alert uses the same system-color boundary when its flat ring disappears.
+Default Cards use an inset CanvasText outline so the lost hairline does not
+change their border-box geometry.
+Tabs keep a Highlight selected border/indicator, and RadioGroup's selected dot
+uses CanvasText so both controls retain visible state independently of their
+ARIA attributes.
+Unchecked Checkbox and RadioGroup indicators use ButtonText borders when their
+shadow-based outlines disappear; checked marks remain distinct.
+Toast Undo actions gain a ButtonText edge and explicit Highlight keyboard
+outline in forced colors, where Sonner's important shadow-based ring vanishes.
+Firefox coverage is pending on a working host: on this macOS 27 machine, both
+Playwright Firefox 155 and the installed Firefox exit before loading a page
+with "Could not find profile folder." No OneDS assertion ran in Firefox.
+The scoped automated forced-colors pass is complete for the current showcase
+and consumer lab. A real Windows high-contrast visual review is still pending:
+WebKit's forced-colors emulation matches the media query but does not remap all
+authored colors, so emulation is not a substitute for that system-level check.
+
+**Consumer-lab UI decisions to revisit:** On 2026-09-27, the task Tabs default
+to All; Active and Completed filter the same local list. Completion Progress
+always summarizes all tasks, independent of the selected tab. Empty filtered
+views offer View all, while an entirely empty list offers Start a task. These
+choices keep task creation and confirmation available from every view without
+changing the underlying task data.
+Keyboard View all returns focus to the All tab as its Empty-state button
+disappears; pointer activation does not force focus to a new control.
+Keyboard completion or reopening within Active or Completed similarly moves
+focus to a surviving visible task, or back to the selected tab when the view
+empties. The All view keeps focus on the toggled task.
+The default Tabs indicator now uses Surface container lowest in both themes;
+the explicitly website-themed Tabs treatment keeps its separate selected
+Secondary-container color.
+
+The bookmark action uses a transient Toast; the Card footer remains the
+persistent visual status for task mutations. The lab passes its current light/dark
+mode to Toaster explicitly rather than relying on a Next.js theme provider.
+The small task creation form stays with Field/Input/Select and its existing
+trimmed-name validation: Form would add React Hook Form and controller state
+without simplifying this local workflow. An optional native date Input records
+a date-only due date during creation and editing, with a Clear due date action
+in each form. Clearing by keyboard returns focus to the date input rather
+than losing it when the Clear button disappears. The date appears in the
+Item description, not another compact
+badge; the completion control references that description for accessibility.
+Formatting uses UTC so the selected calendar day stays the same across local
+time zones. Cancel discards an edit, and Undo restores a removed task's date.
+Browser-based desktop/mobile checks cover the date flow. Physical iPhone Safari
+26.7 renders the date Input at a 40px border box and displays a dated task
+without horizontal overflow when form events are dispatched; WebDriver did not
+operate its keyboard or native picker, so touch input remains unverified.
+
+**Pending manual iPhone checks (deferred 2026-09-27):**
+- In Safari, set and clear a due date with the native picker by touch; confirm
+  the selected day, task description, and form reset.
+- With iPhone VoiceOver, check the date field, native picker, Clear due date,
+  dated task row, and Undo announcements and operation. Continue with the
+  other consumer controls in a separate screen-reader pass. Mac VoiceOver
+  screenshots and emulated WebKit runs do not count as physical iPhone checks.
+
+Removing a task now offers a 10-second Toast Undo action for accidental taps;
+it restores the original completion, priority, and added order, while the
+Card footer remains the persistent mutation status. Independently removed
+tasks keep independent Undo actions. The lab keeps multiple Toasts expanded
+so an older Undo remains
+pointer- and touch-reachable instead of hiding beneath a newer toast; up
+to five concurrent Toasts are visible, rather than Sonner's default three.
+Removal Toast titles truncate to one visual line so five long-name Undo actions
+fit a 320px viewport. The full text remains in the Toast DOM and persistent
+Card footer for reading or assistive technology; other Toast titles can wrap.
+The installed Toast's action and cancel buttons now have a visible
+keyboard focus ring. This temporary Undo window is a reversible product choice.
+Confirmed Clear completed also offers a 10-second Toast Undo; it restores the
+removed tasks' completion, priority, dates, and creation order while retaining
+tasks added afterward. The confirmation dialog still protects the bulk action.
+After confirmation disables its trigger, focus returns to the task-name field;
+Cancel and Escape still return to the Clear completed trigger. Keyboard removal
+of a single row moves focus to the next visible task, the previous one if last,
+or the task-name field if no visible row remains. Pointer removal does not
+force focus elsewhere.
+The removal announcement is left to Sonner's polite live region, with Undo
+in the same toast. The footer keeps the removal text visually but clears its separate
+screen-reader status for that event; restoring the task updates that status
+to announce the recovery. Dismissing the toast leaves the visual removal
+record without a stale live announcement. Other mutations continue to update
+both the footer text and its live status.
+Bulk clearing uses the same single Sonner announcement and visible footer
+history; bulk Undo updates the footer's live status once.
+Task editing uses Dialog and stages changes locally until Save changes; Cancel
+and Escape discard the draft. The Item row reveals Edit and Remove together,
+and its shared hosted-action reserve now accounts for both controls.
+ItemPrimaryAction stays above sibling media and text for pointer/touch hit
+testing, while hosted Edit and Remove remain above it; a visible task title
+no longer intercepts a tap intended to reopen a completed row.
+Grouped Card content uses a shrinkable grid track so long task names and
+mutation messages cannot widen the Card on narrow screens. When an ItemTitle
+contains a priority Badge, Item reserves the hosted-action space even at rest
+so the badge remains readable rather than disappearing under the action mask.
+At 320px the long visible title fades earlier to preserve that badge and both
+actions; the completion control keeps the full task name as its accessible name.
+On screens narrower than 640px, task editing uses a touch-friendly bottom Drawer
+instead of the centered Dialog; desktop retains Dialog. Both share the same
+draft, validation, actions, and theme scope. The surface is chosen when editing
+opens so resizing mid-edit does not discard the draft. Touch Cancel restores
+focus to Edit; this mobile sheet is a reversible layout choice, not a change to
+task data or save behavior.
+Task sorting uses DropdownMenu radio choices. Added (creation order) is the
+default; Priority sorts Soon, Normal, Later, Name sorts alphabetically, and
+Due date sorts calendar days earliest first without timezone conversion.
+Undated tasks follow dated tasks, and creation order breaks ties including
+among undated tasks. Editing or clearing a date updates the displayed order;
+switching back to Added restores creation order. This is a reversible local
+sorting choice and does not change task data or completion.
+Task search and sort now sit in an unframed OneDS Toolbar: search can grow
+across the row, and the grouped sort action wraps to the trailing edge on
+compact screens. The toolbar adds a named control group and its own spacing
+without another card-like surface; filtering and sort order do not change.
+It uses group semantics so text-field arrow keys keep their editing behavior
+and Tab moves normally between search and sort; the shared Toolbar does not
+provide roving-arrow navigation. This is a reversible choice for the task Card.
+The review-notes Collapsible starts open to preserve the existing writing
+workflow; it can be closed without losing the local notes draft.
+An accessible Separator marks the boundary between quick actions and notes,
+using the default subtle stroke rather than introducing a local divider.
+The main form's Priority help uses Popover, not a tooltip, so its longer
+explanation remains accessible by touch and keyboard. It does not change
+sorting or the task model.
+Edit Dialog priority uses a horizontal RadioGroup for three always-visible
+choices; creation still uses Select. This compares both OneDS selection
+patterns without changing the saved task model.
+The notes Checkbox is disabled while the scratchpad is blank. Editing notes
+clears its reviewed state so the label does not imply that new text was
+already reviewed.
+Focus mode is a Switch in Today, off by default. When on, it hides the
+secondary component-check card but keeps tasks, task actions, and the
+persistent status in Today. The Start focus action activates it; turning the
+Switch off brings the secondary card and its local notes back.
+Starting focus by keyboard moves focus to the persistent Switch before the
+Start focus button disappears; pointer activation does not force focus.
+SearchInput (the shared InputGroup composition) filters task names locally and
+case-insensitively across the selected tab. It leaves the overall completion
+progress unchanged. Empty search results offer Clear search; if all tasks are
+removed, the query resets before another task is added.
+Task rows live in a bounded OneDS Scroller once the list grows. It keeps a
+native vertical scroll, leaves focus-ring clearance around rows, and does
+not fade interactive content at the viewport edge.
+The lab now mounts MaterialTheme on its main content and uses a
+`next-themes` provider for light/dark mode instead of toggling the root class
+by hand. Toaster reads the same provider. The private package includes the
+scoped Material theme styles as an optional CSS entry without shipping showcase CSS.
+Select, DropdownMenu, Popover, Dialog, and AlertDialog content use
+ColorThemePortal so their portaled surfaces keep the same scope. The package
+can now render MaterialTheme on the server without browser globals. The
+independent lab also hydrates server-rendered React markup from the installed
+package without replacing the scoped node, then exercises a scoped Button,
+light/dark switching, and ColorThemePortal on desktop and mobile. This checks
+the React hydration contract, not framework-specific streaming or Next.js
+hydration; those remain unverified.
+Once every task is complete, a success Alert appears using OneDS's tonal
+surface and shape icon. The persistent task footer is the single live status
+announcer, so Alert stays visual rather than announcing the same change
+twice. It is not shown for an empty list, and disappears when a task is
+reopened or a new one is added.
+The lab introduction now uses PageHeader's content, eyebrow, title, description,
+and action parts rather than local header layout and Text roles. Its theme
+control sits beside the introduction on desktop and below it on narrow screens;
+the stacked mobile placement favors readable title and description over a
+compressed heading. This is reversible without changing task behavior.
+
 ## Showcase site
 
 ### Design rules for people and agents
 
-Open `#/rules` from the sidebar's Reference section for approved conventions,
+Open `#/rules` from the navigation pane's Reference section for approved conventions,
 searchable candidate rules, implementation links, and live Button measurements.
 [src/design-system/rules.json](src/design-system/rules.json) is the canonical source;
 the page reads it directly and `npm run rules:generate` produces the
@@ -37,7 +292,7 @@ do not recreate it in page markup. Semantic content and product data may remain 
 The Rules page composes Section, Stack, Cluster, Accordion, Empty, Alert, and the
 existing controls. It contains no locally styled native elements or raw disclosures.
 
-For agent-focused retrieval, open `#/catalog` from the sidebar's Reference section.
+For agent-focused retrieval, open `#/catalog` from the navigation pane's Reference section.
 It lists Button, Card, and Response with their source file, primary props, and the
 examples to inspect first. The same data is exported as [public/agent-catalog.json](public/agent-catalog.json) and regenerated with `npm run catalog:generate`.
 Use `npm run catalog:list`, `npm run catalog:show -- <slug>`, `npm run catalog:example -- <slug>`, and `npm run catalog:check` for plain-Node retrieval and freshness checks.
@@ -88,28 +343,31 @@ with `primaryColor="pink"`. General buttons default to Tertiary; `default` is a
 compatibility alias for Tertiary. Choose Primary or Secondary explicitly when
 emphasis is needed. Tune the `--button-primary-*`,
 `--button-secondary-*`, `--button-tertiary-*`, and `--button-link-ink` tokens in
-[src/index.css](src/index.css). Filled hover/pressed states use their paired
+[src/styles/tokens.css](src/styles/tokens.css) and [src/styles/button.css](src/styles/button.css). Filled hover/pressed states use their paired
 foregrounds at 8%/10%. Tertiary uses Surface container highest/On surface variant;
 its name describes emphasis, not Material's tertiary accent palette. Primary pink
 reuses that pink role pair only when explicitly requested.
 Generic selection colors, ghost/destructive treatments, and Button geometry
 and motion are unchanged. See [Button color tuning](src/design-system/material-foundation.md#button-color-tuning).
 
-Latest background-only pass: Filled uses published Material baseline P40/P80
+Filled uses published Material baseline P40/P80
 (`#6750a4` / `#d0bcff`). Destructive's solid Error fill was reverted: its
 original red tint is 10%/20%/30% for rest/hover/press in light mode and
 20%/30%/40% in dark mode, controlled by `--button-destructive-*-opacity`.
-Text colors are deliberately unchanged, including destructive text; its contrast
-is pending the foreground pass. Tonal, links, surfaces, and focus colors stay as-is.
+Destructive Button text now uses `--button-destructive-ink`, a fixed ink per
+theme that stays readable as the tint grows on hover and press. Pressed Link
+text uses 90% of its ink rather than 70% to retain contrast. Other text,
+tonal surfaces, and focus colors stay as-is.
+Destructive Badge keeps its own tint but shares the accessible Button ink.
 
 **Destructive** now uses the selected Material Error40/Error80 tint everywhere,
 with the same light10/20/30% and dark20/30/40% ramp. The original palette and
-`destructivePalette` comparison option are removed; text/focus colors stay unchanged.
+`destructivePalette` comparison option are removed; focus colors stay unchanged.
 
 **Selected** is a controlled Button state: pass `selected={selected}` and update
 it in `onClick`. All shared icons inside selected Buttons use Material Symbols'
 variable `FILL` axis, smoothly interpolating from outlined (0) to filled (1).
-Icons are outlined by default; expanding a sidebar or opening a menu is not selection.
+Icons are outlined by default; expanding a navigation pane or opening a menu is not selection.
 Set `filled={true}` or `filled={false}` on a named icon to explicitly override
 the automatic selected-button fill. Omit it to follow the host's selection state.
 `ButtonSelectionIcon` remains a compatible decorative slot; no wrapper is required
@@ -162,15 +420,21 @@ The reusable [Material foundation](src/design-system/material-foundation.md)
 records official sources, supported roles, compatibility mappings, and migration
 status. Neutral surfaces now apply across the site and components without a
 wrapper. Edit the shared `--theme-website-<role>-light/dark` tokens in
-[src/index.css](src/index.css) to update pages, cards, fields, menus, and portals
-together. `MaterialSurface` consumes those global roles directly. MaterialTheme
+[src/styles/tokens.css](src/styles/tokens.css) to update pages, cards, fields,
+menus, and portals together. Scoped mappings live in
+[src/styles/color-theme.css](src/styles/color-theme.css). `MaterialSurface`
+consumes those global roles directly. MaterialTheme
 remains an opt-in for the website's action accents; shadow geometry is unchanged.
 
-Open **Experiments > Colors** (`#/colors`) for the **Material website** example.
+Open **Experiments > Colors** (`#/colors`) for the **Material website** example,
+plus a **Material tonal scales** reference above it (Purple, Pink, Violet, Red)
+showing each accent's full HCT tone ramp with the tones actually used outlined.
 This demo now focuses exclusively on the website palette. Generated Material,
 Current, hue swatches, contrast options, neutral-action opt-out, and the unrelated
 legacy color galleries are no longer shown. Use the site's appearance control
-for light/dark. Other theme APIs remain available internally; migration proceeds
+for light/dark. The older `theme`-seed API remains available internally for
+experimental consumers; the named-hue picker and generated-Material comparison
+were removed as dead code (2026-09-14). Migration proceeds
 through shared global surface roles, with action accents still explicitly scoped.
 
 Use Material vocabulary: **Surface**, **Surface container lowest/low/high/highest**,
@@ -194,14 +458,14 @@ not applied on top of these explicit surface roles. Shadows remain separate.
 
 Website navigation hover uses an 8% **On surface** state layer over the existing
 surface, not a swap to the raised content background. It darkens light-mode
-navigation and lightens dark-mode navigation. The inset Sidebar honors
-`--sidebar-hover-fill` when supplied; other themes retain their existing fallback.
+navigation and lightens dark-mode navigation. The inset NavigationPane honors
+`--navigation-pane-hover-fill` when supplied; other themes retain their existing fallback.
 Persistent selection keeps its separate Secondary container pair. Interaction
 state layers are distinct from the older tonal-elevation overlays above.
 
 The preview imports `ExpressionLabPreview` from the existing
 [Expression Lab composition](src/components/expression-lab-preview.tsx), replacing the
-single release-note card. It includes the inset Sidebar, focus session, checklist,
+single release-note card. It includes the inset NavigationPane, focus session, checklist,
 observations, lens controls, and assistant chat in a bounded application canvas.
 Its baseline form treatment keeps color comparisons independent of expressive
 geometry. Notes, selection, and chat state survive light/dark changes; Quick actions >
@@ -210,20 +474,22 @@ inherit the selected theme through ColorThemePortal.
 
 #### Retained theme APIs
 
-These APIs are retained for other consumers, not exposed by the Colors demo.
-[ColorTheme](src/components/ui/color-theme.tsx) accepts `hue="warm|rose|green|blue|lilac"`.
-Pass `scale="material"` for the comparison scale; omitted scale inherits the
-enclosing scope or defaults to `current`. Scale, hue, and accent-button state
-travel through ColorThemePortal without remounting product content.
-`ColorThemeSwatches` composes `ButtonGroupChoice` and `ButtonGroupChoiceItem`,
-reusing their persistent checkmark, non-clearing single selection, and keyboard
-navigation. Choice items accept `tooltip` and delegate it to Button internally;
-do not wrap them in an external TooltipTrigger that can overwrite selection state.
-Hue selection takes precedence over the older `theme` seed API, which remains
-available for experimental consumers but is not used by Colors. Omit both to
-inherit the enclosing theme (the existing default when
-there is no custom ancestor). Wrap an application or a region; `asChild` avoids
-adding a wrapper. Color selection does not imply changing shape, size, or motion.
+[ColorTheme](src/components/ui/color-theme.tsx) supports `scale="current"|"website"`
+(omitted scale inherits the enclosing scope or defaults to `current`) and an
+optional `theme={{ surface, accent }}` hex-seed pair for the older seed API below,
+not exposed by the Colors demo. Scale and accent-button state travel through
+ColorThemePortal without remounting product content. Omit `theme` to inherit the
+enclosing theme (the existing default when there is no custom ancestor). Wrap an
+application or a region; `asChild` avoids adding a wrapper. Color selection does
+not imply changing shape, size, or motion.
+
+The named-hue picker (`SurfaceHue`/`ColorThemeSwatches`/`ColorSeedInput`) and the
+`scale="material"` + `materialScheme`/`contrast` comparison wiring were removed
+on 2026-09-14: neither had any call sites beyond this documentation, since
+`ColorTheme` is only ever mounted through `MaterialTheme` (`scale="website"`).
+`createMaterialColorTheme` remains in [the resolver](src/lib/color-theme.ts) as a
+standalone, unit-tested utility, but is no longer wired into the `ColorTheme`
+component.
 
 #### Material website preset
 
@@ -247,7 +513,7 @@ and table headers use surface-1. The pale button illustration is a raster image
 and stays pale in dark mode; it is not a live dark-theme component.
 
 `ColorTheme scale="website"` reads 25 mapped roles from `--theme-website-*`
-tokens in the [token source](src/index.css). Website background maps to surface;
+tokens in the [token source](src/styles/tokens.css). Website background maps to surface;
 its surface-0 through surface-4 map to the existing lowest-through-highest
 container ladder. Its surface-variant supplies OneDS's outline-variant fallback.
 These are explicit OneDS adapter choices, not claims about the website's modern
@@ -302,23 +568,23 @@ Material maps each ladder name directly to its matching role; `high` no longer
 means the middle `container`. Current may intentionally share colors between
 levels. These roles express visual hierarchy, not automatic shadow elevation.
 
-**Lowest** is the user's selected dark-card treatment (tone 4). The comparison
-control is removed from Colors; light cards remain white. The existing optional
-`darkCardSurface` API remains available, but Colors explicitly uses `lowest`.
+**Lowest** is the default Card fill (white in light mode and tone 4 in dark).
+CardFooter reuses that same Card surface; its divider is opt-in for scrolling
+content. The optional `darkCardSurface="low"` remains an explicit alternative.
 
-CardFooter owns `--card-footer-fill`, resolving to `--theme-card-footer-fill`
-when supplied, otherwise its original 50% muted blend. Input owns `--field-fill`,
-resolving to `--theme-field-fill`, otherwise its original control fill in light
-mode and input/30 blend in dark mode. Material supplies opaque surface roles for
-these enabled fills; field outlines and disabled-state styling remain separate.
-These fallbacks preserve existing consumers outside the experiment.
+Input and Textarea use `--field-fill`, a translucent warm neutral tint over their
+host surface. Hover and focus stay in that neutral family; the purple ring
+identifies keyboard focus. `--field-placeholder-ink` uses 70% of the field ink so Input, Textarea, and
+neutral Select placeholder text stays readable on the tested Card surfaces in
+both modes.
+Disabled fields use Surface container with the existing disabled opacity.
 
-SidebarMenuButton keeps neutral hover feedback separate from persistent
-selection. Material's `--sidebar-selected-fill` / `--sidebar-selected-ink` pair
-uses secondary container / on secondary container even inside an inset Sidebar;
+NavigationPaneMenuButton keeps neutral hover feedback separate from persistent
+selection. Material's `--navigation-pane-selected-fill` / `--navigation-pane-selected-ink` pair
+uses secondary container / on secondary container even inside an inset NavigationPane;
 selected hover/press layers use that same paired ink. The panel itself remains
 transparent over its shared backdrop. Without these selection tokens, the
-existing sidebar-accent treatment remains the fallback.
+existing navigation pane accent treatment remains the fallback.
 
 For the retained generated scale (not the website demo), `--button-primary-fill`
 and `--button-primary-ink` map to ordinary primary
@@ -339,11 +605,10 @@ roles with paired foregrounds. OneDS's secondary Button consumes **secondary
 container**, not Material's distinct **secondary** role. Neither is an alias
 for tertiary. The previous Off/Auto/Custom second-color experiment is removed.
 
-`ColorTheme materialScheme="tonal-spot|vibrant|expressive" contrast={0|0.5|1}`
-inherits through context and ColorThemePortal. Current disables these controls.
-Tonal spot is restrained; Vibrant emphasizes chroma; the pinned Expressive
-scheme rotates primary away from the source and coordinates the other families.
-Changing a scheme can change the whole palette, including neutral surfaces.
+`createMaterialColorTheme(seed, mode, scheme, contrast)` in
+[the resolver](src/lib/color-theme.ts) accepts `"tonal-spot"|"vibrant"|"expressive"`
+and `0|0.5|1`. It is a standalone, unit-tested utility (`npm run test:color-theme`)
+and is no longer wired into the `ColorTheme` component or its context/portal.
 
 `MaterialColorRoles` shows paired primary/secondary/tertiary/error samples and
 all 49 generated roles with their actual values, including fixed, inverse,
@@ -356,7 +621,7 @@ Sources: [creating a scheme](https://github.com/material-foundation/material-col
 [Material Web color tokens](https://material-web.dev/theming/color/), and
 [role semantics](https://m3.material.io/styles/color/roles).
 
-Material roles are mapped, not copied wholesale: the inset Sidebar retains its
+Material roles are mapped, not copied wholesale: the inset NavigationPane retains its
 transparent panel/raised content anatomy, Card retains its footer band, and
 status, presence, categorical badges, charts, scrims, and shadows remain on their
 existing independent palettes. Their Material roles are exported for inspection,
@@ -394,7 +659,7 @@ is a visual regression threshold, not a WCAG control-boundary certification.
 | `--action-secondary`, `--action-on-secondary` | Tonal supporting actions and their foreground |
 
 `ColorThemeSurface` exposes canvas/low/default/high/navigation treatments for new
-compositions. Existing Card and Sidebar consumers keep their component APIs.
+compositions. Existing Card and NavigationPane consumers keep their component APIs.
 The old `--accent` token is still a neutral interaction backplate, not the accent
 seed. Navigation selection uses the tonal action pair in a custom theme.
 Button hover/press colors blend with the matching foreground in custom themes;
@@ -413,16 +678,16 @@ retain their existing material colors: white in light mode, their existing dark
 surface in dark mode. The grey canvas/backplates alone shift hue, at the original
 OKLCH chroma of 0.003; do not increase chroma to make the swatches more dramatic.
 
-The Colors specimen uses the inset Sidebar and SidebarInset: navigation sits
+The Colors specimen uses the inset NavigationPane and NavigationPaneInset: navigation sits
 on the shared layer-zero backdrop and the content is raised with an 8px inset.
 The content heading and desktop toggle are omitted; a mobile-only trigger
-preserves access to the native Drawer. Sidebar owns the
+preserves access to the native Drawer. NavigationPane owns the
 ColorThemePortal bridge for its mobile content, so scoped color follows it.
 
 Wrap scoped portaled content in `ColorThemePortal`, inside its ColorTheme context:
 
 ```tsx
-<ColorTheme hue="green" scale="material">
+<ColorTheme theme={{ surface: "#807b71", accent: "#006b60" }}>
   <Popover>
     <PopoverTrigger asChild><Button variant="secondary">Details</Button></PopoverTrigger>
     <ColorThemePortal>
@@ -443,7 +708,7 @@ surfaces, text contrast, input-boundary contrast, and independent families.
 `tests/color-theme.spec.ts` checks all five hue swatches on desktop/mobile in
 both modes, including unchanged cards, same-hue primary pairs with 4.5:1 text
 contrast at rest/hover/press, the neutral Warm baseline, transparent
-secondary borders, draft state, inset Sidebar, and portal inheritance.
+secondary borders, draft state, inset NavigationPane, and portal inheritance.
 These checks cover the pilot, not every possible component/background combination.
 
 ### Button motion
@@ -502,7 +767,7 @@ edits affect them, and do not regenerate showcase code separately when running
 
 `npm run dev` serves the component showcase, modeled on shadcn's docs site:
 
-- **Sidebar** grouped by category, listing all installed components.
+- **Navigation - Pane** grouped by category, listing all installed components.
 - **One page per component** (hash-routed, e.g. `#/dialog`).
 - Each page stacks every named variation as its own live preview.
 - Every example includes Preview/Code controls, Reset, and an in-page index.
@@ -524,7 +789,7 @@ The showcase is driven by category demo files under
 [src/showcase/demos](src/showcase/demos), aggregated in
 [src/showcase/registry.tsx](src/showcase/registry.tsx). To add a component to the
 showcase, add an entry (with a `Demo` render function and its `code` string) to the
-relevant category file — the sidebar and pages update automatically. Variant code
+relevant category file — the navigation pane and pages update automatically. Variant code
 is generated from its `Demo` function before development and production builds;
 an explicit `code` string overrides the generated snippet when a curated example
 is more useful.
@@ -555,7 +820,7 @@ These labeled components also work for standalone options (radio options still
 require a `RadioGroup`). Choice cards, description fields, and table selectors
 retain their specialized compositions rather than receiving this label padding.
 
-The sidebar's **Preview Tools** section contains **Canvas**, **Canvas Grid**, **Cursor Follower**, and **Annotations**,
+The navigation pane's **Preview Tools** section contains **Canvas**, **Canvas Grid**, **Cursor Follower**, and **Annotations**,
 separate from application components. All showcase previews use
 [Canvas](src/components/ui/canvas.tsx); preview surfaces are no longer a Card variant.
 
@@ -757,7 +1022,7 @@ The runner starts and stops a dedicated Vite server on port 5185; set
 selection, keyboard focus, visibility toggles, Reset, live token changes, access
 to the existing controls, and complete code tabs. The existing Toolbar demo
 actions remain illustrative; this pilot does not add filtering or editing logic.
-Rollout checks also cover ordinary, overlay, table, scrolling, resizable, sidebar,
+Rollout checks also cover ordinary, overlay, table, scrolling, resizable, navigation pane,
 page, and carousel examples, and enforce separate annotation/measurement opt-ins.
 
 ### Automatic measurement
@@ -983,7 +1248,7 @@ src/
     demos/           # one file per category (forms, overlays, data, ...)
   hooks/             # generated hooks (use-mobile)
   lib/utils.ts       # cn() helper
-  App.tsx            # showcase layout (sidebar + component pages)
+  App.tsx            # showcase layout (navigation pane + component pages)
   main.tsx           # providers (theme, tooltip, toaster)
   index.css          # Tailwind + shadcn theme tokens
 scripts/

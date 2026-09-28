@@ -5,7 +5,7 @@ import { Toolbar } from "@/components/ui/toolbar"
 
 type CanvasLayout = "center" | "start" | "wide" | "viewport" | "application"
 type CanvasBackground = "grid" | "plain" | "split"
-type CanvasSplitSurface = "card" | "sidebar"
+type CanvasSplitSurface = "card" | "navigation-pane"
 
 function Canvas({
   className,

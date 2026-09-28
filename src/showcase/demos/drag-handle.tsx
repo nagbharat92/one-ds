@@ -57,10 +57,10 @@ function PanelGripDemo() {
       >
         <ResizablePanel defaultSize={40} minSize={20}>
           <div className="flex h-full items-center justify-center p-4 text-sm font-medium">
-            Sidebar
+            NavigationPane
           </div>
         </ResizablePanel>
-        <ResizableHandle withHandle aria-label="Resize sidebar panel" />
+        <ResizableHandle withHandle aria-label="Resize navigation pane" />
         <ResizablePanel defaultSize={60} minSize={30}>
           <ResizablePanelGroup orientation="vertical">
             <ResizablePanel defaultSize={45} minSize={20}>
@@ -81,7 +81,7 @@ function PanelGripDemo() {
   )
 }
 
-function SidebarGripDemo() {
+function NavigationPaneGripDemo() {
   return (
     <div className="h-80 w-full max-w-2xl shrink-0">
       <ResizablePanelGroup
@@ -90,7 +90,7 @@ function SidebarGripDemo() {
       >
         <ResizablePanel defaultSize={35} minSize={20}>
           <div className="flex h-full flex-col justify-between bg-muted p-4">
-            <span className="text-sm font-semibold">Navigation sidebar</span>
+            <span className="text-sm font-semibold">Navigation pane</span>
             <span className="text-sm text-muted-foreground">
               Drag this edge.
             </span>
@@ -98,7 +98,7 @@ function SidebarGripDemo() {
         </ResizablePanel>
         <ResizableHandle
           withHandle
-          aria-label="Resize navigation sidebar"
+          aria-label="Resize navigation pane"
         />
         <ResizablePanel defaultSize={65} minSize={30}>
           <div className="flex h-full items-center justify-center p-6 text-sm text-muted-foreground">
@@ -115,7 +115,7 @@ export const dragHandleDemos: ComponentEntry[] = [
     slug: "drag-handle",
     name: "Drag Handle",
     description:
-      "Interactive drag affordances for drawers, panel separators, and resizable sidebar edges.",
+      "Interactive drag affordances for drawers, panel separators, and resizable navigation pane edges.",
     category: "Utilities",
     Demo: PanelGripDemo,
     code: `import {
@@ -125,7 +125,7 @@ export const dragHandleDemos: ComponentEntry[] = [
 } from "@/components/ui/resizable"
 
 <ResizablePanelGroup orientation="horizontal" className="rounded-(--card-radius) ring-1 ring-(--card-stroke) bg-card">
-  <ResizablePanel defaultSize={40}>Sidebar</ResizablePanel>
+  <ResizablePanel defaultSize={40}>Navigation pane</ResizablePanel>
   <ResizableHandle withHandle />
   <ResizablePanel defaultSize={60}>Content</ResizablePanel>
 </ResizablePanelGroup>`,
@@ -145,10 +145,10 @@ export const dragHandleDemos: ComponentEntry[] = [
         layout: "wide",
       },
       {
-        name: "Grip · Sidebars",
+        name: "Grip · NavigationPanes",
         description:
-          "Used by SidebarResizeHandle at the center of a resizable sidebar edge. Move near the edge to reveal the grip, then drag it or focus it and use the arrow keys.",
-        Demo: SidebarGripDemo,
+          "Used by NavigationPaneResizeHandle at the center of a resizable navigation pane edge. Move near the edge to reveal the grip, then drag it or focus it and use the arrow keys.",
+        Demo: NavigationPaneGripDemo,
         layout: "wide",
       },
     ],

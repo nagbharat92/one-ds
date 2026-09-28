@@ -9,7 +9,7 @@ const pageHeaderVariants = cva("group/page-header flex w-full flex-col", {
     variant: {
       default: "md:flex-row md:items-end md:justify-between",
       centered:
-        "items-center overflow-hidden rounded-(--page-banner-radius) bg-white px-(--page-banner-padding-inline) py-(--page-banner-padding-block) text-center ring-1 ring-(--elevation-stroke) shadow-(--elevation-raised)",
+        "items-center overflow-hidden rounded-(--page-banner-radius) bg-(--surface-lowest) px-(--page-banner-padding-inline) py-(--page-banner-padding-block) text-center ring-1 ring-(--elevation-stroke) shadow-(--elevation-raised)",
     },
     size: {
       default: "gap-(--page-header-gap)",

@@ -481,11 +481,15 @@ function CardImageDemo() {
 }
 
 export function ListItemStatesDemo() {
-  const compactConversation = "OneDS navigation review"
-  const [selected, setSelected] = useState(compactConversation)
+  const conversations = [
+    "OneDS navigation review",
+    "Quarterly design system roadmap review with engineering and product stakeholders",
+    "Accessibility audit findings for the navigation pane, list item, and dropdown menu components",
+  ]
+  const [selected, setSelected] = useState(conversations[0])
   const surfaces = [
     { surface: "card" as const, label: "Card surface states" },
-    { surface: "sidebar" as const, label: "Sidebar surface states" },
+    { surface: "navigation-pane" as const, label: "Navigation pane surface states" },
   ]
   return (
     <div className="grid w-full grid-cols-2">
@@ -503,35 +507,38 @@ export function ListItemStatesDemo() {
                 </button>
               </Item>
             ))}
-            <Item
-              variant={selected === compactConversation ? "muted" : "default"}
-              compact
-              className="flex-nowrap"
-            >
-              <ItemPrimaryAction
-                aria-pressed={selected === compactConversation}
-                onClick={() => setSelected(compactConversation)}
+            {conversations.map((conversation) => (
+              <Item
+                key={conversation}
+                variant={selected === conversation ? "muted" : "default"}
+                compact
+                className="flex-nowrap"
               >
-                <ItemContent>
-                  <ItemTitle>{compactConversation}</ItemTitle>
-                </ItemContent>
-              </ItemPrimaryAction>
-              <ItemActions hosted>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="Conversation actions">
-                      <MoreHorizontalIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent grouped align="end">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>Rename</DropdownMenuItem>
-                      <DropdownMenuItem>Archive</DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </ItemActions>
-            </Item>
+                <ItemPrimaryAction
+                  aria-pressed={selected === conversation}
+                  onClick={() => setSelected(conversation)}
+                >
+                  <ItemContent>
+                    <ItemTitle>{conversation}</ItemTitle>
+                  </ItemContent>
+                </ItemPrimaryAction>
+                <ItemActions hosted>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" aria-label="Conversation actions">
+                        <MoreHorizontalIcon />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent grouped align="end">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>Rename</DropdownMenuItem>
+                        <DropdownMenuItem>Archive</DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </ItemActions>
+              </Item>
+            ))}
             <Item aria-disabled="true">
               <ItemContent>
                 <ItemTitle>Archived workspace</ItemTitle>
@@ -1347,7 +1354,7 @@ export function ItemDemo() {
       },
       {
         name: "States",
-        description: "Rest, selected and disabled rows mirrored across card and sidebar surfaces.",
+        description: "Rest, selected and disabled rows mirrored across card and navigation pane surfaces.",
         layout: "wide" as const,
         background: "split" as const,
         Demo: ListItemStatesDemo,
@@ -1521,7 +1528,7 @@ export function ItemDemo() {
             <ItemContent>
               <ItemTitle>Navigation proposal</ItemTitle>
               <ItemDescription>
-                Review the updated sidebar hierarchy and interaction model.
+                Review the updated navigation pane hierarchy and interaction model.
               </ItemDescription>
             </ItemContent>
             <ItemFooter>

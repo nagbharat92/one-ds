@@ -381,7 +381,7 @@ test("Pointer preview uses a shared toolbar and card materials", async ({ page }
       const content = getComputedStyle(element.querySelector('[data-slot="card-content"]')!)
       const probe = document.createElement("div")
       probe.style.background = "var(--card)"
-      probe.style.borderRadius = "var(--radius-xl)"
+      probe.style.borderRadius = "var(--card-radius)"
       probe.style.padding = "var(--card-spacing)"
       element.append(probe)
       const expected = getComputedStyle(probe)
@@ -391,6 +391,26 @@ test("Pointer preview uses a shared toolbar and card materials", async ({ page }
     })
     expect(material).toEqual({ fill: true, radius: true, padding: true, boundary: true })
   }
+})
+
+test("showcase-only pointer, annotation, and theme-preview tokens survive both themes", async ({ page }) => {
+  await page.goto("/#/pointer")
+  const readTokens = () => page.evaluate(() => {
+    const style = getComputedStyle(document.documentElement)
+    return {
+      pointerSize: style.getPropertyValue("--pointer-size-default").trim(),
+      previewSeed: style.getPropertyValue("--theme-preview-surface-seed").trim(),
+      annotationInk: style.getPropertyValue("--annotation-bounds-color").trim(),
+    }
+  })
+  const light = await readTokens()
+  expect(light.pointerSize).toBe("24px")
+  expect(light.previewSeed).toBe("#807b71")
+  expect(light.annotationInk).not.toBe("")
+  await page.evaluate(() => document.documentElement.classList.add("dark"))
+  const dark = await readTokens()
+  expect(dark.pointerSize).toBe(light.pointerSize)
+  expect(dark.annotationInk).not.toBe(light.annotationInk)
 })
 
 test("Pointer preserves native input, keyboard, reduced motion and touch fallbacks", async ({ page }, testInfo) => {

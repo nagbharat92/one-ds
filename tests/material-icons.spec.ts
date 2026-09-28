@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test"
 
-test("sidebar icons stay outlined and equal sized while section sorting uses sort", async ({ page }) => {
+test("navigation pane icons stay outlined and equal sized while section sorting uses sort", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/#/icon")
   await page.evaluate(() => document.fonts.load('24px "OneDS Material Symbols"'))
-  const floating = page.locator('[data-slot="sidebar-trigger"][data-placement="floating"]')
-  const close = page.getByRole("button", { name: "Close sidebar", exact: true })
+  const floating = page.locator('[data-slot="navigation-pane-trigger"][data-placement="floating"]')
+  const close = page.getByRole("button", { name: "Close navigation pane", exact: true })
   if (await floating.getAttribute("data-visible") === "true") await floating.click()
   await expect(close).toBeVisible()
   const inlineIcon = close.locator(".material-glyph")

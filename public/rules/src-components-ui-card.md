@@ -14,7 +14,7 @@ Exceptions: True unframed page bands may use ColorThemeSurface. Canvas and Toolb
 
 Tokens: `--card`, `--card-foreground`, `--card-spacing`, `--card-radius`, `--card-stroke`
 
-Files: src/components/ui/card.tsx, src/components/ui/color-theme.tsx, src/index.css, src/showcase/experiments/pointer.tsx
+Files: src/components/ui/card.tsx, src/components/ui/color-theme.tsx, src/styles/card.css, src/index.css, src/showcase/experiments/pointer.tsx
 
 ### Paired Card actions end with Secondary
 
@@ -38,7 +38,7 @@ Exceptions: Small Cards retain compact12px spacing. Code Cards keep their specia
 
 Tokens: `--card-spacing`, `--card-spacing-expressive`, `--card-region-gap`, `--card-group-gap`, `--card-content-group-gap`, `--card-footer-gap`, `--space-xs`
 
-Files: src/index.css, src/components/ui/card.tsx, src/showcase/demos/data.tsx
+Files: src/index.css, src/styles/card.css, src/styles/tokens.css, src/components/ui/card.tsx, src/showcase/demos/data.tsx
 
 ### Cards own their corner radius; only the outer card is rounded
 
@@ -50,7 +50,7 @@ Exceptions: Media that fills a card edge follows the card's top or bottom corner
 
 Tokens: `--card-radius`, `--radius-4xl`
 
-Files: src/components/ui/card.tsx, src/index.css
+Files: src/components/ui/card.tsx, src/styles/card.css, src/index.css
 
 ### A card presents one surface
 
@@ -62,7 +62,7 @@ Exceptions: Edge-to-edge media supplies its own imagery. Color themes may retint
 
 Tokens: `--card`, `--card-foreground`, `--card-stroke`
 
-Files: src/components/ui/card.tsx, src/index.css
+Files: src/components/ui/card.tsx, src/styles/card.css, src/index.css
 
 ### Card dividers are opt-in and only for scrolling boundaries
 

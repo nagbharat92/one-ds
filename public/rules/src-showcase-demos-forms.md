@@ -38,4 +38,4 @@ Exceptions: Text-only and icon-only controls receive no correction. A label flan
 
 Tokens: `--icon-label-optical-padding`, `--graphic-label-gap`, `--button-gap`
 
-Files: src/components/ui/icon-label.tsx, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/index.css, src/showcase/demos/forms.tsx
+Files: src/components/ui/icon-label.tsx, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/styles/button.css, src/styles/tokens.css, src/index.css, src/showcase/demos/forms.tsx

@@ -1,0 +1,107 @@
+import assert from "node:assert/strict"
+import { createHash } from "node:crypto"
+import { readFileSync, readdirSync } from "node:fs"
+import test from "node:test"
+import React from "react"
+import { renderToString } from "react-dom/server"
+import { MaterialTheme } from "../consumer-package/dist/index.js"
+
+const dist = new URL("../consumer-package/dist/", import.meta.url)
+const css = readFileSync(new URL("styles.css", dist), "utf8")
+const themeCss = readFileSync(new URL("material-theme.css", dist), "utf8")
+const js = readFileSync(new URL("index.js", dist), "utf8")
+const declarations = readFileSync(new URL("index.d.ts", dist), "utf8")
+const packageJson = JSON.parse(readFileSync(new URL("../consumer-package/package.json", import.meta.url), "utf8"))
+
+test("Core pilot ships only its runtime CSS and external, content-addressed fonts", () => {
+  assert.ok(css.length < 250_000, `Consumer CSS grew to ${css.length} bytes`)
+  assert.doesNotMatch(css, /\.showcase-[\w-]+/)
+  assert.doesNotMatch(css, /url\(data:font\//)
+  assert.match(css, /\.alert-dialog-media__shape/)
+  assert.match(css, /\.alert-icon__shape/)
+  assert.match(css, /vaul-drawer-direction=bottom/)
+  assert.doesNotMatch(css, /\.color-theme-surface\{/)
+  assert.match(themeCss, /\.color-theme\[data-color-scale=website\]/)
+  assert.match(themeCss, /\.color-theme-surface\{/)
+  assert.ok(themeCss.length < 30_000, `Optional Material theme CSS grew to ${themeCss.length} bytes`)
+  assert.doesNotMatch(themeCss, /\.showcase-[\w-]+/)
+  for (const name of ["styles.css", "material-theme.css"]) {
+    assert.equal(packageJson.exports[`./${name}`].types, `./dist/${name}.d.ts`)
+    assert.equal(packageJson.exports[`./${name}`].default, `./dist/${name}`)
+    assert.equal(readFileSync(new URL(`${name}.d.ts`, dist), "utf8"), "export {}\n")
+  }
+
+  const referenced = [...css.matchAll(/url\(["']?\.\/fonts\/([a-f0-9]{12}\.woff2)["']?\)/g)]
+    .map((match) => match[1])
+    .sort()
+  const fonts = readdirSync(new URL("fonts/", dist)).sort()
+  assert.ok(referenced.length >= 2, "Material Symbols and Google Sans Flex must be bundled")
+  assert.deepEqual([...new Set(referenced)], fonts)
+  for (const font of fonts) {
+    const digest = createHash("sha256").update(readFileSync(new URL(`fonts/${font}`, dist))).digest("hex").slice(0, 12)
+    assert.equal(font, `${digest}.woff2`)
+  }
+})
+
+test("Core pilot exposes portable JavaScript and declarations", () => {
+  assert.match(js, /Button/)
+  assert.match(declarations, /function Button\(/)
+  assert.match(declarations, /function Alert\(/)
+  assert.match(declarations, /function Card\(/)
+  assert.match(declarations, /(?:export declare function Text\(|export \{ Text_\d+ as Text \})/)
+  assert.match(declarations, /function PageHeader\(/)
+  assert.match(declarations, /function PageHeaderContent\(/)
+  assert.match(declarations, /function PageHeaderEyebrow\(/)
+  assert.match(declarations, /function PageHeaderTitle\(/)
+  assert.match(declarations, /function PageHeaderDescription\(/)
+  assert.match(declarations, /function PageHeaderActions\(/)
+  assert.match(declarations, /function Input\(/)
+  assert.match(declarations, /function Textarea\(/)
+  assert.match(declarations, /function Label\(/)
+  assert.match(declarations, /function MaterialTheme\(/)
+  assert.match(declarations, /function SelectTrigger\(/)
+  assert.match(declarations, /function SelectItem\(/)
+  assert.match(declarations, /function Item\(/)
+  assert.match(declarations, /function ItemPrimaryAction\(/)
+  assert.match(declarations, /function Badge\(/)
+  assert.match(declarations, /function Empty\(/)
+  assert.match(declarations, /function EmptyMedia\(/)
+  assert.match(declarations, /function Field\(/)
+  assert.match(declarations, /function FieldGroup\(/)
+  assert.match(declarations, /function FieldError\(/)
+  assert.match(declarations, /function AlertDialogContent\(/)
+  assert.match(declarations, /function AlertDialogAction\(/)
+  assert.match(declarations, /function Progress\(/)
+  assert.match(declarations, /function Separator\(/)
+  assert.match(declarations, /function PopoverContent\(/)
+  assert.match(declarations, /function RadioGroupOption\(/)
+  assert.match(declarations, /function Checkbox\(/)
+  assert.match(declarations, /function Switch\(/)
+  assert.match(declarations, /function SearchInput\(/)
+  assert.match(declarations, /function Scroller\(/)
+  assert.match(declarations, /function TooltipContent\(/)
+  assert.match(declarations, /function TabsList\(/)
+  assert.match(declarations, /function Toolbar\(/)
+  assert.match(declarations, /function ToolbarGroup\(/)
+  assert.match(declarations, /function TabsTrigger\(/)
+  assert.match(declarations, /Toaster/)
+  assert.match(declarations, /toast/)
+  assert.match(declarations, /function DialogContent\(/)
+  assert.match(declarations, /function DialogBody\(/)
+  assert.match(declarations, /function Drawer\(/)
+  assert.match(declarations, /function DrawerContent\(/)
+  assert.match(declarations, /function DrawerClose\(/)
+  assert.match(declarations, /function DrawerFooter\(/)
+  assert.match(declarations, /function DropdownMenuContent\(/)
+  assert.match(declarations, /function DropdownMenuRadioItem\(/)
+  assert.match(declarations, /function CollapsibleTrigger\(/)
+  assert.match(declarations, /function CollapsibleContent\(/)
+  assert.doesNotMatch(js, /@\/components|@\/lib/)
+  assert.doesNotMatch(declarations, /@\/components|@\/lib/)
+})
+
+test("MaterialTheme renders on the server without browser globals", () => {
+  const html = renderToString(React.createElement(MaterialTheme, null, React.createElement("p", null, "SSR probe")))
+  assert.match(html, /data-color-scale="website"/)
+  assert.match(html, /SSR probe/)
+})

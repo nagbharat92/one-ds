@@ -61,6 +61,53 @@ test.describe("Expressive SiteHeader and SiteFooter", () => {
     expect(activeIconFill).toBe("1")
   })
 
+  test("SiteHeader surfaces and overflow selection survive forced colors at 320px", async ({ page, isMobile }) => {
+    if (isMobile) await page.setViewportSize({ width: 320, height: 640 })
+    await page.emulateMedia({ forcedColors: "active" })
+    await page.goto("/#/site-header")
+    const docked = page.locator('[data-slot="site-header"][data-variant="docked"]').first()
+    const floating = page.locator('[data-slot="site-header"][data-variant="floating"]').first()
+
+    for (const colorScheme of ["light", "dark"] as const) {
+      await page.emulateMedia({ forcedColors: "active", colorScheme })
+      const shell = floating.locator('[data-slot="site-header-shell"]')
+      const edge = await shell.evaluate((node) => {
+        const style = getComputedStyle(node)
+        return { color: style.borderColor, width: style.borderTopWidth, fill: style.backgroundColor }
+      })
+      expect(edge.width).not.toBe("0px")
+      expect(edge.color).not.toBe("rgba(0, 0, 0, 0)")
+      expect(edge.color).not.toBe(edge.fill)
+      if (isMobile) {
+        const more = docked.getByRole("button", { name: "More" })
+        await expect(more).toBeVisible()
+        await expect(more).toHaveAttribute("data-active", "true")
+        const activeEdge = await more.evaluate((node) => {
+          const style = getComputedStyle(node)
+          return { border: style.borderColor, fill: style.backgroundColor }
+        })
+        expect(activeEdge.border).not.toBe("rgba(0, 0, 0, 0)")
+        expect(activeEdge.border).not.toBe(activeEdge.fill)
+      } else {
+        const indicator = docked.locator('[data-slot="site-header-indicator"]')
+        await expect(indicator).toHaveCSS("opacity", "1")
+        const indicatorFill = await indicator.evaluate((node) => getComputedStyle(node).backgroundColor)
+        expect(indicatorFill).not.toBe(await docked.evaluate((node) => getComputedStyle(node).backgroundColor))
+        expect(await docked.locator('[data-slot="site-header-link"][data-active="true"]').evaluate((node) => getComputedStyle(node).color))
+          .not.toBe(indicatorFill)
+      }
+    }
+    if (isMobile) {
+      await docked.getByRole("button", { name: "More" }).click()
+      await expect(page.getByRole("menuitem", { name: "Product" })).toHaveAttribute("aria-current", "page")
+      await page.getByRole("menuitem", { name: "Docs" }).click()
+      await docked.getByRole("button", { name: "More" }).click()
+      await expect(page.getByRole("menuitem", { name: "Docs" })).toHaveAttribute("aria-current", "page")
+      await expect(page.getByRole("menuitem", { name: "Product" })).not.toHaveAttribute("aria-current")
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    }
+  })
+
   test("SiteFooter docked, floating, and inverted variants with 40px tactile social links", async ({ page }) => {
     await page.goto("/#/site-footer")
     await page.waitForSelector('[data-slot="site-footer"]')
@@ -97,19 +144,19 @@ test.describe("Expressive SiteHeader and SiteFooter", () => {
     await expect(wave).toBeVisible()
     await expect(wave).toHaveAttribute("data-wavy-size", "medium")
 
-    // Verify default/docked footer body uses sidebar fill color
+    // Verify default/docked footer body uses navigation pane fill color
     const dockedBodyBg = await dockedFooter.locator('[data-slot="site-footer-body"]').evaluate((el) => {
       return getComputedStyle(el).backgroundColor
     })
-    const sidebarBg = await page.evaluate(() => {
+    const navigationPaneBg = await page.evaluate(() => {
       const el = document.createElement("div")
-      el.className = "bg-sidebar"
+      el.className = "bg-navigation-pane"
       document.body.appendChild(el)
       const bg = getComputedStyle(el).backgroundColor
       document.body.removeChild(el)
       return bg
     })
-    expect(dockedBodyBg).toBe(sidebarBg)
+    expect(dockedBodyBg).toBe(navigationPaneBg)
 
     // Separator uses OneDS separator with faded variant
     const separator = dockedFooter.locator('[data-slot="site-footer-separator"]')
@@ -123,7 +170,7 @@ test.describe("Expressive SiteHeader and SiteFooter", () => {
     const floatingRadius = await floatingFooter.evaluate((el) => getComputedStyle(el).borderRadius)
     expect(parseFloat(floatingRadius)).toBeGreaterThanOrEqual(20)
 
-    // 3. Inverted dark footer has top wavy separator and dark sidebar fill
+    // 3. Inverted dark footer has top wavy separator and dark navigation pane fill
     const invertedFooter = page.locator('[data-slot="site-footer"][data-variant="inverted"]')
     await expect(invertedFooter).toBeVisible()
     await expect(invertedFooter).toHaveClass(/dark/)
@@ -134,14 +181,37 @@ test.describe("Expressive SiteHeader and SiteFooter", () => {
     const invertedBodyBg = await invertedFooter.locator('[data-slot="site-footer-body"]').evaluate((el) => {
       return getComputedStyle(el).backgroundColor
     })
-    const darkSidebarBg = await page.evaluate(() => {
+    const darkNavigationPaneBg = await page.evaluate(() => {
       const el = document.createElement("div")
-      el.className = "dark bg-sidebar"
+      el.className = "dark bg-navigation-pane"
       document.body.appendChild(el)
       const bg = getComputedStyle(el).backgroundColor
       document.body.removeChild(el)
       return bg
     })
-    expect(invertedBodyBg).toBe(darkSidebarBg)
+    expect(invertedBodyBg).toBe(darkNavigationPaneBg)
+  })
+
+  test("SiteFooter wave and floating shell stay distinct at 320px in forced colors", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 })
+    await page.emulateMedia({ forcedColors: "active" })
+    await page.goto("/#/site-footer")
+    const docked = page.locator('[data-slot="site-footer"][data-variant="docked"]').first()
+    const floating = page.locator('[data-slot="site-footer"][data-variant="floating"]').first()
+    const wave = docked.locator('[data-slot="separator"][data-variant="wavy"] path[stroke]')
+
+    for (const colorScheme of ["light", "dark"] as const) {
+      await page.emulateMedia({ forcedColors: "active", colorScheme })
+      const floatingEdge = await floating.evaluate((node) => {
+        const style = getComputedStyle(node)
+        return { color: style.borderColor, width: style.borderTopWidth, fill: style.backgroundColor }
+      })
+      expect(floatingEdge.width).not.toBe("0px")
+      expect(floatingEdge.color).not.toBe("rgba(0, 0, 0, 0)")
+      expect(floatingEdge.color).not.toBe(floatingEdge.fill)
+      expect(await wave.evaluate((node) => getComputedStyle(node).stroke))
+        .not.toBe(await docked.locator('[data-slot="site-footer-body"]').evaluate((node) => getComputedStyle(node).backgroundColor))
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    }
   })
 })

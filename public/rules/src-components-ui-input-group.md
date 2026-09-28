@@ -14,4 +14,4 @@ Exceptions: Specialized compositions such as calendar cells, toolbars, and exper
 
 Tokens: `--button-height-default`, `--button-height-expressive`, `--button-icon-default`, `--button-icon-expressive`, `--button-padding-default`, `--button-padding-expressive`
 
-Files: src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/components/ui/input-group.tsx
+Files: src/styles/tokens.css, src/styles/button.css, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/components/ui/input-group.tsx

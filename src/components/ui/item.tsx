@@ -126,6 +126,20 @@ function ItemTitle({
   const accessories = parts.filter(
     (part) => typeof part !== "string" && typeof part !== "number"
   )
+  const textKey = text.join("")
+
+  const textRef = React.useRef<HTMLSpanElement>(null)
+  const [truncated, setTruncated] = React.useState(false)
+
+  React.useLayoutEffect(() => {
+    const el = textRef.current
+    if (!el) return
+    const measure = () => setTruncated(el.scrollWidth > el.clientWidth)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [textKey])
 
   return (
     <div
@@ -138,8 +152,15 @@ function ItemTitle({
     >
       {text.length > 0 ? (
         <span
+          ref={textRef}
           data-slot="item-title-text"
-          className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
+          className={cn(
+            "min-w-0 overflow-hidden whitespace-nowrap",
+            // Only the trailing edge of text that actually overflows fades out;
+            // text that fits keeps a hard, fully opaque edge.
+            truncated &&
+              "mask-[linear-gradient(to_right,black,black_calc(100%-var(--item-title-fade-size)),transparent_100%)]"
+          )}
         >
           {text}
         </span>

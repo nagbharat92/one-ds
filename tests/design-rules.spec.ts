@@ -33,6 +33,67 @@ test("Badges use source-ready geometry while Kbd remains compact", async ({ page
   await expect(kbd).toHaveCSS("font-size", "12px")
 })
 
+for (const mode of ["light", "dark"] as const) {
+  test(`Destructive Badge text stays legible on its host surface in ${mode} mode`, async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    await page.goto("/#/badge")
+    const badge = page.locator('[data-slot="canvas"] [data-slot="badge"][data-variant="destructive"]').first()
+    await expect(badge).toBeVisible()
+    const ratio = await badge.evaluate(element => {
+      const canvas = document.createElement("canvas")
+      canvas.width = canvas.height = 1
+      const context = canvas.getContext("2d", { willReadFrequently: true })
+      if (!context) throw new Error("Canvas 2D context unavailable")
+      const sample = (color: string, base?: number[]) => {
+        context.clearRect(0, 0, 1, 1)
+        if (base) {
+          context.fillStyle = `rgb(${base.join(" ")})`
+          context.fillRect(0, 0, 1, 1)
+        }
+        context.fillStyle = color
+        context.fillRect(0, 0, 1, 1)
+        return [...context.getImageData(0, 0, 1, 1).data].slice(0, 3)
+      }
+      const luminance = (rgb: number[]) => rgb.map(channel => {
+        const value = channel / 255
+        return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+      }).reduce((sum, channel, index) => sum + channel * [0.2126, 0.7152, 0.0722][index], 0)
+      const ancestors: Element[] = []
+      for (let parent = element.parentElement; parent; parent = parent.parentElement) ancestors.unshift(parent)
+      const host = ancestors.reduce((base, parent) => sample(getComputedStyle(parent).backgroundColor, base), [255, 255, 255])
+      const style = getComputedStyle(element)
+      const background = sample(style.backgroundColor, host)
+      const foreground = sample(style.color, background)
+      const high = Math.max(luminance(background), luminance(foreground))
+      const low = Math.min(luminance(background), luminance(foreground))
+      return (high + 0.05) / (low + 0.05)
+    })
+    expect(ratio, `${mode} destructive Badge`).toBeGreaterThanOrEqual(4.5)
+  })
+}
+
+test("AlertDialog media keeps its component-owned shape fill and icon ink", async ({ page }) => {
+  await page.goto("/#/alert-dialog")
+  await page.getByRole("button", { name: "With media", exact: true }).click()
+  const dialog = page.getByRole("alertdialog", { name: "Check your email" })
+  await expect(dialog).toBeVisible()
+  const media = dialog.locator('[data-slot="alert-dialog-media"]')
+  const shape = media.locator('[data-slot="shape"]')
+  const fill = await media.evaluate((node) => {
+    const probe = document.createElement("span")
+    probe.style.color = "var(--alert-dialog-media-fill)"
+    node.append(probe)
+    const color = getComputedStyle(probe).color
+    probe.remove()
+    return color
+  })
+  await expect(shape).toHaveCSS("fill", fill)
+  await expect(media.locator('[data-slot="icon"]')).toHaveAttribute("aria-hidden", "true")
+  await dialog.getByRole("button", { name: "Dismiss" }).click()
+  await expect(dialog).toBeHidden()
+})
+
 test("Material icon size anatomy and shared icon semantics stay usable", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
   await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
@@ -509,18 +570,18 @@ test("tooltips use arrowless inverse pill geometry", async ({ page }) => {
   expect(geometry.gap).toBeCloseTo(4)
 })
 
-test("the floating sidebar tooltip opens inward", async ({ page }) => {
+test("the floating navigation pane tooltip opens inward", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/#/accordion")
-  await page.locator('[data-slot="sidebar-trigger"][data-placement="inline"][aria-label="Close sidebar"]').click()
-  const trigger = page.locator('[data-slot="sidebar-trigger"][data-placement="floating"][data-visible="true"]')
+  await page.locator('[data-slot="navigation-pane-trigger"][data-placement="inline"][aria-label="Close navigation pane"]').click()
+  const trigger = page.locator('[data-slot="navigation-pane-trigger"][data-placement="floating"][data-visible="true"]')
   await expect(trigger).toBeVisible()
   const point = await trigger.evaluate(element => {
     const box = element.getBoundingClientRect()
     return { x: box.left + box.width / 2, y: box.top + box.height / 2 }
   })
   await page.mouse.move(point.x, point.y)
-  const tooltip = page.locator('[data-slot="tooltip-content"]').filter({ hasText: "Open sidebar" })
+  const tooltip = page.locator('[data-slot="tooltip-content"]').filter({ hasText: "Open navigation pane" })
   await expect(tooltip).toBeVisible()
   await expect(tooltip).toHaveAttribute("data-side", "right")
   await expect(tooltip).toHaveAttribute("data-align", "center")

@@ -2,7 +2,7 @@ import * as React from "react"
 
 // Shared expressive-menu treatment for Radix menu families (Dropdown, Context,
 // Menubar). This context bridges the treatment to portaled submenu content. All
-// geometry and color come from the shared --menu-* tokens in index.css.
+// geometry and color come from the shared --menu-* tokens in styles/tokens.css.
 const MenuGroupedContext = React.createContext(false)
 
 // Base scroller for every menu surface; grouped mode overrides padding below.

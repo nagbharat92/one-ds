@@ -1,0 +1,3 @@
+[data-slot="alert-dialog-media"] > .alert-dialog-media__shape {
+  fill: var(--alert-dialog-media-fill);
+}

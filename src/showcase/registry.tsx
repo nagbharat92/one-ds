@@ -16,6 +16,7 @@ import { experimentDemos } from "@/showcase/demos/experiments"
 import { concentricDemos } from "@/showcase/experiments/concentric"
 import { pointerDemos } from "@/showcase/experiments/pointer"
 import { shapeDemos } from "@/showcase/experiments/shapes"
+import { itemsExperimentDemos } from "@/showcase/experiments/items"
 import { annotationDemos } from "@/showcase/demos/annotation"
 import { canvasDemos, canvasGridDemos } from "@/showcase/demos/canvas"
 import { cursorFollowerDemos } from "@/showcase/demos/cursor-follower"
@@ -36,6 +37,7 @@ export const registry: ComponentEntry[] = [
   ...concentricDemos,
   ...pointerDemos,
   ...shapeDemos,
+  ...itemsExperimentDemos,
   ...annotationDemos,
   ...canvasDemos,
   ...canvasGridDemos,
@@ -116,7 +118,7 @@ const BUILD_ORDER: { label: string; slugs: string[] }[] = [
     label: "Overlays & shells",
     slugs: [
       "dialog", "alert-dialog", "drawer", "popover", "hover-card", "coachmark",
-      "sonner", "sidebar", "site-header", "site-footer", "page", "page-header",
+      "sonner", "navigation-rail", "navigation-pane", "site-header", "site-footer", "page", "page-header",
       "section", "container", "stack", "cluster", "toolbar", "scroll-area",
       "resizable",
     ],

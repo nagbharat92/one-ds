@@ -14,6 +14,7 @@ createRoot(document.getElementById('root')!).render(
       enableSystem
       storageKey="oneds-theme"
       disableTransitionOnChange
+      scriptProps={{ type: "text/plain" }}
     >
       <TooltipProvider delayDuration={0}>
         <App />

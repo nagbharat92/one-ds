@@ -20,13 +20,13 @@ Files: src/components/ui/card.tsx, src/components/ui/button.tsx, src/showcase/de
 
 controls.button-colors | Required | approved | enforcement: Partially automated
 
-Expose Primary (primary), Secondary (secondary), and Tertiary/Neutral (tertiary). General buttons default to Tertiary; default aliases tertiary. Primary supports primaryColor purple or pink; omitted primaryColor defaults to purple. Purple uses baseline P40/P80 with On primary, while Pink uses the website Tertiary container/On tertiary container pair. Reserve both Primary colors exclusively for prominent calls to action, never selection; Primary ignores the selected prop and ButtonGroupChoiceItem excludes Primary. Secondary uses light-purple Secondary container/On secondary container at rest and dark gray-purple Secondary/On secondary when selected. Tertiary uses warm neutral Surface container highest/On surface variant at rest and the light-purple Secondary container/On secondary container pair when selected. These two selection levels use the shared Button tokens in standalone and grouped controls; do not switch variants to Primary to indicate selection. Selection remains caller-controlled with native accessibility semantics. Standalone square12px/16px corners at40px/56px become20px/28px round when selected; connected groups keep soft inner corners and round selected items without shifting neighbors. Selected button icons animate Material Symbols' variable FILL axis from outlined to filled without changing viewport geometry. Preserve sizes, press behavior, motion tokens, reduced motion, destructive tints/text/focus, and Ghost/link treatments. Neutral Tertiary is an emphasis level, not Material's pink tertiary accent; explicit Primary pink is the deliberate exception.
+Expose Primary (primary), Secondary (secondary), and Tertiary/Neutral (tertiary). General buttons default to Tertiary; default aliases tertiary. Primary supports primaryColor purple or pink; omitted primaryColor defaults to purple. Purple uses baseline P40/P80 with On primary, while Pink uses the website Tertiary container/On tertiary container pair. Reserve both Primary colors exclusively for prominent calls to action, never selection; Primary ignores the selected prop and ButtonGroupChoiceItem excludes Primary. Secondary uses light-purple Secondary container/On secondary container at rest and dark gray-purple Secondary/On secondary when selected. Tertiary uses warm neutral Surface container highest/On surface variant at rest and the light-purple Secondary container/On secondary container pair when selected. These two selection levels use the shared Button tokens in standalone and grouped controls; do not switch variants to Primary to indicate selection. Selection remains caller-controlled with native accessibility semantics. Standalone square12px/16px corners at40px/56px become20px/28px round when selected; connected groups keep soft inner corners and round selected items without shifting neighbors. Selected button icons animate Material Symbols' variable FILL axis from outlined to filled without changing viewport geometry. Preserve sizes, press behavior, motion tokens, reduced motion, destructive tints/focus, and Ghost treatment. Destructive Button text uses a theme-specific --button-destructive-ink that stays legible through the translucent Error hover and pressed ramps. Link keeps 90% of its ink when pressed rather than dropping to 70%. Neutral Tertiary is an emphasis level, not Material's pink tertiary accent; explicit Primary pink is the deliberate exception.
 
-Exceptions: Explicit custom/generated themes retain their Purple Filled mappings; explicit Pink retains the canonical website pink pair. Destructive text and its translucent treatment are unchanged from the original design; no new contrast certification is claimed. Other text, focus, Ghost, link and Tonal treatments stay unchanged. Disabled buttons keep50% opacity and native semantics. The baseline Filled palette is distinct from the website palette used by other consumers.
+Exceptions: Explicit custom/generated themes retain their Purple Filled mappings; explicit Pink retains the canonical website pink pair. Destructive Button ink is tuned for the tested light/dark neutral surfaces and the full rest/hover/pressed tint ramp; non-neutral host surfaces still need contextual evaluation. Other text, focus, Ghost and Tonal treatments stay unchanged. Disabled buttons keep50% opacity and native semantics. The baseline Filled palette is distinct from the website palette used by other consumers.
 
-Tokens: `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`, `--button-primary-pink-fill`, `--button-primary-pink-ink`, `--button-secondary-fill`, `--button-secondary-ink`, `--button-tertiary-fill`, `--button-tertiary-ink`, `--button-tertiary-hover`, `--button-tertiary-pressed`, `--button-link-ink`, `--button-primary-hover`, `--button-primary-pressed`, `--button-secondary-hover`, `--button-secondary-pressed`
+Tokens: `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`, `--button-primary-pink-fill`, `--button-primary-pink-ink`, `--button-secondary-fill`, `--button-secondary-ink`, `--button-tertiary-fill`, `--button-tertiary-ink`, `--button-tertiary-hover`, `--button-tertiary-pressed`, `--button-destructive-ink`, `--button-link-ink`, `--button-primary-hover`, `--button-primary-pressed`, `--button-secondary-hover`, `--button-secondary-pressed`
 
-Files: src/index.css, src/components/ui/button.tsx, src/components/ui/button-group.tsx, src/components/ui/color-theme.tsx, tests/color-theme.spec.ts, tests/design-rules.spec.ts, src/design-system/material-foundation.md
+Files: src/index.css, src/styles/button.css, src/styles/tokens.css, src/components/ui/button.tsx, src/components/ui/button-group.tsx, src/components/ui/color-theme.tsx, tests/color-theme.spec.ts, tests/design-rules.spec.ts, src/design-system/material-foundation.md
 
 ### Alerts use semantic tonal roles
 
@@ -50,7 +50,7 @@ Exceptions: Specialized compositions such as calendar cells, toolbars, and exper
 
 Tokens: `--button-height-default`, `--button-height-expressive`, `--button-icon-default`, `--button-icon-expressive`, `--button-padding-default`, `--button-padding-expressive`
 
-Files: src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/components/ui/input-group.tsx
+Files: src/styles/tokens.css, src/styles/button.css, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/components/ui/input-group.tsx
 
 ### Default to neutral supporting actions
 
@@ -74,16 +74,16 @@ Exceptions: Text-only and icon-only controls receive no correction. A label flan
 
 Tokens: `--icon-label-optical-padding`, `--graphic-label-gap`, `--button-gap`
 
-Files: src/components/ui/icon-label.tsx, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/index.css, src/showcase/demos/forms.tsx
+Files: src/components/ui/icon-label.tsx, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/styles/button.css, src/styles/tokens.css, src/index.css, src/showcase/demos/forms.tsx
 
 ### Edge tooltips open inward
 
 geometry.tooltip-placement | Required | approved | enforcement: Automated
 
-Keep the plain Button tooltip default directly above and centered. When a control is pinned to a viewport edge, its owning composition sets the preferred side toward the viewport interior instead of relying on collision fallback to choose another axis. The floating SidebarTrigger maps a start-edge sidebar to right and an end-edge sidebar to left. Radix collision avoidance remains enabled as the fallback when the preferred side cannot fit.
+Keep the plain Button tooltip default directly above and centered. When a control is pinned to a viewport edge, its owning composition sets the preferred side toward the viewport interior instead of relying on collision fallback to choose another axis. The floating NavigationPaneTrigger maps a start-edge navigation pane to right and an end-edge navigation pane to left. Radix collision avoidance remains enabled as the fallback when the preferred side cannot fit.
 
 Exceptions: Material plain tooltips in app bars appear below their controls and should opt into that side in the app-bar composition. Rich tooltips default bottom-right and are a separate component role. The inward mapping is a OneDS contextual extension; Material specifies above as the ordinary plain-tooltip default, not a universal right-side default.
 
 Tokens: `--tooltip-gap`
 
-Files: src/components/ui/tooltip.tsx, src/components/ui/button.tsx, src/components/ui/sidebar.tsx
+Files: src/components/ui/tooltip.tsx, src/components/ui/button.tsx, src/components/ui/navigation-pane.tsx

@@ -1,0 +1,43 @@
+@keyframes oneds-collapsible-expand {
+  from { height: 0; }
+  to { height: var(--radix-collapsible-content-height); }
+}
+
+@keyframes oneds-collapsible-collapse {
+  from { height: var(--radix-collapsible-content-height); }
+  to { height: 0; }
+}
+
+@keyframes oneds-collapsible-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes oneds-collapsible-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@layer components {
+  [data-slot="collapsible-content"][data-state="open"] {
+    animation: oneds-collapsible-expand var(--collapsible-expand-height-speed)
+      var(--collapsible-ease) both;
+  }
+
+  [data-slot="collapsible-content"][data-state="closed"] {
+    animation: oneds-collapsible-collapse var(--collapsible-collapse-height-speed)
+      var(--collapsible-ease) both;
+  }
+
+  [data-slot="collapsible-content"][data-state="open"]
+    > [data-slot="collapsible-content-inner"] {
+    animation: oneds-collapsible-fade-in var(--collapsible-expand-fade-speed)
+      var(--collapsible-ease) both;
+  }
+
+  [data-slot="collapsible-content"][data-state="closed"]
+    > [data-slot="collapsible-content-inner"] {
+    animation: oneds-collapsible-fade-out var(--collapsible-collapse-fade-speed)
+      var(--collapsible-ease) both;
+  }
+}

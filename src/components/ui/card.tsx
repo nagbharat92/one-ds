@@ -183,7 +183,7 @@ function CardContent({
         edgeToEdge
           ? "-my-(--card-region-gap) px-(--space-none)"
           : "px-(--card-spacing)",
-        grouped && "grid gap-(--card-content-group-gap)",
+        grouped && "grid grid-cols-[minmax(0,1fr)] gap-(--card-content-group-gap)",
         className
       )}
       {...props}

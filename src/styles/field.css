@@ -1,0 +1,86 @@
+/* Keep field roles on the scope, not on a data-slot: asChild may replace that slot. */
+:root {
+  /* The translucent warm tint steps the host surface in either appearance mode. */
+  --field-fill-opacity: 6%;
+  --field-tint-base: oklch(from var(--tertiary-ink) l 0.024 75);
+  --field-fill: color-mix(in srgb, var(--field-tint-base) var(--field-fill-opacity), transparent);
+  --field-ink: var(--foreground);
+  --field-placeholder-ink: color-mix(in srgb, var(--field-ink) 70%, transparent);
+  --field-disabled-fill: var(--md-sys-color-surface-container);
+  --field-focus-fill: var(--field-hover-fill);
+  --field-focus-ink: var(--button-secondary-ink);
+  --field-hover-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-hover-opacity));
+  --field-pressed-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-pressed-opacity));
+}
+
+.color-theme {
+  --field-placeholder-ink: color-mix(in srgb, var(--field-ink) 70%, transparent);
+}
+
+.color-theme[data-color-scale="website"] {
+  --field-tint-base: oklch(from var(--tertiary-ink) l 0.024 75);
+  --field-fill: color-mix(in srgb, var(--field-tint-base) var(--field-fill-opacity), transparent);
+  --field-ink: var(--foreground);
+  --field-disabled-fill: var(--md-sys-color-surface-container);
+  --field-focus-ink: var(--button-secondary-ink);
+  --field-hover-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-hover-opacity));
+  --field-pressed-fill: color-mix(in srgb, var(--field-fill), var(--field-ink) var(--state-layer-pressed-opacity));
+  --field-focus-fill: var(--field-hover-fill);
+}
+
+@media (forced-colors: active) {
+  :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]) {
+    border-color: CanvasText;
+  }
+
+  [data-slot="input"][type="date"] {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  [data-slot="input"][type="date"][data-focus-ring="true"]:focus {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  :is([data-slot="input-group"], [data-slot="search-input"]) {
+    border: 1px solid CanvasText;
+  }
+
+  :is([data-slot="input-group"], [data-slot="search-input"])[data-focus-ring="true"]:has(> [data-slot="input-group-control"]:focus-visible) {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  :is([data-slot="input-group"], [data-slot="search-input"])[data-focus-ring="true"] > [data-slot="input-group-control"]:focus-visible {
+    outline: none;
+  }
+
+  [data-slot="switch"] {
+    border: 2px solid ButtonText;
+    background-color: Canvas;
+  }
+
+  [data-slot="switch-thumb"] {
+    border: 2px solid ButtonText;
+    background-color: ButtonText;
+  }
+
+  [data-slot="switch"][data-state="checked"] {
+    border-color: Highlight;
+    background-color: Highlight;
+  }
+
+  [data-slot="switch"][data-state="checked"] [data-slot="switch-thumb"] {
+    border-color: HighlightText;
+    background-color: HighlightText;
+  }
+
+  :is([data-slot="checkbox"], [data-slot="radio-group-item"])[data-state="unchecked"] {
+    border-color: ButtonText;
+  }
+
+  [data-slot="radio-group-item"][data-state="checked"] [data-slot="radio-group-indicator"] > span {
+    background-color: CanvasText;
+  }
+}

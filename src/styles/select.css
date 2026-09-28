@@ -1,0 +1,5 @@
+@layer components {
+  [data-slot="select-content"] > .select-viewport {
+    max-height: inherit;
+  }
+}

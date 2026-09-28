@@ -1,0 +1,6 @@
+@layer item {
+  :root {
+    --item-compact-height: calc(var(--spacing) * 10);
+    --item-compact-radius: calc(var(--item-compact-height) / 2);
+  }
+}

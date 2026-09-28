@@ -30,6 +30,33 @@ export function readMaterialWebsiteTheme(readToken: (name: string) => string, mo
 export const materialColorRoles = Object.values(MaterialDynamicColors)
   .filter((role): role is DynamicColor => role instanceof DynamicColor && !role.name.endsWith("palette_key_color"))
 
+// Material 3's own tonal palette reference uses these thirteen tone stops (0-100) to chart a hue/chroma family.
+export const materialToneStops = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100] as const
+
+export function tonalScaleFromSeed(seed: string): { tone: number; hex: string }[] {
+  if (!/^#[\da-f]{6}$/i.test(seed)) throw new Error("Tonal scale seed must be a six-digit hex color")
+  const hct = Hct.fromInt(argbFromHex(seed))
+  const palette = TonalPalette.fromHueAndChroma(hct.hue, hct.chroma)
+  return materialToneStops.map(tone => ({ tone, hex: hexFromArgb(palette.tone(tone)) }))
+}
+
+// Same tonal ramp, but built directly from an HCT hue/chroma pair instead of an existing token's
+// hex value. Used to preview hypothetical theme families that have no real color yet.
+export function tonalScaleFromHueChroma(hue: number, chroma: number): { tone: number; hex: string }[] {
+  const palette = TonalPalette.fromHueAndChroma(hue, chroma)
+  return materialToneStops.map(tone => ({ tone, hex: hexFromArgb(palette.tone(tone)) }))
+}
+
+export function toneOfHex(hex: string): number {
+  if (!/^#[\da-f]{6}$/i.test(hex)) throw new Error("Tone lookup requires a six-digit hex color")
+  return Hct.fromInt(argbFromHex(hex)).tone
+}
+
+export function nearestMaterialToneStop(tone: number): number {
+  return materialToneStops.reduce((closest, stop) =>
+    Math.abs(stop - tone) < Math.abs(closest - tone) ? stop : closest)
+}
+
 export function createMaterialColorTheme(seed: string, mode: ColorThemeMode, schemeName: MaterialSchemeName = "tonal-spot", contrast: MaterialContrast = 0): Record<`--md-sys-color-${string}`, string> {
   if (!/^#[\da-f]{6}$/i.test(seed)) throw new Error("Material seed must be a six-digit hex color")
   const Scheme = materialSchemes[schemeName]

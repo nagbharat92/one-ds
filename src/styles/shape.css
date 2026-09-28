@@ -1,0 +1,15 @@
+@theme inline {
+  --shape-fill-neutral: var(--md-sys-color-on-surface-variant);
+  --shape-fill-purple: var(--button-primary-fill);
+  --shape-fill-pink: var(--theme-website-tertiary-container-light);
+}
+
+.dark { --shape-fill-pink: var(--theme-website-on-tertiary-container-dark); }
+.shape {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: var(--shape-fill-purple);
+}
+.shape[data-tone="neutral"] { fill: var(--shape-fill-neutral); }
+.shape[data-tone="pink"] { fill: var(--shape-fill-pink); }

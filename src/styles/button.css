@@ -1,0 +1,103 @@
+:root {
+  --button-destructive-ink: oklch(0.36 0.18 var(--destructive-hue));
+}
+.dark {
+  --button-destructive-ink: oklch(0.995 0.01 var(--destructive-hue));
+}
+
+.button-motion {
+  --button-tertiary-fill: var(--tertiary-fill);
+  --button-tertiary-ink: var(--tertiary-ink);
+  --button-tertiary-hover: color-mix(in srgb, var(--button-tertiary-fill), var(--button-tertiary-ink) var(--state-layer-hover-opacity));
+  --button-tertiary-pressed: color-mix(in srgb, var(--button-tertiary-fill), var(--button-tertiary-ink) var(--state-layer-pressed-opacity));
+  --button-destructive-color: var(--button-material-error);
+  --button-primary-hover: color-mix(in srgb, var(--button-primary-fill), var(--button-primary-state-ink) var(--state-layer-hover-opacity));
+  --button-primary-pressed: color-mix(in srgb, var(--button-primary-fill), var(--button-primary-state-ink) var(--state-layer-pressed-opacity));
+  --button-secondary-hover: color-mix(in srgb, var(--button-secondary-fill), var(--button-secondary-ink) var(--state-layer-hover-opacity));
+  --button-secondary-pressed: color-mix(in srgb, var(--button-secondary-fill), var(--button-secondary-ink) var(--state-layer-pressed-opacity));
+  --button-destructive-fill: color-mix(in oklab, var(--button-destructive-color) var(--button-destructive-fill-opacity), transparent);
+  --button-destructive-hover: color-mix(in oklab, var(--button-destructive-color) var(--button-destructive-hover-opacity), transparent);
+  --button-destructive-pressed: color-mix(in oklab, var(--button-destructive-color) var(--button-destructive-pressed-opacity), transparent);
+  --badge-white-hover: color-mix(in srgb, var(--badge-white-fill), var(--badge-white-ink) var(--state-layer-hover-opacity));
+  --badge-white-pressed: color-mix(in srgb, var(--badge-white-fill), var(--badge-white-ink) var(--state-layer-pressed-opacity));
+  --button-round-radius: calc(var(--button-height-default) / 2);
+  --button-pressed-radius: var(--button-pressed-radius-default);
+}
+
+:has(> .icon-label):has(> :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])) {
+  column-gap: var(--graphic-label-gap);
+}
+.favicon-monochrome {
+  filter: var(--favicon-monochrome-filter);
+}
+[data-icon-label-host][data-variant="primary"] .favicon-monochrome {
+  filter: var(--favicon-monochrome-on-primary-filter);
+}
+.button-motion-expressive {
+  --button-round-radius: calc(var(--button-height-expressive) / 2);
+  --button-pressed-radius: var(--button-pressed-radius-expressive);
+}
+.button-motion.rounded-full:not([data-slot="button-group"] *) {
+  border-radius: var(--button-round-radius);
+}
+.button-motion[data-selected]:not(.rounded-full):not([data-slot="toolbar"] *) {
+  --button-selection-square-radius: var(--button-selection-square-radius-default);
+  border-radius: var(--button-selection-square-radius);
+}
+.button-motion-expressive[data-selected]:not(.rounded-full):not([data-slot="toolbar"] *) {
+  --button-selection-square-radius: var(--button-selection-square-radius-expressive);
+}
+.button-motion[data-selected="true"]:not(.rounded-full):not([data-slot="toolbar"] *) {
+  border-radius: var(--button-round-radius);
+}
+[data-slot="toolbar"] .button-motion,
+[data-slot="toolbar"] .button-motion[data-selected] {
+  border-radius: var(--tb-inner);
+}
+.button-motion[data-selected="true"]:is([data-variant="tertiary"], [data-variant="default"]) {
+  --button-tertiary-fill: var(--button-secondary-fill);
+  --button-tertiary-ink: var(--button-secondary-ink);
+}
+.button-motion[data-selected="true"][data-variant="secondary"] {
+  --button-secondary-fill: var(--button-selected-secondary-fill);
+  --button-secondary-ink: var(--button-selected-secondary-ink);
+}
+.button-motion[data-selected="false"]:not(:disabled):not([aria-disabled="true"]):not([data-slot="button-group"] *):active {
+  border-radius: var(--button-round-radius);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .button-motion[data-press-effect="morph"]:not(.button-motion-link):not([data-slot="fab"]):not([data-slot="navigation-pane-trigger"]):not([data-slot="button-group"] *):not(:disabled):not([aria-disabled="true"]):active {
+    border-radius: var(--button-pressed-radius);
+  }
+  .button-motion:not([data-press-effect="morph"]):not(.button-motion-link):not([data-slot="fab"]):not([data-slot="navigation-pane-trigger"]):not([data-slot="button-group"] *):not(:disabled):not([aria-disabled="true"]):active {
+    translate: 0 var(--button-press-distance);
+    scale: var(--button-press-scale);
+  }
+}
+
+@layer components {
+  .icon-label {
+    padding-inline: 0;
+  }
+  :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label {
+    padding-inline-end: var(--icon-label-optical-padding);
+  }
+  .icon-label:has(~ :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])) {
+    padding-inline-start: var(--icon-label-optical-padding);
+    padding-inline-end: 0;
+  }
+  :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label:has(~ :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])),
+  [data-icon-label-host][data-size^="icon"] > .icon-label {
+    padding-inline: 0;
+  }
+  .button-motion:not([data-slot="fab"]):not([data-slot="navigation-pane-trigger"]) {
+    transition:
+      border-radius var(--button-spatial-speed) var(--button-spatial-curve),
+      translate var(--button-spatial-speed) var(--button-spatial-curve),
+      scale var(--button-spatial-speed) var(--button-spatial-curve),
+      background-color var(--button-effects-speed) var(--button-effects-curve),
+      color var(--button-effects-speed) var(--button-effects-curve),
+      border-color var(--button-effects-speed) var(--button-effects-curve),
+      opacity var(--button-effects-speed) var(--button-effects-curve);
+  }
+}

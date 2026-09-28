@@ -13,10 +13,13 @@ function Input({ className, type, focusRing = true, ...props }: InputProps) {
       data-slot="input"
       data-focus-ring={focusRing ? "true" : "false"}
       className={cn(
-        "h-(--field-height) w-full min-w-0 rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-(--field-padding-inline) text-base font-medium text-(--field-ink) transition-[background-color,border-color,color] duration-(--speed-swift) outline-none placeholder:font-normal placeholder:text-(--field-ink)/60 hover:bg-(--field-hover-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-(--field-disabled-fill) disabled:opacity-50 md:text-sm",
+        "h-(--field-height) w-full min-w-0 rounded-(--field-radius) border border-transparent bg-(--field-fill) bg-clip-border px-(--field-padding-inline) text-base font-medium text-(--field-ink) transition-[background-color,border-color,color] duration-(--speed-swift) outline-none placeholder:font-normal placeholder:text-(--field-placeholder-ink) hover:bg-(--field-hover-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-(--field-disabled-fill) disabled:opacity-50 md:text-sm",
         focusRing
           ? "focus-visible:ring-3 focus-visible:ring-ring aria-invalid:ring-3 aria-invalid:ring-destructive"
           : "focus-visible:ring-0 focus-visible:outline-none aria-invalid:ring-0",
+        type === "date" && "border-0",
+        // WebKit does not mark keyboard-focused native date inputs as :focus-visible.
+        focusRing && type === "date" && "focus:ring-3 focus:ring-ring",
         className
       )}
       {...props}

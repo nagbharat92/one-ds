@@ -1,0 +1,192 @@
+.color-theme:is([data-color-theme="custom"], [data-color-scale="website"]) {
+  --button-primary-state-ink: var(--button-primary-ink);
+  --button-secondary-fill: var(--secondary);
+  --button-secondary-ink: var(--secondary-foreground);
+  --button-link-ink: var(--primary);
+}
+
+.color-theme[data-color-theme][data-accent-buttons="false"] {
+  --action-primary: var(--action-neutral-fill);
+  --action-on-primary: var(--action-neutral-ink);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--action-on-primary);
+  --navigation-pane-primary: var(--action-primary);
+  --navigation-pane-primary-foreground: var(--action-on-primary);
+  --button-primary-hover: color-mix(in oklab, var(--primary) 80%, transparent);
+  --button-primary-pressed: color-mix(in oklab, var(--primary) 70%, transparent);
+}
+.dark .color-theme[data-color-theme][data-accent-buttons="false"] {
+  --action-primary: var(--action-neutral-fill);
+  --action-on-primary: var(--action-neutral-ink);
+}
+
+.color-theme[data-color-scale="website"] {
+  --navigation-pane-selected-fill: var(--md-sys-color-secondary-container);
+  --navigation-pane-selected-ink: var(--md-sys-color-on-secondary-container);
+  --navigation-pane-selected-hover: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) var(--state-layer-hover-opacity));
+  --navigation-pane-selected-pressed: color-mix(in oklab, var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container) var(--state-layer-pressed-opacity));
+  --surface-canvas: var(--md-sys-color-surface);
+  --surface-ground: var(--md-sys-color-surface);
+  --surface-low: var(--md-sys-color-surface-container-low);
+  --surface-lowest: var(--md-sys-color-surface-container-lowest);
+  --surface-container: var(--md-sys-color-surface-container);
+  --surface-highest: var(--md-sys-color-surface-container-highest);
+  --surface-default: var(--md-sys-color-surface-container-lowest);
+  --surface-high: var(--md-sys-color-surface-container-high);
+  --surface-backplate: var(--md-sys-color-surface-container);
+  --surface-navigation: var(--md-sys-color-surface-container);
+  --surface-interaction: var(--md-sys-color-surface-container-highest);
+  --surface-ink: var(--md-sys-color-on-surface);
+  --surface-muted-ink: var(--md-sys-color-on-surface-variant);
+  --surface-outline: var(--theme-outline-neutral);
+  --surface-input-outline: var(--theme-input-outline-neutral);
+  --surface-stroke: var(--md-sys-color-outline-variant);
+  --background: var(--surface-canvas);
+  --foreground: var(--surface-ink);
+  --card: var(--surface-default);
+  --card-foreground: var(--surface-ink);
+  --control: var(--surface-low);
+  --popover: var(--surface-default);
+  --popover-foreground: var(--surface-ink);
+  --muted: var(--surface-container);
+  --muted-foreground: var(--surface-muted-ink);
+  --accent: var(--surface-interaction);
+  --accent-foreground: var(--surface-ink);
+  --secondary: var(--md-sys-color-secondary-container);
+  --secondary-foreground: var(--md-sys-color-on-secondary-container);
+  --action-secondary: var(--secondary);
+  --action-on-secondary: var(--secondary-foreground);
+  --border: var(--surface-outline);
+  --input: var(--surface-input-outline);
+  --ring: var(--md-sys-color-primary);
+  --navigation-pane: var(--surface-navigation);
+  --navigation-pane-foreground: var(--surface-ink);
+  --navigation-pane-accent: var(--md-sys-color-surface-container-highest);
+  --navigation-pane-accent-foreground: var(--md-sys-color-on-surface);
+  --navigation-pane-border: var(--surface-outline);
+  --navigation-pane-ring: var(--md-sys-color-primary);
+  --navigation-pane-inset-backdrop: var(--md-sys-color-surface-container);
+  --state-layer-hover: color-mix(in oklab, var(--state-layer-color) var(--state-layer-hover-opacity), transparent);
+  --state-layer-focus: color-mix(in oklab, var(--state-layer-color) var(--state-layer-focus-opacity), transparent);
+  --state-layer-pressed: color-mix(in oklab, var(--state-layer-color) var(--state-layer-pressed-opacity), transparent);
+  --state-layer-dragged: color-mix(in oklab, var(--state-layer-color) var(--state-layer-dragged-opacity), transparent);
+  --button-secondary-hover: color-mix(in oklab, var(--secondary), var(--secondary-foreground) var(--state-layer-hover-opacity));
+  --button-secondary-pressed: color-mix(in oklab, var(--secondary), var(--secondary-foreground) var(--state-layer-pressed-opacity));
+  color: var(--foreground);
+}
+.color-theme[data-color-scale="website"][data-accent-buttons="true"] {
+  --action-primary: var(--md-sys-color-primary);
+  --action-on-primary: var(--md-sys-color-on-primary);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--action-on-primary);
+  --navigation-pane-primary: var(--primary);
+  --navigation-pane-primary-foreground: var(--primary-foreground);
+  --button-primary-fill: var(--md-sys-color-primary);
+  --button-primary-ink: var(--md-sys-color-on-primary);
+  --button-primary-hover: color-mix(in oklab, var(--button-primary-fill), var(--button-primary-ink) var(--state-layer-hover-opacity));
+  --button-primary-pressed: color-mix(in oklab, var(--button-primary-fill), var(--button-primary-ink) var(--state-layer-pressed-opacity));
+  --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
+}
+
+.dark .color-theme[data-color-scale="website"][data-accent-buttons="true"] {
+  --favicon-monochrome-on-primary-filter: brightness(0);
+}
+
+.color-theme[data-color-scale="website"][data-accent-buttons="true"] {
+  --button-primary-fill: var(--md-ref-palette-primary40);
+  --button-primary-ink: var(--md-sys-color-on-primary);
+  --button-primary-state-ink: var(--md-sys-color-on-primary);
+  --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
+}
+
+.color-theme[data-color-scale="website"] {
+  --state-layer-hover-opacity: calc(var(--md-sys-state-hover-state-layer-opacity) * 100%);
+  --state-layer-focus-opacity: calc(var(--md-sys-state-focus-state-layer-opacity) * 100%);
+  --state-layer-pressed-opacity: calc(var(--md-sys-state-pressed-state-layer-opacity) * 100%);
+  --state-layer-dragged-opacity: calc(var(--md-sys-state-dragged-state-layer-opacity) * 100%);
+  --navigation-pane-hover-fill: color-mix(in srgb, var(--md-sys-color-on-surface) var(--state-layer-hover-opacity), transparent);
+  --navigation-pane-accent: var(--navigation-pane-hover-fill);
+}
+
+.dark .color-theme[data-color-scale="website"][data-accent-buttons="true"] {
+  --button-primary-fill: var(--md-ref-palette-primary80);
+  --favicon-monochrome-on-primary-filter: brightness(0);
+}
+
+.dark .color-theme[data-color-scale="website"][data-dark-card-surface="low"] {
+  --card: var(--surface-low);
+}
+
+.color-theme[data-color-scale="website"] {
+  --theme-highlight-fill: var(--md-sys-color-tertiary-container);
+  --theme-highlight-ink: var(--md-sys-color-on-tertiary-container);
+}
+
+/* Re-resolve aliases that :root already substituted from --md-sys-color-*. A custom property is
+   substituted where it is declared, so descendants inherit an already-resolved value and never
+   see a deeper role override. Each value below is identical to its :root definition, making this
+   inert for the site's own palette; it only takes effect when a scope supplies its own roles. */
+.color-theme[data-color-scale="website"] {
+  --purple-soft: var(--md-sys-color-secondary-container);
+  --purple-soft-ink: var(--md-sys-color-on-secondary-container);
+  --purple-deep: var(--md-sys-color-secondary);
+  --purple-deep-ink: var(--md-sys-color-on-secondary);
+  --button-selected-secondary-fill: var(--purple-deep);
+  --button-selected-secondary-ink: var(--purple-deep-ink);
+  --tertiary-fill: var(--md-sys-color-surface-container-highest);
+  --tertiary-ink: var(--md-sys-color-on-surface-variant);
+  --calendar-selected-fill: var(--md-sys-color-tertiary-container);
+  --calendar-selected-ink: var(--md-sys-color-on-tertiary-container);
+  --alert-container-base: var(--surface-canvas);
+  --alert-neutral-fill: var(--surface-low);
+  --alert-neutral-ink: var(--surface-ink);
+  --alert-info-fill: var(--button-secondary-fill);
+  --alert-info-ink: var(--button-secondary-ink);
+  /* Status hues stay fixed; only the surface they composite over and their paired ink re-resolve. */
+  --alert-success-fill: color-mix(in oklab, var(--alert-success-source) var(--alert-status-container-opacity), var(--alert-container-base));
+  --alert-success-ink: color-mix(in oklab, var(--alert-success-source) var(--alert-status-source-weight), var(--surface-ink));
+  --alert-warning-fill: color-mix(in oklab, var(--alert-warning-source) var(--alert-status-container-opacity), var(--alert-container-base));
+  --alert-warning-ink: color-mix(in oklab, var(--alert-warning-source) var(--alert-status-source-weight), var(--surface-ink));
+  --alert-error-fill: color-mix(in oklab, var(--alert-error-source) var(--button-destructive-fill-opacity), var(--alert-container-base));
+  --chart-primary: var(--purple-strong);
+  --chart-secondary: var(--md-sys-color-tertiary-container);
+  --chart-tertiary: var(--md-sys-color-primary);
+  --chart-quaternary: var(--md-sys-color-secondary);
+  --chart-axis-ink: var(--surface-muted-ink);
+  --chart-grid-stroke: color-mix(in srgb, var(--surface-outline) 56%, transparent);
+  --chart-cursor-fill: color-mix(in srgb, var(--button-secondary-fill) 52%, transparent);
+  --chart-cursor-stroke: color-mix(in srgb, var(--button-selected-secondary-fill) 42%, transparent);
+  --chart-1: var(--chart-primary);
+  --chart-2: var(--chart-secondary);
+  --chart-3: var(--chart-tertiary);
+  --chart-4: var(--chart-quaternary);
+  --chart-5: var(--chart-danger);
+  --slider-track-gap-color: var(--background);
+}
+
+.color-theme[data-color-scale="website"] [data-slot="tabs-list"][data-variant="default"] {
+  background: var(--md-sys-color-surface-container-low);
+}
+.color-theme[data-color-scale="website"] [data-slot="tabs-list"][data-variant="default"] [data-slot="tabs-indicator"] {
+  background: var(--md-sys-color-secondary-container);
+  border-color: transparent;
+  box-shadow: none;
+}
+.color-theme[data-color-scale="website"] [data-slot="tabs-list"][data-variant="default"] [data-slot="tabs-trigger"][data-state="active"] {
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.color-theme-surface {
+  background-color: var(--surface-canvas);
+  color: var(--foreground);
+}
+.color-theme-surface[data-level="low"] { background-color: var(--surface-low); }
+.color-theme-surface[data-level="lowest"] { background-color: var(--surface-lowest, var(--surface-low)); }
+.color-theme-surface[data-level="container"] { background-color: var(--surface-container, var(--surface-backplate)); }
+.color-theme-surface[data-level="highest"] { background-color: var(--surface-highest, var(--surface-high)); }
+.color-theme-surface[data-level="default"] { background-color: var(--surface-default); }
+.color-theme-surface[data-level="high"] { background-color: var(--surface-high); }
+.color-theme-surface[data-level="navigation"] {
+  background-color: var(--navigation-pane);
+  color: var(--navigation-pane-foreground);
+}

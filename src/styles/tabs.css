@@ -1,0 +1,18 @@
+@layer components {
+  [data-slot="tabs-indicator"] {
+    --tabs-travel-duration: calc(
+      var(--tabs-pivot-speed) * var(--tabs-pivot-distance, 1)
+    );
+  }
+}
+
+@media (forced-colors: active) {
+  [data-slot="tabs-trigger"][aria-selected="true"] {
+    border-color: Highlight;
+    color: Highlight;
+  }
+
+  [data-slot="tabs-indicator"]::after {
+    background-color: Highlight;
+  }
+}

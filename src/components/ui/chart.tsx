@@ -188,6 +188,7 @@ function ChartTooltipContent({
 
   return (
     <div
+      data-slot="chart-tooltip-content"
       className={cn(
         "grid min-w-32 items-start gap-(--chart-tooltip-gap) rounded-(--chart-tooltip-radius) border border-(--elevation-stroke) bg-popover bg-clip-padding px-(--chart-tooltip-padding-inline) py-(--chart-tooltip-padding-block) text-xs shadow-(--elevation-floating)",
         className

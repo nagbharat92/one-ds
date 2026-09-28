@@ -18,7 +18,7 @@ const badgeVariants = cva(
         primary: "bg-(--button-primary-fill) text-(--button-primary-ink)",
         secondary: "bg-(--button-secondary-fill) text-(--button-secondary-ink)",
         destructive:
-          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40",
+          "bg-destructive/10 text-(--button-destructive-ink) focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40",
         white:
           "bg-(--badge-white-fill) text-(--badge-white-ink) ring-1 ring-(--elevation-stroke) shadow-(--elevation-flat)",
       },

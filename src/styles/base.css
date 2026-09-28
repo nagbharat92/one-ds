@@ -28,3 +28,27 @@
     margin: 0;
   }
 }
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+
+  :is(
+    [data-slot="alert-dialog-content"],
+    [data-slot="dialog-content"],
+    [data-slot="drawer-content"],
+    [data-slot="select-content"],
+    [data-slot="popover-content"],
+    [data-slot="dropdown-menu-content"],
+    [data-slot="tooltip-content"]
+  ) {
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+
+  [data-slot="toolbar"][data-elevation="floating"] {
+    border-color: CanvasText;
+  }
+}

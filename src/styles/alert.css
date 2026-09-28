@@ -1,0 +1,33 @@
+[data-slot="alert"][data-tone="neutral"] {
+  --alert-fill: var(--alert-neutral-fill);
+  --alert-ink: var(--alert-neutral-ink);
+}
+[data-slot="alert"][data-tone="info"] {
+  --alert-fill: var(--alert-info-fill);
+  --alert-ink: var(--alert-info-ink);
+}
+[data-slot="alert"][data-tone="success"] {
+  --alert-fill: var(--alert-success-fill);
+  --alert-ink: var(--alert-success-ink);
+}
+[data-slot="alert"][data-tone="warning"] {
+  --alert-fill: var(--alert-warning-fill);
+  --alert-ink: var(--alert-warning-ink);
+}
+[data-slot="alert"][data-tone="error"] {
+  --alert-fill: var(--alert-error-fill);
+  --alert-ink: var(--alert-error-ink);
+}
+[data-slot="alert"] {
+  --alert-accent-fill: var(--alert-ink);
+  --alert-accent-ink: var(--alert-fill);
+}
+[data-slot="alert-icon"] > .alert-icon__shape {
+  fill: var(--alert-accent-fill);
+}
+
+@media (forced-colors: active) {
+  [data-slot="alert"] {
+    border: 1px solid CanvasText;
+  }
+}

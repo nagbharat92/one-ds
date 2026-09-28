@@ -60,6 +60,7 @@ export const DownloadIcon = createGlyph("download")
 export const ExternalLinkIcon = createGlyph("open_in_new")
 export const ViewIcon = createGlyph("visibility")
 export const EyeIcon = ViewIcon
+export const Eyeglasses3Icon = createGlyph("eyeglasses_3")
 export const FileIcon = createGlyph("draft")
 export const FileTextIcon = createGlyph("description")
 export const FilterIcon = createGlyph("filter_list")

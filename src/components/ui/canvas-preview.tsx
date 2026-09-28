@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils"
 import { Canvas, CanvasContent, CanvasFooter, CanvasToolbar } from "@/components/ui/canvas"
 import { CanvasGrid } from "@/components/ui/canvas-grid"
 import { CheckboxGroup, CheckboxGroupItem } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
+import { ExternalLinkIcon } from "@/components/ui/icons"
 import { ToolbarSpacer, ToolbarTitle } from "@/components/ui/toolbar"
 
 type CanvasPreviewState = { grid: boolean; annotations: boolean }
@@ -43,6 +45,7 @@ function CanvasPreviewControls({
   annotationsAvailable = false,
   onGridChange,
   onAnnotationsChange,
+  standaloneHref,
   children,
   ...props
 }: React.ComponentProps<typeof CanvasToolbar> & {
@@ -52,6 +55,7 @@ function CanvasPreviewControls({
   annotationsAvailable?: boolean
   onGridChange: (value: boolean) => void
   onAnnotationsChange?: (value: boolean) => void
+  standaloneHref?: string
 }) {
   return (
     <CanvasToolbar aria-label={`${name} controls`} {...props}>
@@ -66,6 +70,16 @@ function CanvasPreviewControls({
           Annotations
         </CheckboxGroupItem>}
       </CheckboxGroup>
+      {standaloneHref ? (
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={`Open ${name} in a new tab`}
+          onClick={() => window.open(standaloneHref, "_blank", "noopener,noreferrer")}
+        >
+          <ExternalLinkIcon />
+        </Button>
+      ) : null}
     </CanvasToolbar>
   )
 }

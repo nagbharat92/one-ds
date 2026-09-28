@@ -82,7 +82,7 @@ test("command menus own expressive chunks by default", async ({ page }) => {
     page,
     page
       .locator("#data-table-row-actions")
-      .getByRole("button", { name: "Row actions" })
+      .locator('[data-slot="dropdown-menu-trigger"]')
       .first(),
     { implicitGroups: 1, explicitGroups: 0, items: 4 }
   )
@@ -127,7 +127,7 @@ test("command menus own expressive chunks by default", async ({ page }) => {
     page,
     page
       .locator("#avatar-dropdown")
-      .getByRole("button", { name: "User menu" }),
+      .locator('[data-slot="dropdown-menu-trigger"]'),
     { implicitGroups: 1, explicitGroups: 0, items: 3 }
   )
   expect(
@@ -173,4 +173,111 @@ test("Select viewport inherits the menu cap and owns scrolling", async ({
   expect(dimensions.viewportMaxHeight).toBe(dimensions.contentMaxHeight)
   expect(dimensions.overflowY).toBe("auto")
   expect(dimensions.clientHeight).toBeLessThan(dimensions.scrollHeight)
+})
+
+async function expectForcedColorsEdge(surface: Locator) {
+  await expect(surface).toBeVisible()
+  const colors = await surface.evaluate((node) => {
+    const style = getComputedStyle(node)
+    return {
+      edge: style.outlineColor,
+      style: style.outlineStyle,
+      width: style.outlineWidth,
+      fill: style.backgroundColor,
+    }
+  })
+  expect(colors.style).toBe("solid")
+  expect(colors.width).toBe("1px")
+  expect(colors.edge).not.toBe(colors.fill)
+}
+
+test("grouped menu chunks retain an edge in forced colors", async ({ page }, testInfo) => {
+  test.skip(
+    Boolean(testInfo.project.use.isMobile),
+    "Right-click surface is checked with a desktop pointer"
+  )
+  const checkChunk = async (contentSelector: string, groupSelector: string) => {
+    const content = page.locator(`${contentSelector}[data-state="open"]`).first()
+    await expect(content).toBeVisible()
+    expect(
+      await content.evaluate((node) => getComputedStyle(node).backgroundColor)
+    ).toMatch(/,\s*0\)$/)
+    await expectForcedColorsEdge(content.locator(groupSelector).first())
+  }
+
+  for (const colorScheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ forcedColors: "active", colorScheme })
+    await page.goto("/#/dropdown-menu")
+    await page
+      .getByRole("button", { name: "Open menu", exact: true })
+      .first()
+      .press("Enter")
+    await checkChunk(
+      '[data-slot="dropdown-menu-content"]',
+      '[data-slot="dropdown-menu-group"]'
+    )
+
+    await page.goto("/#/avatar")
+    await page
+      .locator("#avatar-dropdown [data-slot='dropdown-menu-trigger']")
+      .press("Enter")
+    await checkChunk('[data-slot="dropdown-menu-content"]', '[data-slot="menu-group"]')
+
+    await page.goto("/#/context-menu")
+    await page
+      .locator('[data-slot="context-menu-trigger"]')
+      .first()
+      .click({ button: "right" })
+    await checkChunk(
+      '[data-slot="context-menu-content"]',
+      '[data-slot="context-menu-group"]'
+    )
+
+    await page.goto("/#/menubar")
+    await page.locator('[data-slot="menubar-trigger"]').first().click()
+    await checkChunk(
+      '[data-slot="menubar-content"]',
+      '[data-slot="menubar-group"]'
+    )
+  }
+})
+
+test("grouped submenus keep a forced-colors edge", async ({ page }, testInfo) => {
+  test.skip(
+    Boolean(testInfo.project.use.isMobile),
+    "Hover-open submenus are checked with a desktop pointer"
+  )
+  await page.emulateMedia({ forcedColors: "active" })
+
+  await page.goto("/#/dropdown-menu")
+  await page
+    .getByRole("button", { name: "Open menu", exact: true })
+    .first()
+    .press("Enter")
+  await page.getByRole("menuitem", { name: "More tools" }).hover()
+  await expectForcedColorsEdge(
+    page.locator('[data-slot="dropdown-menu-sub-content"][data-state="open"]')
+  )
+
+  await page.goto("/#/context-menu")
+  await page
+    .locator('[data-slot="context-menu-trigger"]')
+    .filter({ hasText: "Right click — submenu" })
+    .first()
+    .click({ button: "right" })
+  await page.getByRole("menuitem", { name: "More tools" }).hover()
+  await expectForcedColorsEdge(
+    page.locator('[data-slot="context-menu-sub-content"][data-state="open"]')
+  )
+
+  await page.goto("/#/menubar")
+  await page
+    .locator('[data-slot="menubar-trigger"]')
+    .filter({ hasText: /^File$/ })
+    .nth(1)
+    .click()
+  await page.getByRole("menuitem", { name: "Share" }).hover()
+  await expectForcedColorsEdge(
+    page.locator('[data-slot="menubar-sub-content"][data-state="open"]')
+  )
 })

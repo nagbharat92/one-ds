@@ -95,8 +95,10 @@ export function CodeBlock({
             <span
               key={index}
               className={cn(
-                "flex items-center px-(--code-block-padding-inline)",
-                isSingleLine ? "min-h-0 py-0" : "min-h-lh",
+                "flex items-center",
+                isSingleLine
+                  ? "min-h-0 py-0 px-(--code-block-padding-inline-single)"
+                  : "min-h-lh px-(--code-block-padding-inline)",
                 isSingleLine && !showLineNumbers && "justify-start",
                 !isSingleLine && "translate-y-px"
               )}

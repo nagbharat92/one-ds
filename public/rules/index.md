@@ -34,13 +34,13 @@ directory. A missing slice means no scoped rule governs that file.
 | src/components/ui/menu.ts | `src-components-ui-menu.md` | 1 |
 | src/components/ui/menubar.tsx | `src-components-ui-menubar.md` | 1 |
 | src/components/ui/navigation-menu.tsx | `src-components-ui-navigation-menu.md` | 1 |
+| src/components/ui/navigation-pane.tsx | `src-components-ui-navigation-pane.md` | 2 |
 | src/components/ui/page.tsx | `src-components-ui-page.md` | 1 |
 | src/components/ui/pagination.tsx | `src-components-ui-pagination.md` | 1 |
 | src/components/ui/radio-group.tsx | `src-components-ui-radio-group.md` | 1 |
 | src/components/ui/response.tsx | `src-components-ui-response.md` | 1 |
 | src/components/ui/select.tsx | `src-components-ui-select.md` | 1 |
 | src/components/ui/shape.tsx | `src-components-ui-shape.md` | 2 |
-| src/components/ui/sidebar.tsx | `src-components-ui-sidebar.md` | 2 |
 | src/components/ui/table.tsx | `src-components-ui-table.md` | 2 |
 | src/components/ui/text.tsx | `src-components-ui-text.md` | 1 |
 | src/components/ui/toolbar.tsx | `src-components-ui-toolbar.md` | 2 |
@@ -62,5 +62,13 @@ directory. A missing slice means no scoped rule governs that file.
 | src/showcase/experiments/concentric.tsx | `src-showcase-experiments-concentric.md` | 1 |
 | src/showcase/experiments/pointer.tsx | `src-showcase-experiments-pointer.md` | 2 |
 | src/showcase/types.ts | `src-showcase-types.md` | 1 |
+| src/styles/button.css | `src-styles-button.md` | 3 |
+| src/styles/card.css | `src-styles-card.md` | 4 |
+| src/styles/icon.css | `src-styles-icon.md` | 1 |
+| src/styles/item-foundation.css | `src-styles-item-foundation.md` | 2 |
+| src/styles/item-hosted.css | `src-styles-item-hosted.md` | 1 |
+| src/styles/item.css | `src-styles-item.md` | 1 |
+| src/styles/select.css | `src-styles-select.md` | 1 |
+| src/styles/tokens.css | `src-styles-tokens.md` | 5 |
 
 Always-apply rules (14): composition.shared-anatomy, icons.material-symbols, appearance.elevation, foundations.tokens, color.surface-accent, color.accent-restraint, geometry.control-grid, geometry.concentric-corners, typography.natural-case, typography.no-orphans-widows, motion.speed-tokens, typography.role-pairs, accessibility.control-contract, accessibility.unclipped-indicators

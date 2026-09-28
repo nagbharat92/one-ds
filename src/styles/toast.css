@@ -1,0 +1,20 @@
+@layer components {
+  [data-sonner-toast]:not(:has([data-icon])) [data-content] {
+    padding-inline-start: var(--toast-text-edge-padding);
+  }
+}
+
+@media (forced-colors: active) {
+  [data-sonner-toast][data-styled="true"] [data-button="true"] {
+    border: 1px solid ButtonText !important;
+  }
+}
+
+@layer base {
+  @media (forced-colors: active) {
+    [data-sonner-toast][data-styled="true"] [data-button="true"]:focus-visible {
+      outline: 2px solid Highlight !important;
+      outline-offset: 2px;
+    }
+  }
+}

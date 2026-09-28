@@ -1,17 +1,21 @@
 import { defineConfig } from "@playwright/test"
 
 const externalURL = process.env.PREVIEW_TEST_BASE_URL
+const browserName = process.env.PREVIEW_TEST_BROWSER ?? "chromium"
+if (browserName !== "chromium" && browserName !== "webkit") {
+  throw new Error(`Unsupported PREVIEW_TEST_BROWSER: ${browserName}`)
+}
 
 export default defineConfig({
   testDir: "./tests",
-  testMatch: ["ai-composer.spec.ts", "toolbar-inspection.spec.ts", "design-rules.spec.ts", "button-motion.spec.ts", "color-theme.spec.ts", "pointer.spec.ts", "shapes.spec.ts", "material-icons.spec.ts", "list-item.spec.ts", "menu.spec.ts", "table.spec.ts", "site-header-footer.spec.ts"],
+  testMatch: ["ai-composer.spec.ts", "toolbar-inspection.spec.ts", "design-rules.spec.ts", "button-motion.spec.ts", "color-theme.spec.ts", "pointer.spec.ts", "shapes.spec.ts", "material-icons.spec.ts", "list-item.spec.ts", "menu.spec.ts", "floating-surfaces.spec.ts", "navigation-rail.spec.ts", "table.spec.ts", "site-header-footer.spec.ts"],
   fullyParallel: false,
   workers: 1,
   reporter: "list",
   use: {
     baseURL: externalURL ?? "http://127.0.0.1:5185",
-    browserName: "chromium",
-    channel: process.env.PREVIEW_TEST_CHANNEL,
+    browserName,
+    channel: browserName === "chromium" ? process.env.PREVIEW_TEST_CHANNEL : undefined,
     headless: true,
   },
   projects: [

@@ -1,0 +1,94 @@
+:root {
+  --icon-size-8: calc(var(--spacing) * 2);
+  --icon-size-12: calc(var(--spacing) * 3);
+  --icon-size-14: calc(var(--spacing) * 3.5);
+  --icon-size-16: calc(var(--spacing) * 4);
+  --icon-size-20: calc(var(--spacing) * 5);
+  --icon-size-24: calc(var(--spacing) * 6);
+  --icon-size-28: calc(var(--spacing) * 7);
+  --icon-size-32: calc(var(--spacing) * 8);
+  --icon-box-size-40: calc(var(--spacing) * 10);
+  --icon-box-size-48: calc(var(--spacing) * 12);
+  --icon-box-size-56: calc(var(--spacing) * 14);
+  --material-icon-font-family: "OneDS Material Symbols";
+  --material-icon-font-size: 24px;
+  --material-icon-weight: 400;
+  --material-icon-grade: 0;
+  --material-icon-optical-size: 24;
+  --material-icon-fill-default: 0;
+  --material-icon-fill-selected: 1;
+  --material-icon-fill-speed: var(--button-effects-speed);
+  --material-icon-fill-curve: var(--button-effects-curve);
+  --material-icon-triangle-optical-offset-y: calc(var(--spacing) * -0.5);
+}
+
+:is(.oneds-icon, .oneds-icon-box)[data-size="8"] { --icon-size: var(--icon-size-8); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="12"] { --icon-size: var(--icon-size-12); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="14"] { --icon-size: var(--icon-size-14); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="16"] { --icon-size: var(--icon-size-16); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="20"] { --icon-size: var(--icon-size-20); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="24"] { --icon-size: var(--icon-size-24); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="28"] { --icon-size: var(--icon-size-28); }
+:is(.oneds-icon, .oneds-icon-box)[data-size="32"] { --icon-size: var(--icon-size-32); }
+.oneds-icon-box[data-size="40"] { --icon-size: var(--icon-box-size-40); }
+.oneds-icon-box[data-size="48"] { --icon-size: var(--icon-box-size-48); }
+.oneds-icon-box[data-size="56"] { --icon-size: var(--icon-box-size-56); }
+.oneds-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--icon-size);
+  block-size: var(--icon-size);
+  vertical-align: middle;
+}
+.oneds-icon {
+  --icon-fill: var(--material-icon-fill-default);
+  display: block;
+  color: inherit;
+}
+.button-motion[data-selected="true"] .oneds-icon,
+.button-motion[aria-pressed="true"] .oneds-icon,
+.button-motion[aria-checked="true"] .oneds-icon,
+.button-motion[data-state="on"] .oneds-icon,
+.oneds-icon[data-selected="true"] {
+  --icon-fill: var(--material-icon-fill-selected);
+}
+.oneds-icon[data-filled="true"],
+.button-motion .oneds-icon[data-filled="true"] {
+  --icon-fill: var(--material-icon-fill-selected);
+}
+.oneds-icon[data-filled="false"],
+.button-motion .oneds-icon[data-filled="false"] {
+  --icon-fill: var(--material-icon-fill-default);
+}
+[data-slot="badge"] .oneds-icon {
+  --icon-fill: var(--material-icon-fill-selected);
+}
+@font-face {
+  font-family: "OneDS Material Symbols";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../assets/icons/material-symbols-rounded.woff2") format("woff2");
+}
+.material-glyph text {
+  font-family: var(--material-icon-font-family);
+  font-size: var(--material-icon-font-size);
+  font-weight: var(--material-icon-weight);
+  font-style: normal;
+  letter-spacing: 0;
+  fill: currentColor;
+  stroke: none;
+  font-variation-settings: "FILL" var(--icon-fill), "GRAD" var(--material-icon-grade), "opsz" var(--material-icon-optical-size), "wght" var(--material-icon-weight);
+  transition: font-variation-settings var(--material-icon-fill-speed) var(--material-icon-fill-curve);
+}
+.material-glyph[data-optical-correction="triangle"] text {
+  transform: translateY(var(--material-icon-triangle-optical-offset-y));
+}
+.material-glyph:is([data-size="8"], [data-size="12"], [data-size="14"], [data-size="16"], [data-size="20"]) { --material-icon-optical-size: 20; }
+.material-glyph[data-size="28"] { --material-icon-optical-size: 28; }
+.material-glyph[data-size="32"] { --material-icon-optical-size: 32; }
+@media (prefers-reduced-motion: reduce) {
+  .material-glyph text { transition: none; }
+}

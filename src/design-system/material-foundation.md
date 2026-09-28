@@ -25,7 +25,7 @@ selects the verified website palette and compatibility adapter. It follows the
 existing appearance provider. It has no hue, contrast, scheme, or neutral-button
 controls. `asChild` preserves the child's component slot and avoids a layout
 wrapper. Existing `ColorThemePortal` carries its context into portaled content;
-Sidebar already applies this bridge to its mobile Drawer.
+NavigationPane already applies this bridge to its mobile Drawer.
 
 Neutral roles come from :root/.dark rather than local inline copies. MaterialTheme
 and ColorThemePortal apply only the website's accent-role overrides, so changes
@@ -66,8 +66,8 @@ not new Material specification values.
 | --- | --- | --- |
 | Page and Canvas | Surface (light); Surface container low (dark), through `--page-fill` | On surface |
 | Card | Surface container lowest | On surface |
-| Card footer | Surface container low | On surface |
-| Enabled field rest fill (Input, Textarea, Select, NativeSelect, InputGroup, Combobox chips, OTP) | Translucent On surface tint over the host surface | On surface (value); On surface variant for placeholders and affordances |
+| Card footer | Host Card background (Surface container lowest by default) | On surface |
+| Enabled field rest fill (Input, Textarea, Select, NativeSelect, InputGroup, Combobox chips, OTP) | Translucent On surface tint over the host surface | On surface (value); Input/Textarea and neutral Select placeholders use 70% field ink |
 | Disabled field fill | Surface container | Existing disabled opacity retained |
 | Navigation surface | Surface container | On surface |
 | General interaction backplate | Surface container highest | On surface |
@@ -96,7 +96,12 @@ Adopted comparison: **Destructive** now uses Material Error40/Error80 as its
 background tint source globally. The old destructive background palette and
 `destructivePalette` option are removed. `--button-destructive-color` references
 `--button-material-error`; existing10/20/30% light and20/30/40% dark tint states
-remain. Text and focus colors are unchanged. Primary purple, Primary pink, Secondary, and Tertiary
+remain. `--button-destructive-ink` now uses a deeper red in light mode and a
+lighter pink in dark mode so the text stays above 4.5:1 against the tested
+neutral surfaces through rest, hover, and press. Pressed Link ink now keeps
+90% of its color instead of 70%; the earlier amount fell to 3.27:1 on the
+light canvas. Focus colors are unchanged.
+Primary purple, Primary pink, Secondary, and Tertiary
 are distinct treatments; `default` now aliases neutral Tertiary, not Primary.
 
 ### Selected state
@@ -145,7 +150,8 @@ Latest decision: the user rejected solid Error backgrounds for Destructive.
 Restore the earlier translucent red treatment through named opacity tokens:
 light rest/hover/press10%/20%/30%, dark20%/30%/40%, mixed with transparent in
 OKLab using the existing destructive color. Filled baseline P40/P80 remains.
-Text colors are unchanged. This supersedes the Destructive fill described below.
+Text colors were unchanged in that background pass; the later Button ink
+correction above supersedes that part of the decision.
 
 Background-only correction, September 8: Filled now uses Material Web v0.192
 baseline P40 `#6750a4` in light mode and P80 `#d0bcff` in dark mode. Destructive
@@ -158,10 +164,9 @@ for links and other existing consumers. The former website purple was already
 tone40.3 but chroma69.9; baseline P40 is tone40.1/chroma47.9. Tone alone does not
 specify saturation.
 
-Only backgrounds changed in this pass. Existing primary, secondary, destructive,
-and link text colors and focus colors are preserved. Destructive text is still
-the existing red on the new Error fill and is **not contrast-certified**; it
-requires the explicitly deferred foreground pass. Tonal backgrounds remain
+Only backgrounds changed in that pass. Existing primary, secondary, destructive,
+and link text colors and focus colors were preserved then. Destructive text was
+not contrast-certified until the later Button ink correction above. Tonal backgrounds remain
 the existing website Secondary container pair. No new palette is inferred from
 the supplied screenshot.
 
@@ -170,7 +175,7 @@ added as an explicit option on September 13, 2026. Tune
 `--button-primary-fill`, `--button-primary-ink`, `--button-primary-state-ink`,
 `--button-primary-pink-fill`, `--button-primary-pink-ink`,
 `--button-secondary-fill`, `--button-secondary-ink`, and `--button-link-ink` in
-index.css. These alias the established website palette in each appearance.
+`src/styles/tokens.css` and `src/styles/button.css`. These alias the established website palette in each appearance.
 Generic `--primary` and `--secondary` remain separate so button tuning does not
 recolor unrelated selection indicators or badges. Explicit custom themes retain
 their own mappings.
@@ -183,8 +188,8 @@ search-button mapping returns only through explicit `primaryColor="pink"`.
 Tests cover both sizes and modes, actual mouse/press states, disabled opacity,
 source-token propagation, and unchanged generic aliases. Website accent variables
 now reference CSS source tokens rather than applying cached hex copies.
-Ghost/destructive styles, focus indicators, disabled semantics, dimensions,
-corners, and motion are unchanged. Disabled buttons retain the existing 50%
+At that stage, Ghost/destructive styles, focus indicators, disabled semantics,
+dimensions, corners, and motion were unchanged. Disabled buttons retain the existing 50%
 opacity; disabled-label contrast is not certified as enabled-label contrast.
 
 Website `background` maps to Surface, `surface-0..4` to the five container levels,

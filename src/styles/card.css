@@ -1,0 +1,35 @@
+@layer components {
+  [data-slot="card"] {
+    --card-spacing: var(--card-spacing-default);
+    --card-region-gap: var(--card-region-gap-default);
+    --card-content-group-gap: var(--card-content-group-gap-default);
+  }
+
+  [data-slot="card"][data-size="sm"] {
+    --card-spacing: var(--card-spacing-small);
+    --card-region-gap: var(--card-region-gap-small);
+    --card-content-group-gap: var(--card-content-group-gap-small);
+  }
+
+  [data-slot="card"][data-size="expressive"] {
+    --card-spacing: var(--card-spacing-expressive);
+    --card-region-gap: var(--card-region-gap-expressive);
+    --card-content-group-gap: var(--card-content-group-gap-expressive);
+  }
+
+  [data-slot="card"][data-variant="code"] {
+    --code-block-copy-radius: max(0px, calc(var(--card-radius) - var(--code-block-copy-inset) - var(--code-block-boundary-width)));
+    border: var(--code-block-boundary-width) solid var(--border);
+  }
+
+  .card-media-overlay {
+    background-color: var(--card-media-overlay);
+  }
+}
+
+@media (forced-colors: active) {
+  [data-slot="card"][data-variant="default"] {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+}

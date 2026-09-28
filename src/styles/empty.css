@@ -1,0 +1,4 @@
+[data-slot="empty-icon"] .empty-icon__shape { fill: var(--empty-media-fill); }
+[data-slot="empty-icon-glyph"] .oneds-icon {
+  --icon-fill: var(--material-icon-fill-selected);
+}

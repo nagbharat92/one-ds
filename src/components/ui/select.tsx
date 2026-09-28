@@ -69,7 +69,7 @@ function SelectTrigger({
           ? "bg-(--button-tertiary-fill) text-(--button-tertiary-ink) hover:bg-(--button-tertiary-hover) active:bg-(--button-tertiary-pressed) focus-visible:bg-(--button-tertiary-fill) focus-visible:text-(--button-tertiary-ink) data-placeholder:text-(--button-tertiary-ink)/60"
           : variant === "secondary"
             ? "bg-(--button-secondary-fill) text-(--button-secondary-ink) hover:bg-(--button-secondary-hover) active:bg-(--button-secondary-pressed) focus-visible:bg-(--button-secondary-fill) focus-visible:text-(--button-secondary-ink) data-placeholder:text-(--button-secondary-ink)/60"
-            : "bg-(--field-fill) text-(--field-ink) hover:bg-(--field-hover-fill) active:bg-(--field-pressed-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) data-placeholder:text-(--field-ink)/60",
+            : "bg-(--field-fill) text-(--field-ink) hover:bg-(--field-hover-fill) active:bg-(--field-pressed-fill) focus-visible:bg-(--field-focus-fill) focus-visible:text-(--field-focus-ink) data-placeholder:text-(--field-placeholder-ink)",
         focusRing
           ? "focus-visible:ring-3 focus-visible:ring-ring aria-invalid:ring-3 aria-invalid:ring-destructive"
           : "focus-visible:ring-0 focus-visible:outline-none aria-invalid:ring-0",

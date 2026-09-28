@@ -1,7 +1,8 @@
 /**
  * Enforces rule foundations.tokens: design values come from named tokens.
  *
- * Static scan of authored source for values that should live in src/index.css.
+ * Static scan of authored source for values that should live in the shared
+ * token sheets under src/styles/.
  * Runs in milliseconds, needs no browser, and reports file:line with the match.
  *
  * Existing violations live in design-token-allowlist.json with a reason each.
@@ -14,9 +15,9 @@ import fs from "node:fs"
 const root = new URL("..", import.meta.url)
 const allowlistPath = new URL("design-token-allowlist.json", import.meta.url)
 
-// src/index.css is the token source: literals belong there, by definition.
+// Foundation and Button token sheets own their literals.
 // Generated files are not authored, so their contents are not a design decision.
-const SKIP = [/^src\/index\.css$/, /generated-example-code\.ts$/, /^src\/assets\//]
+const SKIP = [/^src\/index\.css$/, /^src\/styles\/(?:tokens|showcase-tokens|button|field)\.css$/, /generated-example-code\.ts$/, /^src\/assets\//]
 
 const PATTERNS = [
   {
@@ -32,7 +33,7 @@ const PATTERNS = [
     // Arbitrary values that reference a variable, and data-[...] selectors,
     // do not match and are not violations.
     re: /[a-z-]+\[[0-9]+(?:\.[0-9]+)?(?:px|rem|em|vh|vw)\]/g,
-    hint: "add a token in src/index.css and reference it, e.g. ring-(--focus-ring-width)",
+    hint: "add a token in src/styles/tokens.css and reference it, e.g. ring-(--focus-ring-width)",
   },
   {
     id: "inline-dimension",
@@ -61,6 +62,7 @@ for (const file of walk("src")) {
   const lines = fs.readFileSync(new URL(file, root), "utf8").split("\n")
   for (const { id, re, hint } of PATTERNS) {
     lines.forEach((line, index) => {
+      if (line.trimStart().startsWith("//")) return
       for (const match of line.matchAll(re)) {
         const key = file + " " + match[0]
         if (!found.has(key)) found.set(key, { file, match: match[0], id, hint, lines: [] })

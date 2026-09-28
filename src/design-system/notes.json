@@ -105,6 +105,23 @@
         "Show both neutral and accent ranges, including light and dark variants",
         "Tie the page to live token relationships so it stays useful as the theme evolves"
       ]
+    },
+    {
+      "id": "note-accordion-border-and-card-variants",
+      "title": "Accordions need stronger border and card variants",
+      "category": "Ergonomics",
+      "status": "planned",
+      "priority": "Medium",
+      "summary": "The accordion needs more intentional visual treatments for both border-based sections and card-based groups, with clear separation and predictable open states.",
+      "context": "The current accordion treatment should be reviewed as a family of patterns rather than a single default, because dense settings and standalone content panels need different levels of containment.",
+      "details": "Explore a restrained border variant for stacked sections where dividers provide enough structure without turning every item into a separate surface. Also define a card variant for accordions that need stronger grouping, elevation, or separation from the surrounding page. Both versions should preserve a clear trigger hierarchy, readable expanded content, consistent spacing, and an open state that feels connected to its trigger instead of becoming a visually unrelated panel.",
+      "reasoning": "A single accordion surface cannot serve every context equally well. Border treatment is better for compact, information-dense flows, while a card treatment can give an isolated group more presence and make its boundaries easier to scan. Naming and testing both variants at the shared component level will keep page consumers from recreating inconsistent local styles.",
+      "tags": ["accordion", "borders", "cards", "variants", "disclosure"],
+      "actionItems": [
+        "Define border and card variants in the shared accordion component",
+        "Review open, hover, focus, and nested-content states for both treatments",
+        "Add real examples showing when to choose a border accordion versus a card accordion"
+      ]
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react"
 import {
   FileIcon,
   XIcon,
@@ -74,6 +74,7 @@ import {
 } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
 import { Chip } from "@/components/ui/chip"
 import { CodeBlock } from "@/components/code-block"
 import { Favicon } from "@/components/ui/favicon"
@@ -599,6 +600,7 @@ function AIComposerMiniDemo() {
 function AIComposerContextIndicatorDemo() {
   const [prompt, setPrompt] = useState("")
   const [status, setStatus] = useState<AIComposerStatus>("ready")
+  const [contextVisible, setContextVisible] = useState(true)
 
   return (
     <AIComposer
@@ -609,7 +611,10 @@ function AIComposerContextIndicatorDemo() {
         setStatus("streaming")
       }}
     >
-      <AIComposerContextIndicator className="gap-(--space-2xs)">
+      <AIComposerContextIndicator
+        visible={contextVisible}
+        className="gap-(--space-2xs)"
+      >
         <Badge asChild variant="white">
           <a
             href="https://github.com/microsoft/fluentui"
@@ -620,8 +625,12 @@ function AIComposerContextIndicatorDemo() {
             microsoft/fluentui
           </a>
         </Badge>
-        <Chip variant="outline" size="sm">
-          add more
+        <Chip
+          variant="outline"
+          size="sm"
+          onClick={() => setContextVisible(false)}
+        >
+          remove
         </Chip>
       </AIComposerContextIndicator>
       <AIComposerInput
@@ -633,6 +642,15 @@ function AIComposerContextIndicatorDemo() {
       <AIComposerFooter>
         <AIComposerTools>
           <AIComposerAddMenu />
+          {!contextVisible ? (
+            <AIComposerTool
+              dismissible={false}
+              onClick={() => setContextVisible(true)}
+            >
+              <PlusIcon />
+              Add repository context
+            </AIComposerTool>
+          ) : null}
         </AIComposerTools>
         <AIComposerActions>
           <AIComposerSubmit
@@ -701,6 +719,72 @@ function AIComposerStatesDemo() {
           </fieldset>
         </AIComposer>
       </div>
+    </div>
+  )
+}
+
+const composerMotionStates: Array<{ status: AIComposerStatus; label: string }> =
+  [
+    { status: "ready", label: "Ready" },
+    { status: "submitted", label: "Submitted" },
+    { status: "streaming", label: "Streaming" },
+    { status: "error", label: "Error" },
+  ]
+
+function AIComposerMotionDemo() {
+  const [prompt, setPrompt] = useState("")
+  const [status, setStatus] = useState<AIComposerStatus>("ready")
+
+  return (
+    <div className="grid w-full max-w-(--ai-composer-max-width) gap-4">
+      <ButtonGroup shape="round" aria-label="Composer status">
+        {composerMotionStates.map(({ status: state, label }) => (
+          <Button
+            key={state}
+            variant="tertiary"
+            selected={status === state}
+            onClick={() => setStatus(state)}
+          >
+            {label}
+          </Button>
+        ))}
+      </ButtonGroup>
+      <AIComposer
+        status={status}
+        onSubmit={(event) => {
+          event.preventDefault()
+          if (prompt.trim()) setStatus("submitted")
+        }}
+        // Scoped slow-down so each one-shot is easy to catch; production stays snappy.
+        style={
+          {
+            "--ai-composer-speed": "var(--speed-slow)",
+            "--ai-composer-icon-fade-speed": "var(--speed-slow)",
+            "--ai-composer-error-shake-speed": "var(--speed-slow)",
+            "--ai-composer-grow-velocity": "120",
+          } as CSSProperties
+        }
+      >
+        <AIComposerInput
+          aria-label="Message"
+          placeholder="Type across several lines to watch it grow, then send…"
+          value={prompt}
+          onChange={(event) => setPrompt(event.target.value)}
+        />
+        <AIComposerFooter>
+          <AIComposerTools>
+            <AIComposerAddMenu />
+          </AIComposerTools>
+          <AIComposerActions>
+            <AIComposerSubmit
+              status={status}
+              onClick={
+                status === "streaming" ? () => setStatus("ready") : undefined
+              }
+            />
+          </AIComposerActions>
+        </AIComposerFooter>
+      </AIComposer>
     </div>
   )
 }
@@ -1383,9 +1467,15 @@ export function AIComposerDemo() {
         layout: "wide",
         Demo: AIComposerStatesDemo,
       },
+      {
+        name: "Motion",
+        description:
+          "Drive the status to watch the choreography: the send button morphs through its whole lifecycle, sending gives it a springy squash, the stop control breathes while streaming, and entering error shakes the shell once. Type across several lines to see the input grow.",
+        layout: "wide",
+        Demo: AIComposerMotionDemo,
+      },
     ],
   },
-
   // =======================================================================
   // BUBBLE
   // =======================================================================
@@ -1745,6 +1835,34 @@ export function MessageDemo() {
                       </Button>
                     </MessageActions>
                   </MessageFooter>
+                </MessageContent>
+              </Message>
+            </MessageGroup>
+          )
+        },
+      },
+      {
+        name: "Floating actions",
+        description: "Hover, focus, or touch the message to reach its actions.",
+        Demo: function FloatingActionsDemo() {
+          const [copied, setCopied] = useState(false)
+          return (
+            <MessageGroup className="w-full max-w-sm">
+              <Message align="start">
+                <MessageContent>
+                  <Bubble variant="secondary">
+                    <BubbleContent>The summary is ready to share.</BubbleContent>
+                  </Bubble>
+                  <MessageActions variant="floating">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={copied ? "Copied" : "Copy message"}
+                      onClick={() => setCopied(true)}
+                    >
+                      {copied ? <CheckIcon aria-hidden /> : <CopyIcon aria-hidden />}
+                    </Button>
+                  </MessageActions>
                 </MessageContent>
               </Message>
             </MessageGroup>

@@ -25,6 +25,7 @@ import {
 
 import { persona } from "@/lib/persona"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { Badge } from "@/components/ui/badge"
 import { Bubble, BubbleContent } from "@/components/ui/bubble"
 import { Button } from "@/components/ui/button"
@@ -78,27 +79,26 @@ import {
   SiteHeaderContainer,
 } from "@/components/ui/site-header"
 import {
-  Sidebar,
-  SidebarAccount,
-  SidebarAccountDetails,
-  SidebarBrand,
-  SidebarBrandLabel,
-  SidebarBrandMark,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarResizeHandle,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar"
+  NavigationPane,
+  NavigationPaneAccount,
+  NavigationPaneAccountDetails,
+  NavigationPaneBrand,
+  NavigationPaneBrandLabel,
+  NavigationPaneBrandMark,
+  NavigationPaneContent,
+  NavigationPaneFooter,
+  NavigationPaneGroup,
+  NavigationPaneGroupContent,
+  NavigationPaneGroupLabel,
+  NavigationPaneHeader,
+  NavigationPaneInset,
+  NavigationPaneMenu,
+  NavigationPaneMenuItem,
+  NavigationPaneProvider,
+  NavigationPaneResizeHandle,
+  NavigationPaneTrigger,
+  useNavigationPane,
+} from "@/components/ui/navigation-pane"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ResizableTextarea } from "@/components/ui/resizable-textarea"
 import { Toolbar } from "@/components/ui/toolbar"
@@ -346,34 +346,39 @@ function ExpressionLabNavigation({
   activeRegion: LabNavigationId
   onNavigate: (id: LabNavigationId) => void
 }) {
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useNavigationPane()
 
   return (
-    <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Workspace</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
+    <NavigationPaneContent>
+      <NavigationPaneGroup>
+        <NavigationPaneGroupLabel>Workspace</NavigationPaneGroupLabel>
+        <NavigationPaneGroupContent>
+          <NavigationPaneMenu>
             {labNavigation.map(({ id, label, icon: Icon }) => (
-              <SidebarMenuItem key={id}>
-                <SidebarMenuButton
-                  type="button"
-                  isActive={activeRegion === id}
-                  tooltip={label}
-                  onClick={() => {
-                    onNavigate(id)
-                    if (isMobile) setOpenMobile(false)
-                  }}
-                >
-                  <Icon />
-                  <span>{label}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <NavigationPaneMenuItem key={id}>
+                <Item compact asChild variant={activeRegion === id ? "muted" : "default"}>
+                  <button
+                    type="button"
+                    aria-pressed={activeRegion === id}
+                    onClick={() => {
+                      onNavigate(id)
+                      if (isMobile) setOpenMobile(false)
+                    }}
+                  >
+                    <ItemMedia variant="icon">
+                      <Icon />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{label}</ItemTitle>
+                    </ItemContent>
+                  </button>
+                </Item>
+              </NavigationPaneMenuItem>
             ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
+          </NavigationPaneMenu>
+        </NavigationPaneGroupContent>
+      </NavigationPaneGroup>
+    </NavigationPaneContent>
   )
 }
 
@@ -481,45 +486,45 @@ export function ExpressionLabCanvas({
       data-expression={mode}
       aria-label="Expression lab workbench"
     >
-      <SidebarProvider
+      <NavigationPaneProvider
         id="expression-lab"
         persist={false}
         shortcut={false}
         className="h-full min-h-0 overflow-hidden"
       >
-        <Sidebar placement="inset" collapsible="bar" data-expression={mode}>
-          <SidebarHeader>
-            <SidebarBrand>
-              <SidebarBrandMark>
+        <NavigationPane placement="floating" collapsible="bar" data-expression={mode}>
+          <NavigationPaneHeader>
+            <NavigationPaneBrand>
+              <NavigationPaneBrandMark>
                 <SparklesIcon className="size-4" />
-              </SidebarBrandMark>
-              <SidebarBrandLabel>Design room</SidebarBrandLabel>
-              <SidebarTrigger />
-            </SidebarBrand>
-          </SidebarHeader>
+              </NavigationPaneBrandMark>
+              <NavigationPaneBrandLabel>Design room</NavigationPaneBrandLabel>
+              <NavigationPaneTrigger />
+            </NavigationPaneBrand>
+          </NavigationPaneHeader>
           <ExpressionLabNavigation
             activeRegion={activeRegion}
             onNavigate={navigateToRegion}
           />
-          <SidebarFooter>
-            <SidebarAccount>
+          <NavigationPaneFooter>
+            <NavigationPaneAccount>
               <Avatar>
                 <AvatarImage src={persona.avatar} alt="" />
                 <AvatarFallback>{persona.initials}</AvatarFallback>
               </Avatar>
-              <SidebarAccountDetails>
+              <NavigationPaneAccountDetails>
                 <span>{persona.name}</span>
                 <span>{persona.title}</span>
-              </SidebarAccountDetails>
+              </NavigationPaneAccountDetails>
               <ChevronsUpDownIcon />
-            </SidebarAccount>
-          </SidebarFooter>
-          <SidebarResizeHandle />
-        </Sidebar>
-        <SidebarInset className="min-h-0 overflow-hidden">
-          <SiteHeader className="expression-lab__header static h-auto min-h-(--sidebar-header-height)">
-            <SiteHeaderContainer className="h-auto min-h-(--sidebar-header-height) flex-wrap">
-              <SidebarTrigger className="md:hidden" />
+            </NavigationPaneAccount>
+          </NavigationPaneFooter>
+          <NavigationPaneResizeHandle />
+        </NavigationPane>
+        <NavigationPaneInset className="min-h-0 overflow-hidden">
+          <SiteHeader className="expression-lab__header static h-auto min-h-(--navigation-pane-header-height)">
+            <SiteHeaderContainer className="h-auto min-h-(--navigation-pane-header-height) flex-wrap">
+              <NavigationPaneTrigger className="md:hidden" />
               <strong className="expression-lab__page-title">
                 {labNavigation.find((item) => item.id === activeRegion)?.label}
               </strong>
@@ -1028,8 +1033,8 @@ export function ExpressionLabCanvas({
           </div>
             </div>
           </Scroller>
-        </SidebarInset>
-      </SidebarProvider>
+        </NavigationPaneInset>
+      </NavigationPaneProvider>
     </section>
   )
 }

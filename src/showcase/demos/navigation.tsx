@@ -1,5 +1,5 @@
 import { Favicon } from "@/components/ui/favicon"
-import { useState } from "react"
+import { useState, type CSSProperties } from "react"
 import {
   HomeIcon,
   InboxIcon,
@@ -14,15 +14,13 @@ import {
   BoxIcon,
   SearchIcon,
   ArrowRightIcon,
-  BoxesIcon,
-  ChevronsUpDownIcon,
 } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
-import { cn } from "@/lib/utils"
 import { persona } from "@/lib/persona"
 import { Button } from "@/components/ui/button"
 import { Input, SearchInput } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
 import {
   SiteHeader,
   SiteHeaderActions,
@@ -73,9 +71,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {
   NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import {
@@ -88,31 +89,35 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Sidebar,
-  SidebarAccount,
-  SidebarAccountDetails,
-  SidebarBrand,
-  SidebarBrandLabel,
-  SidebarBrandMark,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarResizeHandle,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Page, PageScroll, PageContent } from "@/components/ui/page"
+import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item"
+import {
+  NavigationPane,
+  NavigationPaneBrand,
+  NavigationPaneBrandLabel,
+  NavigationPaneBrandMark,
+  NavigationPaneContent,
+  NavigationPaneFooter,
+  NavigationPaneGroup,
+  NavigationPaneGroupContent,
+  NavigationPaneGroupLabel,
+  NavigationPaneHeader,
+  NavigationPaneHeaderActions,
+  NavigationPaneInset,
+  NavigationPaneMenu,
+  NavigationPaneMenuItem,
+  NavigationPaneProvider,
+  NavigationPaneSearch,
+  NavigationPaneTrigger,
+  useNavigationPane,
+} from "@/components/ui/navigation-pane"
+import {
+  NavigationRail,
+  NavigationRailIcon,
+  NavigationRailItem,
+  NavigationRailLabel,
+  NavigationRailList,
+} from "@/components/ui/navigation-rail"
 
 function PaginationSimpleDemo() {
   const [page, setPage] = useState(2)
@@ -235,363 +240,6 @@ function PaginationIconsOnlyDemo() {
         </PaginationItem>
       </PaginationContent>
     </Pagination>
-  )
-}
-
-const sidebarNavItems = [
-  { label: "Home", icon: HomeIcon },
-  { label: "Inbox", icon: InboxIcon, badge: "12" },
-  { label: "Calendar", icon: CalendarIcon },
-  { label: "Settings", icon: SettingsIcon },
-]
-
-function SidebarDemoNav({
-  active,
-  onSelect,
-}: {
-  active: string
-  onSelect: (label: string) => void
-}) {
-  return (
-    <SidebarContent>
-      <SidebarGroup>
-        <SidebarGroupLabel>Application</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {sidebarNavItems.map(({ label, icon: Icon, badge }) => (
-              <SidebarMenuItem key={label}>
-                <SidebarMenuButton
-                  isActive={active === label}
-                  tooltip={label}
-                  onClick={(event) => {
-                    event.preventDefault()
-                    onSelect(label)
-                  }}
-                >
-                  <Icon />
-                  <span>{label}</span>
-                </SidebarMenuButton>
-                {badge && <SidebarMenuBadge>{badge}</SidebarMenuBadge>}
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </SidebarContent>
-  )
-}
-
-function SidebarStateReadout() {
-  const { form, placement, collapse, width } = useSidebar()
-  const rows: [string, string][] = [
-    ["form", form],
-    ["placement", placement],
-    ["collapse", collapse],
-    ["width", width ?? "token default"],
-  ]
-
-  return (
-    <dl className="w-full">
-      {rows.map(([key, value]) => (
-        <div
-          key={key}
-          className="flex items-center justify-between gap-4 border-b py-1 last:border-b-0"
-        >
-          <dt className="text-muted-foreground text-xs">{key}</dt>
-          <dd className="font-mono text-xs">{value}</dd>
-        </div>
-      ))}
-    </dl>
-  )
-}
-
-function SidebarDemoBrand() {
-  return (
-    <SidebarHeader>
-      <SidebarBrand>
-        <SidebarBrandMark>
-          <BoxesIcon className="size-4" />
-        </SidebarBrandMark>
-        <SidebarBrandLabel>Acme</SidebarBrandLabel>
-        <SidebarTrigger />
-      </SidebarBrand>
-    </SidebarHeader>
-  )
-}
-
-function SidebarDemoAccount() {
-  return (
-    <SidebarFooter>
-      <SidebarAccount>
-        <Avatar>
-          <AvatarImage src={persona.avatar} alt="" />
-          <AvatarFallback>{persona.initials}</AvatarFallback>
-        </Avatar>
-        <SidebarAccountDetails>
-          <span>{persona.name}</span>
-          <span>Free plan</span>
-        </SidebarAccountDetails>
-        <ChevronsUpDownIcon />
-      </SidebarAccount>
-    </SidebarFooter>
-  )
-}
-
-function SidebarDemoTopBar({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex h-(--sidebar-header-height) shrink-0 items-center gap-2 border-b px-4 text-sm font-medium">
-      {children}
-    </div>
-  )
-}
-
-function InteractiveSidebarDemo() {
-  const [activeItem, setActiveItem] = useState("Home")
-  return (
-    <div className="showcase-contained-viewport h-96 w-full overflow-hidden rounded-lg border">
-      <SidebarProvider
-        id="showcase-sidebar"
-        persist={false}
-        className="min-h-full"
-      >
-        <Sidebar collapsible="bar">
-          <SidebarDemoBrand />
-          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
-          <SidebarDemoAccount />
-          <SidebarResizeHandle />
-        </Sidebar>
-        <SidebarInset className="min-h-full">
-          <SidebarDemoTopBar>{activeItem}</SidebarDemoTopBar>
-          <div className="flex flex-col gap-3 p-4">
-            <p className="text-muted-foreground text-sm">
-              The toggle lives in the panel: top-right when expanded, and once
-              collapsed it fades out and returns whenever the bar is hovered.
-              Drag the inner edge to resize, or double-click it to reset.
-            </p>
-            <SidebarStateReadout />
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
-  )
-}
-
-function SidebarStateControls() {
-  const { setDock, setWidth, resetWidth, startPeek } = useSidebar()
-  const states: [string, () => void][] = [
-    [
-      "expanded",
-      () => {
-        resetWidth()
-        setDock("expanded")
-      },
-    ],
-    [
-      "resized",
-      () => {
-        setDock("expanded")
-        setWidth("18rem")
-      },
-    ],
-    ["bar", () => setDock("bar")],
-    [
-      "peeking",
-      () => {
-        setDock("bar")
-        startPeek(true)
-      },
-    ],
-  ]
-
-  return (
-    <div className="flex flex-col gap-3 p-4">
-      <div className="flex flex-wrap gap-2">
-        {states.map(([label, apply]) => (
-          <Button key={label} size="default" variant="secondary" onClick={apply}>
-            {label}
-          </Button>
-        ))}
-      </div>
-      <SidebarStateReadout />
-    </div>
-  )
-}
-
-function SidebarCollapseStatesDemo() {
-  const [activeItem, setActiveItem] = useState("Home")
-  return (
-    <div className="showcase-contained-viewport h-96 w-full overflow-hidden rounded-lg border">
-      <SidebarProvider
-        id="showcase-sidebar-states"
-        persist={false}
-        shortcut={false}
-        peek
-        className="min-h-full"
-      >
-        <Sidebar collapsible="bar">
-          <SidebarDemoBrand />
-          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
-          <SidebarDemoAccount />
-          <SidebarResizeHandle />
-        </Sidebar>
-        <SidebarInset className="min-h-full">
-          <SidebarStateControls />
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
-  )
-}
-
-function SidebarPeekDemo() {
-  const [activeItem, setActiveItem] = useState("Inbox")
-  return (
-    <div className="showcase-contained-viewport h-80 w-full overflow-hidden rounded-lg border">
-      <SidebarProvider
-        id="showcase-sidebar-peek"
-        persist={false}
-        shortcut={false}
-        peek
-        defaultOpen={false}
-        className="min-h-full"
-      >
-        <Sidebar collapsible="hidden">
-          <SidebarDemoBrand />
-          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
-          <SidebarDemoAccount />
-        </Sidebar>
-        <SidebarInset className="min-h-full">
-          <SidebarDemoTopBar>{activeItem}</SidebarDemoTopBar>
-          <div className="flex flex-col gap-3 p-4">
-            <p className="text-muted-foreground text-sm">
-              The panel is hidden, so the layout has the full width. Sweep the
-              pointer toward the left edge to peek it over the content — nothing
-              reflows. With peek on, the toggle simply fades out instead of
-              taking over the logo.
-            </p>
-            <SidebarStateReadout />
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
-  )
-}
-
-function SidebarFloatingTriggerDemo() {
-  const [activeItem, setActiveItem] = useState("Home")
-  return (
-    <div className="showcase-contained-viewport h-80 w-full overflow-hidden rounded-lg border">
-      <SidebarProvider
-        id="showcase-sidebar-floating-trigger"
-        persist={false}
-        shortcut={false}
-        defaultOpen={false}
-        className="h-full min-h-0"
-      >
-        <Sidebar collapsible="hidden">
-          <SidebarDemoBrand />
-          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
-          <SidebarDemoAccount />
-        </Sidebar>
-        <SidebarInset className="min-h-0">
-          <SidebarTrigger placement="floating" />
-          <Page>
-            <PageScroll>
-              <PageContent
-                animate={false}
-                className="px-4 [--page-pad-block-start:var(--sidebar-floating-trigger-inset)]"
-              >
-                <SidebarStateReadout />
-              </PageContent>
-            </PageScroll>
-          </Page>
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
-  )
-}
-
-function SidebarEdgeDemo() {
-  const [activeItem, setActiveItem] = useState("Home")
-  const [edge, setEdge] = useState<"line" | "faded" | "none">("faded")
-  return (
-    <div className="showcase-contained-viewport h-80 w-full overflow-hidden rounded-lg border">
-      <SidebarProvider
-        id="showcase-sidebar-edge"
-        persist={false}
-        shortcut={false}
-        className="min-h-full"
-      >
-        <Sidebar collapsible="bar" edge={edge}>
-          <SidebarDemoBrand />
-          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
-          <SidebarDemoAccount />
-        </Sidebar>
-        <SidebarInset className="min-h-full">
-          <SidebarDemoTopBar>{activeItem}</SidebarDemoTopBar>
-          <div className="flex flex-wrap gap-2 p-4">
-            {(["line", "faded", "none"] as const).map((option) => (
-              <Button
-                key={option}
-                size="default"
-                variant="tertiary"
-                selected={edge === option}
-                onClick={() => setEdge(option)}
-              >
-                {option}
-              </Button>
-            ))}
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
-  )
-}
-
-function SidebarPlacementDemo() {
-  const [activeItem, setActiveItem] = useState("Home")
-  const [placement, setPlacement] = useState<"inset" | "floating" | "docked">("inset")
-  return (
-    // rounded-3xl: the inset card's 14px radius plus its 8px margin, so the two curves stay concentric.
-    <div
-      id="sidebar-placement"
-      className={cn(
-        "showcase-contained-viewport h-80 w-full overflow-hidden border",
-        placement === "inset" ? "rounded-3xl" : "rounded-lg"
-      )}
-    >
-      <SidebarProvider
-        id="showcase-sidebar-inset"
-        persist={false}
-        shortcut={false}
-        className="min-h-full"
-      >
-        <Sidebar placement={placement} collapsible="bar">
-          <SidebarDemoBrand />
-          <SidebarDemoNav active={activeItem} onSelect={setActiveItem} />
-          <SidebarDemoAccount />
-          <SidebarResizeHandle />
-        </Sidebar>
-        <SidebarInset className="min-h-full">
-          <SidebarDemoTopBar>{activeItem}</SidebarDemoTopBar>
-          <div className="flex flex-col gap-3 p-4">
-            <div className="flex flex-wrap gap-2">
-              {(["inset", "floating", "docked"] as const).map((option) => (
-                <Button
-                  key={option}
-                  size="default"
-                  variant="tertiary"
-                  selected={placement === option}
-                  onClick={() => setPlacement(option)}
-                >
-                  {option}
-                </Button>
-              ))}
-            </div>
-            <SidebarStateReadout />
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    </div>
   )
 }
 
@@ -1080,6 +728,304 @@ function SiteFooterInvertedDemo() {
   )
 }
 
+const navigationPaneNavItems = [
+  { label: "Home", icon: HomeIcon },
+  { label: "Inbox", icon: InboxIcon },
+  { label: "Calendar", icon: CalendarIcon },
+  { label: "Settings", icon: SettingsIcon },
+]
+
+const navigationRailItems = [
+  {
+    label: "Home",
+    icon: HomeIcon,
+    destinations: ["Overview", "Activity", "Saved"],
+  },
+  {
+    label: "Inbox",
+    icon: InboxIcon,
+    destinations: ["All messages", "Unread", "Drafts"],
+  },
+  {
+    label: "Calendar",
+    icon: CalendarIcon,
+    destinations: ["Schedule", "Upcoming", "Reminders"],
+  },
+  {
+    label: "Settings",
+    icon: SettingsIcon,
+    destinations: ["General", "Notifications", "Account"],
+  },
+]
+
+function AttachedNavigationRailDemo() {
+  const [activeRailItem, setActiveRailItem] = useState("Inbox")
+  const activeItem = navigationRailItems.find(
+    (item) => item.label === activeRailItem
+  ) ?? navigationRailItems[0]
+  const [activeDestination, setActiveDestination] = useState("All messages")
+
+  return (
+    <div className="showcase-contained-viewport h-(--page-preview-height) w-full overflow-hidden rounded-lg border">
+      <NavigationPaneProvider
+        id="showcase-navigation-rail"
+        persist={false}
+        className="min-h-full"
+      >
+        <NavigationPane
+          placement="floating"
+          collapsible="hidden"
+          edge="faded"
+          rail={
+            <NavigationRail attached aria-label="Primary navigation">
+              <NavigationRailList>
+                {navigationRailItems.map(({ label, icon: Icon, destinations }) => (
+                  <NavigationRailItem
+                    key={label}
+                    selected={activeRailItem === label}
+                    onClick={() => {
+                      setActiveRailItem(label)
+                      setActiveDestination(destinations[0])
+                    }}
+                  >
+                    <NavigationRailIcon>
+                      <Icon size={24} />
+                    </NavigationRailIcon>
+                    <NavigationRailLabel>{label}</NavigationRailLabel>
+                  </NavigationRailItem>
+                ))}
+              </NavigationRailList>
+            </NavigationRail>
+          }
+        >
+          <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
+            <NavigationPaneBrand>
+              <NavigationPaneBrandMark>
+                <img src="/favicon.svg" alt="" className="size-5" />
+              </NavigationPaneBrandMark>
+              <NavigationPaneBrandLabel className="text-lg font-semibold">
+                Acme
+              </NavigationPaneBrandLabel>
+            </NavigationPaneBrand>
+            <Button variant="ghost" size="icon" aria-label="Notifications">
+              <BellIcon />
+            </Button>
+          </NavigationPaneHeader>
+          <Separator variant="faded" />
+          <NavigationPaneGroup>
+            <NavigationPaneSearch placeholder={`Search ${activeItem.label}`} aria-label={`Search ${activeItem.label}`} />
+          </NavigationPaneGroup>
+          <NavigationPaneContent>
+            <NavigationPaneGroup>
+              <NavigationPaneGroupLabel>{activeItem.label}</NavigationPaneGroupLabel>
+              <NavigationPaneGroupContent>
+                <NavigationPaneMenu>
+                  {activeItem.destinations.map((destination) => (
+                    <NavigationPaneMenuItem key={destination}>
+                      <Item
+                        compact
+                        asChild
+                        variant={activeDestination === destination ? "muted" : "default"}
+                      >
+                        <button
+                          type="button"
+                          aria-pressed={activeDestination === destination}
+                          onClick={() => setActiveDestination(destination)}
+                        >
+                          <ItemContent>
+                            <ItemTitle>{destination}</ItemTitle>
+                          </ItemContent>
+                        </button>
+                      </Item>
+                    </NavigationPaneMenuItem>
+                  ))}
+                </NavigationPaneMenu>
+              </NavigationPaneGroupContent>
+            </NavigationPaneGroup>
+          </NavigationPaneContent>
+          <NavigationPaneDemoFooter />
+        </NavigationPane>
+        <NavigationPaneInset className="min-h-full">
+          <NavigationPaneTrigger placement="floating" />
+        </NavigationPaneInset>
+      </NavigationPaneProvider>
+    </div>
+  )
+}
+
+function NavigationPaneDemoNav({
+  active,
+  onSelect,
+}: {
+  active: string
+  onSelect: (label: string) => void
+}) {
+  const { isMobile, setOpenMobile } = useNavigationPane()
+  return (
+    <NavigationPaneContent>
+      <NavigationPaneGroup>
+        <NavigationPaneGroupLabel>Application</NavigationPaneGroupLabel>
+        <NavigationPaneGroupContent>
+          <NavigationPaneMenu>
+            {navigationPaneNavItems.map(({ label, icon: Icon }) => (
+              <NavigationPaneMenuItem key={label}>
+                <Item compact asChild variant={active === label ? "muted" : "default"}>
+                  <button
+                    type="button"
+                    aria-pressed={active === label}
+                    onClick={() => {
+                      onSelect(label)
+                      if (isMobile) setOpenMobile(false)
+                    }}
+                  >
+                    <ItemMedia variant="icon">
+                      <Icon />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{label}</ItemTitle>
+                    </ItemContent>
+                  </button>
+                </Item>
+              </NavigationPaneMenuItem>
+            ))}
+          </NavigationPaneMenu>
+        </NavigationPaneGroupContent>
+      </NavigationPaneGroup>
+    </NavigationPaneContent>
+  )
+}
+
+function NavigationPaneDemoBrand() {
+  return (
+    <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
+      <NavigationPaneBrand>
+        <NavigationPaneBrandMark>
+          <img src="/favicon.svg" alt="" className="size-5" />
+        </NavigationPaneBrandMark>
+        <NavigationPaneBrandLabel className="text-lg font-semibold">Acme</NavigationPaneBrandLabel>
+      </NavigationPaneBrand>
+      <NavigationPaneHeaderActions>
+        <Button variant="ghost" size="icon" aria-label="Notifications">
+          <BellIcon />
+        </Button>
+        <NavigationPaneTrigger />
+      </NavigationPaneHeaderActions>
+    </NavigationPaneHeader>
+  )
+}
+
+function NavigationPaneBarDemoBrand() {
+  return (
+    <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
+      <NavigationPaneBrand>
+        <NavigationPaneBrandMark>
+          <img src="/favicon.svg" alt="" className="size-5" />
+        </NavigationPaneBrandMark>
+        <NavigationPaneBrandLabel className="text-lg font-semibold">Acme</NavigationPaneBrandLabel>
+      </NavigationPaneBrand>
+      <NavigationPaneHeaderActions>
+        <NavigationPaneTrigger />
+      </NavigationPaneHeaderActions>
+    </NavigationPaneHeader>
+  )
+}
+
+// The real SearchInput, built to match a nav row exactly: it sits in a
+// NavigationPaneGroup (same 16px inset as the menu), takes the Item's compact radius
+// and 6px inset, and pins its leading icon as a fixed 28px host — the same
+// geometry as a nav row's ItemMedia. So the pill width and the icon column line
+// up with the rows below in every state. On the icon bar the field naturally
+// narrows to a 40px circle (its height never changes) while the text and clear
+// button fade and surrender their width — only width/opacity move, nothing
+// reflows.
+function NavigationPaneDemoSearch() {
+  return (
+    <NavigationPaneGroup>
+      <NavigationPaneSearch placeholder="Search..." aria-label="Search" />
+    </NavigationPaneGroup>
+  )
+}
+
+function NavigationPaneDemoFooter() {
+  return (
+    <NavigationPaneFooter>
+      <NavigationPaneMenu>
+        <NavigationPaneMenuItem>
+          <Item compact asChild>
+            <button type="button">
+              <ItemMedia>
+                <Avatar className="size-(--item-compact-media-host-size)">
+                  <AvatarImage src={persona.avatar} alt="" />
+                  <AvatarFallback>{persona.initials}</AvatarFallback>
+                </Avatar>
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{persona.name}</ItemTitle>
+              </ItemContent>
+            </button>
+          </Item>
+        </NavigationPaneMenuItem>
+      </NavigationPaneMenu>
+    </NavigationPaneFooter>
+  )
+}
+
+function InteractiveNavigationPaneDemo() {
+  const [activeItem, setActiveItem] = useState("Home")
+  return (
+    <div className="showcase-contained-viewport h-(--page-preview-height) w-full overflow-hidden rounded-lg border">
+      <NavigationPaneProvider
+        id="showcase-navigation-pane"
+        persist={false}
+        className="min-h-full"
+        style={{ "--navigation-pane-floating-trigger-inset": "var(--showcase-navigation-pane-trigger-inset)" } as CSSProperties}
+      >
+        <NavigationPane placement="floating" collapsible="hidden" edge="faded">
+          <NavigationPaneDemoBrand />
+          <Separator
+            variant="faded"
+            className="transition-opacity duration-(--navigation-pane-speed) ease-(--navigation-pane-ease) group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0"
+          />
+          <NavigationPaneDemoSearch />
+          <NavigationPaneDemoNav active={activeItem} onSelect={setActiveItem} />
+          <NavigationPaneDemoFooter />
+        </NavigationPane>
+        <NavigationPaneInset className="min-h-full">
+          <NavigationPaneTrigger placement="floating" />
+        </NavigationPaneInset>
+      </NavigationPaneProvider>
+    </div>
+  )
+}
+
+function NavigationPaneIconBarDemo() {
+  const [activeItem, setActiveItem] = useState("Home")
+  return (
+    <div className="showcase-contained-viewport h-(--page-preview-height) w-full overflow-hidden rounded-lg border">
+      <NavigationPaneProvider
+        id="showcase-navigation-pane-bar"
+        persist={false}
+        className="min-h-full"
+        style={{ "--navigation-pane-floating-trigger-inset": "var(--showcase-navigation-pane-trigger-inset)" } as CSSProperties}
+      >
+        <NavigationPane placement="floating" collapsible="bar" edge="faded">
+          <NavigationPaneBarDemoBrand />
+          <Separator
+            variant="faded"
+            className="transition-opacity duration-(--navigation-pane-speed) ease-(--navigation-pane-ease) group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0"
+          />
+          <NavigationPaneDemoSearch />
+          <NavigationPaneDemoNav active={activeItem} onSelect={setActiveItem} />
+          <NavigationPaneDemoFooter />
+        </NavigationPane>
+        <NavigationPaneInset className="min-h-full">
+          <NavigationPaneTrigger placement="floating" />
+        </NavigationPaneInset>
+      </NavigationPaneProvider>
+    </div>
+  )
+}
+
 export const navigationDemos: ComponentEntry[] = [
   {
     slug: "breadcrumb",
@@ -1268,6 +1214,51 @@ export function NavigationMenuDemo() {
     </NavigationMenu>
   )
 }`,
+    examples: [
+      {
+        name: "Viewport popup",
+        description: "A shared floating viewport for navigation destinations.",
+        Demo: () => (
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <NavigationMenuLink href="#/button">
+                    Buttons
+                  </NavigationMenuLink>
+                  <NavigationMenuLink href="#/card">
+                    Cards
+                  </NavigationMenuLink>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+            <NavigationMenuIndicator />
+          </NavigationMenu>
+        ),
+      },
+      {
+        name: "Direct popup",
+        description: "A floating menu anchored to its own trigger.",
+        Demo: () => (
+          <NavigationMenu viewport={false}>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Browse</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <NavigationMenuLink href="#/input">
+                    Inputs
+                  </NavigationMenuLink>
+                  <NavigationMenuLink href="#/select">
+                    Selects
+                  </NavigationMenuLink>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        ),
+      },
+    ],
   },
   {
     slug: "pagination",
@@ -1651,87 +1642,140 @@ export function TabsDemo() {
     ],
   },
   {
-    slug: "sidebar",
-    name: "Sidebar (Navigation)",
+    slug: "navigation-rail",
+    name: "Navigation - Rail",
     description:
-      "An application shell with three independent axes — form, placement, and collapse — plus resize, hover peek, and persistence.",
+      "Material 3 Expressive primary navigation paired with a floating navigation pane as two flat surfaces separated by an 8px gap, with smaller concentric corners.",
     category: "Navigation",
-    Demo: InteractiveSidebarDemo,
+    Demo: AttachedNavigationRailDemo,
     code: `import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarResizeHandle,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
+  NavigationRail,
+  NavigationRailIcon,
+  NavigationRailItem,
+  NavigationRailLabel,
+  NavigationRailList,
+} from "@/components/ui/navigation-rail"
+import {
+  NavigationPane,
+  NavigationPaneInset,
+  NavigationPaneProvider,
+} from "@/components/ui/navigation-pane"
 
-export function SidebarDemo() {
+export function NavigationRailDemo() {
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="bar">
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Application</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton isActive tooltip="Home">
-                    Home
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarResizeHandle />
-      </Sidebar>
-      <SidebarInset>
-        <SidebarTrigger />
-      </SidebarInset>
-    </SidebarProvider>
+    <NavigationPaneProvider>
+      <NavigationPane
+        placement="floating"
+        rail={
+          <NavigationRail attached aria-label="Primary navigation">
+            <NavigationRailList>
+              <NavigationRailItem selected>
+                <NavigationRailIcon>
+                  <HomeIcon size={24} />
+                </NavigationRailIcon>
+                <NavigationRailLabel>Home</NavigationRailLabel>
+              </NavigationRailItem>
+            </NavigationRailList>
+          </NavigationRail>
+        }
+      >
+        Navigation pane content
+      </NavigationPane>
+      <NavigationPaneInset>
+        <NavigationPaneTrigger placement="floating" />
+      </NavigationPaneInset>
+    </NavigationPaneProvider>
+  )
+}`,
+  },
+  {
+    slug: "navigation-pane",
+    name: "Navigation - Pane",
+    description:
+      "Application navigation pane — the same default used by this site: a floating panel that hides fully on toggle rather than collapsing to icons.",
+    category: "Navigation",
+    Demo: InteractiveNavigationPaneDemo,
+    code: `import {
+  NavigationPane,
+  NavigationPaneBrand,
+  NavigationPaneBrandLabel,
+  NavigationPaneBrandMark,
+  NavigationPaneContent,
+  NavigationPaneFooter,
+  NavigationPaneGroup,
+  NavigationPaneGroupContent,
+  NavigationPaneGroupLabel,
+  NavigationPaneHeader,
+  NavigationPaneHeaderActions,
+  NavigationPaneInset,
+  NavigationPaneMenu,
+  NavigationPaneMenuItem,
+  NavigationPaneProvider,
+  NavigationPaneSearch,
+  NavigationPaneTrigger,
+} from "@/components/ui/navigation-pane"
+import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item"
+
+export function NavigationPaneDemo() {
+  return (
+    <NavigationPaneProvider>
+      <NavigationPane placement="floating" collapsible="hidden" edge="faded">
+        <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
+          <NavigationPaneBrand>
+            <NavigationPaneBrandMark>
+              <img src="/favicon.svg" alt="" className="size-5" />
+            </NavigationPaneBrandMark>
+            <NavigationPaneBrandLabel className="text-lg font-semibold">Acme</NavigationPaneBrandLabel>
+          </NavigationPaneBrand>
+          <NavigationPaneHeaderActions>
+            <Button variant="ghost" size="icon" aria-label="Notifications">
+              <BellIcon />
+            </Button>
+            <NavigationPaneTrigger />
+          </NavigationPaneHeaderActions>
+        </NavigationPaneHeader>
+          <Separator
+            variant="faded"
+            className="transition-opacity duration-(--navigation-pane-speed) ease-(--navigation-pane-ease) group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0"
+          />
+        <NavigationPaneGroup>
+          <NavigationPaneSearch placeholder="Search..." aria-label="Search" />
+        </NavigationPaneGroup>
+        <NavigationPaneContent>
+          <NavigationPaneGroup>
+            <NavigationPaneGroupLabel>Application</NavigationPaneGroupLabel>
+            <NavigationPaneGroupContent>
+              <NavigationPaneMenu>
+                <NavigationPaneMenuItem>
+                  <Item compact asChild variant="muted">
+                    <button type="button">
+                      <ItemMedia variant="icon">
+                        <HomeIcon />
+                      </ItemMedia>
+                      <ItemContent>
+                        <ItemTitle>Home</ItemTitle>
+                      </ItemContent>
+                    </button>
+                  </Item>
+                </NavigationPaneMenuItem>
+              </NavigationPaneMenu>
+            </NavigationPaneGroupContent>
+          </NavigationPaneGroup>
+        </NavigationPaneContent>
+        <NavigationPaneFooter />
+      </NavigationPane>
+      <NavigationPaneInset>
+        <NavigationPaneTrigger placement="floating" />
+      </NavigationPaneInset>
+    </NavigationPaneProvider>
   )
 }`,
     examples: [
       {
-        name: "Collapse States",
+        name: "Icon Bar",
         description:
-          "Five states, not three. Expanded and resized reflow the layout, bar shrinks it to icons, hidden removes it, and peeking floats the panel over the content without reflowing anything.",
-        Demo: SidebarCollapseStatesDemo,
-        layout: "wide",
-      },
-      {
-        name: "Hover Peek",
-        description:
-          "When the panel is collapsed, sweeping the pointer toward the edge expands it as an overlay. Placement flips to overlay so the page behind never reflows, and the toggle stays independent instead of taking over the logo.",
-        Demo: SidebarPeekDemo,
-        layout: "wide",
-      },
-      {
-        name: "Placement",
-        description:
-          "Placement is independent of collapse. Docked sits flush, floating lifts the panel off the edge, and inset drops the whole shell to a grey layer zero with the content raised above it.",
-        Demo: SidebarPlacementDemo,
-        layout: "wide",
-      },
-      {
-        name: "Floating Trigger",
-        description:
-          "A compact, neutral navigation control floating over a full-height page. Initial content padding clears the button, then scrolls away; the scroll fade stays at the page edge. The trigger fades out when navigation opens, hands keyboard focus into the panel, and provides a return target when it closes.",
-        Demo: SidebarFloatingTriggerDemo,
-        layout: "wide",
-      },
-      {
-        name: "Edge",
-        description:
-          "How the boundary reads is its own axis. A line is the flush hairline, faded dissolves the rule at both ends so it never hard-stops, and none hands the edge to the surfaces either side. Floating and inset panels ignore it — they already carry a ring.",
-        Demo: SidebarEdgeDemo,
+          "Collapses to a narrow icon bar instead of hiding entirely. The search field shrinks to its icon and labels fade out in place — nothing reflows, so every icon keeps its exact position.",
+        Demo: NavigationPaneIconBarDemo,
         layout: "wide",
       },
     ],

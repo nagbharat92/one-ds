@@ -1,33 +1,26 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
 import {
   CheckIcon,
-  ArchiveIcon,
   CalendarIcon,
-  ChevronDownIcon,
   CopyIcon,
+  Eyeglasses3Icon,
   FileIcon,
   FileTextIcon,
   GlobeIcon,
-  HatGlassesIcon,
-  HistoryIcon,
-  MessageCirclePlusIcon,
   MoreHorizontalIcon,
   PaperclipIcon,
-  PaletteIcon,
-  PencilIcon,
   PencilLineIcon,
   PlusIcon,
   RefreshCwIcon,
-  ShareIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
-  Trash2Icon,
   XIcon,
 } from "@/components/ui/icons"
 
 import type { ComponentEntry } from "@/showcase/types"
 import { persona } from "@/lib/persona"
 import { cn } from "@/lib/utils"
+import { useBroadcastState } from "@/hooks/use-broadcast-state"
 import {
   AIComposer,
   AIComposerAction,
@@ -53,11 +46,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Bubble, BubbleContent } from "@/components/ui/bubble"
 import { Button } from "@/components/ui/button"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { Chip } from "@/components/ui/chip"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -65,7 +54,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -75,6 +63,14 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { Marker, MarkerContent } from "@/components/ui/marker"
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemMedia,
+  ItemPrimaryAction,
+  ItemTitle,
+} from "@/components/ui/item"
 import {
   Message,
   MessageActions,
@@ -93,38 +89,25 @@ import {
   useMessageScroller,
 } from "@/components/ui/message-scroller"
 import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemGroup,
-  ItemPrimaryAction,
-  ItemTitle,
-} from "@/components/ui/item"
-import {
-  Sidebar,
-  SidebarAccount,
-  SidebarAccountDetails,
-  SidebarBrand,
-  SidebarBrandLabel,
-  SidebarBrandMark,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
-  SidebarInset,
-  SidebarInput,
-  SidebarProvider,
-  SidebarResizeHandle,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { Swap, SwapItem } from "@/components/ui/swap"
-import {
-  SiteHeader,
-  SiteHeaderActions,
-  SiteHeaderContainer,
-  SiteHeaderTitle,
-} from "@/components/ui/site-header"
+  NavigationPane,
+  NavigationPaneBrand,
+  NavigationPaneBrandLabel,
+  NavigationPaneBrandMark,
+  NavigationPaneContent,
+  NavigationPaneFooter,
+  NavigationPaneGroup,
+  NavigationPaneGroupContent,
+  NavigationPaneGroupLabel,
+  NavigationPaneHeader,
+  NavigationPaneHeaderActions,
+  NavigationPaneInset,
+  NavigationPaneMenu,
+  NavigationPaneMenuItem,
+  NavigationPaneProvider,
+  NavigationPaneSearch,
+  NavigationPaneTrigger,
+} from "@/components/ui/navigation-pane"
+import { Separator } from "@/components/ui/separator"
 
 type ChatTurn = {
   id: string
@@ -150,28 +133,6 @@ type Conversation = {
 /** `auto` resolves against the block's own width, never the viewport. */
 type ChatLayout = "auto" | "workspace" | "panel"
 type ResolvedChatLayout = Exclude<ChatLayout, "auto">
-
-type ChatHistory = {
-  activeId: string
-  conversations: Conversation[]
-  onArchive: (id: string) => void
-  onDelete: (id: string) => void
-  onNewChat: () => void
-  onSelect: (id: string) => void
-}
-
-const starterTurns: ChatTurn[] = [
-  {
-    id: "welcome-user",
-    role: "user",
-    text: "Summarize the most important decisions from our design review.",
-  },
-  {
-    id: "welcome-assistant",
-    role: "assistant",
-    text: "The review aligned on three priorities: reuse established components, keep every visual decision token-driven, and make motion communicate state rather than decorate it.",
-  },
-]
 
 // Themed answers show the response surface across different content shapes:
 // math, rich media, comparison tables with citations, and code-heavy fixes.
@@ -225,6 +186,18 @@ The current flow loses **32%** of new users before activation. This redesign tri
 | Activation | 41% | 60% |
 | Time to value | 6 min | 2 min |`
 
+// A follow-up turn on the same conversation, so the pane demonstrates a
+// multi-step exchange rather than a single question and answer.
+const onboardingFollowUpResponse = `## Is 60% realistic?
+
+Yes, with a phased approach — teams that cut onboarding from seven steps to three typically see activation gains in this range within two releases.
+
+- **Release 1:** ship the three-step flow. Expect activation to jump to roughly 50% just from removing friction.
+- **Release 2:** add the progress indicator. This closes most of the remaining gap by reducing perceived length.
+
+> [!TIP]
+> Track time-to-value alongside activation — a flow that activates fast but delays value can still churn later.`
+
 const frameworksResponse = `## Comparing frontend frameworks
 
 Here is how the three candidates stack up for the dashboard[^1].
@@ -245,6 +218,26 @@ function Dashboard() {
 
 [^1]: [Framework benchmarks](#/response) — bundle and runtime comparisons.
 [^2]: [Team skills survey](#/message) — current familiarity across the team.`
+
+const frameworksFollowUpResponse = `## With SSR as a hard requirement
+
+React still leads, but for a different reason — its SSR frameworks (Next.js, Remix) are the most mature of the three.
+
+| Framework | SSR framework | Maturity |
+| --- | --- | --- |
+| React | Next.js, Remix | High |
+| Svelte | SvelteKit | Growing |
+| Solid | SolidStart | Early |
+
+\`\`\`tsx
+// Next.js: data fetches on the server by default
+export default async function Page() {
+  const data = await getDashboardData()
+  return <Panel data={data} />
+}
+\`\`\`
+
+**Recommendation holds:** React, and more specifically Next.js, for SSR maturity.`
 
 const deploymentResponse = `## Fixing the failing deployment
 
@@ -271,6 +264,323 @@ npm ci
 
 > [!WARNING]
 > A cached \`node_modules\` from Node 18 is the usual culprit. Always use \`npm ci\` in CI, never \`npm install\`.`
+
+const deploymentFollowUpResponse = `## Fixing the out-of-memory build
+
+Clean installs surface the real workload — the build was always this heavy, the stale cache just hid it.
+
+\`\`\`yaml
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+\`\`\`
+
+> [!WARNING]
+> Treat this as a temporary unblock, not a fix. If the heap keeps growing release over release, profile the build for a bundling or memory-leak regression instead of raising the limit again.`
+
+const mobileNavResponse = `## Recurring themes from the interviews
+
+Across all twelve sessions, three themes came up far more than any others.
+
+- **Predictable navigation** — people expect the back gesture and the home tab to behave the same way every time.
+- **Visible system status** — a spinner alone was not enough; participants wanted to know *what* was loading.
+- **Easy recovery** — nobody wanted a confirmation dialog for browsing, only for anything destructive.
+
+> "I don't mind it being slow. I mind not knowing if it's stuck."
+> — Participant 7, field study
+
+> [!NOTE]
+> Two participants used the app one-handed for almost the whole session — bottom-anchored actions kept the interaction reachable.`
+
+const launchChecklistResponse = `## Copilot onboarding launch checklist
+
+Work through this list in order — each step gates the next.
+
+1. Confirm the onboarding flow passes an accessibility pass (keyboard, screen reader, contrast).
+2. Verify the flow renders correctly at the smallest supported viewport.
+3. Enable telemetry for every step so drop-off is measurable from day one.
+4. Assign a support owner for the first two weeks after launch.
+5. Rehearse the rollback path before announcing a launch date.
+
+### Sign-off checklist
+
+- [x] Accessibility pass complete
+- [x] Responsive layouts verified
+- [ ] Telemetry wired to the dashboard
+- [ ] Support ownership confirmed
+- [ ] Rollback rehearsed
+
+> [!TIP]
+> Schedule the rollback rehearsal for the same day as the launch review — it's the check most likely to get skipped otherwise.`
+
+const tokenAuditResponse = `## What to verify in the token audit
+
+| Risk | Why it matters | Check |
+| --- | --- | --- |
+| Raw values | Bypasses the token pipeline entirely | Grep for hex codes and px literals |
+| Duplicated roles | Two tokens resolving to the same value drift apart later | Diff resolved values, not names |
+| Dark-mode gaps | A token defined for light mode silently falls back | Toggle themes and diff computed styles |
+| Motion outliers | Custom durations break the shared speed scale | Grep for raw \`ms\` / \`transition-duration\` values |
+
+> [!CAUTION]
+> A token that resolves correctly today can still be wrong — if it was hand-copied from a color picker instead of referencing the palette, it will drift the next time the palette changes.`
+
+const accessibilityAuditResponse = `## Checkout accessibility findings, prioritized
+
+1. **Keyboard-blocking defects** — the promo code field traps focus; fix first, it blocks task completion entirely.
+2. **Missing accessible names** — the quantity stepper's buttons only have icons.
+3. **Error recovery** — validation errors aren't announced and don't move focus to the first invalid field.
+4. **Focus order** — the order summary panel is reachable before the fields it summarizes.
+5. **Contrast** — the "Apply" button's disabled state is 2.1:1, below the 3:1 minimum for UI components.
+
+> [!IMPORTANT]
+> Fix items 1–3 before the next release; they block task completion, not just comfort. See the [severity rubric](#/response) for how these were ranked.`
+
+const accessibilityFollowUpResponse = `## Estimated remediation time
+
+| Item | Effort | Owner |
+| --- | --- | --- |
+| Keyboard-blocking defect | 0.5 day | Frontend |
+| Missing accessible names | 0.5 day | Frontend |
+| Error recovery | 1.5 days | Frontend + Content |
+| Focus order | 1 day | Frontend |
+| Contrast | 0.5 day | Design |
+
+**Total: roughly 4 days** if items run in parallel across the two available engineers; closer to 6 days sequentially.
+
+> [!IMPORTANT]
+> Don't parallelize items 1 and 3 — the same field owns both, and fixing error recovery first makes the keyboard trap easier to verify.`
+
+const roadmapResponse = `## Q3 design systems roadmap
+
+### Foundation hardening
+Close the remaining token and contrast gaps before building on top of them.
+
+### High-use workflow blocks
+Ship the AI chat, table, and form blocks that consuming teams ask for most.
+
+### Adoption support
+Publish the catalog, add usage guidance, and clear the top migration blockers.
+
+### Measurable quality
+Wire the design-rule tests into CI so regressions surface before release.
+
+| Quarter | Theme | Exit criteria |
+| --- | --- | --- |
+| Weeks 1–4 | Foundation hardening | Zero raw-value findings in the audit |
+| Weeks 5–8 | Workflow blocks | AI chat and table blocks ship |
+| Weeks 9–11 | Adoption support | Catalog live for all governed components |
+| Week 12 | Measurable quality | Design-rule tests required to merge |`
+
+const roadmapFollowUpResponse = `## Risk of skipping foundation hardening
+
+Every later phase inherits the gaps we skip now — this is the one phase that isn't optional without a cost.
+
+> [!CAUTION]
+> Workflow blocks built on top of ungoverned tokens will need to be reworked when the tokens are fixed later, which typically costs more than fixing them first.
+
+- Adoption support material would document workarounds instead of the real system.
+- Design-rule tests would have nothing stable to check against.
+
+**Recommendation:** keep foundation hardening as a hard gate, even if it compresses a later phase.`
+
+const searchEmptyStateResponse = `## Empty-state copy for zero search results
+
+Three options, from most literal to most actionable:
+
+- \`No results found.\` — plain confirmation, no next step.
+- \`No results for "{query}". Try a different term or remove a filter.\` — names the query, offers two paths forward.
+- \`Nothing matched "{query}" yet. Browse all components instead?\` — softer tone, offers an escape hatch.
+
+| Option | Tone | Best for |
+| --- | --- | --- |
+| Plain confirmation | Neutral | Power users who will self-correct |
+| Named query + next step | Direct | Most general search surfaces |
+| Soft + escape hatch | Encouraging | New users unfamiliar with the catalog |
+
+**Recommendation:** the second option — it names what was searched and gives two concrete next actions.`
+
+const permissionsResponse = `## Enterprise permissions model
+
+| Role | View | Edit | Publish | Manage members |
+| --- | --- | --- | --- | --- |
+| Viewer | ✓ | | | |
+| Contributor | ✓ | ✓ | | |
+| Manager | ✓ | ✓ | ✓ | |
+| Administrator | ✓ | ✓ | ✓ | ✓ |
+
+Scope and inheritance:
+
+- **Organization** — administrators set defaults here; every project inherits them unless overridden.
+  - A project can only *narrow* an inherited permission, never widen it.
+- **Project** — managers can promote a contributor to manager within their own project only.
+- **Component** — the finest scope; used only for pre-release components still under review.`
+
+const releaseNotesResponse = `## August component release
+
+### Added
+- Workflow blocks for AI chat, tables, and multi-step forms.
+- A \`size="icon-expressive"\` tier for touch-first surfaces.
+
+### Changed
+- Navigation pane collapse now fades content instead of toggling display, removing a layout jump.
+- Motion across navigation and chat now shares one speed scale — see the [motion guide](#/response).
+
+### Fixed
+\`\`\`diff
+- transition: all 300ms ease;
++ transition: background-color var(--speed-swift) var(--ease-standard);
+\`\`\`
+
+> [!NOTE]
+> The diff above is representative — each component's actual transition list is scoped to only the properties that visibly change.`
+
+const localizationResponse = `## Before localization testing, verify
+
+- [x] Layouts use flexible containers, not fixed pixel widths
+- [x] Spacing and positioning use logical properties (\`margin-inline-start\`, not \`margin-left\`)
+- [ ] Plural rules are handled per-locale, not just singular/plural
+- [ ] Dates and numbers format per-locale
+- [ ] UI tolerates at least 35% text expansion without clipping
+- [ ] Bidirectional layouts (RTL) mirror correctly
+
+> [!NOTE]
+> Logical properties are the highest-leverage item here — most of the bidirectional issues we've found trace back to a hardcoded \`left\`/\`right\`.`
+
+const analyticsResponse = `## Adoption dashboard metrics
+
+| Metric | Signal | Target |
+| --- | --- | --- |
+| Component coverage | Share of UI built from governed components | ≥ 90% |
+| Active consuming teams | Teams shipping with the system this quarter | Growing |
+| Upgrade latency | Time from release to adoption | ≤ 2 weeks |
+| Accessibility defects | Open defects tied to governed components | 0 blocking |
+| Support volume | Questions per active team per month | Trending down |
+
+Coverage is computed per surface as
+
+$$
+\\text{coverage} = \\frac{\\text{governed components}}{\\text{governed components} + \\text{one-off components}}
+$$
+
+so a surface with a few well-justified one-offs still scores highly if the rest is fully governed.`
+
+const notificationTaxonomyResponse = `## Notification severity taxonomy
+
+| Level | Use for | Example |
+| --- | --- | --- |
+| Note | Background information | "This setting applies to the whole workspace." |
+| Tip | An optional, helpful shortcut | "You can also press ⌘K to search." |
+| Important | Something the user should not miss | "Changes here affect every project." |
+| Warning | A recoverable risk | "This will remove the component from three pages." |
+| Caution | A destructive or irreversible outcome | "This permanently deletes the workspace." |
+
+> [!NOTE]
+> Background information the user doesn't need to act on.
+
+> [!TIP]
+> An optional shortcut or better way to do something.
+
+> [!IMPORTANT]
+> Something the user should not miss, even if it isn't urgent.
+
+> [!WARNING]
+> A recoverable risk — the user can undo or retry.
+
+> [!CAUTION]
+> A destructive or irreversible outcome. Use sparingly.`
+
+const notificationExamplesResponse = `## Example copy per level
+
+- **Note:** "Workspace settings were last updated 3 days ago."
+- **Tip:** "Press ⌘K anywhere to jump straight to search."
+- **Important:** "This role change applies to every project the user can access."
+- **Warning:** "Removing this component will affect 3 pages that still reference it."
+- **Caution:** "This will permanently delete the workspace and everything in it."
+
+> [!NOTE]
+> Keep caution copy specific about what's irreversible — a vague "this cannot be undone" is less effective than naming exactly what's lost.`
+
+const responsiveTablesResponse = `## Responsive approaches for dense data tables
+
+![Table pattern comparison](https://picsum.photos/seed/tables/640/320)
+
+Preserve tabular relationships first. Horizontal scroll keeps every row and column aligned, which a card view or drop-columns approach both lose.
+
+\`\`\`css
+.data-table {
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+}
+\`\`\`
+
+| Approach | Preserves relationships | Best for |
+| --- | --- | --- |
+| Horizontal scroll | Yes | Default choice for dense data |
+| Column controls | Yes, for shown columns | Power users who customize views |
+| Compact/card view | No | Small tables, at-a-glance summaries |`
+
+const designReviewResponse = `## Decisions from the navigation review
+
+Three decisions came out of today's review, in order of impact.
+
+1. **Reuse established components.** No new list-item or menu patterns — extend \`Item\` and the shared menu module instead of building bespoke rows.
+2. **Keep every visual decision token-driven.** No hand-picked hex values or one-off spacing, even for "just this one case."
+3. **Let motion communicate state, not decorate it.** A transition should only exist to show something changed — position, size, or emphasis.
+
+| Area | Before | Decision |
+| --- | --- | --- |
+| Navigation rows | Bespoke per surface | Shared \`Item compact\` everywhere |
+| Color | Some hardcoded hex | 100% token-driven |
+| Motion | Mixed durations | One shared speed scale |
+
+> [!IMPORTANT]
+> Anyone shipping a new navigation surface should start from these three decisions, not from the closest-looking existing screen.`
+
+const designReviewFollowUpResponse = `## Rollout ownership
+
+The design systems team owns the pattern and the migration guide; each product team owns applying it to their own surfaces.
+
+- [x] Design systems team publishes the updated \`Item\` guidance
+- [x] Design systems team flags every non-compliant navigation surface
+- [ ] Each product team migrates its own surfaces on its own timeline
+- [ ] Design systems team re-audits after the next release
+
+> [!NOTE]
+> This mirrors how the token migration rolled out — central ownership of the pattern, distributed ownership of the migration, prevented it from becoming a systems-team backlog item.`
+
+const projectUpdateResponse = `## Design platform weekly update
+
+### Shipped
+- Shared navigation patterns across the pane and rail.
+- Motion aligned to the shared speed-token scale.
+
+### In progress
+- [x] AI chat workflow — conversation history
+- [ ] AI chat workflow — multi-step tool calls
+- [ ] Table block — responsive column controls
+
+### Metrics
+
+| Metric | This week | Last week |
+| --- | --- | --- |
+| Components shipped | 3 | 2 |
+| Open defects | 4 | 7 |
+| Adopting teams | 11 | 9 |
+
+> [!TIP]
+> Adopting teams grew fastest right after the navigation patterns shipped — bundling a workflow block with its supporting components seems to drive adoption more than shipping either alone.`
+
+const projectUpdateFollowUpResponse = `## What's blocking AI workflow validation
+
+One dependency, not a design problem: the multi-step tool-call pattern needs a decision on how partial/streaming tool results render before the interaction can be finalized.
+
+> [!WARNING]
+> Two open questions are blocking this: whether a tool call shows inline in the transcript or in a side panel, and whether a failed tool call should retry automatically or wait for the user.
+
+- Design has a proposal ready for both; needs one review session to decide.
+- Engineering has the composer and message primitives ready either way.
+
+**Next step:** schedule the decision review this week so the pattern can land before the next release.`
 
 const themedConversations: Conversation[] = [
   {
@@ -305,6 +615,16 @@ const themedConversations: Conversation[] = [
         role: "assistant",
         text: onboardingResponse,
       },
+      {
+        id: "onboarding-user-2",
+        role: "user",
+        text: "Is the 60% activation target realistic given our current pace?",
+      },
+      {
+        id: "onboarding-assistant-2",
+        role: "assistant",
+        text: onboardingFollowUpResponse,
+      },
     ],
   },
   {
@@ -321,6 +641,16 @@ const themedConversations: Conversation[] = [
         id: "framework-assistant",
         role: "assistant",
         text: frameworksResponse,
+      },
+      {
+        id: "framework-user-2",
+        role: "user",
+        text: "Does the recommendation change if we need strong SSR support?",
+      },
+      {
+        id: "framework-assistant-2",
+        role: "assistant",
+        text: frameworksFollowUpResponse,
       },
     ],
   },
@@ -339,6 +669,16 @@ const themedConversations: Conversation[] = [
         role: "assistant",
         text: deploymentResponse,
       },
+      {
+        id: "deployment-user-2",
+        role: "user",
+        text: "I cleared the cache but now the build runs out of memory instead.",
+      },
+      {
+        id: "deployment-assistant-2",
+        role: "assistant",
+        text: deploymentFollowUpResponse,
+      },
     ],
   },
 ]
@@ -355,7 +695,28 @@ const starterConversations: Conversation[] = [
     id: "design-review",
     title: "OneDS navigation review decisions",
     group: "Today",
-    turns: starterTurns,
+    turns: [
+      {
+        id: "design-review-user",
+        role: "user",
+        text: "Summarize the most important decisions from our design review.",
+      },
+      {
+        id: "design-review-assistant",
+        role: "assistant",
+        text: designReviewResponse,
+      },
+      {
+        id: "design-review-user-2",
+        role: "user",
+        text: "Who owns rolling this out to the other teams?",
+      },
+      {
+        id: "design-review-assistant-2",
+        role: "assistant",
+        text: designReviewFollowUpResponse,
+      },
+    ],
   },
   {
     id: "project-update",
@@ -370,7 +731,17 @@ const starterConversations: Conversation[] = [
       {
         id: "project-assistant",
         role: "assistant",
-        text: "The design platform work is on track. This week the team completed the shared navigation patterns, aligned motion behavior around speed tokens, and began validating complete AI workflows.",
+        text: projectUpdateResponse,
+      },
+      {
+        id: "project-user-2",
+        role: "user",
+        text: "What's blocking the AI workflow validation?",
+      },
+      {
+        id: "project-assistant-2",
+        role: "assistant",
+        text: projectUpdateFollowUpResponse,
       },
     ],
   },
@@ -387,7 +758,7 @@ const starterConversations: Conversation[] = [
       {
         id: "research-assistant",
         role: "assistant",
-        text: "Participants consistently valued predictable navigation, visible system status, and the ability to recover from mistakes without losing their work.",
+        text: mobileNavResponse,
       },
     ],
   },
@@ -404,7 +775,7 @@ const starterConversations: Conversation[] = [
       {
         id: "launch-assistant",
         role: "assistant",
-        text: "Confirm accessibility, responsive layouts, telemetry, support ownership, rollback steps, and final stakeholder approval before release.",
+        text: launchChecklistResponse,
       },
     ],
   },
@@ -421,7 +792,7 @@ const starterConversations: Conversation[] = [
       {
         id: "token-assistant",
         role: "assistant",
-        text: "Check for raw values, duplicated semantic roles, incomplete dark-mode mappings, and motion values that bypass the shared speed scale.",
+        text: tokenAuditResponse,
       },
     ],
   },
@@ -438,7 +809,17 @@ const starterConversations: Conversation[] = [
       {
         id: "accessibility-assistant",
         role: "assistant",
-        text: "Start with keyboard-blocking defects, missing accessible names, and error recovery. Follow with focus order and contrast improvements.",
+        text: accessibilityAuditResponse,
+      },
+      {
+        id: "accessibility-user-2",
+        role: "user",
+        text: "How long will remediation take for these five items?",
+      },
+      {
+        id: "accessibility-assistant-2",
+        role: "assistant",
+        text: accessibilityFollowUpResponse,
       },
     ],
   },
@@ -455,7 +836,17 @@ const starterConversations: Conversation[] = [
       {
         id: "roadmap-assistant",
         role: "assistant",
-        text: "Sequence the roadmap around foundation hardening, high-use workflow blocks, adoption support, and measurable quality improvements.",
+        text: roadmapResponse,
+      },
+      {
+        id: "roadmap-user-2",
+        role: "user",
+        text: "What's the risk if we skip foundation hardening this quarter?",
+      },
+      {
+        id: "roadmap-assistant-2",
+        role: "assistant",
+        text: roadmapFollowUpResponse,
       },
     ],
   },
@@ -472,7 +863,7 @@ const starterConversations: Conversation[] = [
       {
         id: "search-empty-assistant",
         role: "assistant",
-        text: "No results found. Try a different term, remove a filter, or browse all components.",
+        text: searchEmptyStateResponse,
       },
     ],
   },
@@ -489,7 +880,7 @@ const starterConversations: Conversation[] = [
       {
         id: "permissions-assistant",
         role: "assistant",
-        text: "Use viewer, contributor, manager, and administrator roles with explicit scope and inheritance rules.",
+        text: permissionsResponse,
       },
     ],
   },
@@ -506,7 +897,7 @@ const starterConversations: Conversation[] = [
       {
         id: "release-assistant",
         role: "assistant",
-        text: "This release adds workflow blocks, improves sidebar behavior, and unifies motion across navigation and chat patterns.",
+        text: releaseNotesResponse,
       },
     ],
   },
@@ -523,7 +914,7 @@ const starterConversations: Conversation[] = [
       {
         id: "localization-assistant",
         role: "assistant",
-        text: "Verify flexible layouts, logical properties, plural rules, date formats, expansion tolerance, and bidirectional behavior.",
+        text: localizationResponse,
       },
     ],
   },
@@ -540,7 +931,7 @@ const starterConversations: Conversation[] = [
       {
         id: "analytics-assistant",
         role: "assistant",
-        text: "Track component coverage, active consuming teams, upgrade latency, accessibility defects, and support volume.",
+        text: analyticsResponse,
       },
     ],
   },
@@ -557,7 +948,17 @@ const starterConversations: Conversation[] = [
       {
         id: "notification-assistant",
         role: "assistant",
-        text: "Use neutral for awareness, success for confirmation, warning for recoverable risk, and danger for destructive or blocking outcomes.",
+        text: notificationTaxonomyResponse,
+      },
+      {
+        id: "notification-user-2",
+        role: "user",
+        text: "Give me one example notification for each level.",
+      },
+      {
+        id: "notification-assistant-2",
+        role: "assistant",
+        text: notificationExamplesResponse,
       },
     ],
   },
@@ -574,69 +975,9 @@ const starterConversations: Conversation[] = [
       {
         id: "tables-assistant",
         role: "assistant",
-        text: "Preserve tabular relationships with horizontal scrolling first, then offer column controls or a purpose-built compact view.",
+        text: responsiveTablesResponse,
       },
     ],
-  },
-  {
-    id: "design-critique",
-    title: "Design critique facilitation guide",
-    group: "Today",
-    turns: starterTurns,
-  },
-  {
-    id: "component-inventory",
-    title: "Component inventory cleanup",
-    group: "Today",
-    turns: starterTurns,
-  },
-  {
-    id: "research-repository",
-    title: "Research repository structure",
-    group: "Previous 7 days",
-    turns: starterTurns,
-  },
-  {
-    id: "content-guidelines",
-    title: "Product content guidelines",
-    group: "Previous 7 days",
-    turns: starterTurns,
-  },
-  {
-    id: "prototype-testing",
-    title: "Prototype testing plan",
-    group: "Previous 7 days",
-    turns: starterTurns,
-  },
-  {
-    id: "support-workflow",
-    title: "Customer support workflow",
-    group: "Previous 7 days",
-    turns: starterTurns,
-  },
-  {
-    id: "design-ops",
-    title: "Design operations planning",
-    group: "Older",
-    turns: starterTurns,
-  },
-  {
-    id: "quality-scorecard",
-    title: "Experience quality scorecard",
-    group: "Older",
-    turns: starterTurns,
-  },
-  {
-    id: "governance-review",
-    title: "Component governance review",
-    group: "Older",
-    turns: starterTurns,
-  },
-  {
-    id: "handoff-checklist",
-    title: "Engineering handoff checklist",
-    group: "Older",
-    turns: starterTurns,
   },
 ]
 
@@ -668,6 +1009,54 @@ function replayLastAssistant(turns: ChatTurn[]): ChatTurn[] {
   })
 }
 
+// Each starter chip gets its own tailored answer, so clicking one begins a
+// genuinely on-topic conversation instead of a generic reply.
+const suggestionDraftUpdateResponse = `## Component catalog rollout update
+
+### Shipped
+- The agent-facing catalog now covers Button, Card, and Response.
+- Usage guidance surfaces directly in \`catalog:show\`, not just prop shape.
+
+### In progress
+- [x] Extend extraction to Table and Form
+- [ ] Wire catalog freshness into CI
+- [ ] Publish the catalog CLI to the team wiki
+
+| Metric | This week | Target |
+| --- | --- | --- |
+| Components cataloged | 3 | 12 |
+| Assisted-task accuracy | 100% | ≥ 90% |
+
+> [!TIP]
+> The accuracy jump came from printing usage guidance up front — teams read the "how" before the prop list, not after.`
+
+const suggestionSummarizeDocResponse = `## Summary: Q3 reliability postmortem
+
+1. **Root cause** was a cache invalidation gap between the token pipeline and the build step, not the deployment itself.
+2. **Detection** took 40 minutes because the alert threshold was tuned for a different metric.
+3. **Recovery** was fast (12 minutes) once the stale cache was identified.
+4. **Process gap:** no runbook existed for this failure mode.
+5. **Follow-up:** three action items are now tracked, one already shipped (see the release notes conversation).
+
+> "The fix was simple. Finding it wasn't — we were looking at the wrong dashboard for the first half hour."
+> — Incident notes
+
+> [!IMPORTANT]
+> Write the runbook before the next on-call rotation starts, not after the next incident.`
+
+const suggestionPlanReviewResponse = `## Next design review agenda
+
+| Time | Topic | Owner |
+| --- | --- | --- |
+| 0:00–0:10 | Recap decisions from the last review | Facilitator |
+| 0:10–0:30 | Walk through the AI chat block | Design |
+| 0:30–0:45 | Open questions on navigation pane motion | Engineering |
+| 0:45–0:55 | Prioritize follow-ups | Everyone |
+| 0:55–1:00 | Confirm owners and dates | Facilitator |
+
+> [!TIP]
+> Send the walkthrough recording as a pre-read. Reviews that start from "what changed" instead of a live demo leave more time for the open questions.`
+
 const suggestions = [
   {
     label: "Draft an update",
@@ -685,6 +1074,12 @@ const suggestions = [
     icon: CalendarIcon,
   },
 ]
+
+const suggestionResponseByPrompt: Record<string, string> = {
+  [suggestions[0].prompt]: suggestionDraftUpdateResponse,
+  [suggestions[1].prompt]: suggestionSummarizeDocResponse,
+  [suggestions[2].prompt]: suggestionPlanReviewResponse,
+}
 
 function readMotionToken(
   host: HTMLElement,
@@ -751,12 +1146,10 @@ function useResolvedChatLayout(
 
 function AIChatBlockContent({
   conversation,
-  history,
   layout,
   onTurnsChange,
 }: {
   conversation: Conversation
-  history: ChatHistory
   layout: ResolvedChatLayout
   onTurnsChange: (id: string, turns: ChatTurn[]) => void
 }) {
@@ -1029,7 +1422,8 @@ function AIChatBlockContent({
       id: `assistant-${sequence}`,
       text: webSearch
         ? "I searched the available sources and organized the answer around the strongest recurring themes. The strongest direction is to keep the experience focused, reuse the established components, and reveal supporting detail only when it helps the task."
-        : "Here is a concise answer organized around the goals and constraints in your prompt. Start with the smallest complete experience, preserve the established component behaviors, and introduce a new abstraction only when the pattern repeats.",
+        : (suggestionResponseByPrompt[value] ??
+          "Here is a concise answer organized around the goals and constraints in your prompt. Start with the smallest complete experience, preserve the established component behaviors, and introduce a new abstraction only when the pattern repeats."),
     }
     setStatus("submitted")
     setTurns((current) => [
@@ -1060,11 +1454,9 @@ function AIChatBlockContent({
         )}
       >
         {suggestions.map(({ label, prompt: starter, icon: Icon }) => (
-          <Button
+          <Chip
             key={label}
-            type="button"
             variant="secondary"
-            className="rounded-full"
             onClick={() => {
               setPrompt(starter)
               promptRef.current?.focus()
@@ -1072,7 +1464,7 @@ function AIChatBlockContent({
           >
             <Icon data-icon="inline-start" />
             {label}
-          </Button>
+          </Chip>
         ))}
       </EmptyContent>
     </div>
@@ -1085,189 +1477,6 @@ function AIChatBlockContent({
       aria-label="AI chat"
       data-empty={isEmpty}
     >
-      <SiteHeader
-        variant="docked"
-        className="ai-chat-block__header static border-b-0"
-      >
-        <SiteHeaderContainer>
-          <SiteHeaderTitle>
-            {isPanel ? <PaletteIcon aria-hidden /> : null}
-            <Swap>
-              {isPanel ? (
-                <SwapItem active={isEmpty} className="truncate">
-                  OneDS Chat
-                </SwapItem>
-              ) : null}
-              <SwapItem
-                key={conversation.id}
-                active={!isEmpty}
-                className="truncate"
-              >
-                {conversation.title}
-              </SwapItem>
-            </Swap>
-          </SiteHeaderTitle>
-          <SiteHeaderActions role="toolbar" aria-label="Conversation actions">
-            {isPanel ? (
-              <>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  aria-label="New chat"
-                  aria-hidden={isEmpty}
-                  tabIndex={isEmpty ? -1 : 0}
-                  className={cn(
-                    "transition-opacity duration-(--sidebar-fade-speed) ease-(--sidebar-ease)",
-                    isEmpty && "pointer-events-none opacity-0",
-                  )}
-                  onClick={history.onNewChat}
-                >
-                  <MessageCirclePlusIcon />
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild tooltip="Recents">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      aria-label="Recent chats"
-                    >
-                      <HistoryIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="w-(--ai-chat-recents-menu-width) min-h-(--ai-chat-recents-menu-min-height) max-h-(--ai-chat-recents-menu-max-height)"
-                  >
-                    <DropdownMenuLabel>Recents</DropdownMenuLabel>
-                    <DropdownMenuGroup>
-                      {visibleConversations(history.conversations).map(
-                        (item) => (
-                          <DropdownMenuItem
-                            key={item.id}
-                            aria-current={
-                              item.id === history.activeId ? "true" : undefined
-                            }
-                            onSelect={() => history.onSelect(item.id)}
-                          >
-                            <span className="min-w-0 flex-1 truncate">
-                              {item.title}
-                            </span>
-                          </DropdownMenuItem>
-                        ),
-                      )}
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild tooltip="More actions">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      aria-label="Conversation options"
-                    >
-                      <MoreHorizontalIcon />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>
-                        <ShareIcon />
-                        Share conversation
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <HatGlassesIcon />
-                        Temporary chat
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    {!isEmpty ? (
-                      <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem
-                            onSelect={() => history.onArchive(conversation.id)}
-                          >
-                            <ArchiveIcon />
-                            Archive chat
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            variant="destructive"
-                            onSelect={() => history.onDelete(conversation.id)}
-                          >
-                            <Trash2Icon />
-                            Delete chat
-                          </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                      </>
-                    ) : null}
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <Avatar className="size-5!">
-                        <AvatarImage src={persona.avatar} alt="" />
-                        <AvatarFallback>{persona.initials}</AvatarFallback>
-                      </Avatar>
-                      {persona.name}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
-            ) : (
-              <Swap justify="end">
-                <SwapItem
-                  active={isEmpty}
-                  className="flex items-center gap-(--site-header-action-gap)"
-                >
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Temporary chat"
-                  >
-                    <HatGlassesIcon />
-                  </Button>
-                </SwapItem>
-                <SwapItem
-                  active={!isEmpty}
-                  className="flex items-center gap-(--site-header-action-gap)"
-                >
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Share conversation"
-                  >
-                    <ShareIcon />
-                  </Button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Conversation options"
-                      >
-                        <MoreHorizontalIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        variant="destructive"
-                        onSelect={() => setTurns([])}
-                      >
-                        <Trash2Icon />
-                        Clear conversation
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SwapItem>
-              </Swap>
-            )}
-          </SiteHeaderActions>
-        </SiteHeaderContainer>
-      </SiteHeader>
-
       <MessageScroller className="ai-chat-block__scroller">
           <MessageScrollerViewport
             ref={viewportRef}
@@ -1550,228 +1759,239 @@ function AIChatBlockContent({
   )
 }
 
-const conversationGroups: Conversation["group"][] = [
+function AIChatSidepanelBrand() {
+  return (
+    <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
+      <NavigationPaneBrand>
+        <NavigationPaneBrandMark>
+          <img src="/favicon.svg" alt="" className="size-5" />
+        </NavigationPaneBrandMark>
+        <NavigationPaneBrandLabel className="text-lg font-semibold">Chat</NavigationPaneBrandLabel>
+      </NavigationPaneBrand>
+      <NavigationPaneHeaderActions>
+        <NavigationPaneTrigger />
+      </NavigationPaneHeaderActions>
+    </NavigationPaneHeader>
+  )
+}
+
+function AIChatSidepanelSearch() {
+  return (
+    <NavigationPaneGroup>
+      <NavigationPaneSearch placeholder="Search..." aria-label="Search" />
+    </NavigationPaneGroup>
+  )
+}
+
+function AIChatSidepanelChatAction({
+  isNewChat,
+  onSelect,
+}: {
+  isNewChat: boolean
+  onSelect: () => void
+}) {
+  const fade =
+    "transition-opacity duration-(--motion-effects-fast-speed) ease-(--motion-effects-fast-curve)"
+
+  return (
+    <NavigationPaneGroup>
+      <NavigationPaneMenu>
+        <NavigationPaneMenuItem>
+          <Item
+            compact
+            asChild
+            variant="muted"
+            style={{
+              "--item-muted-surface": "var(--button-primary-pink-fill)",
+              "--item-muted-ink": "var(--button-primary-pink-ink)",
+              "--item-muted-hover-surface": "color-mix(in srgb, var(--button-primary-pink-fill), var(--button-primary-pink-ink) var(--state-layer-hover-opacity))",
+              "--item-muted-pressed-surface": "color-mix(in srgb, var(--button-primary-pink-fill), var(--button-primary-pink-ink) var(--state-layer-pressed-opacity))",
+            } as CSSProperties}
+          >
+            <button
+              type="button"
+              aria-label={isNewChat ? "Temporary chat" : "New chat"}
+              data-chat-action={isNewChat ? "temporary" : "new"}
+              onClick={onSelect}
+            >
+              <ItemMedia variant="icon">
+                <span className="grid place-items-center" aria-hidden="true">
+                  <PlusIcon
+                    className={cn(
+                      "col-start-1 row-start-1",
+                      fade,
+                      isNewChat ? "opacity-0" : "opacity-100",
+                    )}
+                  />
+                  <Eyeglasses3Icon
+                    className={cn(
+                      "col-start-1 row-start-1",
+                      fade,
+                      isNewChat ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                </span>
+              </ItemMedia>
+              <ItemContent>
+                <span className="grid" aria-hidden="true">
+                  <ItemTitle
+                    className={cn(
+                      "col-start-1 row-start-1",
+                      fade,
+                      isNewChat ? "opacity-0" : "opacity-100",
+                    )}
+                  >
+                    New chat
+                  </ItemTitle>
+                  <ItemTitle
+                    className={cn(
+                      "col-start-1 row-start-1",
+                      fade,
+                      isNewChat ? "opacity-100" : "opacity-0",
+                    )}
+                  >
+                    Temporary chat
+                  </ItemTitle>
+                </span>
+              </ItemContent>
+            </button>
+          </Item>
+        </NavigationPaneMenuItem>
+      </NavigationPaneMenu>
+    </NavigationPaneGroup>
+  )
+}
+
+const conversationGroupOrder: Conversation["group"][] = [
   "Today",
   "Previous 7 days",
   "Older",
 ]
 
-/** Recents is a flat list: the groups only order it, they never label it. */
-function visibleConversations(conversations: Conversation[]) {
-  return conversations
-    .filter((conversation) => conversation.turns.length > 0)
-    .sort(
-      (left, right) =>
-        conversationGroups.indexOf(left.group) -
-        conversationGroups.indexOf(right.group),
-    )
-}
-
-function makeNewChat(count: number): Conversation {
-  return {
-    id: `new-chat-${count}`,
-    title: count === 1 ? "New conversation" : `New conversation ${count}`,
-    group: "Today",
-    turns: [],
-  }
-}
-
-function ConversationHistory({
-  activeId,
+function AIChatSidepanelNav({
   conversations,
-  onArchive,
-  onDelete,
-  onNewChat,
-  onRename,
+  activeId,
   onSelect,
 }: {
-  activeId: string
   conversations: Conversation[]
-  onArchive: (id: string) => void
-  onDelete: (id: string) => void
-  onNewChat: () => void
-  onRename: (id: string, title: string) => void
+  activeId: string
   onSelect: (id: string) => void
 }) {
-  const [recentsOpen, setRecentsOpen] = useState(true)
-  const [renamingId, setRenamingId] = useState<string | null>(null)
-  const [renameValue, setRenameValue] = useState("")
-  const hasActiveChat = conversations.some(
-    (conversation) =>
-      conversation.id === activeId && conversation.turns.length > 0,
-  )
-  const visible = visibleConversations(conversations)
-
-  const commitRename = () => {
-    if (renamingId && renameValue.trim()) {
-      onRename(renamingId, renameValue.trim())
-    }
-    setRenamingId(null)
-  }
-
   return (
-    <>
-      <SidebarHeader className="ai-chat-history__header min-h-(--ai-chat-top-band-height) p-(--ai-chat-history-rail-inset)">
-        <SidebarBrand>
-          <SidebarBrandMark>
-            <PaletteIcon className="size-5" />
-          </SidebarBrandMark>
-          <SidebarBrandLabel>OneDS Chat</SidebarBrandLabel>
-          <SidebarTrigger />
-        </SidebarBrand>
-      </SidebarHeader>
-      <Collapsible
-        open={recentsOpen}
-        onOpenChange={setRecentsOpen}
-        className="group/recents ai-chat-history__chats flex min-h-0 flex-1 flex-col"
-      >
-        <SidebarContent
-          scrollbar="thin"
-          stickyHeader={
-            <div className="ai-chat-history__recents-bar">
-            <CollapsibleTrigger className="ai-chat-history__recents-trigger">
-              <span>Recents</span>
-              <ChevronDownIcon aria-hidden />
-            </CollapsibleTrigger>
-            <div className="ai-chat-history__recents-header">
-              <div className="ai-chat-history__recents-actions">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  aria-label="New chat"
-                  aria-hidden={!hasActiveChat}
-                  tabIndex={hasActiveChat ? 0 : -1}
-                  className={cn(
-                    "ai-chat-history__compose transition-opacity duration-(--sidebar-fade-speed) ease-(--sidebar-ease)",
-                    !hasActiveChat && "pointer-events-none opacity-0",
-                  )}
-                  onClick={onNewChat}
-                >
-                  <MessageCirclePlusIcon />
-                </Button>
-              </div>
-            </div>
-            </div>
-          }
-          className="ai-chat-history__content"
-          aria-label="Conversation history"
-        >
-          <CollapsibleContent
-            containerClassName="shrink-0"
-            className="ai-chat-history__recents-content [[data-slot=sidebar][data-collapsible=icon]_&]:hidden"
+    <NavigationPaneContent>
+      {/* No icons on these rows, so a collapsed selected pill would show as an
+          empty box — hide the whole list in icon-bar mode instead. */}
+      {conversationGroupOrder.map((group) => {
+        const items = conversations.filter(
+          (conversation) =>
+            conversation.turns.length > 0 && conversation.group === group,
+        )
+        if (items.length === 0) return null
+        return (
+          <NavigationPaneGroup
+            key={group}
+            className="group-data-[collapsible=icon]:hidden"
           >
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <ItemGroup className="gap-(--ai-chat-history-item-gap)!">
-                  {visible.map((conversation) => (
+            <NavigationPaneGroupLabel>{group}</NavigationPaneGroupLabel>
+            <NavigationPaneGroupContent>
+              <NavigationPaneMenu>
+                {items.map((conversation) => (
+                  <NavigationPaneMenuItem key={conversation.id}>
                     <Item
-                      key={conversation.id}
                       compact
                       variant={activeId === conversation.id ? "muted" : "default"}
-                      className="text-muted-foreground"
                     >
-                      {renamingId === conversation.id ? (
-                        <SidebarInput
-                          autoFocus
-                          aria-label={`Rename ${conversation.title}`}
-                          value={renameValue}
-                          onChange={(event) =>
-                            setRenameValue(event.currentTarget.value)
-                          }
-                          onBlur={commitRename}
-                          onKeyDown={(event) => {
-                            if (event.key === "Enter") {
-                              event.preventDefault()
-                              commitRename()
+                      <ItemPrimaryAction
+                        type="button"
+                        aria-pressed={activeId === conversation.id}
+                        onClick={() => onSelect(conversation.id)}
+                      >
+                        <ItemContent>
+                          <ItemTitle
+                            className={
+                              activeId === conversation.id
+                                ? undefined
+                                : "text-muted-foreground"
                             }
-                            if (event.key === "Escape") {
-                              event.preventDefault()
-                              setRenamingId(null)
-                            }
-                          }}
-                        />
-                      ) : (
-                        <ItemPrimaryAction
-                          type="button"
-                          aria-pressed={activeId === conversation.id}
-                          onClick={() => onSelect(conversation.id)}
-                        >
-                          <ItemContent>
-                            <ItemTitle>{conversation.title}</ItemTitle>
-                          </ItemContent>
-                        </ItemPrimaryAction>
-                      )}
-                      {renamingId !== conversation.id ? (
-                        <ItemActions hosted>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild tooltip="More actions">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label={`Actions for ${conversation.title}`}
-                              >
-                                <MoreHorizontalIcon />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent side="right" align="start">
-                              <DropdownMenuItem
-                                onSelect={() => {
-                                  setRenamingId(conversation.id)
-                                  setRenameValue(conversation.title)
-                                }}
-                              >
-                                <PencilIcon />
-                                Rename
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onSelect={() => onArchive(conversation.id)}
-                              >
-                                <ArchiveIcon />
-                                Archive
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                variant="destructive"
-                                onSelect={() => onDelete(conversation.id)}
-                              >
-                                <Trash2Icon />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </ItemActions>
-                      ) : null}
+                          >
+                            {conversation.title}
+                          </ItemTitle>
+                        </ItemContent>
+                      </ItemPrimaryAction>
+                      <ItemActions hosted>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild tooltip="More actions">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              aria-label={`Actions for ${conversation.title}`}
+                            >
+                              <MoreHorizontalIcon />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent grouped align="end">
+                            <DropdownMenuGroup>
+                              <DropdownMenuItem>Rename</DropdownMenuItem>
+                              <DropdownMenuItem>Archive</DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </ItemActions>
                     </Item>
-                  ))}
-                </ItemGroup>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </CollapsibleContent>
-        </SidebarContent>
-      </Collapsible>
-      <SidebarFooter className="ai-chat-history__profile">
-        <SidebarAccount type="button">
-          <Avatar>
-            <AvatarImage src={persona.avatar} alt="" />
-            <AvatarFallback>{persona.initials}</AvatarFallback>
-          </Avatar>
-          <SidebarAccountDetails>
-            <span>{persona.name}</span>
-            <span>{persona.title}</span>
-          </SidebarAccountDetails>
-        </SidebarAccount>
-      </SidebarFooter>
-    </>
+                  </NavigationPaneMenuItem>
+                ))}
+              </NavigationPaneMenu>
+            </NavigationPaneGroupContent>
+          </NavigationPaneGroup>
+        )
+      })}
+    </NavigationPaneContent>
   )
+}
+
+function AIChatSidepanelFooter() {
+  return (
+    <NavigationPaneFooter>
+      <NavigationPaneMenu>
+        <NavigationPaneMenuItem>
+          <Item compact asChild>
+            <button type="button">
+              <ItemMedia>
+                <Avatar className="size-(--item-compact-media-host-size)">
+                  <AvatarImage src={persona.avatar} alt="" />
+                  <AvatarFallback>{persona.initials}</AvatarFallback>
+                </Avatar>
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{persona.name}</ItemTitle>
+              </ItemContent>
+            </button>
+          </Item>
+        </NavigationPaneMenuItem>
+      </NavigationPaneMenu>
+    </NavigationPaneFooter>
+  )
+}
+
+// Falls back to the placeholder title until the first message arrives, then
+// derives a short title from it — same convention as most chat apps.
+function deriveConversationTitle(prompt: string) {
+  const trimmed = prompt.trim().replace(/\s+/g, " ")
+  if (trimmed.length <= 48) return trimmed
+  return `${trimmed.slice(0, 48).trimEnd()}\u2026`
 }
 
 function AIChatBlock({ layout = "auto" }: { layout?: ChatLayout } = {}) {
   const workspaceRef = useRef<HTMLDivElement>(null)
   const resolvedLayout = useResolvedChatLayout(layout, workspaceRef)
-  const [conversations, setConversations] = useState(starterConversations)
-  const [activeId, setActiveId] = useState(starterConversations[0].id)
-  const newChatCountRef = useRef(0)
+  const [conversations, setConversations] = useBroadcastState(
+    "oneds:ai-chat:v1:conversations",
+    starterConversations,
+  )
+  const [activeId, setActiveId] = useBroadcastState(
+    "oneds:ai-chat:v1:active-id",
+    starterConversations[0].id,
+  )
   const activeConversation =
     conversations.find((conversation) => conversation.id === activeId) ??
     conversations[0]
@@ -1784,102 +2004,83 @@ function AIChatBlock({ layout = "auto" }: { layout?: ChatLayout } = {}) {
             return conversation
           }
           changed = true
-          return { ...conversation, turns }
+          const firstUserTurn = turns.find((turn) => turn.role === "user")
+          const title =
+            conversation.turns.length === 0 &&
+            conversation.title === "New conversation" &&
+            firstUserTurn
+              ? deriveConversationTitle(firstUserTurn.text)
+              : conversation.title
+          return { ...conversation, turns, title }
         })
         return changed ? next : current
       })
     },
-    [],
+    [setConversations],
   )
-
-  const createNewChat = () => {
-    const conversation = makeNewChat(++newChatCountRef.current)
-    setConversations((current) => [
-      conversation,
-      ...current.filter((item) => item.turns.length > 0),
-    ])
-    setActiveId(conversation.id)
-  }
-
-  const deleteConversation = (id: string) => {
-    const next = conversations.filter((conversation) => conversation.id !== id)
-    // Deleting the last record has to land on a usable empty chat rather than
-    // an empty workspace.
-    if (next.length === 0) {
-      const conversation = makeNewChat(++newChatCountRef.current)
-      setConversations([conversation])
-      setActiveId(conversation.id)
+  // Reuses an existing blank conversation instead of piling up empty ones;
+  // otherwise starts a genuinely new one so it never reopens a past chat.
+  const startNewChat = useCallback(() => {
+    const existingEmpty = conversations.find(
+      (conversation) => conversation.turns.length === 0,
+    )
+    if (existingEmpty) {
+      setActiveId(existingEmpty.id)
       return
     }
-    setConversations(next)
-    if (activeId === id) setActiveId(next[0].id)
-  }
+    const fresh: Conversation = {
+      id: `new-${Date.now()}`,
+      title: "New conversation",
+      group: "Today",
+      turns: [],
+    }
+    setConversations((current) => [fresh, ...current])
+    setActiveId(fresh.id)
+  }, [conversations, setConversations, setActiveId])
 
   if (!activeConversation) return null
 
-  const archiveConversation = (id: string) =>
-    setConversations((current) =>
-      current.map((conversation) =>
-        conversation.id === id
-          ? { ...conversation, group: "Older" }
-          : conversation,
-      ),
-    )
-
-  const history: ChatHistory = {
-    activeId,
-    conversations,
-    onArchive: archiveConversation,
-    onDelete: deleteConversation,
-    onNewChat: createNewChat,
-    onSelect: setActiveId,
-  }
-
   return (
-    // The measured box is one we own: a ref spread through SidebarProvider
-    // never reaches the DOM node, and the pane's own width depends on whether
-    // the rail is rendered, which would make it circular.
-    <div ref={workspaceRef} className="h-full w-full min-h-0">
-      <SidebarProvider
+    <div
+      ref={workspaceRef}
+      data-layout={resolvedLayout}
+      className="ai-chat-workspace showcase-contained-viewport h-full w-full min-h-0 overflow-hidden"
+    >
+      <NavigationPaneProvider
         id="ai-chat-history"
         persist={false}
-        shortcut={false}
-        data-layout={resolvedLayout}
-        className="ai-chat-workspace showcase-contained-viewport h-full min-h-0 overflow-hidden"
+        className="min-h-full"
       >
         {resolvedLayout === "workspace" ? (
-          <Sidebar collapsible="bar" edge="line" className="ai-chat-history">
-            <ConversationHistory
-              activeId={activeId}
-              conversations={conversations}
-              onNewChat={createNewChat}
-              onSelect={setActiveId}
-              onRename={(id, title) =>
-                setConversations((current) =>
-                  current.map((conversation) =>
-                    conversation.id === id
-                      ? { ...conversation, title }
-                      : conversation,
-                  ),
-                )
-              }
-              onArchive={archiveConversation}
-              onDelete={deleteConversation}
+          <NavigationPane placement="floating" collapsible="bar" edge="faded">
+            <AIChatSidepanelBrand />
+            <Separator
+              variant="faded"
+              className="transition-opacity duration-(--navigation-pane-speed) ease-(--navigation-pane-ease) group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0"
             />
-            <SidebarResizeHandle />
-          </Sidebar>
+            <AIChatSidepanelSearch />
+            <AIChatSidepanelChatAction
+              isNewChat={activeConversation.turns.length === 0}
+              onSelect={startNewChat}
+            />
+            <AIChatSidepanelNav
+              conversations={conversations}
+              activeId={activeId}
+              onSelect={setActiveId}
+            />
+            <AIChatSidepanelFooter />
+          </NavigationPane>
         ) : null}
-        <SidebarInset className="min-h-0 overflow-hidden">
+        <NavigationPaneInset className="min-h-0 overflow-hidden">
           <MessageScrollerProvider defaultScrollPosition="start">
             <AIChatBlockContent
               conversation={activeConversation}
-              history={history}
               layout={resolvedLayout}
               onTurnsChange={updateConversationTurns}
             />
           </MessageScrollerProvider>
-        </SidebarInset>
-      </SidebarProvider>
+        </NavigationPaneInset>
+      </NavigationPaneProvider>
     </div>
   )
 }
@@ -1897,7 +2098,7 @@ export const blockDemos: ComponentEntry[] = [
     slug: "block-ai-chat",
     name: "AI Chat",
     description:
-      "A complete conversational workspace composed from OneDS chat, feedback and navigation primitives. It adapts to the width it is given: below --ai-chat-panel-max-width the history rail becomes a header menu and the composer docks to the bottom.",
+      "A complete conversational workspace composed from OneDS chat, feedback and composer primitives. It adapts to the width it is given: below --ai-chat-panel-max-width the composer docks to the bottom and the greeting and suggestions flow above it.",
     category: "Blocks",
     installCommand: null,
     Demo: AIChatBlock,
@@ -1905,7 +2106,7 @@ export const blockDemos: ComponentEntry[] = [
       {
         name: "Side panel",
         description:
-          "The same block at 360px, the default and minimum content width of a browser side panel. History moves into the header, the composer stays docked, and the greeting and suggestions flow above it.",
+          "The same block at 360px, the default and minimum content width of a browser side panel. The composer stays docked, and the greeting and suggestions flow above it.",
         layout: "application",
         Demo: AIChatSidePanelDemo,
       },

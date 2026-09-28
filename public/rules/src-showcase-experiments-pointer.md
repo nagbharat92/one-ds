@@ -26,4 +26,4 @@ Exceptions: True unframed page bands may use ColorThemeSurface. Canvas and Toolb
 
 Tokens: `--card`, `--card-foreground`, `--card-spacing`, `--card-radius`, `--card-stroke`
 
-Files: src/components/ui/card.tsx, src/components/ui/color-theme.tsx, src/index.css, src/showcase/experiments/pointer.tsx
+Files: src/components/ui/card.tsx, src/components/ui/color-theme.tsx, src/styles/card.css, src/index.css, src/showcase/experiments/pointer.tsx

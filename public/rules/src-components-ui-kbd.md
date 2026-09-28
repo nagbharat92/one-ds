@@ -14,4 +14,4 @@ Exceptions: AvatarBadge and presence dots are status indicators, not text badges
 
 Tokens: `--badge-height`, `--badge-radius`, `--badge-padding-inline`, `--badge-font-size`, `--badge-line-height`, `--badge-graphic-size`, `--badge-gap`, `--graphic-label-gap`, `--icon-label-optical-padding`
 
-Files: src/components/ui/badge.tsx, src/components/ui/kbd.tsx, src/components/ui/favicon.tsx, src/components/ui/icon-label.tsx, src/index.css, src/showcase/demos/data.tsx, tests/design-rules.spec.ts
+Files: src/components/ui/badge.tsx, src/components/ui/kbd.tsx, src/components/ui/favicon.tsx, src/components/ui/icon-label.tsx, src/styles/icon.css, src/styles/tokens.css, src/index.css, src/showcase/demos/data.tsx, tests/design-rules.spec.ts

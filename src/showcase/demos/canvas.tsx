@@ -79,7 +79,7 @@ export const canvasDemos: ComponentEntry[] = [
     examples: [
       {
         name: "Split surfaces",
-        description: "The same control shown on the card and sidebar fills, separated at the canvas midpoint.",
+        description: "The same control shown on the card and navigation pane fills, separated at the canvas midpoint.",
         background: "split",
         Demo: CanvasSplitSurfacesDemo,
       },

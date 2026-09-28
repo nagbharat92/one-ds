@@ -60,7 +60,7 @@ function SiteFooter({
               wavySize="medium"
               tone={resolvedVariant === "inverted" ? "subtle" : "neutral"}
               fill="bottom"
-              fillClassName="fill-(--sidebar) text-(--sidebar)"
+              fillClassName="fill-(--navigation-pane) text-(--navigation-pane)"
               className="block w-full text-(--separator-stroke)"
             />
           </div>
@@ -69,7 +69,7 @@ function SiteFooter({
           data-slot="site-footer-body"
           className={cn(
             "w-full",
-            !isFloating && "bg-sidebar"
+            !isFloating && "bg-navigation-pane"
           )}
         >
           {children}

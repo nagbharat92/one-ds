@@ -1,0 +1,65 @@
+@layer components {
+  :is(
+    [data-slot="dropdown-menu-content"],
+    [data-slot="dropdown-menu-sub-content"],
+    [data-slot="context-menu-content"],
+    [data-slot="context-menu-sub-content"],
+    [data-slot="menubar-content"],
+    [data-slot="menubar-sub-content"]
+  ) > [data-slot="scroller"],
+  :is(
+    [data-slot="dropdown-menu-content"][data-grouped="true"],
+    [data-slot="context-menu-content"][data-grouped="true"],
+    [data-slot="menubar-content"][data-grouped="true"]
+  )
+    > [data-slot="scroller"]
+    > :is(
+      [data-slot="menu-group"],
+      [data-slot="dropdown-menu-group"],
+      [data-slot="context-menu-group"],
+      [data-slot="menubar-group"]
+    ) {
+    max-height: inherit;
+  }
+
+  :is(
+    [data-slot="dropdown-menu-content"][data-grouped="true"],
+    [data-slot="dropdown-menu-sub-content"][data-grouped="true"],
+    [data-slot="context-menu-content"][data-grouped="true"],
+    [data-slot="context-menu-sub-content"][data-grouped="true"],
+    [data-slot="menubar-content"][data-grouped="true"],
+    [data-slot="menubar-sub-content"][data-grouped="true"]
+  )
+    :is(
+      [data-slot="dropdown-menu-label"] + [data-slot="dropdown-menu-separator"],
+      [data-slot="context-menu-label"] + [data-slot="context-menu-separator"],
+      [data-slot="menubar-label"] + [data-slot="menubar-separator"]
+    ) {
+    display: none;
+  }
+
+  :is(
+    [data-slot="dropdown-menu-content"][data-grouped="true"],
+    [data-slot="dropdown-menu-sub-content"][data-grouped="true"],
+    [data-slot="context-menu-content"][data-grouped="true"],
+    [data-slot="context-menu-sub-content"][data-grouped="true"],
+    [data-slot="menubar-content"][data-grouped="true"],
+    [data-slot="menubar-sub-content"][data-grouped="true"]
+  )
+    :is(
+      [data-slot="dropdown-menu-item"],
+      [data-slot="dropdown-menu-checkbox-item"],
+      [data-slot="dropdown-menu-radio-item"],
+      [data-slot="dropdown-menu-sub-trigger"],
+      [data-slot="context-menu-item"],
+      [data-slot="context-menu-checkbox-item"],
+      [data-slot="context-menu-radio-item"],
+      [data-slot="context-menu-sub-trigger"],
+      [data-slot="menubar-item"],
+      [data-slot="menubar-checkbox-item"],
+      [data-slot="menubar-radio-item"],
+      [data-slot="menubar-sub-trigger"]
+    ):not([data-disabled]):is(:active, [data-pressed="true"]) {
+    background-color: var(--menu-item-pressed-fill);
+  }
+}

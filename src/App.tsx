@@ -2,7 +2,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type ReactNode,
 } from "react"
 import {
@@ -69,26 +68,26 @@ import { Canvas } from "@/components/ui/canvas"
 import { CanvasGrid } from "@/components/ui/canvas-grid"
 import { CanvasPreviewControls, CanvasPreviewFrame } from "@/components/ui/canvas-preview"
 import {
-  Sidebar,
-  SidebarBrand,
-  SidebarBrandLabel,
-  SidebarBrandMark,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarHeaderActions,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger,
-  useSidebar,
-} from "@/components/ui/sidebar"
+  NavigationPane,
+  NavigationPaneBrand,
+  NavigationPaneBrandLabel,
+  NavigationPaneBrandMark,
+  NavigationPaneContent,
+  NavigationPaneFooter,
+  NavigationPaneGroup,
+  NavigationPaneGroupContent,
+  NavigationPaneGroupLabel,
+  NavigationPaneHeader,
+  NavigationPaneHeaderActions,
+  NavigationPaneInset,
+  NavigationPaneMenu,
+  NavigationPaneMenuItem,
+  NavigationPaneProvider,
+  NavigationPaneSearch,
+  NavigationPaneTrigger,
+  useNavigationPane,
+} from "@/components/ui/navigation-pane"
 import { Page, PageContent, PageScroll } from "@/components/ui/page"
-import { SearchInput } from "@/components/ui/input"
 import {
   Section,
   SectionActions,
@@ -120,28 +119,28 @@ const alphabeticalPreviewTools = [...previewRegistry].sort((left, right) =>
   left.name.localeCompare(right.name),
 )
 const defaultComponentSlug = alphabeticalRegistry[0].slug
-const wipSidebarSlugs = new Set(["chart", "carousel", "persona", "table-of-contents"])
+const wipNavigationPaneSlugs = new Set(["chart", "carousel", "persona", "table-of-contents"])
 
-type SidebarNavigationItem = Pick<ComponentEntry, "slug" | "name"> & {
+type NavigationPaneNavigationItem = Pick<ComponentEntry, "slug" | "name"> & {
   wip?: boolean
 }
 
-function withSidebarMetadata(
+function withNavigationPaneMetadata(
   component: Pick<ComponentEntry, "slug" | "name">,
-): SidebarNavigationItem {
+): NavigationPaneNavigationItem {
   return {
     ...component,
-    wip: wipSidebarSlugs.has(component.slug),
+    wip: wipNavigationPaneSlugs.has(component.slug),
   }
 }
 
-function SidebarWipBadge({ show = false }: { show?: boolean }) {
+function NavigationPaneWipBadge({ show = false }: { show?: boolean }) {
   if (!show) return null
 
   return (
     <Badge
       variant="primary"
-      className="ms-auto me-(--showcase-sidebar-wip-badge-edge-offset) h-(--showcase-sidebar-wip-badge-height) min-w-(--showcase-sidebar-wip-badge-height) rounded-(--showcase-sidebar-wip-badge-radius) px-(--showcase-sidebar-wip-badge-padding-inline) text-(length:--text-caption-size) leading-(--text-caption-leading)"
+      className="ms-auto me-(--showcase-navigation-pane-wip-badge-edge-offset) h-(--showcase-navigation-pane-wip-badge-height) min-w-(--showcase-navigation-pane-wip-badge-height) rounded-(--showcase-navigation-pane-wip-badge-radius) px-(--showcase-navigation-pane-wip-badge-padding-inline) text-(length:--text-caption-size) leading-(--text-caption-leading)"
     >
       WIP
     </Badge>
@@ -149,13 +148,25 @@ function SidebarWipBadge({ show = false }: { show?: boolean }) {
 }
 
 function useHashRoute() {
-  const [hash, setHash] = useState(
-    () => window.location.hash.replace(/^#\/?/, "") || defaultComponentSlug,
-  )
+  const parseRoute = () => {
+    const raw = window.location.hash.replace(/^#\/?/, "")
+    const standaloneMatch = raw.match(/^standalone\/([^/]+)(?:\/(.+))?$/)
+    if (standaloneMatch) {
+      return {
+        slug: standaloneMatch[1] || defaultComponentSlug,
+        exampleName: standaloneMatch[2]
+          ? decodeURIComponent(standaloneMatch[2])
+          : undefined,
+        standalone: true as const,
+      }
+    }
+    return { slug: raw || defaultComponentSlug, exampleName: undefined, standalone: false as const }
+  }
+
+  const [route, setRoute] = useState(parseRoute)
 
   useEffect(() => {
-    const onChange = () =>
-      setHash(window.location.hash.replace(/^#\/?/, "") || defaultComponentSlug)
+    const onChange = () => setRoute(parseRoute())
     window.addEventListener("hashchange", onChange)
     return () => window.removeEventListener("hashchange", onChange)
   }, [])
@@ -164,7 +175,13 @@ function useHashRoute() {
     window.location.hash = `/${slug}`
   }
 
-  return [hash, navigate] as const
+  return [route, navigate] as const
+}
+
+// The toolbar's "open in new tab" action targets this route, which renders
+// just the one example full-bleed with no showcase chrome.
+function standaloneHref(componentSlug: string, exampleName: string) {
+  return `#/standalone/${componentSlug}/${encodeURIComponent(exampleName)}`
 }
 
 function exampleId(componentSlug: string, exampleName: string) {
@@ -206,12 +223,14 @@ function DemoSandbox({
   layout = "center",
   background,
   ownsCanvas = false,
+  standaloneHref,
 }: {
   children: ReactNode
   name: string
   layout?: ComponentExample["layout"]
   background?: ComponentExample["background"]
   ownsCanvas?: boolean
+  standaloneHref?: string
 }) {
   const stageRef = useRef<HTMLDivElement>(null)
   const [grid, setGrid] = useState(false)
@@ -236,7 +255,7 @@ function DemoSandbox({
   }, [])
 
   return (
-    <CanvasPreviewFrame controls={!ownsCanvas && <CanvasPreviewControls name={name} grid={grid} onGridChange={setGrid} />}>
+    <CanvasPreviewFrame controls={!ownsCanvas && <CanvasPreviewControls name={name} grid={grid} onGridChange={setGrid} standaloneHref={standaloneHref} />}>
     <Surface
       ref={stageRef}
       {...(ownsCanvas ? {} : { layout, background })}
@@ -275,8 +294,17 @@ function ExampleSection({
   const id = exampleId(componentSlug, example.name)
   const code =
     example.code ?? generatedExampleCode[`${componentSlug}:${example.name}`]
+  const standaloneUrl = new URL(window.location.href)
+  standaloneUrl.hash = standaloneHref(componentSlug, example.name)
   const preview = (
-    <DemoSandbox key={resetKey} name={example.name} layout={example.layout} background={example.background} ownsCanvas={example.ownsCanvas}>
+    <DemoSandbox
+      key={resetKey}
+      name={example.name}
+      layout={example.layout}
+      background={example.background}
+      ownsCanvas={example.ownsCanvas}
+      standaloneHref={standaloneUrl.toString()}
+    >
       <ErrorBoundary title={`${example.name} failed to render`}>
         <example.Demo />
       </ErrorBoundary>
@@ -393,7 +421,7 @@ function ComponentNavigation({
 }) {
   const [query, setQuery] = useState("")
   const [sort, setSort] = useState<"build" | "alphabetical" | "sections">("build")
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useNavigationPane()
   const normalizedQuery = query.trim().toLowerCase()
   const matches = (name: string) =>
     name.toLowerCase().includes(normalizedQuery)
@@ -425,8 +453,8 @@ function ComponentNavigation({
     matches(item.name),
   )
 
-  const renderItem = (component: SidebarNavigationItem) => (
-    <SidebarMenuItem key={component.slug} data-showcase-nav-item={component.slug}>
+  const renderItem = (component: NavigationPaneNavigationItem) => (
+    <NavigationPaneMenuItem key={component.slug} data-showcase-nav-item={component.slug}>
       <Item
         compact
         asChild
@@ -443,35 +471,35 @@ function ComponentNavigation({
           <ItemContent>
             <ItemTitle>{component.name}</ItemTitle>
           </ItemContent>
-          <SidebarWipBadge show={component.wip} />
+          <NavigationPaneWipBadge show={component.wip} />
         </button>
       </Item>
-    </SidebarMenuItem>
+    </NavigationPaneMenuItem>
   )
 
   return (
     <>
-      <SidebarHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
-        <SidebarBrand>
-          <SidebarBrandMark>
+      <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
+        <NavigationPaneBrand>
+          <NavigationPaneBrandMark>
             <img src="/favicon.svg" alt="" className="size-5" />
-          </SidebarBrandMark>
-          <SidebarBrandLabel className="text-lg font-semibold">
+          </NavigationPaneBrandMark>
+          <NavigationPaneBrandLabel className="text-lg font-semibold">
             OneDS
-          </SidebarBrandLabel>
-        </SidebarBrand>
-        <SidebarHeaderActions
+          </NavigationPaneBrandLabel>
+        </NavigationPaneBrand>
+        <NavigationPaneHeaderActions
           role="toolbar"
           aria-label="Site controls"
         >
           <ModeToggle />
-          <SidebarTrigger />
-        </SidebarHeaderActions>
-      </SidebarHeader>
+          <NavigationPaneTrigger />
+        </NavigationPaneHeaderActions>
+      </NavigationPaneHeader>
       <Separator variant="faded" />
       <div className="flex min-h-0 flex-1 flex-col pt-(--showcase-shell-content-inset)">
         <div className="flex items-center gap-2 px-4">
-          <SearchInput
+          <NavigationPaneSearch
             value={query}
             onValueChange={setQuery}
             placeholder="Search library"
@@ -509,86 +537,86 @@ function ComponentNavigation({
           </Button>
         </div>
         {/* Bottom padding matches the scroll fade, so the final item stays clear. */}
-        <SidebarContent
+        <NavigationPaneContent
           className="gap-5 pt-4 pb-6"
           role="navigation"
           aria-label="OneDS library"
         >
           {(matches("Design Rules") || matches("Agent Catalog") || matches("Notes")) && (
-            <SidebarGroup>
-              <SidebarGroupLabel>Reference</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
+            <NavigationPaneGroup>
+              <NavigationPaneGroupLabel>Reference</NavigationPaneGroupLabel>
+              <NavigationPaneGroupContent>
+                <NavigationPaneMenu>
                   {matches("Design Rules") && renderItem({ slug: "rules", name: "Design Rules" })}
                   {matches("Agent Catalog") && renderItem({ slug: "catalog", name: "Agent Catalog" })}
                   {matches("Notes") && renderItem({ slug: "notes", name: "Notes" })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+                </NavigationPaneMenu>
+              </NavigationPaneGroupContent>
+            </NavigationPaneGroup>
           )}
           {sort === "build" ? (
             buildGroups.map((group) => (
-              <SidebarGroup key={group.category}>
-                <SidebarGroupLabel>{group.category}</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>{group.items.map(withSidebarMetadata).map(renderItem)}</SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+              <NavigationPaneGroup key={group.category}>
+                <NavigationPaneGroupLabel>{group.category}</NavigationPaneGroupLabel>
+                <NavigationPaneGroupContent>
+                  <NavigationPaneMenu>{group.items.map(withNavigationPaneMetadata).map(renderItem)}</NavigationPaneMenu>
+                </NavigationPaneGroupContent>
+              </NavigationPaneGroup>
             ))
           ) : sort === "alphabetical" ? (
             <>
               {alphabeticalBlockItems.length > 0 ? (
-                <SidebarGroup>
-                  <SidebarGroupLabel>Blocks</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {alphabeticalBlockItems.map(withSidebarMetadata).map(renderItem)}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
+                <NavigationPaneGroup>
+                  <NavigationPaneGroupLabel>Blocks</NavigationPaneGroupLabel>
+                  <NavigationPaneGroupContent>
+                    <NavigationPaneMenu>
+                      {alphabeticalBlockItems.map(withNavigationPaneMetadata).map(renderItem)}
+                    </NavigationPaneMenu>
+                  </NavigationPaneGroupContent>
+                </NavigationPaneGroup>
               ) : null}
               {alphabeticalExperimentItems.length > 0 ? (
-                <SidebarGroup>
-                  <SidebarGroupLabel>Experiments</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {alphabeticalExperimentItems.map(withSidebarMetadata).map(renderItem)}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
+                <NavigationPaneGroup>
+                  <NavigationPaneGroupLabel>Experiments</NavigationPaneGroupLabel>
+                  <NavigationPaneGroupContent>
+                    <NavigationPaneMenu>
+                      {alphabeticalExperimentItems.map(withNavigationPaneMetadata).map(renderItem)}
+                    </NavigationPaneMenu>
+                  </NavigationPaneGroupContent>
+                </NavigationPaneGroup>
               ) : null}
               {alphabeticalPreviewItems.length > 0 ? (
-                <SidebarGroup>
-                  <SidebarGroupLabel>Preview Tools</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>
-                      {alphabeticalPreviewItems.map(withSidebarMetadata).map(renderItem)}
-                    </SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
+                <NavigationPaneGroup>
+                  <NavigationPaneGroupLabel>Preview Tools</NavigationPaneGroupLabel>
+                  <NavigationPaneGroupContent>
+                    <NavigationPaneMenu>
+                      {alphabeticalPreviewItems.map(withNavigationPaneMetadata).map(renderItem)}
+                    </NavigationPaneMenu>
+                  </NavigationPaneGroupContent>
+                </NavigationPaneGroup>
               ) : null}
               {alphabeticalItems.length > 0 ? (
-                <SidebarGroup>
-                  <SidebarGroupLabel>Components</SidebarGroupLabel>
-                  <SidebarGroupContent>
-                    <SidebarMenu>{alphabeticalItems.map(withSidebarMetadata).map(renderItem)}</SidebarMenu>
-                  </SidebarGroupContent>
-                </SidebarGroup>
+                <NavigationPaneGroup>
+                  <NavigationPaneGroupLabel>Components</NavigationPaneGroupLabel>
+                  <NavigationPaneGroupContent>
+                    <NavigationPaneMenu>{alphabeticalItems.map(withNavigationPaneMetadata).map(renderItem)}</NavigationPaneMenu>
+                  </NavigationPaneGroupContent>
+                </NavigationPaneGroup>
               ) : null}
             </>
           ) : (
             visibleGroups.map((group) => (
-              <SidebarGroup key={group.category}>
-                <SidebarGroupLabel>{group.category}</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>{group.items.map(withSidebarMetadata).map(renderItem)}</SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
+              <NavigationPaneGroup key={group.category}>
+                <NavigationPaneGroupLabel>{group.category}</NavigationPaneGroupLabel>
+                <NavigationPaneGroupContent>
+                  <NavigationPaneMenu>{group.items.map(withNavigationPaneMetadata).map(renderItem)}</NavigationPaneMenu>
+                </NavigationPaneGroupContent>
+              </NavigationPaneGroup>
             ))
           )}
-        </SidebarContent>
+        </NavigationPaneContent>
       </div>
-      <SidebarFooter>
+      <NavigationPaneFooter>
         <Button asChild variant="ghost" className="w-full justify-start rounded-(--item-compact-radius)">
           <a
             href="https://github.com/bhna_microsoft/oneds"
@@ -599,12 +627,12 @@ function ComponentNavigation({
             GitHub
           </a>
         </Button>
-      </SidebarFooter>
+      </NavigationPaneFooter>
     </>
   )
 }
 
-function ComponentPage({ entry }: { entry: ComponentEntry }) {
+function getComponentExamples(entry: ComponentEntry): ComponentExample[] {
   const tier = surfaceTier(entry)
 
   const defaultExample = {
@@ -616,12 +644,16 @@ function ComponentPage({ entry }: { entry: ComponentEntry }) {
     layout: DEFAULT_LAYOUT_BY_SURFACE[tier],
     ownsCanvas: entry.ownsCanvas,
   }
-  const examples: ComponentExample[] = [
+  return [
     entry.defaultExampleHeader
       ? { ...defaultExample, header: entry.defaultExampleHeader.style, description: entry.defaultExampleHeader.description }
       : defaultExample,
     ...(entry.examples ?? []),
   ]
+}
+
+function ComponentPage({ entry }: { entry: ComponentEntry }) {
+  const examples = getComponentExamples(entry)
 
   return (
     <div className="showcase-component__examples">
@@ -637,8 +669,31 @@ function ComponentPage({ entry }: { entry: ComponentEntry }) {
   )
 }
 
+// Reached via the toolbar's "open in new tab" action: the one example,
+// full-bleed, with none of the showcase shell (no nav pane, no page header).
+function StandaloneDemoPage({
+  entry,
+  exampleName,
+}: {
+  entry: ComponentEntry
+  exampleName?: string
+}) {
+  const examples = getComponentExamples(entry)
+  const example =
+    examples.find((item) => item.name === exampleName) ?? examples[0]
+
+  return (
+    <div className="h-screen w-screen overflow-hidden">
+      <ErrorBoundary title={`${example.name} failed to render`}>
+        <example.Demo />
+      </ErrorBoundary>
+    </div>
+  )
+}
+
 function App() {
-  const [slug, navigate] = useHashRoute()
+  const [route, navigate] = useHashRoute()
+  const { slug, standalone, exampleName } = route
   const [catalogQuery, setCatalogQuery] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
   const isRulesPage = slug === "rules"
@@ -674,23 +729,20 @@ function App() {
     scrollRef.current?.scrollTo({ top: 0, behavior: "auto" })
   }, [slug])
 
+  if (standalone) {
+    return <StandaloneDemoPage entry={activeEntry} exampleName={exampleName} />
+  }
+
   return (
-    <SidebarProvider
-      className="showcase-app"
-      style={
-        {
-          "--sidebar-width": "var(--showcase-sidebar-width)",
-        } as CSSProperties
-      }
-    >
+    <NavigationPaneProvider className="showcase-app">
       <MaterialTheme asChild data-theme-scope="showcase-navigation">
-        <Sidebar collapsible="hidden" edge="faded" placement="floating">
+        <NavigationPane collapsible="hidden" edge="faded" placement="floating">
           <ComponentNavigation activeSlug={slug} onNavigate={navigate} />
-        </Sidebar>
+        </NavigationPane>
       </MaterialTheme>
 
-      <SidebarInset className="min-h-0 overflow-hidden">
-        <SidebarTrigger placement="floating" />
+      <NavigationPaneInset className="min-h-0 overflow-hidden">
+        <NavigationPaneTrigger placement="floating" />
         <Page>
           <PageScroll ref={scrollRef}>
             <ShowcasePageHeader
@@ -730,8 +782,8 @@ function App() {
             </PageContent>
           </PageScroll>
         </Page>
-      </SidebarInset>
-    </SidebarProvider>
+      </NavigationPaneInset>
+    </NavigationPaneProvider>
   )
 }
 

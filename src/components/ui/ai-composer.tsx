@@ -30,6 +30,7 @@ function AIComposer({
   className,
   status = "ready",
   size = "default",
+  onSubmit,
   ...props
 }: React.ComponentProps<"form"> & {
   status?: AIComposerStatus
@@ -40,14 +41,51 @@ function AIComposer({
     () => ({ hasPrompt, setHasPrompt, size }),
     [hasPrompt, size]
   )
+  const rootRef = React.useRef<HTMLFormElement>(null)
+  const previousStatusRef = React.useRef(status)
+
+  const prefersReducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+  // One-shot lateral wobble when the status first enters error; never loops.
+  React.useEffect(() => {
+    const previous = previousStatusRef.current
+    previousStatusRef.current = status
+    const shell = rootRef.current
+    if (status !== "error" || previous === "error" || !shell) return
+    if (prefersReducedMotion()) return
+    const tokens = getComputedStyle(shell)
+    // The distance token is a calc(), which resolves only when used in a real
+    // property, so it is handed to the browser inside the keyframe rather than
+    // parsed to a number here.
+    const d = "var(--ai-composer-error-shake-distance)"
+    shell.animate(
+      [
+        { translate: "0" },
+        { translate: `calc(${d} * -1)` },
+        { translate: d },
+        { translate: `calc(${d} * -0.6)` },
+        { translate: `calc(${d} * 0.6)` },
+        { translate: "0" },
+      ],
+      {
+        duration: Number.parseFloat(
+          tokens.getPropertyValue("--ai-composer-error-shake-speed")
+        ),
+        easing: tokens.getPropertyValue("--ai-composer-error-shake-ease").trim(),
+      }
+    )
+  }, [status])
 
   return (
     <AIComposerContext.Provider value={context}>
       <form
+        ref={rootRef}
         data-slot="ai-composer"
         data-status={status}
         data-size={size}
         aria-busy={status === "submitted" || status === "streaming"}
+        onSubmit={onSubmit}
         className={cn(
           "relative grid w-full max-w-(--ai-composer-max-width) gap-(--ai-composer-gap) overflow-visible rounded-(--ai-composer-radius) border border-(--elevation-stroke) bg-(--surface-lowest) bg-clip-border p-(--ai-composer-padding) text-foreground shadow-(--elevation-flat) transition-[background-color,border-color,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-floating) focus-within:shadow-(--elevation-floating) data-[status=error]:shadow-(--elevation-floating) data-[status=error]:border-destructive/40",
           className
@@ -60,13 +98,19 @@ function AIComposer({
 
 function AIComposerContextIndicator({
   className,
+  visible = true,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { visible?: boolean }) {
   return (
     <div
       data-slot="ai-composer-context-indicator"
+      data-visible={visible}
+      aria-hidden={!visible}
       className={cn(
-        "absolute -top-(--space-xs) inset-s-(--ai-composer-context-indicator-inset-inline-start) -translate-y-full z-10 flex items-center justify-start",
+        "absolute -top-(--space-xs) inset-s-(--ai-composer-context-indicator-inset-inline-start) z-10 flex items-center justify-start",
+        "transition-[opacity,translate] duration-(--ai-composer-context-indicator-speed) ease-(--ai-composer-context-indicator-enter-ease)",
+        "data-[visible=false]:translate-y-0 data-[visible=false]:opacity-0 data-[visible=false]:pointer-events-none data-[visible=false]:ease-(--ai-composer-context-indicator-exit-ease)",
+        "data-[visible=true]:-translate-y-full data-[visible=true]:opacity-100",
         className
       )}
       {...props}
@@ -97,6 +141,9 @@ function AIComposerInput({
 }: React.ComponentProps<"textarea"> & { submitOnEnter?: boolean }) {
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const composer = React.useContext(AIComposerContext)
+  const previousHeightRef = React.useRef<number | null>(null)
+  const growthAnimationRef = React.useRef<Animation | null>(null)
+  const observerRef = React.useRef<ResizeObserver | null>(null)
 
   const updateLayout = React.useCallback(
     (input: HTMLTextAreaElement) => {
@@ -114,15 +161,73 @@ function AIComposerInput({
     [composer]
   )
 
+  // A container transform: the box is one persistent object growing or
+  // shrinking, so it borrows the spatial spring rather than snapping to
+  // field-sizing's instant intrinsic height. Duration scales with distance
+  // (a tokenized velocity), not a single fixed time for every line count.
+  const animateGrowth = React.useCallback((input: HTMLTextAreaElement) => {
+    const nextHeight = input.getBoundingClientRect().height
+    const previousHeight = previousHeightRef.current
+    previousHeightRef.current = nextHeight
+
+    growthAnimationRef.current?.cancel()
+    if (previousHeight === null || Math.abs(nextHeight - previousHeight) < 1) return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    const tokens = getComputedStyle(input)
+    const velocity = Number(tokens.getPropertyValue("--ai-composer-grow-velocity"))
+    if (velocity <= 0) return
+    const maxDuration = Number.parseFloat(tokens.getPropertyValue("--ai-composer-grow-max-duration"))
+    const duration = Math.min(
+      (Math.abs(nextHeight - previousHeight) / velocity) * 1000,
+      Number.isFinite(maxDuration) && maxDuration > 0 ? maxDuration : Infinity
+    )
+
+    // The animation itself resizes the box every frame, which would
+    // otherwise retrigger this same observer mid-flight. Pause observation
+    // for its duration and resume once settled (or interrupted).
+    const animation = input.animate(
+      [{ height: `${previousHeight}px` }, { height: `${nextHeight}px` }],
+      { duration, easing: tokens.getPropertyValue("--ai-composer-grow-ease").trim() }
+    )
+    growthAnimationRef.current = animation
+    observerRef.current?.disconnect()
+    const resume = () => {
+      if (growthAnimationRef.current === animation && inputRef.current) {
+        observerRef.current?.observe(inputRef.current)
+      }
+    }
+    animation.addEventListener("finish", resume)
+    animation.addEventListener("cancel", resume)
+  }, [])
+
+  // Syncs the multiline flag whenever the controlled value changes
+  // externally (for example, a caller clearing the prompt after submit).
+  React.useLayoutEffect(() => {
+    const input = inputRef.current
+    if (input) updateLayout(input)
+  }, [props.value, updateLayout])
+
+  // Owns the ResizeObserver and the animation baseline for the input's whole
+  // lifetime. This must NOT re-run on every keystroke: recreating it per
+  // value change would reset previousHeightRef to the already-grown height
+  // before the observer could ever see a delta, silently disabling growth.
   React.useLayoutEffect(() => {
     const input = inputRef.current
     if (!input) return
 
-    updateLayout(input)
-    const observer = new ResizeObserver(() => updateLayout(input))
+    previousHeightRef.current = input.getBoundingClientRect().height
+    const observer = new ResizeObserver(() => {
+      updateLayout(input)
+      animateGrowth(input)
+    })
+    observerRef.current = observer
     observer.observe(input)
-    return () => observer.disconnect()
-  }, [props.value, updateLayout])
+    return () => {
+      observer.disconnect()
+      observerRef.current = null
+    }
+  }, [animateGrowth, updateLayout])
 
   return (
     <Textarea
@@ -318,6 +423,7 @@ function AIComposerSubmit({
   type,
   children,
   disabled,
+  ref,
   ...props
 }: Omit<React.ComponentProps<typeof Button>, "children"> & {
   status?: AIComposerStatus
@@ -326,12 +432,17 @@ function AIComposerSubmit({
   const composer = React.useContext(AIComposerContext)
   const isVoice = status === "ready" && !composer?.hasPrompt
   const label = isVoice ? "Voice input" : submitLabels[status]
+  // One persistent pill morphs through its whole lifecycle: voice affordance,
+  // send arrow, sending spinner, stop square, then retry - never an unmount/
+  // remount swap between states.
+  const mode = isVoice ? "voice" : status === "streaming" ? "stop" : status
 
   return (
     <Button
+      ref={ref}
       data-slot="ai-composer-submit"
       data-status={status}
-      data-mode={isVoice ? "voice" : status === "streaming" ? "stop" : "send"}
+      data-mode={mode}
       type={type ?? (isVoice || status === "streaming" ? "button" : "submit")}
       size="icon"
       variant={status === "error" ? "destructive" : "primary"}
@@ -339,28 +450,30 @@ function AIComposerSubmit({
       aria-label={props["aria-label"] ?? label}
       disabled={disabled || status === "submitted"}
       className={cn(
-        "relative rounded-full shadow-(--elevation-flat) transition-[width,transform,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-raised) focus-visible:shadow-(--elevation-raised) focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
+        "relative rounded-full shadow-(--elevation-flat) transition-[width,box-shadow] duration-(--ai-composer-speed) ease-(--ai-composer-ease) hover:shadow-(--elevation-raised) focus-visible:shadow-(--elevation-raised) focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none",
         className
       )}
       {...props}
     >
-      {children ??
-        (status === "ready" ? (
-          <>
-            <span className="absolute grid place-items-center transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-data-[mode=send]/button:scale-75 group-data-[mode=send]/button:opacity-0">
-              <MicIcon aria-hidden filled />
-            </span>
-            <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-speed) ease-(--ai-composer-ease) group-data-[mode=send]/button:scale-100 group-data-[mode=send]/button:opacity-100">
-              <ArrowUpIcon aria-hidden filled />
-            </span>
-          </>
-        ) : status === "submitted" ? (
-          <Spinner aria-label={label} />
-        ) : status === "streaming" ? (
-          <SquareIcon aria-hidden filled />
-        ) : status === "error" ? (
-          <RefreshCwIcon aria-hidden />
-        ) : null)}
+      {children ?? (
+        <>
+          <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-icon-fade-speed) ease-(--ai-composer-icon-fade-ease) group-data-[mode=voice]/button:scale-100 group-data-[mode=voice]/button:opacity-100">
+            <MicIcon aria-hidden filled />
+          </span>
+          <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-icon-fade-speed) ease-(--ai-composer-icon-fade-ease) group-data-[mode=ready]/button:scale-100 group-data-[mode=ready]/button:opacity-100">
+            <ArrowUpIcon aria-hidden filled />
+          </span>
+          <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-icon-fade-speed) ease-(--ai-composer-icon-fade-ease) group-data-[mode=submitted]/button:scale-100 group-data-[mode=submitted]/button:opacity-100">
+            <Spinner aria-hidden />
+          </span>
+          <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-icon-fade-speed) ease-(--ai-composer-icon-fade-ease) group-data-[mode=stop]/button:scale-100 group-data-[mode=stop]/button:opacity-100">
+            <SquareIcon aria-hidden filled />
+          </span>
+          <span className="absolute grid scale-75 place-items-center opacity-0 transition-[opacity,scale] duration-(--ai-composer-icon-fade-speed) ease-(--ai-composer-icon-fade-ease) group-data-[mode=error]/button:scale-100 group-data-[mode=error]/button:opacity-100">
+            <RefreshCwIcon aria-hidden />
+          </span>
+        </>
+      )}
     </Button>
   )
 }

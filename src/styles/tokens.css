@@ -1,22 +1,5 @@
 :root {
   --overlay-scrim: rgb(0 0 0 / 10%);
-  --surface-warm-chroma: 0.003;
-  --surface-warm-hue: 85;
-  --surface-ground-lightness: 0.988;
-  --surface-ground-dark-lightness: 0.145;
-  --surface-backplate-dark-lightness: 0.269;
-  --surface-backplate-ground-weight: 94%;
-  --surface-stroke-ground-weight: 90%;
-  --theme-hue-warm: 85;
-  --theme-hue-rose: 12;
-  --theme-hue-green: 155;
-  --theme-hue-blue: 245;
-  --theme-hue-lilac: 305;
-  --theme-material-seed-warm: #734e00;
-  --theme-material-seed-rose: #8b3343;
-  --theme-material-seed-green: #006836;
-  --theme-material-seed-blue: #005993;
-  --theme-material-seed-lilac: #65418a;
   --theme-website-background-light: #fefbff;
   --theme-website-background-dark: #141314;
   --theme-website-on-background-light: #1c1b1d;
@@ -67,16 +50,7 @@
   --theme-website-outline-dark: #928f94;
   --theme-website-outline-variant-light: #e8e0e8;
   --theme-website-outline-variant-dark: #4d4256;
-  --theme-primary-lightness: 0.45;
-  --theme-primary-chroma: 0.12;
-  --theme-primary-dark-lightness: 0.8;
-  --theme-primary-dark-chroma: 0.1;
-  --theme-on-primary: oklch(1 0 0);
-  --theme-on-primary-dark: oklch(0.18 0 0);
-  --theme-swatch-lightness: 0.86;
-  --theme-swatch-chroma: 0.075;
   --destructive-hue: 12;
-  --theme-preview-surface-seed: #807b71;
   --theme-surface-chroma: 4;
   --theme-accent-chroma: 48;
   --theme-secondary-chroma: 12;
@@ -104,22 +78,23 @@
   --theme-tone-on-primary-dark: 20;
   --theme-tone-secondary-dark: 38;
   --theme-tone-on-secondary-dark: 98;
-  --theme-swatch-size: var(--button-height-default);
-  --theme-preview-padding: calc(var(--spacing) * 6);
-  --theme-preview-nav-width: calc(var(--spacing) * 44);
-  --theme-preview-content-min: calc(var(--spacing) * 64);
-  --action-primary: oklch(0.205 0 0);
-  --action-on-primary: oklch(0.985 0 0);
+  --action-neutral-fill: oklch(0.205 0 0);
+  --action-neutral-ink: oklch(0.985 0 0);
+  --action-primary: var(--action-neutral-fill);
+  --action-on-primary: var(--action-neutral-ink);
     --primary: var(--action-primary);
     --primary-foreground: var(--action-on-primary);
-    --destructive: oklch(0.58 0.2 var(--destructive-hue));
+    --destructive-light: oklch(0.58 0.2 var(--destructive-hue));
+    --destructive: var(--destructive-light);
     --ring: oklch(0.708 0 0);
 
     /* Presence. The only chromatic accents in an otherwise neutral palette,
        because a person's availability has to read at a glance. */
-    --presence-available: oklch(0.63 0.16 149);
+    --presence-available-light: oklch(0.63 0.16 149);
+    --presence-available: var(--presence-available-light);
     --presence-busy: var(--destructive);
-    --presence-away: oklch(0.75 0.15 75);
+    --presence-away-light: oklch(0.75 0.15 75);
+    --presence-away: var(--presence-away-light);
     --presence-offline: var(--muted-foreground);
 
     --chart-1: var(--chart-primary);
@@ -245,13 +220,13 @@
     --code-block-min-height: calc(var(--button-height-default) + var(--code-block-copy-inset) * 2 + var(--code-block-boundary-width) * 2);
     --code-block-padding-block: var(--space-md);
     --code-block-padding-inline: var(--space-md);
+    --code-block-padding-inline-single: var(--space-lg);
     --code-block-line-number-width: calc(var(--spacing) * 10);
     --code-block-line-number-gap: var(--space-md);
 
      /* List Item. Hosted actions float above long text instead of consuming its
-       layout width; the fade preserves readability beneath the action. */
-     --item-hosted-action-fade-size: calc(var(--spacing) * 8);
-     --item-hosted-action-speed: var(--speed-swift);
+       layout width; truncation keeps the row's own text clear of the action. */
+     --item-hosted-action-speed: var(--speed-instant);
      --item-hosted-action-ease: var(--ease-settle);
 
     /* Motion. Every token names a SPEED, never a count of milliseconds —
@@ -293,13 +268,21 @@
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
     /* gentle spring: a soft overshoot that settles back into place. */
     --ease-spring: cubic-bezier(0.34, 1.42, 0.5, 1);
-    --collapsible-collapse-height-speed: var(--sidebar-speed);
+    --collapsible-collapse-height-speed: var(--navigation-pane-speed);
     --collapsible-collapse-fade-speed: calc(
       var(--collapsible-collapse-height-speed) / 2
     );
     --collapsible-expand-height-speed: var(--collapsible-collapse-fade-speed);
     --collapsible-expand-fade-speed: var(--collapsible-collapse-height-speed);
-    --collapsible-ease: var(--sidebar-ease);
+    --collapsible-ease: var(--navigation-pane-ease);
+    /* Chunky Material 3 trigger geometry; the indicator's rotation uses the
+       gentle spring so the chevron flip carries expressive character even
+       though the height animation itself stays a plain glide. */
+    --collapsible-radius: var(--radius-xl);
+    --collapsible-padding-x: var(--space-md);
+    --collapsible-padding-y: var(--space-md);
+    --collapsible-indicator-speed: var(--speed-swift);
+    --collapsible-indicator-ease: var(--ease-spring);
 
     /* AI composer. Its fixed radius is derived from the circular footer
        control, the surrounding inset and the shell stroke. It therefore reads
@@ -321,6 +304,39 @@
     --ai-composer-ease: var(--ease-glide);
     --ai-composer-shadow: var(--elevation-raised);
     --ai-composer-context-indicator-inset-inline-start: calc(var(--ai-composer-padding) + var(--ai-composer-border-width));
+
+    /* The input's height is a size change, so it borrows the spatial spring
+       (Button's own fast-spatial curve) rather than the composer's border/
+       shadow effects easing. Duration is derived from travel distance so a
+       one-line wrap and a five-line paste both feel like the same velocity,
+       capped so a large paste still settles quickly. */
+    --ai-composer-grow-velocity: 260;
+    --ai-composer-grow-ease: var(--motion-spatial-fast-curve);
+    --ai-composer-grow-max-duration: var(--speed-slow);
+
+    /* Status feedback. The submit pill only changes via its icon crossfade -
+       no scale/shape motion on the container itself. The icon crossfade gets
+       its own timing so it can be tuned independently of the shell's
+       border/shadow speed; effects never overshoot, so it settles rather
+       than springs. Error shake is a one-shot lateral wobble on the shell.
+       Streaming breathe is the only repeating motion, and only while the
+       answer streams; its cadence is a calm double of the response caret's
+       pulse so the composer and the answer read as one system. */
+    --ai-composer-icon-fade-speed: var(--speed-gentle);
+    --ai-composer-icon-fade-ease: var(--ease-settle);
+    --ai-composer-error-shake-distance: calc(var(--spacing) * 1.5);
+    --ai-composer-error-shake-speed: var(--speed-brisk);
+    --ai-composer-error-shake-ease: var(--ease-settle);
+    --ai-composer-streaming-breathe-scale: 1.06;
+    --ai-composer-streaming-breathe-speed: calc(var(--speed-pulse) * 2);
+    --ai-composer-streaming-breathe-ease: var(--ease-settle);
+
+    /* Enter decelerates into place; exit accelerates away, per Material's
+       standard pairing (also matches "entrances decelerate, exits leave more
+       directly" in the motion character brief). */
+    --ai-composer-context-indicator-speed: var(--speed-swift);
+    --ai-composer-context-indicator-enter-ease: var(--ease-settle);
+    --ai-composer-context-indicator-exit-ease: var(--ease-exit);
 
     /* How much of the transcript column a directed message may occupy. */
     --bubble-max-width: 80%;
@@ -448,23 +464,6 @@
     );
     --ai-chat-border-width: 1px;
     --ai-chat-radius: var(--showcase-block-surface-radius);
-    --ai-chat-history-width: calc(var(--spacing) * 64);
-    --ai-chat-history-padding: var(--space-md);
-    /* One inset for the brand row, Recents bar and list, so the rail keeps a
-       32px control centred at both widths and nothing shifts when collapsing. */
-    --ai-chat-history-rail-inset: calc(
-      (var(--sidebar-width-icon) - var(--ai-chat-history-recents-height)) / 2
-    );
-    --ai-chat-history-gap: var(--space-sm);
-    --ai-chat-history-content-padding-block: var(--space-none);
-    --ai-chat-history-action-inset: var(--space-hairline);
-    --ai-chat-history-item-gap: var(--space-hairline);
-    /* Matches the list item's own inline padding. */
-    --ai-chat-history-item-text-inset: calc(var(--spacing) * 2.5);
-    --ai-chat-history-recents-height: calc(var(--spacing) * 8);
-    --ai-chat-history-recents-icon-size: calc(var(--spacing) * 4);
-    --ai-chat-header-height: calc(var(--spacing) * 12);
-    --ai-chat-top-band-height: var(--ai-chat-header-height);
     --ai-chat-gutter: clamp(
       calc(var(--spacing) * 4),
       4vw,
@@ -480,20 +479,11 @@
       var(--ai-chat-fade-clearance) + var(--ai-chat-scroll-settle-offset)
     );
     --ai-chat-transcript-gap: var(--space-lg);
-    --ai-chat-action-gap: var(--space-2xs);
     --ai-chat-empty-greeting-gap: var(--space-lg);
     --ai-chat-empty-suggestions-gap: var(--space-md);
     --ai-chat-empty-chip-gap: var(--space-xs);
     /* The empty-state greeting and chips stay on the composer, not the turn column. */
     --ai-chat-empty-suggestions-width: var(--ai-composer-max-width);
-    /* Equal flex growth divides the counterweight between both sides. Include
-       the header, then double the desired offset, to anchor against the full
-       block midpoint rather than the content area below the header. */
-    --ai-chat-empty-composer-anchor-offset: calc(var(--spacing) * 10);
-    --ai-chat-empty-composer-counterweight: calc(
-      var(--ai-chat-header-height) +
-        var(--ai-chat-empty-composer-anchor-offset) * 2
-    );
     --ai-chat-greeting-size: var(--text-3xl);
     --ai-chat-greeting-line-height: var(--text-3xl--line-height);
     --ai-chat-greeting-tracking: var(--tracking-tight);
@@ -513,9 +503,9 @@
     /* Side panel layout. 360px is Chrome's kSidePanelDefaultContentWidth,
        which is both the default and the hard minimum a panel can be dragged
        to, so it is the width this layout is designed against. The max-width
-       is the threshold at which `layout="auto"` adopts the panel treatment:
-       below it a docked history rail can no longer coexist with a usable
-       conversation column. */
+       is the threshold at which `layout="auto"` adopts the panel treatment,
+       stacking the composer's greeting and suggestions above it instead of
+       around a wider turn column. */
     --ai-chat-panel-min-width: calc(var(--spacing) * 90);
     --ai-chat-panel-max-width: calc(var(--spacing) * 160);
     --ai-chat-panel-gutter: calc(var(--spacing) * 4);
@@ -536,9 +526,6 @@
         var(--ai-chat-border-width)
      );
     --ai-chat-panel-reveal-fade-speed: var(--speed-swift);
-    --ai-chat-recents-menu-width: calc(var(--spacing) * 64);
-    --ai-chat-recents-menu-min-height: calc(var(--spacing) * 24);
-    --ai-chat-recents-menu-max-height: calc(var(--spacing) * 80);
 
     --progress-height: calc(var(--spacing) * 2);
 
@@ -560,6 +547,10 @@
     --elevation-key: oklch(0.145 0 0 / 0.1);
     /* Hairline outline shared by every elevated surface (card/dialog/menu/popover). */
     --elevation-stroke: color-mix(in oklab, oklch(from var(--foreground) l 0 h) 10%, transparent);
+    /* A raw color reference (a tonal ramp, a role sample) must stay legible at its own near-white
+       or near-black extremes, where the 10% elevation-stroke all but disappears against a
+       same-toned page. Twice the strength keeps every swatch bounded regardless of its fill. */
+    --swatch-stroke: color-mix(in oklab, oklch(from var(--foreground) l 0 h) 20%, transparent);
     /* Transparent no-op, not `none`, so it composes with a ring without voiding it. */
     --elevation-flat: 0 0 transparent;
     --elevation-raised: 0 1px 2px -1px var(--elevation-ambient),
@@ -684,94 +675,175 @@
     --toast-text-edge-padding: var(--space-md);
     --toast-width: calc(var(--spacing) * 135);
 
-    /* Sidebar geometry and motion. Expressive floating / overlay panel following the concentric rule. */
-    --sidebar-floating-padding: var(--space-md);
-    --sidebar-radius: calc(
-      var(--item-compact-radius) + var(--sidebar-floating-padding)
+    /* Navigation pane geometry and motion. Expressive floating / overlay panel following the concentric rule. */
+    --navigation-pane-floating-padding: var(--space-md);
+    --navigation-pane-radius: calc(
+      var(--item-compact-radius) + var(--navigation-pane-floating-padding)
     );
-    --sidebar-inset-radius: var(--radius-xl);
-    --sidebar-inset-margin: var(--space-xs);
-    --sidebar-menu-badge-height: calc(var(--spacing) * 5);
-    --sidebar-menu-badge-radius: calc(var(--sidebar-menu-badge-height) / 2);
-    --sidebar-menu-badge-padding-inline: var(--space-2xs);
-    --sidebar-selected-fill: var(--button-secondary-fill);
-    --sidebar-selected-ink: var(--button-secondary-ink);
-    --sidebar-selected-hover: color-mix(
+    --navigation-pane-inset-radius: var(--radius-xl);
+    --navigation-pane-inset-margin: var(--space-xs);
+    --navigation-pane-menu-badge-height: calc(var(--spacing) * 5);
+    --navigation-pane-menu-badge-radius: calc(var(--navigation-pane-menu-badge-height) / 2);
+    --navigation-pane-menu-badge-padding-inline: var(--space-2xs);
+    --navigation-pane-selected-fill: var(--button-secondary-fill);
+    --navigation-pane-selected-ink: var(--button-secondary-ink);
+    --navigation-pane-selected-hover: color-mix(
       in srgb,
       var(--button-secondary-fill),
       var(--button-secondary-ink) var(--state-layer-hover-opacity)
     );
-    --sidebar-selected-pressed: color-mix(
+    --navigation-pane-selected-pressed: color-mix(
       in srgb,
       var(--button-secondary-fill),
       var(--button-secondary-ink) var(--state-layer-pressed-opacity)
     );
 
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-    --sidebar-width: calc(var(--spacing) * 64);
-    --sidebar-width-icon: calc(var(--spacing) * 12);
-    /* The collapsed float pads the bar, so gap and container share one value. */
-    --sidebar-width-icon-floating: calc(
-      var(--sidebar-width-icon) + var(--spacing) * 4
+    --navigation-pane-primary: oklch(0.205 0 0);
+    --navigation-pane-primary-foreground: oklch(0.985 0 0);
+    --navigation-pane-ring: oklch(0.708 0 0);
+    --navigation-pane-width: calc(var(--spacing) * 80);
+    /* Same side padding as expanded, both sides, around one media icon.
+       A row nests two insets before the icon: the group's own padding, then
+       the Item's own compact inset — both must be counted, on both sides. */
+    --navigation-pane-width-icon: calc(
+      (var(--navigation-pane-menu-group-inset) + var(--item-compact-inset)) * 2 +
+        var(--item-compact-media-host-size)
     );
-    /* Sidebar navigation reuses compact Item geometry while keeping its icon
-       centered on the 48px rail in expanded and collapsed states. */
-    --sidebar-menu-group-inset: var(--sidebar-padding);
-    --sidebar-menu-group-inset-collapsed: calc(
-      (var(--sidebar-width-icon) - var(--item-compact-height)) / 2
+    /* Floating padding eats into both sides of the container, so the bar's
+       inner content stays --navigation-pane-width-icon wide only if both sides are added back. */
+    --navigation-pane-width-icon-floating: calc(
+      var(--navigation-pane-width-icon) + var(--navigation-pane-floating-padding) * 2
     );
-    --sidebar-menu-button-collapsed-padding: calc(
+    --navigation-pane-menu-group-inset: var(--navigation-pane-padding);
+    /* Absolutely positioned children ignore their ancestor's padding (inset is
+       measured from the padding box's OUTER edge), so the pinned brand mark
+       must add the header's own inset back in explicitly. */
+    --navigation-pane-brand-mark-inset: calc(
+      var(--navigation-pane-menu-group-inset) + var(--space-2xs)
+    );
+    /* Label clears the pinned mark: its inset plus the mark's own 32px width. */
+    --navigation-pane-brand-label-inset: calc(
+      var(--navigation-pane-brand-mark-inset) + var(--spacing) * 8
+    );
+    --navigation-pane-menu-button-collapsed-padding: calc(
       (var(--item-compact-height) - var(--item-compact-media-graphic-size)) / 2
     );
     /* Outer vertical breathing room for the header and footer edges. */
-    --sidebar-padding: var(--space-md);
+    --navigation-pane-padding: var(--space-md);
     /* Horizontal padding for menu buttons; also anchors the badge inset. */
-    --sidebar-menu-button-padding-inline: var(--space-sm);
+    --navigation-pane-menu-button-padding-inline: var(--space-sm);
     /* Keep a menu label clear of a trailing badge: edge inset + badge + gap. */
-    --sidebar-menu-badge-reserved-space: calc(
-      var(--sidebar-menu-button-padding-inline) +
-        var(--sidebar-menu-badge-height) + var(--space-xs)
+    --navigation-pane-menu-badge-reserved-space: calc(
+      var(--navigation-pane-menu-button-padding-inline) +
+        var(--navigation-pane-menu-badge-height) + var(--space-xs)
     );
-    --sidebar-menu-action-reserved-space: calc(
+    --navigation-pane-menu-action-reserved-space: calc(
       var(--item-compact-inset) + var(--item-compact-media-host-size) +
         var(--graphic-label-gap)
     );
-    --sidebar-width-mobile: calc(var(--spacing) * 72);
-    --sidebar-width-min: calc(var(--spacing) * 44);
-    --sidebar-width-max: calc(var(--spacing) * 110);
-    --sidebar-snap-threshold: calc(var(--spacing) * 34);
+    --navigation-pane-width-mobile: calc(var(--spacing) * 72);
+    --navigation-pane-width-min: calc(var(--spacing) * 44);
+    --navigation-pane-width-max: calc(var(--spacing) * 110);
+    --navigation-pane-snap-threshold: calc(var(--spacing) * 34);
     /* The header is as tall as the bar is wide, so the collapsed corner is square. */
-    --sidebar-header-height: var(--sidebar-width-icon);
-    --sidebar-floating-trigger-size: var(--fab-size-lg);
-    --sidebar-floating-trigger-radius: var(--radius-xl);
-    --sidebar-floating-trigger-entry-scale: 0.8;
-    --sidebar-floating-trigger-spin-turns: 0.5;
-    --sidebar-floating-trigger-spin-velocity: 240;
-    --sidebar-floating-trigger-growth-velocity: 32;
-    --sidebar-floating-trigger-settle-ease: cubic-bezier(0.22, 0, 0.1, 1);
-    --sidebar-floating-trigger-fade-in-delay: var(--speed-swift);
-    --sidebar-floating-trigger-fade-out-speed: var(--speed-swift);
-    --sidebar-floating-trigger-inset: var(--space-md);
-    --sidebar-floating-trigger-clearance: calc(
-      var(--sidebar-floating-trigger-size) + var(--sidebar-floating-trigger-inset) * 2
+    --navigation-pane-header-height: var(--navigation-pane-width-icon);
+    --navigation-pane-floating-trigger-size: var(--fab-size-lg);
+    --navigation-pane-floating-trigger-radius: var(--radius-xl);
+    --navigation-pane-floating-trigger-entry-scale: 0.8;
+    --navigation-pane-floating-trigger-spin-turns: 0.5;
+    --navigation-pane-floating-trigger-spin-velocity: 240;
+    --navigation-pane-floating-trigger-growth-velocity: 32;
+    --navigation-pane-floating-trigger-settle-ease: cubic-bezier(0.22, 0, 0.1, 1);
+    --navigation-pane-floating-trigger-fade-in-delay: var(--speed-swift);
+    --navigation-pane-floating-trigger-fade-out-speed: var(--speed-swift);
+    --navigation-pane-floating-trigger-inset: var(--space-md);
+    --navigation-pane-floating-trigger-clearance: calc(
+      var(--navigation-pane-floating-trigger-size) + var(--navigation-pane-floating-trigger-inset) * 2
     );
-    --sidebar-floating-trigger-elevation: var(--elevation-raised);
-    --sidebar-resize-handle-width: calc(var(--spacing) * 4);
-    --sidebar-resize-handle-offset: calc(var(--sidebar-resize-handle-width) / -2);
+    --navigation-pane-floating-trigger-elevation: var(--elevation-raised);
+    --navigation-pane-resize-handle-width: calc(var(--spacing) * 4);
+    --navigation-pane-resize-handle-offset: calc(var(--navigation-pane-resize-handle-width) / -2);
     /* Keeps the line clear of an inset card's rounded corner (8px margin + 14px radius). */
-    --sidebar-resize-handle-inset: var(--space-lg);
-    --sidebar-resize-step: calc(var(--spacing) * 4);
-    --sidebar-peek-edge-width: calc(var(--spacing) * 6);
-    --sidebar-inset-backdrop: var(--muted);
-    --sidebar-ease: var(--ease-glide);
-    --sidebar-speed: var(--speed-slow);
-    /* Hover affordances only. Collapsing rides --sidebar-speed so width and fade move together. */
-    --sidebar-fade-speed: var(--speed-swift);
+    --navigation-pane-resize-handle-inset: var(--space-lg);
+    --navigation-pane-resize-step: calc(var(--spacing) * 4);
+    --navigation-pane-peek-edge-width: calc(var(--spacing) * 6);
+    --navigation-pane-inset-backdrop: var(--muted);
+    --navigation-pane-ease: var(--ease-glide);
+    --navigation-pane-speed: var(--speed-slow);
+    /* Hover affordances only. Collapsing rides --navigation-pane-speed so width and fade move together. */
+    --navigation-pane-fade-speed: var(--speed-swift);
     /* Intent timers, not motion. */
-    --sidebar-peek-open-delay: 90ms;
-    --sidebar-peek-close-delay: 320ms;
+    --navigation-pane-peek-open-delay: 90ms;
+    --navigation-pane-peek-close-delay: 320ms;
+
+    /* Material 3 Expressive collapsed navigation rail, attached to a navigation pane. */
+    --navigation-rail-width: calc(var(--spacing) * 24);
+    --navigation-rail-radius: var(--navigation-pane-radius);
+    --navigation-rail-container: var(--navigation-pane);
+    --navigation-rail-foreground: var(--md-sys-color-on-surface-variant);
+    /* Centers the first item's icon on the attached pane header's own row height. */
+    --navigation-rail-top-space: calc(
+      (var(--showcase-header-row-height) - var(--navigation-rail-indicator-height)) / 2
+    );
+    --navigation-rail-item-gap: var(--space-2xs);
+    --navigation-rail-item-height: calc(var(--spacing) * 16);
+    --navigation-rail-indicator-width: calc(var(--spacing) * 14);
+    --navigation-rail-indicator-height: calc(var(--spacing) * 8);
+    --navigation-rail-indicator-radius: calc(
+      var(--navigation-rail-indicator-height) / 2
+    );
+    --navigation-rail-icon-size: var(--icon-size-24);
+    --navigation-rail-icon-label-gap: var(--space-2xs);
+    --navigation-rail-label-padding-inline: var(--space-xs);
+    --navigation-rail-label-size: var(--text-caption-size);
+    --navigation-rail-label-leading: var(--text-caption-leading);
+    --navigation-rail-item-ink: var(--md-sys-color-on-surface-variant);
+    --navigation-rail-selected-indicator: var(--button-secondary-fill);
+    --navigation-rail-selected-icon: var(--button-secondary-ink);
+    --navigation-rail-selected-label: var(--purple-deep);
+    --navigation-rail-state-ink: var(--button-secondary-ink);
+    --navigation-rail-item-hover: color-mix(
+      in srgb,
+      var(--navigation-rail-state-ink) var(--state-layer-hover-opacity),
+      transparent
+    );
+    --navigation-rail-item-focus: color-mix(
+      in srgb,
+      var(--navigation-rail-state-ink) var(--state-layer-focus-opacity),
+      transparent
+    );
+    --navigation-rail-item-pressed: color-mix(
+      in srgb,
+      var(--navigation-rail-state-ink) var(--state-layer-pressed-opacity),
+      transparent
+    );
+    --navigation-rail-selected-hover: color-mix(
+      in srgb,
+      var(--navigation-rail-selected-indicator),
+      var(--navigation-rail-state-ink) var(--state-layer-hover-opacity)
+    );
+    --navigation-rail-selected-focus: color-mix(
+      in srgb,
+      var(--navigation-rail-selected-indicator),
+      var(--navigation-rail-state-ink) var(--state-layer-focus-opacity)
+    );
+    --navigation-rail-selected-pressed: color-mix(
+      in srgb,
+      var(--navigation-rail-selected-indicator),
+      var(--navigation-rail-state-ink) var(--state-layer-pressed-opacity)
+    );
+    --navigation-rail-indicator-velocity: 280;
+    --navigation-rail-indicator-ease: var(--motion-spatial-fast-curve);
+    --navigation-rail-effects-speed: var(--motion-effects-fast-speed);
+    --navigation-rail-effects-ease: var(--motion-effects-fast-curve);
+    --navigation-pane-attached-gap: var(--space-xs);
+    /* Seam corners facing the gap read like ButtonGroup's connected corners: only the two true outer ends stay fully rounded. */
+    --navigation-pane-attached-inner-radius: var(--button-group-inner-radius);
+    --navigation-rail-attached-inner-radius: var(--navigation-pane-attached-inner-radius);
+    --navigation-pane-attached-width: calc(
+      var(--navigation-pane-width) + var(--navigation-rail-width) +
+        var(--navigation-pane-attached-gap)
+    );
 
     /* Drag handle. One primitive: a grabber for drawers, a grip for resizers. */
     --drag-handle-thickness: calc(var(--spacing) * 1);
@@ -899,22 +971,11 @@
     --site-footer-floating-radius: var(--radius-3xl);
     --site-footer-floating-inset: var(--space-lg);
     --site-footer-floating-shadow: var(--elevation-raised);
-    --site-footer-surface: var(--sidebar);
+    --site-footer-surface: var(--navigation-pane);
     --site-footer-surface-floating: var(--surface-lowest);
     --showcase-header-height: calc(var(--spacing) * 14);
     --showcase-copy-width: calc(var(--spacing) * 192);
     --canvas-min-height: calc(var(--spacing) * 72);
-    --annotation-clearance: calc(var(--spacing) * 2);
-    --annotation-measurement-tolerance: 0.05px;
-    --annotation-label-distance-min: calc(var(--spacing) * 4);
-    --annotation-label-distance-max: calc(var(--spacing) * 16);
-    --annotation-boundary-inset: calc(var(--spacing) * 6);
-    --annotation-label-reserve: calc(var(--spacing) * 10);
-    --annotation-connector-radius: var(--radius-lg);
-    --annotation-outline-inset: var(--spacing);
-    --annotation-line-width: calc(var(--spacing) * 0.375);
-    --annotation-line-dash: calc(var(--spacing) * 0.25);
-    --annotation-line-gap: calc(var(--spacing) * 1.25);
     --slider-snap-threshold: 0.03;
     /* Material 3 Expressive slider geometry (XS reference: 16dp track,
        4x44dp handle, 8dp track shape) — tokenized so scale/gap can retune. */
@@ -1005,51 +1066,6 @@
     --concentric-medium-field-indicator-gap: calc(var(--spacing) * 3);
     --concentric-form-textarea-lines: 3;
     --concentric-form-switch-inset: calc(var(--spacing) * 0.5);
-    --annotation-anchor-radius: calc(var(--spacing) * 0.75);
-    --annotation-corner-gap: var(--spacing);
-    --annotation-corner-stroke: calc(var(--spacing) * 0.75);
-    --annotation-bounds-color: oklch(0.46 0.2 260);
-    --annotation-padding-color: oklch(0.41 0.14 150);
-    --annotation-border-color: oklch(0.48 0.1 90);
-    --annotation-margin-color: oklch(0.5 0.13 55);
-    --annotation-gap-color: oklch(0.46 0.18 300);
-    --annotation-color: var(--annotation-bounds-color);
-    --annotation-label-background: var(--background);
-    --annotation-fill-opacity: 24%;
-    --annotation-fill-hover-opacity: 36%;
-    --annotation-fill-selected-opacity: 44%;
-    --annotation-fill-pressed-opacity: 56%;
-    --annotation-pressed-mix: 85%;
-    --annotation-highlight-foreground: oklch(0.985 0 0);
-    --annotation-layer: 10;
-    --annotation-dim-opacity: 0.2;
-    --annotation-reveal-duration: var(--speed-gentle);
-    --annotation-transition-duration: var(--speed-swift);
-    --annotation-ease: var(--ease-settle);
-    --annotation-font-size: var(--text-xs);
-    --annotation-line-height: var(--text-xs--line-height);
-    --annotation-font-weight: var(--font-weight-medium);
-    --annotation-shadow: var(--shadow-xs);
-    --annotation-group-gap: calc(var(--spacing) * 1.5);
-    --annotation-label-gap: var(--spacing);
-    --annotation-label-padding-inline: calc(var(--spacing) * 1.5);
-    --annotation-label-padding-block: calc(var(--spacing) * 0.5);
-    --annotation-label-radius: var(--radius-md);
-    --annotation-label-border-width: 1px;
-    --annotation-label-hit-inset: var(--spacing);
-    --annotation-selected-gap: calc(var(--spacing) * 0.5);
-    --annotation-marker-size: calc(var(--spacing) * 6);
-    --annotation-marker-hit-inset: calc(var(--spacing) * 2);
-    --annotation-dot-size: calc(var(--spacing) * 3);
-    --annotation-dot-border-width: calc(var(--spacing) * 0.5);
-    --annotation-circle-radius: 50%;
-    --annotation-region-radius: var(--radius-md);
-    --annotation-region-focus-width: calc(var(--spacing) * 0.5);
-    --annotation-region-focus-offset: calc(var(--annotation-region-focus-width) * -1);
-    --annotation-legend-column-gap: calc(var(--spacing) * 4);
-    --annotation-legend-row-gap: calc(var(--spacing) * 2);
-    --annotation-legend-label-gap: calc(var(--spacing) * 2);
-    --annotation-legend-dot-size: calc(var(--spacing) * 2);
     --canvas-viewport-height: calc(var(--spacing) * 112);
     --canvas-padding: calc(var(--spacing) * 8);
     --canvas-annotation-padding-block: max(
@@ -1063,7 +1079,7 @@
     --canvas-border-width: 1px;
     --canvas-split-position: 50%;
     --canvas-split-card-background: var(--card);
-    --canvas-split-sidebar-background: var(--sidebar);
+    --canvas-split-navigation-pane-background: var(--navigation-pane);
     --canvas-split-divider-color: var(--canvas-border-color);
     --canvas-split-divider-width: var(--canvas-border-width);
     --canvas-grid-size: calc(var(--spacing) * 6);
@@ -1075,60 +1091,6 @@
     --canvas-measure-ruler-size: calc(var(--spacing) * 8);
     --canvas-measure-tick-size: calc(var(--spacing) * 2);
     --canvas-measure-marker-size: calc(var(--spacing) * 1.5);
-    --pointer-size-compact: 16px;
-    --pointer-size-default: 24px;
-    --pointer-size-large: 32px;
-    --pointer-growth-subtle: 1.25;
-    --pointer-growth-default: 1.5;
-    --pointer-growth-bold: 2;
-    --pointer-fill: #fff;
-    --pointer-layer: 1000;
-    --pointer-easing-linear: linear;
-    --pointer-easing-ease-in: cubic-bezier(0.42, 0, 1, 1);
-    --pointer-easing-ease-out: cubic-bezier(0, 0, 0.58, 1);
-    --pointer-easing-ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
-    --pointer-velocity-min: 50;
-    --pointer-velocity-max: 3000;
-    --pointer-velocity-step: 50;
-    --pointer-settings-control-width: calc(var(--spacing) * 40);
-    --pointer-snap-move-velocity: 1200;
-    --pointer-snap-width-velocity: 900;
-    --pointer-snap-height-velocity: 600;
-    --pointer-snap-radius-velocity: 600;
-    --pointer-snap-release-velocity: 1400;
-    --pointer-snap-capture-curve: cubic-bezier(0.2, 0, 0, 1);
-    --pointer-snap-release-curve: cubic-bezier(0.2, 0, 0, 1);
-    --pointer-sprint-move-velocity: 600;
-    --pointer-sprint-width-velocity: 700;
-    --pointer-sprint-height-velocity: 160;
-    --pointer-sprint-radius-velocity: 300;
-    --pointer-sprint-release-velocity: 850;
-    --pointer-sprint-capture-curve: cubic-bezier(0, 0.1, 0.1, 1);
-    --pointer-sprint-release-curve: cubic-bezier(0, 1, 0.1, 1);
-    --pointer-stretch-move-velocity: 400;
-    --pointer-stretch-width-velocity: 850;
-    --pointer-stretch-height-velocity: 90;
-    --pointer-stretch-radius-velocity: 200;
-    --pointer-stretch-release-velocity: 650;
-    --pointer-stretch-capture-curve: cubic-bezier(0.1, 0.7, 0.1, 1);
-    --pointer-stretch-release-curve: cubic-bezier(0, 1, 0.1, 1);
-    --cursor-follower-offset: calc(var(--spacing) * 4);
-    --cursor-follower-inset: var(--space-xs);
-    --cursor-follower-padding-inline: var(--space-xs);
-    --cursor-follower-padding-block: var(--space-2xs);
-    --cursor-follower-radius: var(--radius-4xl);
-    --cursor-follower-shadow: var(--elevation-raised);
-    --cursor-follower-background: var(--popover);
-    --cursor-follower-foreground: var(--popover-foreground);
-    --cursor-follower-border: var(--border);
-    --cursor-follower-border-width: 1px;
-    --cursor-follower-accent: var(--primary);
-    --cursor-follower-on-accent: var(--primary-foreground);
-    --cursor-follower-font-size: var(--text-xs);
-    --cursor-follower-line-height: var(--text-xs--line-height);
-    --cursor-follower-layer: 20;
-    --cursor-follower-origin-x: 0px;
-    --cursor-follower-origin-y: 0px;
     --canvas-measure-stroke: 1px;
     --canvas-measure-grid-layer: -1;
     --canvas-measure-cursor-layer: calc(var(--cursor-follower-layer) + 1);
@@ -1166,24 +1128,20 @@
     --showcase-header-row-height: calc(
       var(--site-header-height) + var(--site-header-inset) * 2
     );
-    --showcase-sidebar-trigger-inset: calc(
-      var(--sidebar-floating-padding) +
-        (var(--showcase-header-row-height) - var(--sidebar-floating-trigger-size)) / 2
+    --showcase-navigation-pane-trigger-inset: calc(
+      var(--navigation-pane-floating-padding) +
+        (var(--showcase-header-row-height) - var(--navigation-pane-floating-trigger-size)) / 2
     );
     --showcase-shell-content-inset: calc(var(--spacing) * 4);
     --showcase-shell-divider-size: 1px;
     --showcase-content-start: var(--showcase-shell-content-inset);
     --showcase-section-gap: calc(var(--spacing) * 30);
     --showcase-example-gap: calc(var(--spacing) * 5);
-    /* Floating placement eats 2x --sidebar-floating-padding into the panel's
-       visible width, so this is padded up to keep the panel at least as wide
-       as the pre-floating 256px column. */
-    --showcase-sidebar-width: calc(var(--spacing) * 76);
-    --showcase-sidebar-wip-badge-height: calc(var(--spacing) * 5);
-    --showcase-sidebar-wip-badge-radius: calc(var(--showcase-sidebar-wip-badge-height) / 2);
-    --showcase-sidebar-wip-badge-padding-inline: var(--space-2xs);
-    --showcase-sidebar-wip-badge-inset: calc(var(--item-compact-radius) - var(--showcase-sidebar-wip-badge-radius));
-    --showcase-sidebar-wip-badge-edge-offset: calc(var(--showcase-sidebar-wip-badge-inset) - var(--item-compact-inset));
+    --showcase-navigation-pane-wip-badge-height: calc(var(--spacing) * 5);
+    --showcase-navigation-pane-wip-badge-radius: calc(var(--showcase-navigation-pane-wip-badge-height) / 2);
+    --showcase-navigation-pane-wip-badge-padding-inline: var(--space-2xs);
+    --showcase-navigation-pane-wip-badge-inset: calc(var(--item-compact-radius) - var(--showcase-navigation-pane-wip-badge-radius));
+    --showcase-navigation-pane-wip-badge-edge-offset: calc(var(--showcase-navigation-pane-wip-badge-inset) - var(--item-compact-inset));
 
     --button-height-default: calc(var(--spacing) * 10);
     --button-height-expressive: calc(var(--spacing) * 14);
@@ -1446,8 +1404,8 @@
         var(--separator-thickness) * 2
     );
     --showcase-page-header-sticky-inset: calc(
-      var(--showcase-sidebar-trigger-inset) +
-        (var(--sidebar-floating-trigger-size) - var(--showcase-page-header-bar-height)) / 2
+      var(--showcase-navigation-pane-trigger-inset) +
+        (var(--navigation-pane-floating-trigger-size) - var(--showcase-page-header-bar-height)) / 2
     );
     --page-header-gap: var(--space-md);
     --page-header-content-gap: var(--space-xs);
@@ -1501,19 +1459,18 @@
 .dark {
   --favicon-monochrome-filter: brightness(0) invert(1);
   --favicon-monochrome-on-primary-filter: brightness(0);
-  --action-primary: oklch(0.922 0 0);
-  --action-on-primary: oklch(0.205 0 0);
+  --action-neutral-fill: oklch(0.922 0 0);
+  --action-neutral-ink: oklch(0.205 0 0);
+  --action-primary: var(--action-neutral-fill);
+  --action-on-primary: var(--action-neutral-ink);
     --primary: var(--action-primary);
     --primary-foreground: var(--action-on-primary);
-    --destructive: oklch(0.7 0.16 var(--destructive-hue));
-    --annotation-bounds-color: oklch(0.84 0.11 255);
-    --annotation-padding-color: oklch(0.85 0.12 150);
-    --annotation-border-color: oklch(0.86 0.14 90);
-    --annotation-margin-color: oklch(0.84 0.12 55);
-    --annotation-gap-color: oklch(0.86 0.11 300);
-    --annotation-highlight-foreground: oklch(0.205 0 0);
-    --presence-available: oklch(0.72 0.17 149);
-    --presence-away: oklch(0.81 0.15 75);
+    --destructive-dark: oklch(0.7 0.16 var(--destructive-hue));
+    --destructive: var(--destructive-dark);
+    --presence-available-dark: oklch(0.72 0.17 149);
+    --presence-available: var(--presence-available-dark);
+    --presence-away-dark: oklch(0.81 0.15 75);
+    --presence-away: var(--presence-away-dark);
     --ring: oklch(0.556 0 0);
     --chart-1: var(--chart-primary);
     --chart-2: var(--chart-secondary);
@@ -1523,9 +1480,9 @@
     /* A shadow has to be far denser on a dark canvas to register at all. */
     --elevation-ambient: oklch(0 0 0 / 0.3);
     --elevation-key: oklch(0 0 0 / 0.55);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-ring: oklch(0.556 0 0);
+    --navigation-pane-primary: oklch(0.488 0.243 264.376);
+    --navigation-pane-primary-foreground: oklch(0.985 0 0);
+    --navigation-pane-ring: oklch(0.556 0 0);
 }
 
 :root {
@@ -1581,9 +1538,8 @@
   --surface-input-outline: oklch(from var(--md-sys-color-outline) l 0 h);
   --background: var(--surface-canvas);
   --foreground: var(--surface-ink);
-  /* Flat cards sit flush with the canvas; the --elevation-stroke ring provides separation,
-     not a lighter tone. Only the footer introduces a second tone (the sidebar fill). */
-  --card: var(--surface-canvas);
+  /* Cards use Surface container lowest; the hairline still separates adjacent surfaces. */
+  --card: var(--surface-default);
   --card-foreground: var(--surface-ink);
   --control: var(--surface-low);
   --popover: var(--surface-default);
@@ -1598,12 +1554,12 @@
   --action-on-secondary: var(--surface-ink);
   --secondary: var(--action-secondary);
   --secondary-foreground: var(--action-on-secondary);
-  --sidebar: var(--surface-navigation);
-  --sidebar-foreground: var(--surface-ink);
-  --sidebar-hover-fill: color-mix(in srgb, var(--surface-ink) var(--state-layer-hover-opacity), transparent);
-  --sidebar-accent: var(--sidebar-hover-fill);
-  --sidebar-accent-foreground: var(--surface-ink);
-  --sidebar-border: var(--surface-outline);
+  --navigation-pane: var(--surface-navigation);
+  --navigation-pane-foreground: var(--surface-ink);
+  --navigation-pane-hover-fill: color-mix(in srgb, var(--surface-ink) var(--state-layer-hover-opacity), transparent);
+  --navigation-pane-accent: var(--navigation-pane-hover-fill);
+  --navigation-pane-accent-foreground: var(--surface-ink);
+  --navigation-pane-border: var(--surface-outline);
 }
 
 .dark {
@@ -1623,7 +1579,7 @@
   --surface-interaction: var(--surface-high);
   --background: var(--surface-canvas);
   --foreground: var(--surface-ink);
-  --card: var(--surface-canvas);
+  --card: var(--surface-default);
   --card-foreground: var(--surface-ink);
   --control: var(--surface-low);
   --popover: var(--surface-default);
@@ -1639,15 +1595,15 @@
   --border: var(--surface-outline);
   --input: var(--surface-input-outline);
   --ring: var(--action-primary);
-  --sidebar: var(--surface-navigation);
-  --sidebar-foreground: var(--surface-ink);
-  --sidebar-primary: var(--action-primary);
-  --sidebar-primary-foreground: var(--action-on-primary);
-  --sidebar-accent: var(--action-secondary);
-  --sidebar-accent-foreground: var(--action-on-secondary);
-  --sidebar-border: var(--surface-outline);
-  --sidebar-ring: var(--action-primary);
-  --sidebar-inset-backdrop: var(--surface-high);
+  --navigation-pane: var(--surface-navigation);
+  --navigation-pane-foreground: var(--surface-ink);
+  --navigation-pane-primary: var(--action-primary);
+  --navigation-pane-primary-foreground: var(--action-on-primary);
+  --navigation-pane-accent: var(--action-secondary);
+  --navigation-pane-accent-foreground: var(--action-on-secondary);
+  --navigation-pane-border: var(--surface-outline);
+  --navigation-pane-ring: var(--action-primary);
+  --navigation-pane-inset-backdrop: var(--surface-high);
   --state-layer-hover: color-mix(in oklab, var(--state-layer-color) var(--state-layer-hover-opacity), transparent);
   --state-layer-focus: color-mix(in oklab, var(--state-layer-color) var(--state-layer-focus-opacity), transparent);
   --state-layer-pressed: color-mix(in oklab, var(--state-layer-color) var(--state-layer-pressed-opacity), transparent);
@@ -1688,6 +1644,8 @@
   --button-destructive-pressed-opacity: 30%;
   --button-primary-ink: var(--purple-strong-ink);
   --button-primary-state-ink: var(--purple-strong-ink);
+  --button-primary-pink-fill: var(--theme-website-tertiary-container-light);
+  --button-primary-pink-ink: var(--theme-website-on-tertiary-container-light);
   --button-secondary-fill: var(--purple-soft);
   --button-secondary-ink: var(--purple-soft-ink);
   --button-link-ink: var(--purple-strong);
@@ -1697,7 +1655,7 @@
   --favicon-monochrome-on-primary-filter: brightness(0) invert(1);
 
   --chart-primary: var(--purple-strong);
-  --chart-secondary: var(--theme-website-tertiary-light);
+  --chart-secondary: var(--theme-website-tertiary-container-light);
   --chart-tertiary: var(--theme-website-primary-light);
   --chart-quaternary: var(--theme-website-secondary-light);
   --chart-danger: var(--button-material-error);
@@ -1730,6 +1688,8 @@
   --button-destructive-pressed-opacity: 40%;
   --button-primary-ink: var(--purple-strong-ink);
   --button-primary-state-ink: var(--purple-strong-ink);
+  --button-primary-pink-fill: var(--theme-website-tertiary-container-dark);
+  --button-primary-pink-ink: var(--theme-website-on-tertiary-container-dark);
   --button-secondary-fill: var(--purple-soft);
   --button-secondary-ink: var(--purple-soft-ink);
   --button-link-ink: var(--purple-strong);
@@ -1741,10 +1701,17 @@
   --favicon-monochrome-on-primary-filter: brightness(0);
 
   --chart-primary: var(--purple-strong);
-  --chart-secondary: var(--theme-website-tertiary-dark);
+  --chart-secondary: var(--theme-website-tertiary-container-dark);
   --chart-tertiary: var(--theme-website-primary-dark);
   --chart-quaternary: var(--theme-website-secondary-dark);
   --chart-danger: var(--button-material-error);
+}
+
+/* Explicit `primaryColor="pink"` swaps the Primary Button's own fill/ink tokens. */
+[data-slot="button"][data-primary-color="pink"] {
+  --button-primary-fill: var(--button-primary-pink-fill);
+  --button-primary-ink: var(--button-primary-pink-ink);
+  --button-primary-state-ink: var(--button-primary-pink-ink);
 }
 
 /* The Tertiary pair is the system's neutral default, so it lives at the root for every
@@ -1761,3 +1728,7 @@
   --badge-white-ink: var(--foreground);
 }
 
+.color-theme[data-color-scale="website"] {
+  --theme-outline-neutral: oklch(from var(--md-sys-color-outline-variant) l 0 h);
+  --theme-input-outline-neutral: oklch(from var(--md-sys-color-outline) l 0 h);
+}

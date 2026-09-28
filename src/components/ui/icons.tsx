@@ -47,6 +47,7 @@ import {
   ExternalLinkIcon as GlyphExternalLinkIcon,
   ViewIcon as GlyphViewIcon,
   EyeIcon as GlyphEyeIcon,
+  Eyeglasses3Icon as GlyphEyeglasses3Icon,
   FileIcon as GlyphFileIcon,
   FileTextIcon as GlyphFileTextIcon,
   FilterIcon as GlyphFilterIcon,
@@ -188,6 +189,7 @@ export const DownloadIcon = createIcon(GlyphDownloadIcon)
 export const ExternalLinkIcon = createIcon(GlyphExternalLinkIcon)
 export const ViewIcon = createIcon(GlyphViewIcon)
 export const EyeIcon = createIcon(GlyphEyeIcon)
+export const Eyeglasses3Icon = createIcon(GlyphEyeglasses3Icon)
 export const FileIcon = createIcon(GlyphFileIcon)
 export const FileTextIcon = createIcon(GlyphFileTextIcon)
 export const FilterIcon = createIcon(GlyphFilterIcon)

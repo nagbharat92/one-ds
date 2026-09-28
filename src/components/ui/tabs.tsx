@@ -52,7 +52,7 @@ const tabsIndicatorVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-(--surface-lowest) shadow-(--elevation-raised) dark:bg-primary-foreground",
+          "bg-(--surface-lowest) shadow-(--elevation-raised)",
         line: "after:absolute after:rounded-full after:bg-foreground group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-0 group-data-horizontal/tabs:after:h-(--tabs-indicator-thickness) group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:inset-e-0 group-data-vertical/tabs:after:w-(--tabs-indicator-thickness)",
       },
       shape: {

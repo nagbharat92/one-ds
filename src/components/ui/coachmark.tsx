@@ -300,6 +300,7 @@ function CoachmarkContent({
             height={COACHMARK_ARROW_HEIGHT}
           >
             <svg
+              data-slot="coachmark-arrow"
               viewBox={`0 0 ${COACHMARK_ARROW_WIDTH} ${COACHMARK_ARROW_HEIGHT}`}
               preserveAspectRatio="none"
               className={cn(
@@ -308,13 +309,14 @@ function CoachmarkContent({
               )}
             >
               <path d={coachmarkArrowPaths.fill} />
-              {tone === "default" ? (
-                <path
-                  d={coachmarkArrowPaths.stroke}
-                  className="fill-none stroke-foreground/10"
-                  strokeWidth={1}
-                />
-              ) : null}
+              <path
+                d={coachmarkArrowPaths.stroke}
+                className={cn(
+                  "fill-none",
+                  tone === "default" ? "stroke-foreground/10" : "stroke-none"
+                )}
+                strokeWidth={1}
+              />
             </svg>
           </PopoverPrimitive.Arrow>
         ) : null}

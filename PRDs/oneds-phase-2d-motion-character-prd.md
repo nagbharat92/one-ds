@@ -173,6 +173,47 @@ overshoot, check fixed layout dimensions, rapid presses, keyboard/touch behavior
 corners, token overrides, and reduced-motion behavior. Later adoption in other
 components requires its own role mapping and approval; it is not a global reskin.
 
+## AI Chat composer travel
+
+The AI Chat block's composer sits at a different rest position depending on
+whether the conversation is empty. With no turns, it settles as the visual
+center of the page beneath a greeting; once a turn exists, it docks as a bar
+under the transcript. The composer never measures its own position or animates
+a script-computed transform: the regions around it resize, and the composer
+travels because its place in the surrounding flex/grid layout changes.
+
+Mechanism (`src/showcase/demos/blocks.tsx`, `src/styles/components.css`):
+
+- `.ai-chat-block[data-empty]` is the single state switch that every other
+  rule below reads.
+- `.ai-chat-block__reveal` (the greeting, and the suggestion chips in the side
+  panel layout) is a CSS grid row that collapses to `minmax(0, 0fr)` and fades
+  out once a turn exists, and expands to `minmax(0, 1fr)` at full opacity while
+  empty. A bare `0fr` track floors at the content's own minimum size unless
+  explicitly clamped with `minmax(0, ...)`, so the explicit zero is required
+  for a full collapse.
+- `.ai-chat-block__spacer` is a flex item that only grows (`flex-grow: 1`)
+  while empty, pushing the composer down to a centered rest point; it
+  collapses once a turn exists, handing that space to the transcript's own
+  `flex: 1 1 0` scroller instead.
+- `.ai-chat-block__composer-region`'s block padding transitions between the
+  layout gutter (empty) and zero (docked), so the composer's final rest
+  position tightens against the transcript once a conversation is underway.
+- All of the above share one timing pair, `--ai-chat-layout-speed`
+  (`--speed-slow`) and `--ai-chat-layout-ease` (`--ease-glide`), so the
+  greeting fade, the spacer's flex change, and the composer's padding settle
+  as one coordinated move rather than staged steps.
+
+Why layout properties and not a measured transform: the composer's travel
+distance depends on viewport height, greeting text length, and, in the side
+panel layout, whether suggestion chips are shown - a hand-computed translate
+would need re-measuring for every one of those inputs. Animating the CSS
+properties that already determine layout (grid row size, flex-grow, block
+padding) delegates that measurement to the browser and stays correct at any
+size for free. This is the Transformation family's declarative form: the
+container and its contents move as one object, with no measure-old-spot,
+animate-a-transform step in script.
+
 ## Choreography principles
 
 - Prefer simultaneous container-and-content change over staged disappearance and reflow.

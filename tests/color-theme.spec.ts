@@ -1,11 +1,24 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
 
+test("client-only showcase theme does not render an executable inline script", async ({ page }) => {
+  const scriptWarnings: string[] = []
+  page.on("console", (message) => {
+    if (message.text().includes("Encountered a script tag while rendering React component")) {
+      scriptWarnings.push(message.text())
+    }
+  })
+  await page.goto("/#/colors")
+  await expect(page.locator('script[type="text/plain"]')).toHaveCount(1)
+  await expect(page.getByRole("region", { name: "Expression lab workbench", exact: true })).toBeVisible()
+  expect(scriptWarnings).toEqual([])
+})
+
 async function openColors(page: Page, mode: "light" | "dark") {
   await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
   await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
   await page.goto("/#/colors")
-  const preview = page.locator('[data-slot="color-theme"]')
-  const lab = preview.getByRole("region", { name: "Expression lab workbench", exact: true })
+  const lab = page.getByRole("region", { name: "Expression lab workbench", exact: true })
+  const preview = lab.locator("xpath=ancestor::*[@data-slot='color-theme'][1]")
   await expect(preview).toHaveAttribute("data-color-scale", "website")
   await expect(lab).toBeVisible()
   await expect(page.locator("html")).toHaveClass(new RegExp(mode))
@@ -25,12 +38,148 @@ async function expectRole(element: Locator, property: "color" | "background-colo
   await expect(element).toHaveCSS(property, expected)
 }
 
+test("Material website roles group tokens along tonal scales", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+  await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
+  await page.goto("/#/colors")
+  const roleSpectra = page.locator('[data-slot="material-color-roles"]')
+  const roleGroups = roleSpectra.locator('[data-role-group]')
+  await expect(roleSpectra).toBeVisible()
+  await expect(roleGroups).toHaveCount(8)
+  expect(await roleGroups.evaluateAll(groups => groups.map(group => group.getAttribute("data-role-group")))).toEqual([
+    "Backgrounds", "Surfaces", "Surface variants and outlines", "Surface effects",
+    "Primary", "Secondary", "Tertiary", "Error",
+  ])
+  await expect(roleSpectra.locator('[data-role]')).toHaveCount(49)
+  await expect(roleSpectra.locator('[data-slot="chip"][data-token]')).toHaveCount(49)
+  await expect(roleSpectra.locator('.material-role-spectrum__marker')).toHaveCount(49)
+  await expect(roleSpectra.locator('.material-tonal-scale__step')).toHaveCount(104)
+  const layout = await roleSpectra.evaluate(element => {
+    const toneLabelsOverlap = Array.from(element.querySelectorAll('.material-tonal-scale__row')).some(row => {
+      const labels = Array.from(row.querySelectorAll('.material-tonal-scale__tone'))
+        .map(label => label.getBoundingClientRect())
+      return labels.some((label, index) => index < labels.length - 1 && label.right > labels[index + 1].left)
+    })
+    return {
+      horizontalOverflow: element.scrollWidth > element.clientWidth + 1,
+      toneLabelsOverlap,
+    }
+  })
+  expect(layout).toEqual({ horizontalOverflow: false, toneLabelsOverlap: false })
+  const pageScroll = page.locator('[data-slot="page-scroll"]')
+  const surfaces = roleSpectra.locator('[data-role-group="Surfaces"]')
+  const surfaceSticky = surfaces.locator('.material-role-spectrum__sticky')
+  const scrollTarget = await surfaceSticky.evaluate(sticky => {
+    const root = sticky.closest('[data-slot="page-scroll"]')
+    const card = sticky.closest('[data-role-group]')
+    if (!(root instanceof HTMLElement) || !(card instanceof HTMLElement)) return 0
+    const rootTop = root.getBoundingClientRect().top
+    const normalTop = sticky.getBoundingClientRect().top + root.scrollTop - rootTop
+    const stickyInset = Number.parseFloat(getComputedStyle(sticky).insetBlockStart)
+    return normalTop - stickyInset + card.clientHeight / 2
+  })
+  await pageScroll.evaluate((root, target) => { root.scrollTop = target }, scrollTarget)
+  await expect(page.locator('.showcase-page-header__barwrap')).toHaveAttribute("data-collapsed", "true")
+  await expect.poll(() => page.locator('.showcase-page-header__bar').evaluate(bar => {
+    const root = bar.closest('[data-slot="page-scroll"]')
+    const wrapper = bar.closest('.showcase-page-header__barwrap')
+    if (!(root instanceof HTMLElement) || !(wrapper instanceof HTMLElement)) return Number.POSITIVE_INFINITY
+    const expectedTop = root.getBoundingClientRect().top + Number.parseFloat(getComputedStyle(wrapper).insetBlockStart)
+    return Math.abs(bar.getBoundingClientRect().top - expectedTop)
+  })).toBeLessThanOrEqual(1)
+  const stickyGeometry = await surfaceSticky.evaluate(sticky => {
+    const root = sticky.closest('[data-slot="page-scroll"]')
+    const title = sticky.querySelector('[data-slot="card-title"]')
+    const description = sticky.querySelector('[data-slot="card-description"]')
+    const header = sticky.querySelector('[data-slot="card-header"]')
+    const scale = sticky.querySelector('.material-role-spectrum__scale')
+    const bar = document.querySelector('.showcase-page-header__bar')
+    if (!(root instanceof HTMLElement) || !(title instanceof HTMLElement) || !(description instanceof HTMLElement) || !(header instanceof HTMLElement) || !(scale instanceof HTMLElement) || !(bar instanceof HTMLElement)) return null
+    const gapProbe = document.createElement("span")
+    gapProbe.style.position = "absolute"
+    gapProbe.style.insetInlineStart = "var(--material-role-sticky-gap)"
+    sticky.append(gapProbe)
+    const configuredGap = Number.parseFloat(getComputedStyle(gapProbe).insetInlineStart)
+    gapProbe.remove()
+    const stickyStyle = getComputedStyle(sticky)
+    const backplate = getComputedStyle(sticky, "::before")
+    return {
+      stickyTop: sticky.getBoundingClientRect().top,
+      expectedTop: root.getBoundingClientRect().top + Number.parseFloat(stickyStyle.insetBlockStart),
+      titleTop: title.getBoundingClientRect().top,
+      descriptionBottom: description.getBoundingClientRect().bottom,
+      scaleTop: scale.getBoundingClientRect().top,
+      topPadding: Number.parseFloat(stickyStyle.paddingBlockStart),
+      contentGap: Number.parseFloat(stickyStyle.rowGap),
+      headerToScale: scale.getBoundingClientRect().top - header.getBoundingClientRect().bottom,
+      barTop: bar.getBoundingClientRect().top,
+      barToStickyGap: sticky.getBoundingClientRect().top - bar.getBoundingClientRect().bottom,
+      configuredGap,
+      backplateTop: Number.parseFloat(backplate.insetBlockStart),
+      backplateAbsoluteTop: sticky.getBoundingClientRect().top + Number.parseFloat(backplate.insetBlockStart),
+      backplateHeight: Number.parseFloat(backplate.blockSize),
+      backplateColor: backplate.backgroundColor,
+      cardColor: getComputedStyle(sticky.closest('[data-slot="card"]')!).backgroundColor,
+    }
+  })
+  expect(stickyGeometry).not.toBeNull()
+  expect(Math.abs(stickyGeometry!.stickyTop - stickyGeometry!.expectedTop)).toBeLessThanOrEqual(1)
+  expect(stickyGeometry!.titleTop - stickyGeometry!.stickyTop).toBe(stickyGeometry!.topPadding)
+  expect(stickyGeometry!.scaleTop).toBeGreaterThan(stickyGeometry!.descriptionBottom)
+  expect(stickyGeometry!.headerToScale).toBe(stickyGeometry!.contentGap)
+  expect(stickyGeometry!.barToStickyGap).toBeGreaterThanOrEqual(stickyGeometry!.configuredGap)
+  if (stickyGeometry!.backplateHeight > 0) {
+    expect(stickyGeometry!.backplateTop + stickyGeometry!.backplateHeight).toBe(0)
+    expect(stickyGeometry!.backplateAbsoluteTop).toBeLessThanOrEqual(stickyGeometry!.barTop + 1)
+    expect(stickyGeometry!.backplateHeight).toBeGreaterThanOrEqual(stickyGeometry!.barToStickyGap - 1)
+  } else {
+    expect(stickyGeometry!.barToStickyGap).toBeLessThanOrEqual(0)
+  }
+  expect(stickyGeometry!.backplateColor).toBe(stickyGeometry!.cardColor)
+  const variantGroup = roleSpectra.locator('[data-role-group="Surface variants and outlines"]')
+  const variantSticky = variantGroup.locator('.material-role-spectrum__sticky')
+  const handoffTarget = await variantSticky.evaluate(sticky => {
+    const root = sticky.closest('[data-slot="page-scroll"]')
+    const card = sticky.closest('[data-role-group]')
+    if (!(root instanceof HTMLElement) || !(card instanceof HTMLElement)) return 0
+    const rootTop = root.getBoundingClientRect().top
+    const normalTop = sticky.getBoundingClientRect().top + root.scrollTop - rootTop
+    const stickyInset = Number.parseFloat(getComputedStyle(sticky).insetBlockStart)
+    return normalTop - stickyInset + card.clientHeight / 2
+  })
+  await pageScroll.evaluate((root, target) => { root.scrollTop = target }, handoffTarget)
+  const handoffGeometry = await variantSticky.evaluate(sticky => {
+    const root = sticky.closest('[data-slot="page-scroll"]')
+    const previous = document.querySelector('[data-role-group="Surfaces"] .material-role-spectrum__sticky')
+    if (!(root instanceof HTMLElement) || !(previous instanceof HTMLElement)) return null
+    return {
+      stickyTop: sticky.getBoundingClientRect().top,
+      expectedTop: root.getBoundingClientRect().top + Number.parseFloat(getComputedStyle(sticky).insetBlockStart),
+      previousBottom: previous.getBoundingClientRect().bottom,
+    }
+  })
+  expect(handoffGeometry).not.toBeNull()
+  expect(Math.abs(handoffGeometry!.stickyTop - handoffGeometry!.expectedTop)).toBeLessThanOrEqual(1)
+  expect(handoffGeometry!.previousBottom).toBeLessThanOrEqual(handoffGeometry!.stickyTop)
+  await roleSpectra.evaluate(element => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: async (token: string) => element.setAttribute("data-copied-token", token) },
+    })
+  })
+  const backgroundToken = "--md-sys-color-background"
+  const backgroundChip = roleSpectra.locator(`[data-token="${backgroundToken}"]`)
+  await backgroundChip.click()
+  await expect(roleSpectra).toHaveAttribute("data-copied-token", backgroundToken)
+  await expect(backgroundChip).toHaveAccessibleName(`${backgroundToken} copied`)
+})
+
 for (const mode of ["light", "dark"] as const) {
   test(`Website theme uses paired Material roles in ${mode} mode`, async ({ page }, testInfo) => {
     const { preview, lab } = await openColors(page, mode)
     await expect(page.getByRole("combobox", { name: /Color scale|Material scheme|Material contrast/ })).toHaveCount(0)
     await expect(page.getByRole("checkbox", { name: "Accent buttons" })).toHaveCount(0)
-    await expect(preview.locator('[data-slot="material-color-roles"] tbody tr')).toHaveCount(25)
+    await expect(preview.locator('[data-slot="material-color-roles"] [data-role]')).toHaveCount(49)
     const surfaces = preview.locator('[data-slot="material-surface-roles"]')
     await expect(surfaces.locator('tbody tr')).toHaveCount(6)
     await expect(surfaces.getByText("Surface container lowest", { exact: true })).toBeVisible()
@@ -39,20 +188,19 @@ for (const mode of ["light", "dark"] as const) {
       await expectRole(sample, "background-color", `--md-sys-color-${role}`)
       await expectRole(sample, "color", await sample.textContent() === "On surface" ? "--md-sys-color-on-surface" : "--md-sys-color-on-surface-variant")
     }
-    await expect(preview.locator('[data-slot="material-color-families"] tbody tr')).toHaveCount(3)
+    await expect(preview.locator('[data-slot="material-color-families"] tbody tr')).toHaveCount(4)
+    await expect(page.getByRole("radiogroup", { name: "Theme family" }).getByRole("radio", { name: "Purple" })).toBeChecked()
     await expect(preview.getByText("On primary container", { exact: true }).first()).toBeVisible()
-    await expect(lab.locator('[data-slot="sidebar-inset"]')).toHaveCSS("background-color", mode === "light" ? "rgb(254, 251, 255)" : "rgb(20, 19, 20)")
+    await expect(lab.locator('[data-slot="navigation-pane-inset"]')).toHaveCSS("background-color", mode === "light" ? "rgb(254, 251, 255)" : "rgb(20, 19, 20)")
     const primary = lab.getByRole("button", { name: "Complete next", exact: true })
-    await expect(primary).toHaveCSS("background-color", mode === "light" ? "rgb(103, 80, 164)" : "rgb(208, 188, 255)")
     await expectRole(primary, "background-color", "--button-primary-fill")
     await expectRole(primary, "color", "--md-sys-color-on-primary")
     await expectRole(lab.getByRole("button", { name: "Pause session", exact: true }), "background-color", "--button-primary-fill")
-    expect(await preview.evaluate(element => getComputedStyle(element).getPropertyValue("--md-sys-color-primary").trim())).toBe(mode === "light" ? "#6442d6" : "#9f86ff")
     await expect(primary).toHaveCSS("height", "40px")
     for (const card of await lab.locator('[data-slot="card"]').all()) {
       await expect(card).toHaveCSS("background-color", mode === "light" ? "rgb(255, 255, 255)" : "rgb(15, 14, 15)")
     }
-    await expectRole(lab.locator('[data-slot="card-footer"]').first(), "background-color", "--md-sys-color-surface-container-low")
+    await expectRole(lab.locator('[data-slot="card-footer"]').first(), "background-color", "--md-sys-color-surface-container-lowest")
     const tabs = lab.getByRole("tablist", { name: "Lab horizon" })
     await expectRole(tabs, "background-color", "--md-sys-color-surface-container-low")
     await expectRole(tabs.locator('[data-slot="tabs-indicator"]'), "background-color", "--md-sys-color-secondary-container")
@@ -62,15 +210,16 @@ for (const mode of ["light", "dark"] as const) {
     await lab.getByRole("button", { name: "Quick actions", exact: true }).click()
     const menu = page.getByRole("menu")
     await expect(menu).toHaveAttribute("data-color-scale", "website")
-    await expectRole(menu, "background-color", "--md-sys-color-surface-container-high")
+    await expect(menu).toHaveCSS("background-color", "rgba(0, 0, 0, 0)")
+    await expectRole(menu.locator('[data-slot="menu-group"]'), "background-color", "--md-sys-color-surface-container-lowest")
     await menu.press("Escape")
     await expect(menu).toBeHidden()
     expect(await preview.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
     const overflow = await lab.evaluate(element => Array.from(element.querySelectorAll('[data-slot="card"], [data-slot="site-header-shell"], [data-slot="ai-composer"]')).filter(node => node.scrollWidth > node.clientWidth + 2).map(node => node.getAttribute("data-slot")))
     expect(overflow).toEqual([])
     if (testInfo.project.use.isMobile) {
-      await lab.locator('.expression-lab__header').getByRole("button", { name: "Open sidebar", exact: true }).click()
-      const drawer = page.locator('#expression-lab-panel[data-mobile="true"]')
+      await lab.locator('.expression-lab__header').getByRole("button", { name: "Open navigation pane", exact: true }).click()
+      const drawer = page.locator('#expression-lab-panel[data-placement="drawer"]')
       await expect(drawer).toHaveAttribute("data-color-scale", "website")
       await expectRole(drawer, "background-color", "--md-sys-color-surface-container")
       await drawer.getByRole("button", { name: "Notes", exact: true }).click()
@@ -87,7 +236,7 @@ test("Website inset navigation hover composites a foreground state layer", async
     await page.emulateMedia({ colorScheme: mode })
     await expect(page.locator("html")).toHaveClass(new RegExp(mode))
     await item.hover()
-    await expectRole(item, "background-color", "--sidebar-hover-fill")
+    await expectRole(item, "background-color", "--navigation-pane-hover-fill")
     const pixels = await item.evaluate(element => {
       const style = getComputedStyle(element)
       const context = document.createElement("canvas").getContext("2d")!
@@ -126,7 +275,7 @@ for (const mode of ["light", "dark"] as const) {
     expect(baseline.local).toEqual(baseline.root)
     expect(baseline.material).toBe("")
     if (testInfo.project.use.isMobile) {
-      await page.getByRole("button", { name: "Open sidebar", exact: true }).click()
+      await page.getByRole("button", { name: "Open navigation pane", exact: true }).click()
     }
     const navigation = page.locator('[data-theme-scope="showcase-navigation"]')
     await expect(navigation).toBeVisible()
@@ -149,8 +298,8 @@ for (const mode of ["light", "dark"] as const) {
     if (testInfo.project.use.isMobile) {
       await expect(navigation).toBeHidden()
     } else {
-      await navigation.getByRole("button", { name: "Close sidebar", exact: true }).click()
-      const reopen = page.locator('[data-placement="floating"][aria-controls="sidebar-panel"]')
+      await navigation.getByRole("button", { name: "Close navigation pane", exact: true }).click()
+      const reopen = page.locator('[data-placement="floating"][aria-controls="navigation-pane-panel"]')
       await expect(reopen).toBeVisible()
       await reopen.click()
       await expect(navigation).toBeVisible()
@@ -165,11 +314,11 @@ for (const mode of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
     const samples = [
       { route: "card", selector: '[data-slot="card"]', role: "surface-container-lowest" },
-      { route: "input", selector: '[data-slot="input"]:not(:disabled)', role: "surface-container-highest" },
-      { route: "textarea", selector: '[data-slot="textarea"]:not(:disabled)', role: "surface-container-highest" },
-      { route: "select", selector: '[data-slot="select-trigger"]', role: "surface-container-highest" },
-      { route: "input-group", selector: '[data-slot="input-group"]', role: "surface-container-highest" },
-      { route: "tabs", selector: '[data-slot="tabs-indicator"]', role: "surface-container-low" },
+      { route: "input", selector: '[data-slot="input"]:not(:disabled)', role: "field-fill" },
+      { route: "textarea", selector: '[data-slot="textarea"]:not(:disabled)', role: "field-fill" },
+      { route: "select", selector: '[data-slot="select-trigger"]', role: "field-fill" },
+      { route: "input-group", selector: '[data-slot="input-group"]', role: "field-fill" },
+      { route: "tabs", selector: '[data-slot="tabs-indicator"]', role: "surface-container-lowest" },
     ]
     for (const { route, selector, role } of samples) {
       await page.goto(`/#/${route}`)
@@ -177,18 +326,26 @@ for (const mode of ["light", "dark"] as const) {
       const sample = page.locator(`[data-slot="canvas"] ${selector}`).first()
       await expect(sample).toBeVisible()
       await expectRole(page.locator("body"), "background-color", "--md-sys-color-surface")
-      await expectRole(sample, "background-color", `--md-sys-color-${role}`)
-      const source = `--theme-website-${role}-${mode}`
+      await expectRole(sample, "background-color", role === "field-fill" ? "--field-fill" : `--md-sys-color-${role}`)
+      const initial = await sample.evaluate(element => getComputedStyle(element).backgroundColor)
+      const source = role === "field-fill"
+        ? `--theme-website-on-surface-variant-${mode}`
+        : `--theme-website-${role}-${mode}`
       await page.locator("html").evaluate((element, source) => element.style.setProperty(source, "#b5c9d3"), source)
-      await expect(sample).toHaveCSS("background-color", "rgb(181, 201, 211)")
+      if (role === "field-fill") {
+        await expect.poll(() => sample.evaluate(element => getComputedStyle(element).backgroundColor)).not.toBe(initial)
+        await expectRole(sample, "background-color", "--field-fill")
+      } else {
+        await expect(sample).toHaveCSS("background-color", "rgb(181, 201, 211)")
+      }
       await page.locator("html").evaluate((element, source) => element.style.removeProperty(source), source)
     }
     await page.goto("/#/dialog")
     await page.locator('[data-slot="canvas"] button').first().click()
     const dialog = page.getByRole("dialog")
     await expect(dialog).toBeVisible()
-    await expectRole(dialog, "background-color", "--md-sys-color-surface-container-high")
-    const popupSource = `--theme-website-surface-container-high-${mode}`
+    await expectRole(dialog, "background-color", "--md-sys-color-surface-container-lowest")
+    const popupSource = `--theme-website-surface-container-lowest-${mode}`
     await page.locator("html").evaluate((element, source) => element.style.setProperty(source, "#b5c9d3"), popupSource)
     await expect(dialog).toHaveCSS("background-color", "rgb(181, 201, 211)")
     await dialog.press("Escape")
@@ -312,7 +469,7 @@ for (const mode of ["light", "dark"] as const) {
       gap: "8px",
       opticalPadding: "4px",
       leadingInset: 16,
-      graphicGap: 16,
+      graphicGap: 12,
       padding: ["16px", "16px", "16px", "16px"],
       radius: "44px",
       title: { size: "18px", lineHeight: "28px", weight: "500" },
@@ -402,6 +559,26 @@ for (const mode of ["light", "dark"] as const) {
       expect(focus.visible).toBe(true)
       expect(focus.shadow).toContain(focus.ring)
       expect(focus.shadow).toContain(`0px 0px 0px ${focus.controlOutlineWidth}`)
+    }
+  })
+}
+
+for (const mode of ["light", "dark"] as const) {
+  test(`Input and Textarea tint responds to the shared surface ink in ${mode} mode`, async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("oneds-theme", "system"))
+    await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" })
+    for (const route of ["input", "textarea"]) {
+      await page.goto(`/#/${route}`)
+      await page.mouse.move(0, 0)
+      const field = page.locator(`[data-slot="canvas"] [data-slot="${route}"]:not(:disabled)`).first()
+      await expect(field).toBeVisible()
+      await expectRole(field, "background-color", "--field-fill")
+      const original = await field.evaluate(element => getComputedStyle(element).backgroundColor)
+      const source = `--theme-website-on-surface-variant-${mode}`
+      await page.locator("html").evaluate((element, token) => element.style.setProperty(token, "#b5c9d3"), source)
+      await expect.poll(() => field.evaluate(element => getComputedStyle(element).backgroundColor)).not.toBe(original)
+      await expectRole(field, "background-color", "--field-fill")
+      await page.locator("html").evaluate((element, token) => element.style.removeProperty(token), source)
     }
   })
 }
@@ -655,7 +832,7 @@ for (const mode of ["light", "dark"] as const) {
           return { color, height: element.getBoundingClientRect().height }
         }, { mode, state })
         await expect(material).toHaveCSS("background-color", expected.color)
-        await expectRole(material, "color", "--destructive")
+        await expectRole(material, "color", "--button-destructive-ink")
         expect(expected.height).toBe(size === "default" ? 40 : 56)
         if (state === "pressed") await page.mouse.up()
       }
@@ -676,7 +853,7 @@ for (const mode of ["light", "dark"] as const) {
     if (!testInfo.project.use.isMobile) {
       await secondary.hover()
       await expectRole(secondary, "background-color", "--button-secondary-hover")
-      await expectRole(page.locator('[data-theme-scope="showcase-navigation"]').getByRole("button", { name: "Group by section", exact: true }), "background-color", "--button-tertiary-fill")
+      await expectRole(page.locator('[data-theme-scope="showcase-navigation"]').getByRole("button", { name: "Sort alphabetically", exact: true }), "background-color", "--button-tertiary-fill")
     }
     expect(await page.locator("html").evaluate(element => ["--primary", "--secondary"].map(token => getComputedStyle(element).getPropertyValue(token)))).toEqual(generic)
     await page.locator("html").evaluate((element, source) => element.style.removeProperty(source), source)

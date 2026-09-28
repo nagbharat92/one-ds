@@ -16,46 +16,7 @@
     --field-action-icon-size: calc(var(--field-action-size) / 2);
   }
 
-  .item-actions--hosted {
-    position: absolute;
-    z-index: 1;
-    justify-content: flex-end;
-    opacity: 0;
-    transition: opacity var(--item-hosted-action-speed)
-      var(--item-hosted-action-ease);
-  }
-
-  .item-actions--hosted::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    inset-inline-end: 100%;
-    inline-size: var(--item-hosted-action-fade-size);
-    pointer-events: none;
-  }
-
-  [data-slot="item"]:hover > .item-actions--hosted,
-  [data-slot="item"]:has(
-      > .item-actions--hosted [data-slot="dropdown-menu-trigger"]:focus-visible
-    )
-    > .item-actions--hosted,
-  [data-slot="item"]:has(
-      > .item-actions--hosted
-        [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
-    )
-    > .item-actions--hosted {
-    opacity: 1;
-  }
-
   .ai-chat-workspace {
-    --sidebar-width: var(--ai-chat-history-width);
-    --site-header-height: var(--ai-chat-header-height);
-    --site-header-gutter: var(--ai-chat-history-padding);
-    /* Header actions and message actions are both icon clusters, so they
-       share one gap. */
-    --site-header-action-gap: var(--ai-chat-action-gap);
-    --swap-speed: var(--ai-chat-layout-speed);
-    --swap-ease: var(--ai-chat-layout-ease);
     position: relative;
     block-size: 100%;
     min-block-size: 0;
@@ -72,116 +33,6 @@
     box-shadow: none;
   }
 
-  .ai-chat-workspace [data-slot="sidebar-inset"] {
-    min-inline-size: 0;
-  }
-
-  .ai-chat-history__content {
-    padding-block: var(--ai-chat-history-content-padding-block);
-  }
-
-  .ai-chat-history__chats {
-    position: relative;
-  }
-
-  .ai-chat-history__recents-bar {
-    position: relative;
-    background: var(--sidebar);
-  }
-
-  .ai-chat-history__recents-trigger {
-    position: absolute;
-    inset-block-start: 0;
-    /* Sits on the list's text column, not the rail edge. */
-    inset-inline-start: calc(
-      var(--ai-chat-history-rail-inset) + var(--ai-chat-history-item-text-inset)
-    );
-    z-index: 1;
-    display: flex;
-    block-size: var(--ai-chat-history-recents-height);
-    align-items: center;
-    gap: var(--ai-chat-history-action-inset);
-    color: var(--muted-foreground);
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--text-xs--line-height);
-    outline: none;
-  }
-
-  .ai-chat-history__recents-trigger > svg {
-    inline-size: var(--ai-chat-history-recents-icon-size);
-    block-size: var(--ai-chat-history-recents-icon-size);
-    transition: rotate var(--collapsible-collapse-height-speed)
-      var(--collapsible-ease);
-  }
-
-  .ai-chat-history__recents-trigger[data-state="open"] > svg {
-    rotate: 180deg;
-    transition-duration: var(--collapsible-expand-height-speed);
-  }
-
-  .ai-chat-history__recents-header {
-    display: flex;
-    inline-size: calc(100% - var(--ai-chat-history-rail-inset) * 2);
-    min-inline-size: 0;
-    align-items: center;
-    justify-content: flex-end;
-    margin-inline: var(--ai-chat-history-rail-inset);
-    transition-property: inline-size, margin-inline;
-    transition-duration: var(--sidebar-speed);
-    transition-timing-function: var(--sidebar-ease);
-  }
-
-  .ai-chat-history__recents-actions {
-    display: flex;
-    flex: none;
-    align-items: center;
-    gap: var(--ai-chat-history-action-inset);
-    transition: gap var(--sidebar-speed) var(--sidebar-ease);
-  }
-
-  .ai-chat-history__compose {
-    flex: none;
-  }
-
-  .ai-chat-history__recents-trigger {
-    transition-property: opacity, visibility;
-    transition-duration: var(--sidebar-fade-speed);
-    transition-timing-function: var(--sidebar-ease);
-  }
-
-  [data-slot="sidebar"][data-collapsible="icon"]
-    .ai-chat-history__recents-header {
-    inline-size: var(--sidebar-width-icon);
-    margin-inline: 0;
-    padding-inline: var(--ai-chat-history-rail-inset);
-  }
-
-  [data-slot="sidebar"][data-collapsible="icon"]
-    .ai-chat-history__recents-trigger {
-    visibility: hidden;
-    pointer-events: none;
-    opacity: 0;
-  }
-
-  [data-slot="sidebar"][data-collapsible="icon"]
-    .ai-chat-history__recents-actions {
-    gap: 0;
-  }
-
-  .ai-chat-history__recents-trigger:hover,
-  .ai-chat-history__recents-trigger:focus-visible {
-    color: var(--sidebar-foreground);
-  }
-
-  .ai-chat-history__recents-content {
-    padding-block-end: var(--ai-chat-history-gap);
-  }
-
-  .ai-chat-history [data-slot="sidebar-group"] {
-    padding-inline: var(--ai-chat-history-rail-inset);
-  }
-
   .ai-chat-block {
     display: flex;
     flex-direction: column;
@@ -193,10 +44,6 @@
     border-radius: var(--ai-chat-radius);
     background: var(--background);
     box-shadow: var(--ai-chat-shadow);
-  }
-
-  .ai-chat-block__header {
-    flex: none;
   }
 
   /* The empty and docked layouts are one interpolable box model, so the
@@ -245,12 +92,6 @@
 
   .ai-chat-block[data-empty="true"] .ai-chat-block__spacer {
     flex-grow: 1;
-  }
-
-  .ai-chat-workspace[data-layout="workspace"]
-    .ai-chat-block[data-empty="true"]
-    .ai-chat-block__spacer {
-    flex-basis: var(--ai-chat-empty-composer-counterweight);
   }
 
   /* Panel is a token swap, not a second stylesheet. Only the history surface
@@ -641,7 +482,7 @@
   }
 
   .expression-lab {
-    --site-header-height: var(--sidebar-header-height);
+    --site-header-height: var(--navigation-pane-header-height);
     --site-header-gutter: var(--expression-lab-header-padding);
     display: block;
     inline-size: 100%;
@@ -975,28 +816,6 @@
   }
 }
 @layer components {
-  [data-slot="collapsible-content"][data-state="open"] {
-    animation: oneds-collapsible-expand var(--collapsible-expand-height-speed)
-      var(--collapsible-ease) both;
-  }
-
-  [data-slot="collapsible-content"][data-state="closed"] {
-    animation: oneds-collapsible-collapse var(--collapsible-collapse-height-speed)
-      var(--collapsible-ease) both;
-  }
-
-  [data-slot="collapsible-content"][data-state="open"]
-    > [data-slot="collapsible-content-inner"] {
-    animation: oneds-collapsible-fade-in var(--collapsible-expand-fade-speed)
-      var(--collapsible-ease) both;
-  }
-
-  [data-slot="collapsible-content"][data-state="closed"]
-    > [data-slot="collapsible-content-inner"] {
-    animation: oneds-collapsible-fade-out var(--collapsible-collapse-fade-speed)
-      var(--collapsible-ease) both;
-  }
-
   [data-slot="carousel"] {
     --carousel-slide-extent: calc(var(--carousel-slide-size) + var(--carousel-gap));
   }
@@ -1048,89 +867,6 @@
 
   :is([data-slot="separator"], [data-slot="dropdown-menu-separator"])[data-tone="neutral"] {
     --separator-stroke: var(--separator-stroke-neutral);
-  }
-
-  .icon-label {
-    padding-inline: 0;
-  }
-
-  [data-slot="select-content"] > .select-viewport,
-  :is(
-    [data-slot="dropdown-menu-content"],
-    [data-slot="dropdown-menu-sub-content"],
-    [data-slot="context-menu-content"],
-    [data-slot="context-menu-sub-content"],
-    [data-slot="menubar-content"],
-    [data-slot="menubar-sub-content"]
-  ) > [data-slot="scroller"],
-  :is(
-    [data-slot="dropdown-menu-content"][data-grouped="true"],
-    [data-slot="context-menu-content"][data-grouped="true"],
-    [data-slot="menubar-content"][data-grouped="true"]
-  )
-    > [data-slot="scroller"]
-    > :is(
-      [data-slot="menu-group"],
-      [data-slot="dropdown-menu-group"],
-      [data-slot="context-menu-group"],
-      [data-slot="menubar-group"]
-    ) {
-    max-height: inherit;
-  }
-
-    :is(
-      [data-slot="dropdown-menu-content"][data-grouped="true"],
-      [data-slot="dropdown-menu-sub-content"][data-grouped="true"],
-      [data-slot="context-menu-content"][data-grouped="true"],
-      [data-slot="context-menu-sub-content"][data-grouped="true"],
-      [data-slot="menubar-content"][data-grouped="true"],
-      [data-slot="menubar-sub-content"][data-grouped="true"]
-    )
-      :is(
-        [data-slot="dropdown-menu-label"] + [data-slot="dropdown-menu-separator"],
-        [data-slot="context-menu-label"] + [data-slot="context-menu-separator"],
-        [data-slot="menubar-label"] + [data-slot="menubar-separator"]
-      ) {
-      display: none;
-    }
-
-  :is(
-    [data-slot="dropdown-menu-content"][data-grouped="true"],
-    [data-slot="dropdown-menu-sub-content"][data-grouped="true"],
-    [data-slot="context-menu-content"][data-grouped="true"],
-    [data-slot="context-menu-sub-content"][data-grouped="true"],
-    [data-slot="menubar-content"][data-grouped="true"],
-    [data-slot="menubar-sub-content"][data-grouped="true"]
-  )
-    :is(
-      [data-slot="dropdown-menu-item"],
-      [data-slot="dropdown-menu-checkbox-item"],
-      [data-slot="dropdown-menu-radio-item"],
-      [data-slot="dropdown-menu-sub-trigger"],
-      [data-slot="context-menu-item"],
-      [data-slot="context-menu-checkbox-item"],
-      [data-slot="context-menu-radio-item"],
-      [data-slot="context-menu-sub-trigger"],
-      [data-slot="menubar-item"],
-      [data-slot="menubar-checkbox-item"],
-      [data-slot="menubar-radio-item"],
-      [data-slot="menubar-sub-trigger"]
-    ):not([data-disabled]):is(:active, [data-pressed="true"]) {
-    background-color: var(--menu-item-pressed-fill);
-  }
-
-  :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label {
-    padding-inline-end: var(--icon-label-optical-padding);
-  }
-
-  .icon-label:has(~ :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])) {
-    padding-inline-start: var(--icon-label-optical-padding);
-    padding-inline-end: 0;
-  }
-
-  :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon]) ~ .icon-label:has(~ :is(svg, [data-slot="favicon"], [data-slot="spinner"], [data-icon])),
-  [data-icon-label-host][data-size^="icon"] > .icon-label {
-    padding-inline: 0;
   }
 
   /* Open trigger bottom padding IS the title-to-content gap; keep it one token
@@ -1189,25 +925,6 @@
     padding-inline-end: var(--optical-edge-text-padding);
   }
 
-  /* Toast / Sonner optical edge adjustments:
-     When a toast has no leading icon, the text starts at the outer curve and receives
-     an optical leading inset to clear the corner radius. When an icon is present,
-     the text padding resets so the icon-to-text gap remains balanced. */
-  [data-sonner-toast]:not(:has([data-icon])) [data-content] {
-    padding-inline-start: var(--toast-text-edge-padding);
-  }
-}
-@layer components {
-  .button-motion:not([data-slot="fab"]):not([data-slot="sidebar-trigger"]) {
-  transition:
-    border-radius var(--button-spatial-speed) var(--button-spatial-curve),
-    translate var(--button-spatial-speed) var(--button-spatial-curve),
-    scale var(--button-spatial-speed) var(--button-spatial-curve),
-    background-color var(--button-effects-speed) var(--button-effects-curve),
-    color var(--button-effects-speed) var(--button-effects-curve),
-    border-color var(--button-effects-speed) var(--button-effects-curve),
-    opacity var(--button-effects-speed) var(--button-effects-curve);
-  }
 }
 @layer components {
   [data-slot="slider-thumb"] {
@@ -1247,39 +964,6 @@
   }
 }
 @layer components {
-  [data-slot="card"] {
-    --card-spacing: var(--card-spacing-default);
-    --card-region-gap: var(--card-region-gap-default);
-    --card-content-group-gap: var(--card-content-group-gap-default);
-  }
-
-  [data-slot="card"][data-size="sm"] {
-    --card-spacing: var(--card-spacing-small);
-    --card-region-gap: var(--card-region-gap-small);
-    --card-content-group-gap: var(--card-content-group-gap-small);
-  }
-
-  [data-slot="card"][data-size="expressive"] {
-    --card-spacing: var(--card-spacing-expressive);
-    --card-region-gap: var(--card-region-gap-expressive);
-    --card-content-group-gap: var(--card-content-group-gap-expressive);
-  }
-
-  [data-slot="card"][data-variant="code"] {
-    --code-block-copy-radius: max(0px, calc(var(--card-radius) - var(--code-block-copy-inset) - var(--code-block-boundary-width)));
-    border: var(--code-block-boundary-width) solid var(--border);
-  }
-
-  .card-media-overlay {
-    background-color: var(--card-media-overlay);
-  }
-
-  [data-slot="tabs-indicator"] {
-    --tabs-travel-duration: calc(
-      var(--tabs-pivot-speed) * var(--tabs-pivot-distance, 1)
-    );
-  }
-
   [data-slot="site-header-indicator"] {
     --site-header-travel-duration: calc(
       var(--site-header-pivot-speed) * var(--site-header-pivot-distance, 1)
@@ -1307,7 +991,7 @@
   }
 
   .showcase-app {
-    --sidebar-floating-trigger-inset: var(--showcase-sidebar-trigger-inset);
+    --navigation-pane-floating-trigger-inset: var(--showcase-navigation-pane-trigger-inset);
     height: 100svh;
     overflow: hidden;
     background: var(--page-fill);
@@ -1336,21 +1020,21 @@
     padding-block: var(--space-2xl);
   }
 
-  [data-slot="sidebar-inset"]:has(> [data-slot="sidebar-trigger"][data-placement="floating"])
+  [data-slot="navigation-pane-inset"]:has(> [data-slot="navigation-pane-trigger"][data-placement="floating"])
     > [data-slot="page"] > [data-slot="page-scroll"] > [data-slot="page-content"] {
     padding-block-start: calc(
-      var(--page-pad-block-start) + var(--sidebar-floating-trigger-clearance)
+      var(--page-pad-block-start) + var(--navigation-pane-floating-trigger-clearance)
     );
   }
 
-  [data-slot="sidebar-inset"]:has(> [data-slot="sidebar-trigger"][data-placement="floating"])
+  [data-slot="navigation-pane-inset"]:has(> [data-slot="navigation-pane-trigger"][data-placement="floating"])
     > [data-slot="page"] > [data-slot="page-scroll"]:has(> [data-showcase-page-header-shell])
     > [data-slot="page-content"] {
     padding-block-start: var(--showcase-content-start);
   }
 
   [data-slot="page-scroll"] > [data-showcase-page-header-shell] {
-    margin-block-start: var(--sidebar-floating-padding);
+    margin-block-start: var(--navigation-pane-floating-padding);
   }
 
   @keyframes page-enter {
@@ -1662,7 +1346,7 @@
       linear-gradient(
         to right,
         var(--canvas-split-card-background) var(--canvas-split-position),
-        var(--canvas-split-sidebar-background) var(--canvas-split-position)
+        var(--canvas-split-navigation-pane-background) var(--canvas-split-position)
       );
     background-position: var(--canvas-split-position) center, center;
     background-repeat: no-repeat;
@@ -1673,8 +1357,8 @@
     --item-host-surface: var(--canvas-split-card-background);
   }
 
-  .canvas-split-pane[data-surface="sidebar"] {
-    --item-host-surface: var(--canvas-split-sidebar-background);
+  .canvas-split-pane[data-surface="navigation-pane"] {
+    --item-host-surface: var(--canvas-split-navigation-pane-background);
   }
 
   .canvas:has(> [data-slot="canvas-grid"]) {

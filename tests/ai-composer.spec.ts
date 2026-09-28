@@ -48,6 +48,47 @@ async function composerMetrics(form: Locator) {
   })
 }
 
+test("AI Chat swaps Temporary chat and New chat actions", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "The navigation pane is hidden in panel layout")
+
+  await page.goto("/#/block-ai-chat")
+  const workspace = page.locator(".ai-chat-workspace").first()
+  const action = workspace.locator("[data-chat-action]")
+
+  await expect(action).toHaveAttribute("data-chat-action", "temporary")
+  await expect(action).toHaveAccessibleName("Temporary chat")
+  await expect(action.locator('[data-material-symbol="eyeglasses_3"]')).toHaveCSS("opacity", "1")
+  await expect(action.locator('[data-material-symbol="add"]')).toHaveCSS("opacity", "0")
+  await expect(workspace.getByRole("button", { name: "New chat", exact: true })).toHaveCount(0)
+
+  const layerTransitions = await action
+    .locator('[data-material-symbol], [data-slot="item-title"]')
+    .evaluateAll((layers) => layers.map((layer) => {
+      const style = getComputedStyle(layer)
+      return {
+        property: style.transitionProperty,
+        duration: style.transitionDuration,
+      }
+    }))
+  expect(layerTransitions).toHaveLength(4)
+  expect(layerTransitions.every(({ property }) => property === "opacity")).toBe(true)
+  expect(new Set(layerTransitions.map(({ duration }) => duration))).toEqual(new Set(["0.15s"]))
+
+  await workspace
+    .locator('[data-slot="navigation-pane-content"] button[aria-pressed]')
+    .first()
+    .click()
+  await expect(action).toHaveAttribute("data-chat-action", "new")
+  await expect(action).toHaveAccessibleName("New chat")
+  await expect(action.locator('[data-material-symbol="add"]')).toHaveCSS("opacity", "1")
+  await expect(action.locator('[data-material-symbol="eyeglasses_3"]')).toHaveCSS("opacity", "0")
+  await expect(workspace.getByRole("button", { name: "Temporary chat", exact: true })).toHaveCount(0)
+
+  await action.click()
+  await expect(action).toHaveAttribute("data-chat-action", "temporary")
+  await expect(action).toHaveAccessibleName("Temporary chat")
+})
+
 test("AI Composer states and Mini keep stable concentric geometry", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" })
   await page.goto("/#/ai-composer")

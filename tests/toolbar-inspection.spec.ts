@@ -83,17 +83,17 @@ test("expression lab compact dark view and navigation preserve usable bounds", a
   await expect(lab.locator('.expression-lab__capture-footer button').first()).toHaveCSS('height', '56px')
   await expect.poll(() => lab.evaluate(root => Array.from(root.querySelectorAll('[data-slot="card"], [data-slot="choice-card"], [data-slot="ai-composer"], [data-slot="site-header-shell"]')).map(element => ({ slot: element.getAttribute('data-slot'), extra: element.scrollWidth - element.clientWidth })).filter(item => item.extra > 2))).toEqual([])
   if (testInfo.project.name === 'mobile') {
-    await lab.locator('.expression-lab__header').getByRole('button', { name: /sidebar/i }).click()
+    await lab.locator('.expression-lab__header').getByRole('button', { name: /navigation pane/i }).click()
     const panel = page.locator('#expression-lab-panel')
     await expect(panel).toHaveAttribute('data-expression', 'expressive')
-    await expect(panel.locator('[data-slot="sidebar-menu-button"]').first()).toHaveCSS('min-height', '48px')
-    await expect(panel.locator('[data-slot="sidebar-account"] [data-slot="avatar"]')).toHaveCSS('width', '40px')
+    await expect(panel.locator('[data-slot="navigation-pane-menu-button"]').first()).toHaveCSS('min-height', '48px')
+    await expect(panel.locator('[data-slot="navigation-pane-account"] [data-slot="avatar"]')).toHaveCSS('width', '40px')
     await panel.getByRole('button', { name: 'Notes', exact: true }).click()
     await expect(panel).toBeHidden()
   } else {
-    await lab.locator('[data-slot="sidebar-brand"]').getByRole('button', { name: /sidebar/i }).click()
-    await expect(lab.locator('[data-slot="sidebar"]')).toHaveAttribute('data-collapsible', 'icon')
-    await expect(lab.locator('[data-slot="sidebar-account"] [data-slot="avatar"]')).toHaveCSS('width', '24px')
+    await lab.locator('[data-slot="navigation-pane-brand"]').getByRole('button', { name: /navigation pane/i }).click()
+    await expect(lab.locator('[data-slot="navigation-pane"]')).toHaveAttribute('data-collapsible', 'icon')
+    await expect(lab.locator('[data-slot="navigation-pane-account"] [data-slot="avatar"]')).toHaveCSS('width', '24px')
   }
 })
 
@@ -296,7 +296,7 @@ test("concentric specimens share continuous geometry between scale stops", async
       }
       const inset = target / 2
       const corner = horizontal ? target : 14 + target - 20
-      const height = target < 48 ? 32 : target < 56 ? 56 : 48
+      const height = target < 48 ? 40 : target < 56 ? 56 : 48
       await expect(surface).toHaveCSS("border-top-left-radius", `${corner}px`)
       await expect(horizontal ? surface : surface.locator('[data-slot="card-content"]')).toHaveCSS("padding-left", `${inset}px`)
       if (!horizontal) {
@@ -1007,7 +1007,7 @@ test("special preview pages explicitly opt into the requested defaults", async (
   await expect(page.locator('[data-slot="canvas"]').first()).toHaveAttribute("data-background", "plain")
 })
 
-for (const route of ["checkbox", "button", "input", "dialog", "table", "scroll-area", "resizable", "sidebar", "page", "carousel"]) {
+for (const route of ["checkbox", "button", "input", "dialog", "table", "scroll-area", "resizable", "navigation-pane", "page", "carousel"]) {
   test(`${route} uses shared headers and grid-only previews`, async ({ page }) => {
     await page.goto(`/#/${route}`)
     const sections = page.locator('section.showcase-example')

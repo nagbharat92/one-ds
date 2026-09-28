@@ -50,7 +50,9 @@ function Message({
     const observer = new ResizeObserver(updateAvatarAlignment)
     observer.observe(el)
     return () => observer.disconnect()
-  })
+    // Re-measure only on mount or when alignment flips; the ResizeObserver already
+    // reacts to any subsequent size change, so this must not re-run on every render.
+  }, [align])
 
   return (
     <div

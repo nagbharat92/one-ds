@@ -1,0 +1,55 @@
+@layer components {
+  .item-actions--hosted {
+    position: absolute;
+    z-index: 1;
+    justify-content: flex-end;
+    transition: background-color var(--item-hosted-action-speed)
+      var(--item-hosted-action-ease);
+  }
+
+  .item-actions--hosted > * {
+    /* Opacity preserves keyboard focusability where visibility:hidden cannot. */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--item-hosted-action-speed)
+      var(--item-hosted-action-ease);
+  }
+
+  [data-slot="item"]:hover > .item-actions--hosted > *,
+  [data-slot="item"] > .item-actions--hosted:focus-within > *,
+  [data-slot="item"]:has(
+      > .item-actions--hosted
+        [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
+    )
+    > .item-actions--hosted
+    > * {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .item-actions--hosted > * {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+/* Host-owned state layers override Button's utility-layer variants. */
+.item-actions--hosted > button {
+  transition-property: color, background-color, transform;
+  transition-duration: var(--item-hosted-action-speed);
+  transition-timing-function: var(--item-hosted-action-ease);
+}
+.item-actions--hosted > button:hover {
+  background: var(--state-layer-hover);
+  box-shadow: none;
+}
+.item-actions--hosted > button:is(:focus-visible, [aria-expanded="true"]) {
+  background: var(--state-layer-focus);
+  box-shadow: none;
+}
+.item-actions--hosted > button:active {
+  background: var(--state-layer-pressed);
+  box-shadow: none;
+}

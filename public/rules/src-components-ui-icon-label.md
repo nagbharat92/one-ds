@@ -14,7 +14,7 @@ Exceptions: AvatarBadge and presence dots are status indicators, not text badges
 
 Tokens: `--badge-height`, `--badge-radius`, `--badge-padding-inline`, `--badge-font-size`, `--badge-line-height`, `--badge-graphic-size`, `--badge-gap`, `--graphic-label-gap`, `--icon-label-optical-padding`
 
-Files: src/components/ui/badge.tsx, src/components/ui/kbd.tsx, src/components/ui/favicon.tsx, src/components/ui/icon-label.tsx, src/index.css, src/showcase/demos/data.tsx, tests/design-rules.spec.ts
+Files: src/components/ui/badge.tsx, src/components/ui/kbd.tsx, src/components/ui/favicon.tsx, src/components/ui/icon-label.tsx, src/styles/icon.css, src/styles/tokens.css, src/index.css, src/showcase/demos/data.tsx, tests/design-rules.spec.ts
 
 ### Icon labels include a tokenized optical correction
 
@@ -26,4 +26,4 @@ Exceptions: Text-only and icon-only controls receive no correction. A label flan
 
 Tokens: `--icon-label-optical-padding`, `--graphic-label-gap`, `--button-gap`
 
-Files: src/components/ui/icon-label.tsx, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/index.css, src/showcase/demos/forms.tsx
+Files: src/components/ui/icon-label.tsx, src/components/ui/button.tsx, src/components/ui/favicon.tsx, src/styles/button.css, src/styles/tokens.css, src/index.css, src/showcase/demos/forms.tsx

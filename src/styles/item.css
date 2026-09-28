@@ -3,6 +3,7 @@
     --item-radius: var(--card-radius);
     --item-padding: var(--space-md);
     --item-edge-text-padding: var(--optical-edge-text-padding);
+    --item-title-fade-size: var(--space-2xl);
     --item-inner-radius: max(
       0px,
       calc(
@@ -30,11 +31,7 @@
     --item-media-graphic-size: calc(var(--item-media-host-size) / 2);
     --item-media-host-fill: var(--muted);
     --item-image-size: calc(var(--spacing) * 11);
-    --item-compact-height: calc(var(--spacing) * 10);
     --item-compact-inset: calc(var(--spacing) * 1.5);
-    --item-compact-radius: calc(
-      var(--item-compact-height) / 2
-    );
     --item-compact-media-host-size: calc(
       var(--item-compact-height) - var(--item-compact-inset) * 2
     );
@@ -46,6 +43,7 @@
         var(--item-compact-inset) * 2
     );
     --item-compact-text-inset: var(--space-md);
+    --item-compact-action-gap: var(--space-xs);
     --item-compact-edge-text-padding: calc(
       var(--item-compact-text-inset) - var(--item-compact-inset)
     );
@@ -63,17 +61,17 @@
     --item-host-surface: var(--card);
   }
 
-  [data-slot="sidebar"] {
-    --item-host-surface: var(--sidebar);
+  [data-slot="navigation-pane"] {
+    --item-host-surface: var(--navigation-pane);
   }
 
   :is(
     [data-slot="item"],
-    [data-slot="sidebar-menu-button"],
-    [data-slot="sidebar-menu-sub-button"]
+    [data-slot="navigation-pane-menu-button"],
+    [data-slot="navigation-pane-menu-sub-button"]
   ) {
     /* Resolve Ghost Button's translucent state layers into opaque surfaces for
-       hosted action masks and Sidebar rows while preserving the local rest fill. */
+       hosted action masks and Navigation pane rows while preserving the local rest fill. */
     --item-default-hover-surface: color-mix(
       in srgb,
       var(--item-host-surface),
@@ -123,6 +121,12 @@
     padding: var(--item-padding);
     border-width: 0;
     border-radius: var(--item-radius);
+  }
+
+  [data-slot="item"]:has(> .item-actions--hosted > :nth-child(2)) {
+    --item-hosted-actions-reserve: calc(
+      var(--item-compact-media-host-size) * 2 + var(--space-xs)
+    );
   }
 
 
@@ -226,12 +230,12 @@
     border-radius: var(--item-compact-radius);
   }
 
-  [data-slot="item"][data-compact]:has(> [data-slot="sidebar-input"]) {
+  [data-slot="item"][data-compact]:has(> [data-slot="navigation-pane-input"]) {
     padding: var(--item-compact-field-inset);
   }
 
   [data-slot="item"][data-compact]
-    > [data-slot="sidebar-input"] {
+    > [data-slot="navigation-pane-input"] {
     border-radius: var(--item-compact-field-radius);
   }
 
@@ -328,10 +332,8 @@
     > [data-slot="item-primary-action"] {
     position: absolute;
     inset: 0;
-    inset-inline-end: calc(
-      var(--item-compact-inset) + var(--item-compact-media-host-size)
-    );
-    z-index: 0;
+    inset-inline-end: var(--item-compact-inset);
+    z-index: 1;
     inline-size: auto;
     block-size: 100%;
     min-inline-size: 0;
@@ -340,9 +342,32 @@
     border-radius: inherit;
     padding-block: var(--item-compact-inset);
     padding-inline-start: var(--item-compact-text-inset);
-    padding-inline-end: var(--item-compact-text-inset);
+    padding-inline-end: var(--item-compact-action-gap);
     background-color: transparent;
     text-align: start;
+    transition: inset-inline-end var(--item-hosted-action-speed)
+      var(--item-hosted-action-ease);
+  }
+
+    /* At rest the hosted action is invisible, so text can run to the row's
+       own edge inset. Once revealed, the reserve grows back out to clear
+       the action host — the fade recedes left to make room for it. */
+    [data-slot="item"]:hover > [data-slot="item-primary-action"],
+    [data-slot="item"]:has(
+        > .item-actions--hosted:focus-within
+      )
+      > [data-slot="item-primary-action"],
+    [data-slot="item"]:has(
+        > .item-actions--hosted
+          [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
+      )
+      > [data-slot="item-primary-action"] {
+    inset-inline-end: calc(
+      var(--item-compact-inset) + var(
+        --item-hosted-actions-reserve,
+        var(--item-compact-media-host-size)
+      )
+    );
   }
 
   [data-slot="item"]:has(
@@ -412,8 +437,7 @@
 
 
     [data-slot="item"][data-variant="default"]:has(
-      > .item-actions--hosted
-        [data-slot="dropdown-menu-trigger"]:focus-visible
+      > .item-actions--hosted:focus-within
     ) {
     --item-hosted-surface: var(--item-default-focus-surface);
     background-color: var(--item-default-focus-surface);
@@ -423,6 +447,43 @@
     [data-slot="item"]:has(> .item-actions--hosted)
     [data-slot="item-title"] {
     min-block-size: var(--item-compact-media-host-size);
+  }
+
+
+    /* At rest the hosted action is invisible, so ItemContent can run to the
+       row's own edge inset (--item-compact-inset). ItemPrimaryAction reserves
+       its own space unconditionally (this rule targets the sibling case
+       without one), so this only shrinks that one. */
+    [data-slot="item"]:has(> .item-actions--hosted)
+    > [data-slot="item-content"] {
+    padding-inline-end: var(--item-compact-inset);
+    transition: padding-inline-end var(--item-hosted-action-speed)
+      var(--item-hosted-action-ease);
+  }
+
+  [data-slot="item"]:has(> .item-actions--hosted)
+    > [data-slot="item-content"]:has(> [data-slot="item-title"] > [data-slot="badge"]) {
+    padding-inline-end: calc(
+      var(--item-hosted-actions-reserve, var(--item-compact-media-host-size)) + var(--item-compact-action-gap)
+    );
+  }
+
+    /* Once the hosted action is revealed, the reserve grows back out to
+       clear it — the fade recedes left to make room for the action. */
+    [data-slot="item"]:has(> .item-actions--hosted):hover
+      > [data-slot="item-content"],
+    [data-slot="item"]:has(
+        > .item-actions--hosted:focus-within
+      )
+      > [data-slot="item-content"],
+    [data-slot="item"]:has(
+        > .item-actions--hosted
+          [data-slot="dropdown-menu-trigger"][aria-expanded="true"]
+      )
+      > [data-slot="item-content"] {
+    padding-inline-end: calc(
+      var(--item-hosted-actions-reserve, var(--item-compact-media-host-size)) + var(--item-compact-action-gap)
+    );
   }
 
 
@@ -454,15 +515,14 @@
 
 
     [data-slot="item"][data-variant="muted"]:has(
-      > .item-actions--hosted
-        [data-slot="dropdown-menu-trigger"]:focus-visible
+      > .item-actions--hosted:focus-within
     ) {
     --item-hosted-surface: var(--item-muted-focus-surface);
   }
 
 
     .item-actions--hosted
-    > :is([data-slot="button"], [data-slot="dropdown-menu-trigger"]) {
+    > :is([data-slot="button"], [data-slot="dialog-trigger"], [data-slot="drawer-trigger"], [data-slot="dropdown-menu-trigger"]) {
     inline-size: var(--item-compact-media-host-size);
     block-size: var(--item-compact-media-host-size);
     border-radius: var(--item-compact-media-host-radius);
@@ -470,7 +530,7 @@
 
 
     .item-actions--hosted
-    > :is([data-slot="button"], [data-slot="dropdown-menu-trigger"])
+    > :is([data-slot="button"], [data-slot="dialog-trigger"], [data-slot="drawer-trigger"], [data-slot="dropdown-menu-trigger"])
     > .oneds-icon {
     inline-size: var(--item-compact-media-graphic-size);
     block-size: var(--item-compact-media-graphic-size);
@@ -483,21 +543,21 @@
     background: var(--item-hosted-surface);
   }
 
-   .item-actions--hosted::before {
-    background: linear-gradient(
-      to right,
-      transparent,
-      var(--item-hosted-surface)
-    );
-  }
+  @media (hover: none), (pointer: coarse) {
+    [data-slot="item"]:has(> .item-actions--hosted) > [data-slot="item-primary-action"] {
+      inset-inline-end: calc(
+        var(--item-compact-inset) + var(
+          --item-hosted-actions-reserve,
+          var(--item-compact-media-host-size)
+        )
+      );
+    }
 
-  [dir="rtl"]
-    .item-actions--hosted::before {
-    background: linear-gradient(
-      to left,
-      transparent,
-      var(--item-hosted-surface)
-    );
+    [data-slot="item"]:has(> .item-actions--hosted) > [data-slot="item-content"] {
+      padding-inline-end: calc(
+        var(--item-hosted-actions-reserve, var(--item-compact-media-host-size)) + var(--item-compact-action-gap)
+      );
+    }
   }
 
 }

@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test"
 
-test("sidebar cookie FAB reveals with random shape spin and exits with fade only", async ({ page, isMobile }) => {
+test("navigation pane cookie FAB reveals with random shape spin and exits with fade only", async ({ page, isMobile }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" })
   await page.goto("/#/fab")
   const floating = page.locator('.fab[data-placement="floating"]')
-  const close = page.getByRole("button", { name: "Close sidebar", exact: true })
+  const close = page.getByRole("button", { name: "Close navigation pane", exact: true })
   const shape = floating.locator('[data-slot="shape"]')
   await expect(floating).toHaveCount(1)
   if (await floating.getAttribute("data-visible") === "true") {
@@ -104,7 +104,7 @@ test("sidebar cookie FAB reveals with random shape spin and exits with fade only
     expect(exit.rotation).toBe(rotationAtExit)
     expect(exit.scale).toBe(scaleAtExit)
     await expect(close).toBeVisible()
-    if (!isMobile) expect(await close.evaluate(element => element.closest('[data-slot="sidebar"]')!.contains(document.activeElement))).toBe(true)
+    if (!isMobile) expect(await close.evaluate(element => element.closest('[data-slot="navigation-pane"]')!.contains(document.activeElement))).toBe(true)
   }
   await page.emulateMedia({ reducedMotion: "reduce" })
   await close.evaluate(element => element.click())

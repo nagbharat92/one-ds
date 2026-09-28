@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from "react"
 import {
-  ChevronsUpDownIcon,
   ChevronRightIcon,
   FileIcon,
   FolderIcon,
@@ -69,6 +68,7 @@ import {
 import {
   Collapsible,
   CollapsibleContent,
+  CollapsibleIndicator,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { Separator } from "@/components/ui/separator"
@@ -841,41 +841,35 @@ export function AccordionDemo() {
     description: "An interactive component that expands and collapses content.",
     category: "Layout",
     Demo: () => (
-      <Collapsible className="w-full max-w-sm space-y-2">
-        <div className="flex items-center justify-between gap-4 rounded-md border py-2 ps-4 pe-2">
-          <span className="text-sm font-medium">@peduarte starred 3 repositories</span>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="icon" className="size-8">
-              <ChevronsUpDownIcon />
-            </Button>
-          </CollapsibleTrigger>
-        </div>
-        <CollapsibleContent className="space-y-2">
-          <div className="rounded-md border px-4 py-2 font-mono text-sm">@radix-ui/react</div>
-          <div className="rounded-md border px-4 py-2 font-mono text-sm">@shadcn/ui</div>
+      <Collapsible className="w-full max-w-sm overflow-hidden rounded-(--collapsible-radius) border border-(--elevation-stroke)">
+        <CollapsibleTrigger>
+          <span>@peduarte starred 3 repositories</span>
+          <CollapsibleIndicator />
+        </CollapsibleTrigger>
+        <CollapsibleContent className="space-y-2 px-(--collapsible-padding-x) pb-(--collapsible-padding-y)">
+          <div className="rounded-lg border px-4 py-2 font-mono text-sm">@radix-ui/react</div>
+          <div className="rounded-lg border px-4 py-2 font-mono text-sm">@shadcn/ui</div>
         </CollapsibleContent>
       </Collapsible>
     ),
-    code: `import { ChevronsUpDownIcon } from "@/components/ui/icons"
-import {
+    code: `import {
   Collapsible,
   CollapsibleContent,
+  CollapsibleIndicator,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { Button } from "@/components/ui/button"
 
 export function CollapsibleDemo() {
   return (
-    <Collapsible className="w-full max-w-sm space-y-2">
-      <div className="flex items-center justify-between rounded-md border py-2 ps-4 pe-2">
-        <span className="text-sm font-medium">@peduarte starred 3 repositories</span>
-        <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="icon" className="size-8">
-            <ChevronsUpDownIcon />
-          </Button>
-        </CollapsibleTrigger>
-      </div>
-      <CollapsibleContent>@shadcn/ui</CollapsibleContent>
+    <Collapsible className="w-full max-w-sm overflow-hidden rounded-(--collapsible-radius) border border-(--elevation-stroke)">
+      <CollapsibleTrigger>
+        <span>@peduarte starred 3 repositories</span>
+        <CollapsibleIndicator />
+      </CollapsibleTrigger>
+      <CollapsibleContent className="space-y-2 px-(--collapsible-padding-x) pb-(--collapsible-padding-y)">
+        <div className="rounded-lg border px-4 py-2 font-mono text-sm">@radix-ui/react</div>
+        <div className="rounded-lg border px-4 py-2 font-mono text-sm">@shadcn/ui</div>
+      </CollapsibleContent>
     </Collapsible>
   )
 }`,
@@ -888,19 +882,15 @@ export function CollapsibleDemo() {
           const [notifs, setNotifs] = useState(false)
           const [darkMode, setDarkMode] = useState(false)
           return (
-            <Collapsible defaultOpen className="w-full max-w-sm space-y-2">
-              <div className="flex items-center justify-between gap-4 rounded-md border py-2 ps-4 pe-2">
-                <div className="flex items-center gap-2">
+            <Collapsible defaultOpen className="w-full max-w-sm overflow-hidden rounded-(--collapsible-radius) border border-(--elevation-stroke)">
+              <CollapsibleTrigger>
+                <span className="flex items-center gap-2">
                   <SettingsIcon className="size-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Quick settings</span>
-                </div>
-                <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="icon" className="size-8">
-                    <ChevronsUpDownIcon />
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-              <CollapsibleContent className="space-y-3 rounded-md border p-4">
+                  Quick settings
+                </span>
+                <CollapsibleIndicator />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-3 px-(--collapsible-padding-x) pb-(--collapsible-padding-y)">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <WifiIcon className="size-4 text-muted-foreground" />
@@ -938,14 +928,14 @@ export function CollapsibleDemo() {
           return (
             <div className="w-full max-w-xs rounded-md border p-2">
               <Collapsible open={srcOpen} onOpenChange={setSrcOpen}>
-                <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-sm hover:bg-muted">
+                <CollapsibleTrigger className="flex w-full items-center justify-start gap-1.5 rounded px-2 py-1 text-sm font-normal hover:bg-muted">
                   <ChevronRightIcon className={`size-3.5 text-muted-foreground transition-transform duration-(--speed-swift) ease-(--ease-glide) ${srcOpen ? "rotate-90" : ""}`} />
                   {srcOpen ? <FolderOpenIcon className="size-4 text-muted-foreground" /> : <FolderIcon className="size-4 text-muted-foreground" />}
                   <span>src</span>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="ml-4 border-l pl-2">
                   <Collapsible open={compOpen} onOpenChange={setCompOpen}>
-                    <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-sm hover:bg-muted">
+                    <CollapsibleTrigger className="flex w-full items-center justify-start gap-1.5 rounded px-2 py-1 text-sm font-normal hover:bg-muted">
                       <ChevronRightIcon className={`size-3.5 text-muted-foreground transition-transform duration-(--speed-swift) ease-(--ease-glide) ${compOpen ? "rotate-90" : ""}`} />
                       {compOpen ? <FolderOpenIcon className="size-4 text-muted-foreground" /> : <FolderIcon className="size-4 text-muted-foreground" />}
                       <span>components</span>

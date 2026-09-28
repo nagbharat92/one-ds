@@ -316,6 +316,7 @@ function SiteHeaderNav({
   const navRef = React.useRef<HTMLElement>(null)
   const triggerRef = React.useRef<HTMLButtonElement>(null)
   const [overflowed, setOverflowed] = React.useState<string[]>([])
+  const [activeOverflowIndex, setActiveOverflowIndex] = React.useState<number | null>(null)
   const variant = useSiteHeaderVariant()
 
   React.useLayoutEffect(() => {
@@ -400,10 +401,12 @@ function SiteHeaderNav({
     const syncActive = () => {
       const trigger = triggerRef.current
       if (!trigger) return
-      const holdsActive = Array.from(
+      const hiddenLinks = Array.from(
         nav.querySelectorAll<HTMLElement>('[data-slot="site-header-link"]')
-      ).some((link) => link.hidden && link.dataset.active === "true")
-      const value = String(holdsActive)
+      ).filter((link) => link.hidden)
+      const activeIndex = hiddenLinks.findIndex((link) => link.dataset.active === "true")
+      setActiveOverflowIndex(activeIndex < 0 ? null : activeIndex)
+      const value = String(activeIndex >= 0)
       if (trigger.dataset.active !== value) trigger.dataset.active = value
     }
 
@@ -471,6 +474,8 @@ function SiteHeaderNav({
           {overflowed.map((label, index) => (
             <DropdownMenuItem
               key={label}
+              data-active={index === activeOverflowIndex ? "true" : undefined}
+              aria-current={index === activeOverflowIndex ? "page" : undefined}
               className={cn("font-medium", itemShape(variant))}
               onSelect={() => {
                 const hiddenLinks = Array.from(

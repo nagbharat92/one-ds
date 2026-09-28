@@ -4,9 +4,10 @@ import test from "node:test"
 import ts from "typescript"
 
 const rules = JSON.parse(fs.readFileSync("src/design-system/rules.json", "utf8"))
+const readCss = (...files) => files.map(file => fs.readFileSync(file, "utf8")).join("\n")
 
 test("optical label correction is shared, tokenized, and explicitly directional", () => {
-  const css = fs.readFileSync("src/index.css", "utf8")
+  const css = readCss("src/styles/tokens.css", "src/styles/button.css")
   assert.ok(css.includes("--space-2xs: var(--spacing);"))
   assert.ok(css.includes("--space-xs: calc(var(--spacing) * 2);"))
   assert.ok(css.includes("--icon-label-optical-padding: var(--space-2xs);"))
@@ -51,7 +52,7 @@ test("Button has no outline variant or stale outline markup in published example
 
 test("Primary Button keeps purple by default and exposes an explicit pink color", () => {
   const button = fs.readFileSync("src/components/ui/button.tsx", "utf8")
-  const css = fs.readFileSync("src/index.css", "utf8")
+  const css = readCss("src/styles/tokens.css", "src/styles/button.css")
   const showcase = fs.readFileSync("src/showcase/demos/forms.tsx", "utf8")
   assert.match(button, /type ButtonPrimaryColor = "purple" \| "pink"/)
   assert.match(button, /primaryColor = "purple"/)
@@ -72,7 +73,7 @@ test("showcase exposes two surface tiers with compact ordinary previews", () => 
   assert.match(app, /default: "center"/)
   assert.match(app, /layout = "center"/)
   assert.doesNotMatch(app, /component: "docs"|medium: "app"/)
-  const styles = fs.readFileSync("src/index.css", "utf8")
+  const styles = readCss("src/styles/tokens.css", "src/styles/components.css")
   assert.match(styles, /--showcase-preview-min-height: calc\(var\(--spacing\) \* 50\)/)
   assert.match(styles, /--canvas-min-height: var\(--showcase-preview-min-height\)/)
   const rule = rules.rules.find(rule => rule.id === "showcase.surface-scale")
@@ -100,7 +101,7 @@ test("List Item owns full and compact geometry plus the shared list state ladder
   }
   assert.deepEqual(legacySizeConsumers, [])
 
-  const css = fs.readFileSync("src/index.css", "utf8")
+  const css = readCss("src/styles/tokens.css", "src/styles/item-foundation.css", "src/styles/item.css")
   for (const token of ["--item-radius", "--item-padding", "--item-inner-radius", "--item-host-surface", "--item-compact-height", "--item-compact-radius", "--item-media-host-size", "--item-image-size", "--state-layer-color", "--state-layer-hover-opacity", "--state-layer-focus-opacity", "--state-layer-pressed-opacity"]) {
     assert.ok(css.includes(`${token}:`), token)
   }
@@ -114,9 +115,9 @@ test("List Item owns full and compact geometry plus the shared list state ladder
   assert.doesNotMatch(css, /--list-row-(?:state-ink|hover-opacity|focus-opacity|pressed-opacity)/)
   assert.match(css, /@layer item/)
   assert.doesNotMatch(css, /data-showcase-slug="list-item"|--list-item-|list-item-(?:compact|media|action|select)/)
-  const sidebar = fs.readFileSync("src/components/ui/sidebar.tsx", "utf8")
-  assert.match(sidebar, /hover:bg-\(--item-default-hover-surface\)/)
-  assert.match(sidebar, /active:bg-\(--item-default-pressed-surface\)/)
+  const navigationPane = fs.readFileSync("src/components/ui/navigation-pane.tsx", "utf8")
+  assert.match(navigationPane, /hover:bg-\(--item-default-hover-surface\)/)
+  assert.match(navigationPane, /active:bg-\(--item-default-pressed-surface\)/)
   const app = fs.readFileSync("src/App.tsx", "utf8")
   assert.match(app, /<Item\s+compact\s+asChild/)
   assert.match(app, /<ItemContent>[\s\S]*<ItemTitle>\{component\.name\}<\/ItemTitle>/)
@@ -128,13 +129,13 @@ test("tooltips use fixed arrowless pill geometry", () => {
   assert.match(tooltip, /rounded-xl/)
   assert.match(tooltip, /data-\[side=top\]:mb-\(--tooltip-gap\)/)
   assert.doesNotMatch(tooltip, /TooltipPrimitive\.Arrow|tooltip-arrow/)
-  const styles = fs.readFileSync("src/index.css", "utf8")
+  const styles = readCss("src/styles/tokens.css", "src/styles/button.css")
   assert.match(styles, /--tooltip-gap: var\(--space-2xs\)/)
   assert.doesNotMatch(styles, /tooltip-arrow/)
   const button = fs.readFileSync("src/components/ui/button.tsx", "utf8")
   assert.match(button, /tooltipSide = "top"/)
-  const sidebar = fs.readFileSync("src/components/ui/sidebar.tsx", "utf8")
-  assert.match(sidebar, /tooltipSide=\{side === "start" \? "right" : "left"\}/)
+  const navigationPane = fs.readFileSync("src/components/ui/navigation-pane.tsx", "utf8")
+  assert.match(navigationPane, /tooltipSide="right"/)
   for (const id of ["geometry.tooltip-shape", "geometry.tooltip-placement"]) {
     assert.equal(rules.rules.find(rule => rule.id === id).status, "approved")
   }
@@ -188,7 +189,7 @@ test("Button exposes only two paired size tiers and binds them to the approved g
   visit(source)
   const entries = new Map(sizes.properties.map(property => [property.name.text, property.initializer.text]))
   assert.deepEqual([...entries.keys()], ["default", "expressive", "icon", "icon-expressive"])
-  const css = fs.readFileSync("src/index.css", "utf8")
+  const css = readCss("src/styles/tokens.css", "src/styles/button.css")
   for (const [size, role, steps] of [["default", "default", 10], ["expressive", "expressive", 14]]) {
     const token = `--button-height-${role}`
     assert.ok(css.includes(`${token}: calc(var(--spacing) * ${steps});`))

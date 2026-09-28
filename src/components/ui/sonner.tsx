@@ -47,6 +47,8 @@ function ToastShapeIcon({
   )
 }
 
+const toastActionFocus = "focus-visible:outline-none! focus-visible:ring-3! focus-visible:ring-ring! focus-visible:ring-offset-2! focus-visible:ring-offset-popover!"
+
 const Toaster = ({ closeButton = true, ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
 
@@ -126,9 +128,9 @@ const Toaster = ({ closeButton = true, ...props }: ToasterProps) => {
           title: "font-heading font-semibold text-sm leading-snug text-foreground",
           description: "text-sm text-muted-foreground leading-normal",
           actionButton:
-            "rounded-(--toast-inner-radius)! font-medium text-sm! px-(--button-padding-default)! h-(--button-height-default)! bg-foreground! text-background! hover:bg-foreground/90! cursor-pointer! shrink-0! order-1! m-0!",
+            `rounded-(--toast-inner-radius)! font-medium text-sm! px-(--button-padding-default)! h-(--button-height-default)! bg-foreground! text-background! hover:bg-foreground/90! cursor-pointer! shrink-0! order-1! m-0! ${toastActionFocus}`,
           cancelButton:
-            "rounded-(--toast-inner-radius)! font-medium text-sm! px-(--button-padding-default)! h-(--button-height-default)! bg-muted! text-foreground! hover:bg-muted/80! cursor-pointer! shrink-0! order-1! m-0!",
+            `rounded-(--toast-inner-radius)! font-medium text-sm! px-(--button-padding-default)! h-(--button-height-default)! bg-muted! text-foreground! hover:bg-muted/80! cursor-pointer! shrink-0! order-1! m-0! ${toastActionFocus}`,
           closeButton:
             "static! inset-auto! transform-none! order-last! flex! size-(--button-height-default)! shrink-0! items-center! justify-center! rounded-(--toast-inner-radius)! border-0! bg-transparent! text-muted-foreground! hover:bg-muted! hover:text-foreground! cursor-pointer! transition-colors! m-0!",
         },

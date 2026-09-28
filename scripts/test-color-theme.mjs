@@ -4,7 +4,9 @@ import test from "node:test"
 import { argbFromHex, Contrast, Hct, lstarFromArgb, hexFromArgb, SchemeExpressive, SchemeTonalSpot, SchemeVibrant } from "@material/material-color-utilities"
 import { createColorTheme, createMaterialColorTheme, materialColorRoles, readColorThemeRecipe, readMaterialWebsiteTheme } from "../src/lib/color-theme.ts"
 
-const css = readFileSync(new URL("../src/index.css", import.meta.url), "utf8")
+const css = ["../src/styles/tokens.css", "../src/styles/color-theme.css"]
+  .map(path => readFileSync(new URL(path, import.meta.url), "utf8"))
+  .join("\n")
 const recipe = readColorThemeRecipe((name) => css.match(new RegExp(`${name}:\\s*([^;]+);`))?.[1] ?? "")
 const ratio = (foreground, background) => Contrast.ratioOfTones(
   lstarFromArgb(argbFromHex(foreground)), lstarFromArgb(argbFromHex(background)),
