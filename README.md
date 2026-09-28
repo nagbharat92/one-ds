@@ -21,7 +21,7 @@ inspect their example code, including opt-in visual experiments.
 ## Run locally
 
 ```sh
-npm ci
+npm ci --legacy-peer-deps
 npm run dev
 ```
 

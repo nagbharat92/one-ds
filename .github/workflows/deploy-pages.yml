@@ -26,7 +26,8 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: npm ci
+      # The locked React Hook Form 8 beta is outside resolvers' v7 peer range.
+      - run: npm ci --legacy-peer-deps
       - run: npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
