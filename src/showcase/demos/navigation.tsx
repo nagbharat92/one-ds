@@ -801,7 +801,7 @@ function AttachedNavigationRailDemo() {
           <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
             <NavigationPaneBrand>
               <NavigationPaneBrandMark>
-                <img src="/favicon.svg" alt="" className="size-5" />
+                <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="size-5" />
               </NavigationPaneBrandMark>
               <NavigationPaneBrandLabel className="text-lg font-semibold">
                 Acme
@@ -900,7 +900,7 @@ function NavigationPaneDemoBrand() {
     <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
       <NavigationPaneBrand>
         <NavigationPaneBrandMark>
-          <img src="/favicon.svg" alt="" className="size-5" />
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="size-5" />
         </NavigationPaneBrandMark>
         <NavigationPaneBrandLabel className="text-lg font-semibold">Acme</NavigationPaneBrandLabel>
       </NavigationPaneBrand>
@@ -919,7 +919,7 @@ function NavigationPaneBarDemoBrand() {
     <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
       <NavigationPaneBrand>
         <NavigationPaneBrandMark>
-          <img src="/favicon.svg" alt="" className="size-5" />
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="size-5" />
         </NavigationPaneBrandMark>
         <NavigationPaneBrandLabel className="text-lg font-semibold">Acme</NavigationPaneBrandLabel>
       </NavigationPaneBrand>
@@ -1723,7 +1723,7 @@ export function NavigationPaneDemo() {
         <NavigationPaneHeader className="h-(--showcase-header-row-height) min-h-0 flex-row items-center justify-between px-4 py-0">
           <NavigationPaneBrand>
             <NavigationPaneBrandMark>
-              <img src="/favicon.svg" alt="" className="size-5" />
+              <img src={import.meta.env.BASE_URL + "favicon.svg"} alt="" className="size-5" />
             </NavigationPaneBrandMark>
             <NavigationPaneBrandLabel className="text-lg font-semibold">Acme</NavigationPaneBrandLabel>
           </NavigationPaneBrand>
